@@ -1,0 +1,102 @@
+{
+	"FU": {
+		"attributes": {
+			"dex": "Destrezza",
+			"dexAbbr": "DES",
+			"ins": "Intuito",
+			"insAbbr": "INT",
+			"mig": "Vigore",
+			"migAbbr": "VIG",
+			"wlp": "Volontà",
+			"wlpAbbr": "VOL"
+		},
+		"mindPoint": "Punto Mente",
+		"mindPointPL": "Punti Mente",
+		"mindPointAbbr": "PM",
+		"target": "Bersaglio",
+		"targetPL": "Bersagli",
+		"targetAbbr": "B",
+		"duration": "Durata",
+		"discipline": "Disciplina",
+		"disciplinePL": "Discipline",
+		"disciplineTypes": {
+			"arcanism": "Arcanismo",
+			"chimerism": "Chimerismo",
+			"elementalism": "Elementalismo",
+			"entropism": "Entropismo",
+			"ritualism": "Ritualismo",
+			"spiritism": "Spiritismo"
+		},
+		"spellDuration": {
+			"instant": "Istantanea",
+			"scene": "Scena"
+		},
+		"spellOpportunity": "Opportunità",
+		"spellOffensive": "Offensivo",
+		"spellEffect": "Effetto",
+		"equipmentCategory": {
+			"accessory": "Accessorio",
+			"accessoryPL": "Accessori",
+			"armor": "Armatura",
+			"armorPL": "Armature",
+			"shield": "Scudo",
+			"shieldPL": "Scudi",
+			"weapon": "Arma",
+			"weaponPL": "Armi"
+		},
+		"equipmentRarity": {
+			"basic": "Base",
+			"rare": "Raro"
+		},
+		"equipmentNoAbility": "Nessuna Qualità.",
+		"weaponTypes": {
+			"arcane": "Arcano",
+			"arcanePL": "Arcane",
+			"bow": "Arco",
+			"bowPL": "Archi",
+			"flail": "Flagello",
+			"flailPL": "Flagelli",
+			"firearm": "da Fuoco",
+			"firearmPL": "da Fuoco",
+			"spear": "Lancia",
+			"spearPL": "Lance",
+			"thrown": "da Lancio",
+			"thrownPL": "da Lancio",
+			"heavy": "Pesante",
+			"heavyPL": "Pesanti",
+			"dagger": "Pugnale",
+			"daggerPL": "Pugnali",
+			"brawling": "da Rissa",
+			"brawlingPL": "da Rissa",
+			"sword": "Spada",
+			"swordPL": "Spada"
+		},
+		"project": {
+			"potency": "Potenza",
+			"area": "Area",
+			"uses": "Usi"
+		},
+		"projectPotency": {
+			"minor": "Minore",
+			"medium": "Media",
+			"major": "Maggiore",
+			"extreme": "Estrema"
+		},
+		"projectArea": {
+			"individual": "Individuale",
+			"small": "Piccola",
+			"large": "Grande",
+			"huge": "Enorme"
+		},
+		"projectUses": {
+			"consumable": "Consumabile",
+			"permanent": "Permanente"
+		},
+		"Item": {
+			"BaseName": "Nome",
+			"BaseDescription": "Descrizione",
+			"sheetMainTab": "Visualizza",
+			"sheetEditTab": "Modifica"
+		}
+	}
+}
