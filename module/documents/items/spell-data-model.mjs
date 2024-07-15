@@ -41,7 +41,7 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 		const MPCost = this.target.MPCost * this.target.number;
 		(this.MPCost ??= {}).value = MPCost;
 
-		const typeAttributes = { 
+		const typeAttributes = {
 			chimerism: [ 'mig', 'wlp' ],
 			elementalism: [ 'ins', 'wlp' ],
 			entropism: [ 'ins', 'wlp' ],

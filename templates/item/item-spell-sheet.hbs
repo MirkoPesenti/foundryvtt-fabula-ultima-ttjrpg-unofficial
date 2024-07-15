@@ -1,0 +1,23 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+        <a class="item" data-tab="items">Items</a>
+    </nav>
+
+    <section class="sheet-body">
+		<div class="tab desc resource-content" data-group="primary" data-tab="description">
+			<div data-tooltip="Test Tooltip">Tooltip</div>
+		</div>
+		<div class="tab desc resource-content" data-group="primary" data-tab="items">
+			{{system.MPCost.value}}
+		</div>
+    </section>
+</form>

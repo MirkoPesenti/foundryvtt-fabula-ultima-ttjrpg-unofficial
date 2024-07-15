@@ -1,4 +1,4 @@
-export const SYSTEM = 'Fabula Ultima TTJRPG (Unofficial)';
+export const SYSTEM = 'Fabula Ultima';
 
 export const FU = {};
 
