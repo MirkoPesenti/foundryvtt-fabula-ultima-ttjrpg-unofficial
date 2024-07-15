@@ -1,23 +1,82 @@
 <form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        <div class="profile-container">
+            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        </div>
         <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                {{#if system.isOffensive.value}}
+                (offensivo)
+                {{/if}}
+            </h1>
+            <div class="textarea-container">
+                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
+            </div>
         </div>
     </header>
 
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="description">Description</a>
-        <a class="item" data-tab="items">Items</a>
+        <a class="item" data-tab="details">Details</a>
+        <a class="item {{#unless system.isOffensive.value}}disabled{{/unless}}" data-tab="damage">Damage</a>
     </nav>
 
     <section class="sheet-body">
-		<div class="tab desc resource-content" data-group="primary" data-tab="description">
-			<div data-tooltip="Test Tooltip">Tooltip</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>PM</th>
+                    <th>Bersaglio</th>
+                    <th>Durata</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        {{system.target.MPCost}}
+                        {{#gt system.target.number 1}}
+                        x B
+                        {{/gt}}
+                    </td>
+                    <td>
+                        <input type="text" name="system.target.value" value="{{system.target.value}}" placeholder="Bersaglio">
+                    </td>
+                    <td>
+                        <select name="system.duration.value">
+                            {{selectOptions SpellDurations selected=system.duration.value sort=true localize=true}}
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+		<div class="tab desc" data-group="primary" data-tab="description">
+            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+
+            {{#if system.opportunity.value}}
+            <label for="enrichedHtml.opportunity"><strong>Opportunità:</strong></label>
+            {{editor enrichedHtml.opportunity target="system.opportunityEffect" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+            {{/if}}
 		</div>
-		<div class="tab desc resource-content" data-group="primary" data-tab="items">
-			{{system.MPCost.value}}
+		<div class="tab details" data-group="primary" data-tab="details">
+            <div class="form-group">
+                <label for="system.isOffensive.value">Offensivo?</label>
+                <input type="checkbox" name="system.isOffensive.value" {{checked system.isOffensive.value}}>
+            </div>
+            <div class="form-group">
+                <label>Targets</label>
+                <input type="number" name="system.target.MPCost" value="{{system.target.MPCost}}" placeholder="Punti Mente">
+                x
+                <input type="number" name="system.target.number" value="{{system.target.number}}" placeholder="N° Bersagli">
+            </div>
+            <div class="form-group">
+                <label for="system.opportunity.value">opportunity?</label>
+                <input type="checkbox" name="system.opportunity.value" {{checked system.opportunity.value}}>
+            </div>
 		</div>
+        <div class="tab dmg" data-gr="primary" data-tab="damage">
+            OFFENSIVO
+        </div>
     </section>
 </form>

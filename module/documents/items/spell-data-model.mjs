@@ -6,7 +6,7 @@ import { FU } from '../../helpers/config.mjs';
  * @property {string} type.value
  * @property {string} summary.value
  * @property {string} description
- * @property {boolean} isOffensive
+ * @property {boolean} isOffensive.value
  * @property {ItemAttributesDataModel} attributes
  * @property {DamageDataModel} damage
  * @property {number} MPCost.value

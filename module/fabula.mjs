@@ -36,8 +36,19 @@ Hooks.once('init', async () => {
 
 	// Register Sheets
 	Items.unregisterSheet('core', ItemSheet);
-	Items.registerSheet('projectfu', FabulaItemSheet, {
+	Items.registerSheet('fabula', FabulaItemSheet, {
 		makeDefault: true,
 	});
 
+});
+
+Hooks.once('setup', () => {});
+
+/* ============================= */
+/* 		Handlebars Helpers		 */
+/* ============================= */
+
+Handlebars.registerHelper('gt', function( a, b ){
+	var next =  arguments[arguments.length-1];
+	return (a > b) ? next.fn(this) : next.inverse(this);
 });

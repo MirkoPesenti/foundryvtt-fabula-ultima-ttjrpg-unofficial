@@ -1,0 +1,37 @@
+/* 
+------------------------------------------
+Typography
+------------------------------------------
+*/
+
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap");
+
+/* 
+------------------------------------------
+End Typography
+------------------------------------------
+*/
+
+/* 【】 */
+.fabula .editor {height:100%;min-height:25em;}
+
+/* Sheets > Header */
+.sheet header.sheet-header {flex:0;position:relative;min-height:170px;align-items:flex-end;}
+.sheet header.sheet-header .profile-container {position:absolute;bottom:0;left:0;z-index:1;border-radius:100%;overflow:hidden;width:150px;height:150px;border:3px solid #a1c4b6;flex:0 0 150px;padding:3px;background:url(/ui/parchment.jpg) repeat;}
+.sheet header.sheet-header img {width:100%;height:100%;object-fit:contain;border:2px solid #a1c4b6;margin:0;border-radius:100%;}
+.sheet header.sheet-header .header-fields {flex:0;flex-grow:1;}
+.sheet header.sheet-header h1 {padding-left:170px;}
+.sheet header.sheet-header h1 input {width:100%;margin:0;padding:0;box-shadow:none;border:0;border-radius:0;background-color:transparent;text-transform:uppercase;color:#31534a;font-weight:700;}
+.sheet header.sheet-header .textarea-container {margin-left:75px;border-radius:0 20px 20px 0;border:1px solid #a1c4b6;border-left:0;padding:2px;}
+.sheet header.sheet-header textarea {padding:15px;padding-left:95px;border:2px solid #a1c4b6;border-left:0;border-radius:0 18px 18px 0;resize:none;box-shadow:none;font-size:14px;background-color:transparent;min-height:85px;display:block;background:linear-gradient(to right,  rgba(234,243,235,1) 0%,rgba(234,243,235,0) 40%);}
+
+/* Sheets > Tabs */
+.sheet nav.sheet-tabs {margin:0;padding:15px 0 1px;flex:0;border:0;border-bottom:1px solid #31534a;}
+.sheet nav.sheet-tabs > [data-tab] {background-color:transparent;color:#31534a;text-transform:uppercase;width:100%;padding:5px;border-radius:10px 10px 0 0;border-bottom:2px solid #31534a;text-shadow:none;transition:all .15s ease-in-out;}
+.sheet nav.sheet-tabs > [data-tab]:hover {background-color:rgba(49,83,74,.1);}
+.sheet nav.sheet-tabs > [data-tab].active {background-color:#31534a;color:#fff;}
+.sheet nav.sheet-tabs > [data-tab].disabled {color:rgba(49,83,74,.3);background-color:transparent;pointer-events:none;}

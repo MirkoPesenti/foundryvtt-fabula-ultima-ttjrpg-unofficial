@@ -32,10 +32,11 @@ export class FabulaItemSheet extends ItemSheet {
 		context.attrAbbr = CONFIG.FU.attributeAbbreviations;
 		context.damageTypes = CONFIG.FU.damageTypes;
 		context.weaponTypes = CONFIG.FU.weaponTypes;
-		context.miscCategories = CONFIG.FU.miscCategories;
+		context.SpellDurations = CONFIG.FU.SpellDurations;
 
 		context.enrichedHtml = {
-			description: await TextEditor.enrichHTML( context.system.description ?? '' )
+			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
+			opportunity: await TextEditor.enrichHTML( context.system.opportunityEffect ?? '' ),
 		};
 
 		context.FU = FU;
