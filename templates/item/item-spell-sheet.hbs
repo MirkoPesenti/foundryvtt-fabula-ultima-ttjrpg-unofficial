@@ -9,10 +9,10 @@
                 {{selectOptions SpellDisciplines selected=system.type.value sort=true localize=true}}
             </select>
             <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{FU.Sheet.Name}}"/>
                 {{#if system.isOffensive.value}}
-                (offensivo)
+                <div class="icon-offensive"></div>
                 {{/if}}
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
             </h1>
             <div class="textarea-container">
                 <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
@@ -21,18 +21,18 @@
     </header>
 
     <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">{{FU.Sheet.DescriptionTab}}</a>
-        <a class="item" data-tab="details">{{FU.Sheet.DetailsTab}}</a>
-        <a class="item {{#unless system.isOffensive.value}}disabled{{/unless}}" data-tab="damage">{{FU.Sheet.DamageTab}}</a>
+        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
+        <a class="item" data-tab="details">{{localize 'FU.Sheet.DetailsTab'}}</a>
+        <a class="item {{#unless system.isOffensive.value}}disabled{{/unless}}" data-tab="damage">{{localize 'FU.Sheet.DamageTab'}}</a>
     </nav>
 
     <section class="sheet-body">
         <table>
             <thead>
                 <tr>
-                    <th>{{FU.MPabbr}}</th>
-                    <th>{{FU.target}}</th>
-                    <th>{{FU.duration}}</th>
+                    <th>{{localize 'FU.MPabbr'}}</th>
+                    <th>{{localize 'FU.target'}}</th>
+                    <th>{{localize 'FU.duration'}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,11 +40,11 @@
                     <td>
                         {{system.target.MPCost}}
                         {{#gt system.target.number 1}}
-                        x {{FU.targetAbbr}}
+                        x {{localize 'FU.targetAbbr'}}
                         {{/gt}}
                     </td>
                     <td>
-                        <input type="text" name="system.target.value" value="{{system.target.value}}" placeholder="{{FU.target}}">
+                        <input type="text" name="system.target.value" value="{{system.target.value}}" placeholder="{{localize 'FU.target'}}">
                     </td>
                     <td>
                         <select name="system.duration.value">
@@ -52,29 +52,29 @@
                         </select>
                     </td>
                 </tr>
-            </tbody>
+            </tbody>Z
         </table>
 		<div class="tab desc" data-group="primary" data-tab="description">
             {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
 
             {{#if system.opportunity.value}}
-            <label for="enrichedHtml.opportunity"><strong>{{FU.spellOpportunity}}:</strong></label>
+            <label for="enrichedHtml.opportunity"><strong>{{localize 'FU.spellOpportunity'}}:</strong></label>
             {{editor enrichedHtml.opportunity target="system.opportunityEffect" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
             {{/if}}
 		</div>
 		<div class="tab details" data-group="primary" data-tab="details">
             <div class="form-group">
-                <label for="system.isOffensive.value">{{FU.spellOffensive}}?</label>
+                <label for="system.isOffensive.value">{{localize 'FU.spellOffensive'}}?</label>
                 <input type="checkbox" name="system.isOffensive.value" {{checked system.isOffensive.value}}>
             </div>
             <div class="form-group">
-                <label>{{FU.target}}</label>
-                <input type="number" name="system.target.MPCost" value="{{system.target.MPCost}}" placeholder="{{FU.MP}}">
+                <label>{{localize 'FU.target'}}</label>
+                <input type="number" name="system.target.MPCost" value="{{system.target.MPCost}}" placeholder="{{localize 'FU.MP'}}">
                 x
-                <input type="number" name="system.target.number" value="{{system.target.number}}" placeholder="{{FU.targetPL}}">
+                <input type="number" name="system.target.number" value="{{system.target.number}}" placeholder="{{localize 'FU.targetPL'}}">
             </div>
             <div class="form-group">
-                <label for="system.opportunity.value">{{FU.spellOpportunity}}?</label>
+                <label for="system.opportunity.value">{{localize 'FU.spellOpportunity'}}?</label>
                 <input type="checkbox" name="system.opportunity.value" {{checked system.opportunity.value}}>
             </div>
 		</div>

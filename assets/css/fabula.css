@@ -24,7 +24,8 @@ End Typography
 .sheet header.sheet-header .profile-container {position:absolute;bottom:0;left:0;z-index:1;border-radius:100%;overflow:hidden;width:150px;height:150px;border:3px solid #a1c4b6;flex:0 0 150px;padding:3px;background:url(/ui/parchment.jpg) repeat;}
 .sheet header.sheet-header img {width:100%;height:100%;object-fit:contain;border:2px solid #a1c4b6;margin:0;border-radius:100%;}
 .sheet header.sheet-header .header-fields {flex:0;flex-grow:1;}
-.sheet header.sheet-header h1 {padding-left:170px;}
+.sheet header.sheet-header h1 {padding-left:180px;position:relative;}
+.sheet header.sheet-header h1 .icon-offensive {width:20px;height:20px;border-radius:100%;background-color:red;position:absolute;top:50%;left:150px;transform:translate(0,-50%);}
 .sheet header.sheet-header h1 input {width:100%;margin:0;padding:0;box-shadow:none;border:0;border-radius:0;background-color:transparent;text-transform:uppercase;color:#31534a;font-weight:700;}
 .sheet header.sheet-header .textarea-container {margin-left:75px;border-radius:0 20px 20px 0;border:1px solid #a1c4b6;border-left:0;padding:2px;}
 .sheet header.sheet-header textarea {padding:15px;padding-left:95px;border:2px solid #a1c4b6;border-left:0;border-radius:0 18px 18px 0;resize:none;box-shadow:none;font-size:14px;background-color:transparent;min-height:85px;display:block;background:linear-gradient(to right,  rgba(234,243,235,1) 0%,rgba(234,243,235,0) 40%);}

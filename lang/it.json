@@ -7,10 +7,10 @@
 			"wlp": "Volontà"
 		},
 		"attributesAbbr": {
-			"dexAbbr": "DES",
-			"insAbbr": "INT",
-			"migAbbr": "VIG",
-			"wlpAbbr": "VOL"
+			"dex": "DES",
+			"ins": "INT",
+			"mig": "VIG",
+			"wlp": "VOL"
 		},
 		"MP": "Punti Mente",
 		"MPabbr": "PM",
@@ -22,15 +22,15 @@
 		"targetAbbr": "B",
 		"duration": "Durata",
 		"DamageTypes": {
-			"physical": "physical",
-			"air": "air",
-			"bolt": "bolt",
-			"dark": "dark",
-			"earth": "earth",
-			"fire": "fire",
-			"ice": "ice",
-			"light": "light",
-			"poison": "poison"
+			"physical": "Fisico",
+			"air": "Aria",
+			"bolt": "Fulmine",
+			"dark": "Ombra",
+			"earth": "Terra",
+			"fire": "Fuoco",
+			"ice": "Ghiaccio",
+			"light": "Luce",
+			"poison": "Veleno"
 		},
 		"ItemTypes": {
 			"spell": "Incantesimo",

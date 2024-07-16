@@ -8,17 +8,17 @@ export const FU = {};
  */
 
 FU.attributes = {
-	dex: 'FU.AttributeDex',
-	ins: 'FU.AttributeIns',
-	mig: 'FU.AttributeMig',
-	wlp: 'FU.AttributeWlp',
+	dex: 'FU.attributes.dex',
+	ins: 'FU.attributes.ins',
+	mig: 'FU.attributes.mig',
+	wlp: 'FU.attributes.wlp',
 };
 
 FU.attributesAbbr = {
-	dex: 'FU.AttributeDexAbbr',
-	ins: 'FU.AttributeInsAbbr',
-	mig: 'FU.AttributeMigAbbr',
-	wlp: 'FU.AttributeWlpAbbr',
+	dex: 'FU.attributesAbbr.dex',
+	ins: 'FU.attributesAbbr.ins',
+	mig: 'FU.attributesAbbr.mig',
+	wlp: 'FU.attributesAbbr.wlp',
 };
 
 FU.currencies = {

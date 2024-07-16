@@ -29,8 +29,9 @@ export class FabulaItemSheet extends ItemSheet {
 		context.flags = itemData.flags;
 
 		//Add required CONFIG data
-		context.attrAbbr = CONFIG.FU.attributeAbbreviations;
-		context.damageTypes = CONFIG.FU.damageTypes;
+		context.attributes = CONFIG.FU.attributes;
+		context.attributesAbbr = CONFIG.FU.attributesAbbr;
+		context.DamageTypes = CONFIG.FU.DamageTypes;
 		context.weaponTypes = CONFIG.FU.weaponTypes;
 		context.SpellDurations = CONFIG.FU.SpellDurations;
 		context.SpellDisciplines = CONFIG.FU.SpellDisciplines;
