@@ -2,24 +2,55 @@
 	"FU": {
 		"attributes": {
 			"dex": "Destrezza",
-			"dexAbbr": "DES",
 			"ins": "Intuito",
-			"insAbbr": "INT",
 			"mig": "Vigore",
+			"wlp": "Volontà"
+		},
+		"attributesAbbr": {
+			"dexAbbr": "DES",
+			"insAbbr": "INT",
 			"migAbbr": "VIG",
-			"wlp": "Volontà",
 			"wlpAbbr": "VOL"
 		},
-		"mindPoint": "Punto Mente",
-		"mindPointPL": "Punti Mente",
-		"mindPointAbbr": "PM",
+		"MP": "Punti Mente",
+		"MPabbr": "PM",
+		"Zenit": "Zenit",
+		"ZenitPL": "Zenit",
+		"ZenitAbbr": "z",
 		"target": "Bersaglio",
 		"targetPL": "Bersagli",
 		"targetAbbr": "B",
 		"duration": "Durata",
-		"discipline": "Disciplina",
-		"disciplinePL": "Discipline",
-		"disciplineTypes": {
+		"DamageTypes": {
+			"physical": "physical",
+			"air": "air",
+			"bolt": "bolt",
+			"dark": "dark",
+			"earth": "earth",
+			"fire": "fire",
+			"ice": "ice",
+			"light": "light",
+			"poison": "poison"
+		},
+		"ItemTypes": {
+			"spell": "Incantesimo",
+			"spellPL": "Incantesimi",
+			"ritual": "Rituale",
+			"ritualPL": "Rituali",
+			"accessory": "Accessorio",
+			"accessoryPL": "Accessori",
+			"armor": "Armatura",
+			"armorPL": "Armature",
+			"weapon": "Arma",
+			"weaponPL": "Armi",
+			"shield": "Scudo",
+			"shieldPL": "Scudi",
+			"project": "Progetto",
+			"projectPL": "Progetti",
+			"consumable": "Consumabile",
+			"consumablePL": "Consumabili"
+		},
+		"MagicDisciplines": {
 			"arcanism": "Arcanismo",
 			"chimerism": "Chimerismo",
 			"elementalism": "Elementalismo",
@@ -27,76 +58,55 @@
 			"ritualism": "Ritualismo",
 			"spiritism": "Spiritismo"
 		},
-		"spellDuration": {
-			"instant": "Istantanea",
+		"SpellDurations": {
+			"instantaneous": "Istantanea",
 			"scene": "Scena"
 		},
 		"spellOpportunity": "Opportunità",
 		"spellOffensive": "Offensivo",
-		"spellEffect": "Effetto",
-		"equipmentCategory": {
-			"accessory": "Accessorio",
-			"accessoryPL": "Accessori",
-			"armor": "Armatura",
-			"armorPL": "Armature",
-			"shield": "Scudo",
-			"shieldPL": "Scudi",
-			"weapon": "Arma",
-			"weaponPL": "Armi"
-		},
-		"equipmentRarity": {
-			"basic": "Base",
-			"rare": "Raro"
-		},
-		"equipmentNoAbility": "Nessuna Qualità.",
-		"weaponTypes": {
-			"arcane": "Arcano",
-			"arcanePL": "Arcane",
-			"bow": "Arco",
-			"bowPL": "Archi",
-			"flail": "Flagello",
-			"flailPL": "Flagelli",
-			"firearm": "da Fuoco",
-			"firearmPL": "da Fuoco",
-			"spear": "Lancia",
-			"spearPL": "Lance",
-			"thrown": "da Lancio",
-			"thrownPL": "da Lancio",
-			"heavy": "Pesante",
-			"heavyPL": "Pesanti",
-			"dagger": "Pugnale",
-			"daggerPL": "Pugnali",
-			"brawling": "da Rissa",
-			"brawlingPL": "da Rissa",
-			"sword": "Spada",
-			"swordPL": "Spada"
-		},
-		"project": {
-			"potency": "Potenza",
-			"area": "Area",
-			"uses": "Usi"
-		},
-		"projectPotency": {
+		"potency": {
 			"minor": "Minore",
 			"medium": "Media",
 			"major": "Maggiore",
 			"extreme": "Estrema"
 		},
-		"projectArea": {
+		"area": {
 			"individual": "Individuale",
 			"small": "Piccola",
 			"large": "Grande",
 			"huge": "Enorme"
 		},
-		"projectUses": {
-			"consumable": "Consumabile",
-			"permanent": "Permanente"
+		"weaponCategories": {
+			"arcane": "Arcano",
+			"arcanePL": "Arcane",
+			"bow": "Arco",
+			"bowPL": "Archi",
+			"brawling": "da Rissa",
+			"brawlingPL": "da Rissa",
+			"dagger": "Pugnale",
+			"daggerPL": "Pugnali",
+			"firearm": "da Fuoco",
+			"firearmPL": "da Fuoco",
+			"flail": "Flagello",
+			"flailPL": "Flagelli",
+			"heavy": "Pesante",
+			"heavyPL": "Pesanti",
+			"spear": "Lancia",
+			"spearPL": "Lance",
+			"sword": "Spada",
+			"swordPL": "Spade",
+			"thrown": "da Lancio",
+			"thrownPL": "da Lancio"
 		},
-		"Item": {
-			"BaseName": "Nome",
-			"BaseDescription": "Descrizione",
-			"sheetMainTab": "Visualizza",
-			"sheetEditTab": "Modifica"
+		"WeaponRanges": {
+			"melee": "Mischia",
+			"ranged": "Distanza"
+		},
+		"Sheet": {
+			"Name": "Nome",
+			"DescriptionTab": "Descrizione",
+			"DetailsTab": "Dettagli",
+			"DamageTab": "Danno"
 		}
 	}
 }

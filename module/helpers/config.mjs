@@ -35,7 +35,6 @@ FU.currencies = {
  */
 
 FU.DamageTypes = {
-	untyped: 'FU.DamageTypes.untyped',
 	physical: 'FU.DamageTypes.physical',
 	air: 'FU.DamageTypes.air',
 	bolt: 'FU.DamageTypes.bolt',
@@ -124,7 +123,6 @@ FU.weaponCategories = {
 	spear: 'FU.weaponCategories.spear',
 	sword: 'FU.weaponCategories.sword',
 	thrown: 'FU.weaponCategories.thrown',
-	custom: 'FU.weaponCategories.custom',
 };
 
 /**
@@ -135,11 +133,4 @@ FU.weaponCategories = {
 FU.WeaponRanges = {
 	melee: 'FU.WeaponRanges.melee',
 	ranged: 'FU.WeaponRanges.ranged',
-};
-
-FU.porjectPotency = {
-	minor: 'FU.porjectPotency.minor',
-	medium: 'FU.porjectPotency.medium',
-	major: 'FU.porjectPotency.major',
-	extreme: 'FU.porjectPotency.extreme',
 };

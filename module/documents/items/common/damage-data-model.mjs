@@ -11,8 +11,8 @@ export class DamageDataModel extends foundry.abstract.DataModel {
 		const { SchemaField, StringField, BooleanField, NumberField } = foundry.data.fields;
 		return {
 			hasDamage: new SchemaField({ value: new BooleanField() }),
-			value: new NumberField({ initial: 0, integer: true, nullable: false }),
 			type: new SchemaField({ value: new StringField({ initial: 'physical', choices: Object.keys(FU.DamageTypes) }) }),
+			value: new NumberField({ initial: 0, integer: true, nullable: false }),
 		};
 	}
 }
