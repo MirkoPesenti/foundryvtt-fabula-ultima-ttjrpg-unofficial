@@ -6,6 +6,7 @@ import { FabulaItemSheet } from './sheets/item-sheet.mjs';
 
 // Helpers
 import { FU, SYSTEM } from './helpers/config.mjs';
+import { preloadPartialTemplates } from './helpers/templates.mjs';
 
 // Data Models
 import { SpellDataModel } from './documents/items/spell-data-model.mjs';
@@ -39,6 +40,8 @@ Hooks.once('init', async () => {
 	Items.registerSheet('fabula', FabulaItemSheet, {
 		makeDefault: true,
 	});
+
+	return preloadPartialTemplates();
 
 });
 
