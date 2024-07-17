@@ -11,7 +11,6 @@ import { FU } from '../../helpers/config.mjs';
  * @property {DamageDataModel} damage
  * @property {number} MPCost.value
  * @property {string} target.value
- * @property {number} target.MPCost
  * @property {number} target.number
  * @property {string} duration.value
  * @property {boolean} opportunity.value
@@ -29,7 +28,8 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 			isOffensive: new SchemaField({ value: new BooleanField() }),
 			attributes: new EmbeddedDataField(ItemAttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
 			damage: new EmbeddedDataField(DamageDataModel, {}),
-			target: new SchemaField({ value: new StringField(), MPCost: new NumberField({ initial: 1, min: 0, integer: true }), number: new NumberField({ initial: 1, min: 1, integer: true }) }),
+			MPCost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true }) }),
+			target: new SchemaField({ value: new StringField(), number: new NumberField({ initial: 1, min: 1, integer: true }) }),
 			duration: new SchemaField({ value: new StringField({ initial: 'instantaneous', choices: Object.keys(FU.SpellDurations) }) }),
 			opportunity: new SchemaField({ value: new BooleanField() }),
 			opportunityEffect: new HTMLField(),
@@ -38,9 +38,6 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 	}
 
 	prepareBaseData() {
-		const MPCost = this.target.MPCost * this.target.number;
-		(this.MPCost ??= {}).value = MPCost;
-
 		const typeAttributes = {
 			chimerism: [ 'mig', 'wlp' ],
 			elementalism: [ 'ins', 'wlp' ],

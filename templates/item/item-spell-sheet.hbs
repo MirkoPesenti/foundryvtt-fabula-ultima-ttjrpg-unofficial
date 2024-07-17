@@ -38,7 +38,7 @@
             <tbody>
                 <tr>
                     <td>
-                        {{system.target.MPCost}}
+                        {{system.MPCost.value}}
                         {{#gt system.target.number 1}}
                         x {{localize 'FU.targetAbbr'}}
                         {{/gt}}
@@ -69,7 +69,7 @@
             </div>
             <div class="form-group">
                 <label>{{localize 'FU.target'}}</label>
-                <input type="number" name="system.target.MPCost" value="{{system.target.MPCost}}" placeholder="{{localize 'FU.MP'}}">
+                <input type="number" name="system.MPCost.value" value="{{system.MPCost.value}}" placeholder="{{localize 'FU.MP'}}">
                 x
                 <input type="number" name="system.target.number" value="{{system.target.number}}" placeholder="{{localize 'FU.targetPL'}}">
             </div>
