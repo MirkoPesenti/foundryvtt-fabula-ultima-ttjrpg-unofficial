@@ -11,6 +11,7 @@ import { FU } from '../../helpers/config.mjs';
  * @property {string} area.value
  * @property {number} MPCost.value
  * @property {number} difficultyLevel.value
+ * @property {boolean} hasReduction.value
  * @property {boolean} hasClock.value
  * @property {ProgressDataModel} progress
  * @property {string} isFavorite.value
@@ -24,8 +25,9 @@ export class RitualDataModel extends foundry.abstract.TypeDataModel {
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
 			attributes: new EmbeddedDataField(ItemAttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
-			potency: new SchemaField({ value: new StringField({ initial: 'minor', choices: Object.keys(FU.potency) }) }),
-			area: new SchemaField({ value: new StringField({ initial: 'individual', choices: Object.keys(FU.area) }) }),
+			potency: new SchemaField({ value: new StringField({ initial: 'minor', choices: Object.keys(FU.potencyList) }) }),
+			area: new SchemaField({ value: new StringField({ initial: 'individual', choices: Object.keys(FU.areaList) }) }),
+			hasReduction: new SchemaField({ value: new BooleanField({ initial: false }) }),
 			hasClock: new SchemaField({ value: new BooleanField() }),
 			progress: new EmbeddedDataField(ProgressDataModel, { initial: { current: 0, step: 1, max: 4 } }),
 			isFavorite: new SchemaField({ value: new BooleanField() }),
@@ -38,7 +40,10 @@ export class RitualDataModel extends foundry.abstract.TypeDataModel {
 		const potencyDifficulty = { minor: 7, medium: 10, major: 13, extreme: 16 };
 		const potencyClock = { minor: 4, medium: 6, major: 6, extreme: 8 };
 
-		const MPCost = potencyCost[this.potency.value] * areaCost[this.area.value];
+		let MPCost = potencyCost[this.potency.value] * areaCost[this.area.value];
+		if ( this.hasReduction.value ) {
+			MPCost = MPCost / 2;
+		}
 		const difficultyLevel = potencyDifficulty[this.potency.value];
 		const clock = potencyClock[this.potency.value];
 

@@ -1,4 +1,18 @@
 {
+	"ACTOR": {
+		"TypeCharacter": "Personaggio",
+		"TypeNpc": "PNG"
+	},
+	"ITEM": {
+		"TypeWeapon": "Arma",
+		"TypeShield": "Scudo",
+		"TypeArmor": "Armatura",
+		"TypeAccessory": "Accessorio",
+		"TypeConsumable": "Consumabile",
+		"TypeSpell": "Incantesimi",
+		"TypeRitual": "Rituale",
+		"TypeProject": "Progetto"
+	},
 	"FU": {
 		"attributes": {
 			"dex": "Destrezza",
@@ -17,10 +31,16 @@
 		"Zenit": "Zenit",
 		"ZenitPL": "Zenit",
 		"ZenitAbbr": "z",
+		"cost": "Costo",
+		"rarity": "Rarità",
 		"target": "Bersaglio",
 		"targetPL": "Bersagli",
 		"targetAbbr": "B",
 		"duration": "Durata",
+		"difficultyLevel": "Livello di Difficoltà",
+		"difficultyLevelAbbr": "LD",
+		"potency": "Potenza",
+		"area": "Area",
 		"DamageTypes": {
 			"physical": "Fisico",
 			"air": "Aria",
@@ -64,18 +84,20 @@
 		},
 		"spellOpportunity": "Opportunità",
 		"spellOffensive": "Offensivo",
-		"potency": {
+		"potencyList": {
 			"minor": "Minore",
 			"medium": "Media",
 			"major": "Maggiore",
 			"extreme": "Estrema"
 		},
-		"area": {
+		"areaList": {
 			"individual": "Individuale",
 			"small": "Piccola",
 			"large": "Grande",
 			"huge": "Enorme"
 		},
+		"ritualReduction": "Riduzione",
+		"descriptionNoQuality": "Nessuna Qualità.",
 		"weaponCategories": {
 			"arcane": "Arcano",
 			"arcanePL": "Arcane",
@@ -101,6 +123,10 @@
 		"WeaponRanges": {
 			"melee": "Mischia",
 			"ranged": "Distanza"
+		},
+		"rarityList": {
+			"base": "Base",
+			"rare": "Raro"
 		},
 		"Sheet": {
 			"Name": "Nome",

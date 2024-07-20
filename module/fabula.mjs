@@ -9,8 +9,10 @@ import { FU, SYSTEM } from './helpers/config.mjs';
 import { preloadPartialTemplates } from './helpers/templates.mjs';
 
 // Data Models
-import { SpellDataModel } from './documents/items/spell-data-model.mjs';
+import { AccessoryDataModel } from './documents/items/accessory-data-model.mjs';
+import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
 import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
+import { SpellDataModel } from './documents/items/spell-data-model.mjs';
 
 /* ============================= */
 /* 			Init Hook			 */
@@ -31,8 +33,10 @@ Hooks.once('init', async () => {
 	// Custom document classes
 	CONFIG.Item.documentClass = FabulaItem;
 	CONFIG.Item.dataModels = {
-		spell: SpellDataModel,
+		accessory: AccessoryDataModel,
+		armor: ArmorDataModel,
 		ritual: RitualDataModel,
+		spell: SpellDataModel,
 	};
 
 	// Register Sheets
@@ -50,6 +54,10 @@ Hooks.once('setup', () => {});
 /* ============================= */
 /* 		Handlebars Helpers		 */
 /* ============================= */
+
+Handlebars.registerHelper('multiply', function( a, b ){
+	return ( a * b );
+});
 
 Handlebars.registerHelper('gt', function( a, b ){
 	var next =  arguments[arguments.length-1];

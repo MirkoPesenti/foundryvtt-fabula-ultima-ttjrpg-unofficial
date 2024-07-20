@@ -1,0 +1,71 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        <div class="profile-container">
+            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        </div>
+        <div class="header-fields">
+            <select name="system.type.value">
+                {{selectOptions SpellDisciplines selected=system.type.value sort=true localize=true}}
+            </select>
+            <h1 class="charname">
+                {{#if system.isOffensive.value}}
+                <div class="icon-offensive"></div>
+                {{/if}}
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+            </h1>
+            <div class="textarea-container">
+                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
+        <a class="item" data-tab="details">{{localize 'FU.Sheet.DetailsTab'}}</a>
+    </nav>
+
+    <section class="sheet-body">
+        <table>
+            <thead>
+                <tr>
+                    <th>{{localize 'FU.MPabbr'}}</th>
+                    <th>{{localize 'FU.difficultyLevelAbbr'}}</th>
+                    <th>{{localize 'FU.potency'}}</th>
+                    <th>{{localize 'FU.area'}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+						{{#if system.hasReduction.value}}
+							{{multiply system.MPCost.value 2}} / 2 ({{system.MPCost.value}})
+						{{else}}
+							{{system.MPCost.value}}
+						{{/if}}
+					</td>
+                    <td>{{system.difficultyLevel.value}}</td>
+                    <td>
+                        <select name="system.potency.value">
+                            {{selectOptions potencyList selected=system.potency.value localize=true}}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="system.area.value">
+                            {{selectOptions areaList selected=system.area.value localize=true}}
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+		<div class="tab desc" data-group="primary" data-tab="description">
+            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+		</div>
+		<div class="tab details" data-group="primary" data-tab="details">
+            <div class="form-group">
+                <label for="system.hasReduction.value">{{localize 'FU.ritualReduction'}}?</label>
+                <input type="checkbox" name="system.hasReduction.value" {{checked system.hasReduction.value}}>
+            </div>
+		</div>
+    </section>
+</form>

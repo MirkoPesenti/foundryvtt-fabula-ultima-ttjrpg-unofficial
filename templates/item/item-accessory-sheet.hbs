@@ -1,0 +1,40 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        <div class="profile-container">
+            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        </div>
+        <div class="header-fields">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+            </h1>
+            <div class="textarea-container">
+                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
+            </div>
+        </div>
+    </header>
+
+    <section class="sheet-body">
+        <table>
+            <thead>
+                <tr>
+                    <th>{{localize 'FU.rarity'}}</th>
+                    <th>{{localize 'FU.cost'}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select name="system.rarity.value">
+                            {{selectOptions rarityList selected=system.rarity.value localize=true}}
+                        </select>
+                    </td>
+                    <td>
+                        <input name="system.cost.value" type="number" value="{{system.cost.value}}" placeholder="{{localize 'FU.Zenit'}}"/> {{localize 'FU.ZenitAbbr'}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+    </section>
+</form>

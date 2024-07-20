@@ -29,6 +29,11 @@ FU.currencies = {
 	},
 };
 
+FU.rarityList = {
+	base: 'FU.rarityList.base',
+	rare: 'FU.rarityList.rare'
+};
+
 /**
  * @typedef {"untyped", "physical", "air", "bolt", "dark", "earth", "fire", "ice", "light", "poison"} DamageTypes
  * @type {Object<DamageTypes, string}
@@ -93,18 +98,18 @@ FU.SpellDurations = {
 	scene: 'FU.SpellDurations.scene',
 };
 
-FU.potency = {
-	minor: 'FU.potency.minor',
-	medium: 'FU.potency.medium',
-	major: 'FU.potency.major',
-	extreme: 'FU.potency.extreme',
+FU.potencyList = {
+	minor: 'FU.potencyList.minor',
+	medium: 'FU.potencyList.medium',
+	major: 'FU.potencyList.major',
+	extreme: 'FU.potencyList.extreme',
 };
 
-FU.area = {
-	individual: 'FU.area.individual',
-	small: 'FU.area.small',
-	large: 'FU.area.large',
-	huge: 'FU.area.huge',
+FU.areaList = {
+	individual: 'FU.areaList.individual',
+	small: 'FU.areaList.small',
+	large: 'FU.areaList.large',
+	huge: 'FU.areaList.huge',
 };
 
 /**
