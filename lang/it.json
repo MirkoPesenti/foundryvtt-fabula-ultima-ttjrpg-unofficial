@@ -41,6 +41,10 @@
 		"difficultyLevelAbbr": "LD",
 		"potency": "Potenza",
 		"area": "Area",
+		"defence": "Difesa",
+		"magicDefence": "Difesa Magica",
+		"magicDefenceAbbr": "D. Magica",
+		"equipmentMartial": "Marziale",
 		"DamageTypes": {
 			"physical": "Fisico",
 			"air": "Aria",

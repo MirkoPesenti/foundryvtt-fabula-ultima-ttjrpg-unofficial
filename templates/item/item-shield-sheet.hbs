@@ -20,6 +20,8 @@
                 <tr>
                     <th>{{localize 'FU.rarity'}}</th>
                     <th>{{localize 'FU.cost'}}</th>
+                    <th>{{localize 'FU.defence'}}</th>
+                    <th>{{localize 'FU.magicDefenceAbbr'}}</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +33,12 @@
                     </td>
                     <td>
                         <input name="system.cost.value" type="number" value="{{system.cost.value}}" placeholder="{{localize 'FU.Zenit'}}"/> {{localize 'FU.ZenitAbbr'}}
+                    </td>
+                    <td>
+                        <input name="system.defenceBonus.value" type="number" value="{{system.defenceBonus.value}}" placeholder="{{localize 'FU.defence'}}"/>
+                    </td>
+                    <td>
+                        <input name="system.magicDefenceBonus.value" type="number" value="{{system.magicDefenceBonus.value}}" placeholder="{{localize 'FU.magicDefence'}}"/>
                     </td>
                 </tr>
             </tbody>
