@@ -16,6 +16,10 @@ End Typography
 ------------------------------------------
 */
 
+/* Utilities */
+.text-center {text-align:center;}
+.input-sm {display:inline-block;width:auto !important;}
+
 /* 【】 */
 .fabula .editor {height:100%;min-height:25em;}
 
@@ -24,6 +28,7 @@ End Typography
 .sheet header.sheet-header .profile-container {position:absolute;bottom:0;left:0;z-index:1;border-radius:100%;overflow:hidden;width:150px;height:150px;border:3px solid #a1c4b6;flex:0 0 150px;padding:3px;background:url(/ui/parchment.jpg) repeat;}
 .sheet header.sheet-header img {width:100%;height:100%;object-fit:contain;border:2px solid #a1c4b6;margin:0;border-radius:100%;}
 .sheet header.sheet-header .header-fields {flex:0;flex-grow:1;}
+.sheet header.sheet-header .header-fields > select {position:absolute;top:0;right:0;}
 .sheet header.sheet-header h1 {padding-left:180px;position:relative;}
 .sheet header.sheet-header h1 .icon-offensive {width:20px;height:20px;border-radius:100%;background-color:red;position:absolute;top:50%;left:150px;transform:translate(0,-50%);}
 .sheet header.sheet-header h1 input {width:100%;margin:0;padding:0;box-shadow:none;border:0;border-radius:0;background-color:transparent;text-transform:uppercase;color:#31534a;font-weight:700;}
@@ -36,3 +41,13 @@ End Typography
 .sheet nav.sheet-tabs > [data-tab]:hover {background-color:rgba(49,83,74,.1);}
 .sheet nav.sheet-tabs > [data-tab].active {background-color:#31534a;color:#fff;}
 .sheet nav.sheet-tabs > [data-tab].disabled {color:rgba(49,83,74,.3);background-color:transparent;pointer-events:none;}
+
+/* Sheets > Tables */
+.sheet .sheet-body table tbody td {text-align:center;}
+
+/* Project > Progressbar */
+.project-progressbar {display:flex;gap:10px;}
+.project-progressbar button {width:34px;flex-shrink:0;}
+.project-progressbar button[disabled] {opacity:.3;pointer-events:none;}
+.project-progressbar .progressbar {flex-grow:1;border:1px solid #31534a;border-radius:15px;position:relative;overflow:hidden;}
+.project-progressbar .progressbar .progress {position:absolute;top:0;left:0;bottom:0;height:100%;display:flex;align-items:center;justify-content:center;background-color:#31534a;color:#fff;min-width:100px;max-width:100%;}

@@ -112,6 +112,11 @@ FU.areaList = {
 	huge: 'FU.areaList.huge',
 };
 
+FU.usesList = {
+	consumable: 'FU.usesList.consumable',
+	permanent: 'FU.usesList.permanent',
+};
+
 /**
  * @typedef {"arcane", "bow", "brawling", "dagger", "firearm", "flail", "heavy", "spear", "sword", "thrown", "custom"} WeaponCategory
  * @type {Object.<WeaponCategory, string>}

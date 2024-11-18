@@ -5,9 +5,6 @@
             <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
         </div>
         <div class="header-fields">
-            <select name="system.type.value">
-                {{selectOptions SpellDisciplines selected=system.type.value sort=true localize=true}}
-            </select>
             <h1 class="charname">
                 <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
             </h1>
@@ -26,22 +23,20 @@
         <table>
             <thead>
                 <tr>
-                    <th>{{localize 'FU.MPabbr'}}</th>
-                    <th>{{localize 'FU.difficultyLevelAbbr'}}</th>
+                    <th>{{localize 'FU.ZenitPL'}}</th>
                     <th>{{localize 'FU.potency'}}</th>
                     <th>{{localize 'FU.area'}}</th>
+                    <th>{{localize 'FU.uses'}}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>
-						{{#if system.hasReduction.value}}
-							{{multiply system.MPCost.value 2}} / 2 ({{system.MPCost.value}})
-						{{else}}
-							{{system.MPCost.value}}
+                        {{system.ZCost.value}} {{localize 'FU.ZenitAbbr'}}
+						{{#if system.hasFlaw.value}}
+							(- 25%)
 						{{/if}}
 					</td>
-                    <td>{{system.difficultyLevel.value}}</td>
                     <td>
                         <select name="system.potency.value">
                             {{selectOptions potencyList selected=system.potency.value localize=true}}
@@ -52,16 +47,30 @@
                             {{selectOptions areaList selected=system.area.value localize=true}}
                         </select>
                     </td>
+                    <td>
+                        <select name="system.uses.value">
+                            {{selectOptions usesList selected=system.uses.value localize=true}}
+                        </select>
+                    </td>
                 </tr>
             </tbody>
         </table>
+        <div class="project-progressbar">
+            <button type="button" class="projectProgressBtnMinus" {{#sm_e system.progress.current 0}}disabled{{/sm_e}}>-</button>
+            <div class="progressbar">
+                <div class="progress" style="width:{{percentage system.progress.current system.progress.max}}%">
+                    {{system.progress.current}} / {{system.progress.max}}
+                </div>
+            </div>
+            <button type="button" class="projectProgressBtnPlus" {{#gt_e system.progress.current system.progress.max}}disabled{{/gt_e}}>+</button>
+        </div>
 		<div class="tab desc" data-group="primary" data-tab="description">
             {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
 		</div>
 		<div class="tab details" data-group="primary" data-tab="details">
             <div class="form-group">
-                <label for="system.hasReduction.value">{{localize 'FU.ritualReduction'}}?</label>
-                <input type="checkbox" name="system.hasReduction.value" {{checked system.hasReduction.value}}>
+                <label for="system.hasFlaw.value">{{localize 'FU.projectFlaw'}}?</label>
+                <input type="checkbox" name="system.hasFlaw.value" {{checked system.hasFlaw.value}}>
             </div>
 		</div>
     </section>

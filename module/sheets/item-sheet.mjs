@@ -1,4 +1,5 @@
 import { FU } from "../helpers/config.mjs";
+import { changeProjectProgress } from "../helpers/effects.mjs";
 
 /**
  * Extend basic ItemSheet
@@ -37,6 +38,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.SpellDisciplines = CONFIG.FU.SpellDisciplines;
 		context.potencyList = CONFIG.FU.potencyList;
 		context.areaList = CONFIG.FU.areaList;
+		context.usesList = CONFIG.FU.usesList;
 		context.rarityList = CONFIG.FU.rarityList;
 
 		context.enrichedHtml = {
@@ -51,6 +53,9 @@ export class FabulaItemSheet extends ItemSheet {
 
 	activateListeners( html ) {
 		super.activateListeners( html );
+
+		html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
+		html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
 
 		if (!this.isEditable) return;
 	}
