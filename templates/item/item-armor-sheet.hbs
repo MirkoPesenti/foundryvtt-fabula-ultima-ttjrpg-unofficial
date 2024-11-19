@@ -6,6 +6,9 @@
         </div>
         <div class="header-fields">
             <h1 class="charname">
+                {{#if system.isMartial.value}}
+                <div class="icon-offensive"></div>
+                {{/if}}
                 <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
             </h1>
             <div class="textarea-container">

@@ -19,7 +19,7 @@ export class ArmorDataModel extends foundry.abstract.TypeDataModel {
 		return {
 			summary: new SchemaField({ value: new StringField() }),
 			isMartial: new SchemaField({ value: new BooleanField() }),
-			description: new HTMLField({ initial: 'FU.descriptionNoQuality' }),
+			description: new HTMLField(),
 			rarity: new SchemaField({ value: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }) }),
 			cost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true }) }),
 			isDefenseFixed: new SchemaField({ value: new BooleanField() }),

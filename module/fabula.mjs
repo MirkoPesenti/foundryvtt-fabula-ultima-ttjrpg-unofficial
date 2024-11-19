@@ -10,10 +10,13 @@ import { preloadPartialTemplates } from './helpers/templates.mjs';
 
 // Data Models
 import { AccessoryDataModel } from './documents/items/accessory-data-model.mjs';
+import { WeaponDataModel } from './documents/items/weapon-data-model.mjs';
 import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
-import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
-import { ProjectDataModel } from './documents/items/project-data-model.mjs';
+import { ConsumableDataModel } from './documents/items/consumable-data-model.mjs';
 import { SpellDataModel } from './documents/items/spell-data-model.mjs';
+import { ProjectDataModel } from './documents/items/project-data-model.mjs';
+import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
+import { ShieldDataModel } from './documents/items/shield-data-model.mjs';
 
 /* ============================= */
 /* 			Init Hook			 */
@@ -36,9 +39,12 @@ Hooks.once('init', async () => {
 	CONFIG.Item.dataModels = {
 		accessory: AccessoryDataModel,
 		armor: ArmorDataModel,
-		ritual: RitualDataModel,
-		project: ProjectDataModel,
+		weapon: WeaponDataModel,
+		consumable: ConsumableDataModel,
 		spell: SpellDataModel,
+		project: ProjectDataModel,
+		ritual: RitualDataModel,
+		shield: ShieldDataModel,
 	};
 
 	// Register Sheets
@@ -52,6 +58,12 @@ Hooks.once('init', async () => {
 });
 
 Hooks.once('setup', () => {});
+
+Hooks.on('updateItem', async ( item, updateData, options, userId ) => {
+	if ( item.type === 'project' && item.system.progress.current > item.system.progress.max ) {
+		await item.update({ 'system.progress.current': item.system.progress.max });
+	}
+});
 
 /* ============================= */
 /* 		Handlebars Helpers		 */

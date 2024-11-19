@@ -49,6 +49,9 @@
 		"magicDefenceAbbr": "D. Magica",
 		"equipmentMartial": "Marziale",
 		"type": "Tipologia",
+		"requiredHands": "Mani richieste",
+		"oneHand": "Una mano",
+		"twoHands": "Due mani",
 		"DamageTypes": {
 			"physical": "Fisico",
 			"air": "Aria",
@@ -133,6 +136,7 @@
 			"thrown": "da Lancio",
 			"thrownPL": "da Lancio"
 		},
+		"range": "Portata",
 		"WeaponRanges": {
 			"melee": "Mischia",
 			"ranged": "Distanza"

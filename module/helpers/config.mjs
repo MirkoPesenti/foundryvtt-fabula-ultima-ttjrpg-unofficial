@@ -89,7 +89,7 @@ FU.SpellDisciplines = {
 };
 
 /**
- * @typedef {"melee", "ranged"} SpellDurations
+ * @typedef {"instantaneous", "scene"} SpellDurations
  * @type {Object.<SpellDurations, string>}
  */
 

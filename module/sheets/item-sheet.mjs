@@ -33,7 +33,8 @@ export class FabulaItemSheet extends ItemSheet {
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
 		context.DamageTypes = CONFIG.FU.DamageTypes;
-		context.weaponTypes = CONFIG.FU.weaponTypes;
+		context.WeaponRanges = CONFIG.FU.WeaponRanges;
+		context.weaponCategories = CONFIG.FU.weaponCategories;
 		context.SpellDurations = CONFIG.FU.SpellDurations;
 		context.SpellDisciplines = CONFIG.FU.SpellDisciplines;
 		context.potencyList = CONFIG.FU.potencyList;

@@ -1,0 +1,93 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        <div class="profile-container">
+            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        </div>
+        <div class="header-fields">
+            <select name="system.type.value">
+                {{selectOptions weaponCategories selected=system.type.value sort=true localize=true}}
+            </select>
+            <h1 class="charname">
+                {{#if system.isMartial.value}}
+                <div class="icon-offensive"></div>
+                {{/if}}
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+            </h1>
+            <div class="textarea-container">
+                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
+        <a class="item" data-tab="damage">{{localize 'FU.Sheet.DamageTab'}}</a>
+    </nav>
+
+    <section class="sheet-body">
+        <table>
+            <thead>
+                <tr>
+                    <th>{{localize 'FU.rarity'}}</th>
+                    <th>{{localize 'FU.cost'}}</th>
+                    <th>{{localize 'FU.range'}}</th>
+                    <th>{{localize 'FU.requiredHands'}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <select name="system.rarity.value">
+                            {{selectOptions rarityList selected=system.rarity.value localize=true}}
+                        </select>
+                    </td>
+                    <td>
+                        <input name="system.cost.value" class="input-sm" type="number" value="{{system.cost.value}}" placeholder="{{localize 'FU.Zenit'}}"/> {{localize 'FU.ZenitAbbr'}}
+                    </td>
+                    <td>
+                        <select name="system.range.value">
+                            {{selectOptions WeaponRanges selected=system.range.value localize=true}}
+                        </select>
+                    </td>
+                    <td>
+						{{#if system.needTwoHands.value}}
+							{{localize 'FU.twoHands'}}
+						{{else}}
+                            {{localize 'FU.oneHand'}}
+						{{/if}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+		<div class="tab desc" data-group="primary" data-tab="description">
+            <div class="form-group">
+                <label for="system.isMartial.value">{{localize 'FU.equipmentMartial'}}?</label>
+                <input type="checkbox" name="system.isMartial.value" {{checked system.isMartial.value}}>
+            </div>
+            <div class="form-group">
+                <label for="system.needTwoHands.value">{{localize 'FU.twoHands'}}?</label>
+                <input type="checkbox" name="system.needTwoHands.value" {{checked system.needTwoHands.value}}>
+            </div>
+            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+        </div>
+        <div class="tab dmg" data-gr="primary" data-tab="damage">
+            <div class="form-group">
+                <label>Test di Magia:</label>
+                <select name="system.attributes.primary">
+                    {{selectOptions attributes selected=system.attributes.primary sort=true localize=true}}
+                </select>
+                +
+                <select name="system.attributes.secondary">
+                    {{selectOptions attributes selected=system.attributes.secondary sort=true localize=true}}
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="number" name="system.damage.value" value="{{system.damage.value}}" placeholder="Danno">
+                <select name="system.damage.type">
+                    {{selectOptions DamageTypes selected=system.damage.type sort=true localize=true}}
+                </select>
+            </div>
+        </div>
+    </section>
+</form>
