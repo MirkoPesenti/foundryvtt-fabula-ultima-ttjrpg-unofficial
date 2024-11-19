@@ -28,6 +28,8 @@
 		},
 		"MP": "Punti Mente",
 		"MPabbr": "PM",
+		"IP": "Punti Inventario",
+		"IPabbr": "PI",
 		"Zenit": "Zenit",
 		"ZenitPL": "Zenit",
 		"ZenitAbbr": "z",
@@ -46,6 +48,7 @@
 		"magicDefence": "Difesa Magica",
 		"magicDefenceAbbr": "D. Magica",
 		"equipmentMartial": "Marziale",
+		"type": "Tipologia",
 		"DamageTypes": {
 			"physical": "Fisico",
 			"air": "Aria",
