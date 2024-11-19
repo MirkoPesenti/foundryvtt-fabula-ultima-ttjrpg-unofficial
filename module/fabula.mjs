@@ -1,7 +1,9 @@
 // Classes
+import { FabulaActor } from './documents/actors/actor.mjs';
 import { FabulaItem } from './documents/items/item.mjs';
 
 // Sheets
+import { FabulaActorSheet } from './sheets/actor-sheet.mjs';
 import { FabulaItemSheet } from './sheets/item-sheet.mjs';
 
 // Helpers
@@ -9,6 +11,8 @@ import { FU, SYSTEM } from './helpers/config.mjs';
 import { preloadPartialTemplates } from './helpers/templates.mjs';
 
 // Data Models
+import { CharacterDataModel } from './documents/actors/character-data-model.mjs';
+import { NpcDataModel } from './documents/actors/npc-data-model.mjs';
 import { AccessoryDataModel } from './documents/items/accessory-data-model.mjs';
 import { WeaponDataModel } from './documents/items/weapon-data-model.mjs';
 import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
@@ -31,10 +35,16 @@ Hooks.once('init', async () => {
 
 	// Utilities classes to global game object
 	game.fabula = {
+		FabulaActor,
 		FabulaItem,
 	};
 
 	// Custom document classes
+	CONFIG.Actor.documentClass = FabulaActor;
+	CONFIG.Actor.dataModels = {
+		character: CharacterDataModel,
+		npc: NpcDataModel,
+	};
 	CONFIG.Item.documentClass = FabulaItem;
 	CONFIG.Item.dataModels = {
 		accessory: AccessoryDataModel,
@@ -48,6 +58,10 @@ Hooks.once('init', async () => {
 	};
 
 	// Register Sheets
+	Actors.unregisterSheet('core', ActorSheet);
+	Actors.registerSheet('fabula', FabulaActorSheet, {
+		makeDefault: true,
+	});
 	Items.unregisterSheet('core', ItemSheet);
 	Items.registerSheet('fabula', FabulaItemSheet, {
 		makeDefault: true,

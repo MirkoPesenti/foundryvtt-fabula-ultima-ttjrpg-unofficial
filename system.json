@@ -2,7 +2,7 @@
 	"id": "fabula",
 	"title": "Fabula Ultima TTJRPG (Unofficial)",
 	"description": "An Unofficial system for playing Fabula Ultima in the Foundry Virtual Tabletop environment.",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"authors": [
 		{
 			"name": "OmegaPrime",
@@ -14,8 +14,9 @@
 		}
 	],
 	"compatibility": {
-		"minimum": "12.328",
-		"verified": "12.328"
+		"minimum": "12",
+		"verified": "12",
+		"maximum": "12"
 	},
 	"esmodules": ["module/fabula.mjs"],
 	"styles": ["assets/css/fabula.css"],
@@ -42,5 +43,6 @@
 	},
 	"socket": true,
 	"readme": "README.md",
-	"url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical"
+	"url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical",
+	"manifest": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/blob/main/system.json"
 }

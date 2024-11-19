@@ -1,17 +1,19 @@
 {
-	"ACTOR": {
-		"TypeCharacter": "Personaggio",
-		"TypeNpc": "PNG"
-	},
-	"ITEM": {
-		"TypeWeapon": "Arma",
-		"TypeShield": "Scudo",
-		"TypeArmor": "Armatura",
-		"TypeAccessory": "Accessorio",
-		"TypeConsumable": "Consumabile",
-		"TypeSpell": "Incantesimi",
-		"TypeRitual": "Rituale",
-		"TypeProject": "Progetto"
+	"TYPES": {
+		"Actor": {
+			"character": "Personaggio",
+			"npc": "PNG"
+		},
+		"Item": {
+			"weapon": "Arma",
+			"shield": "Scudo",
+			"armor": "Armatura",
+			"accessory": "Accessorio",
+			"consumable": "Consumabile",
+			"spell": "Incantesimi",
+			"ritual": "Rituale",
+			"project": "Progetto"
+		}
 	},
 	"FU": {
 		"attributes": {
