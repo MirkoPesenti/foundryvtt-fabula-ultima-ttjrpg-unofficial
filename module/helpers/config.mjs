@@ -144,3 +144,18 @@ FU.WeaponRanges = {
 	melee: 'FU.WeaponRanges.melee',
 	ranged: 'FU.WeaponRanges.ranged',
 };
+
+FU.bondType1 = {
+	admiration: 'FU.bond.admiration',
+	inferiority: 'FU.bond.inferiority',
+};
+
+FU.bondType2 = {
+	loyalty: 'FU.bond.loyalty',
+	mistrust: 'FU.bond.mistrust',
+};
+
+FU.bondType3 = {
+	affection: 'FU.bond.affection',
+	hatred: 'FU.bond.hatred',
+};

@@ -1,4 +1,4 @@
-import { ItemAttributesDataModel } from './common/item-attributes-data-model.mjs';
+import { AttributesDataModel } from './common/attributes-data-model.mjs';
 import { DamageDataModel } from './common/damage-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
@@ -7,7 +7,7 @@ import { FU } from '../../helpers/config.mjs';
  * @property {string} summary.value
  * @property {string} description
  * @property {boolean} isOffensive.value
- * @property {ItemAttributesDataModel} attributes
+ * @property {AttributesDataModel} attributes
  * @property {DamageDataModel} damage
  * @property {number} MPCost.value
  * @property {string} target.value
@@ -26,7 +26,7 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
 			isOffensive: new SchemaField({ value: new BooleanField() }),
-			attributes: new EmbeddedDataField(ItemAttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
+			attributes: new EmbeddedDataField(AttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
 			damage: new EmbeddedDataField(DamageDataModel, {}),
 			MPCost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true }) }),
 			target: new SchemaField({ value: new StringField(), number: new NumberField({ initial: 1, min: 1, integer: true }) }),

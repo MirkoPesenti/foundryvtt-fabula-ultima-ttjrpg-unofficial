@@ -65,6 +65,14 @@
 			"light": "Luce",
 			"poison": "Veleno"
 		},
+		"Status": {
+			"slow": "Lento",
+			"dazed": "Confuso",
+			"weak": "Debole",
+			"shaken": "Scosso",
+			"enraged": "Furente",
+			"poisoned": "Avvelenato"
+		},
 		"ItemTypes": {
 			"spell": "Incantesimo",
 			"spellPL": "Incantesimi",
@@ -152,6 +160,14 @@
 			"DescriptionTab": "Descrizione",
 			"DetailsTab": "Dettagli",
 			"DamageTab": "Danno"
+		},
+		"bond": {
+			"admiration": "Ammirazione",
+			"inferiority": "Inferiotità",
+			"loyalty": "Lealtà",
+			"mistrust": "Sfiducia",
+			"affection": "Affetto",
+			"hatred": "Odio"
 		}
 	}
 }

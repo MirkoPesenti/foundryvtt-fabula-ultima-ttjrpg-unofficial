@@ -5,7 +5,7 @@ import { FU } from '../../../helpers/config.mjs';
  * @property {"dex", "ins", "mig", "wlp"} primary.value
  */
 
-export class ItemAttributesDataModel extends foundry.abstract.DataModel {
+export class AttributesDataModel extends foundry.abstract.DataModel {
 	static defineSchema() {
 		const { SchemaField, StringField } = foundry.data.fields;
 		return {

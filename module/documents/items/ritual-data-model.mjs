@@ -1,4 +1,4 @@
-import { ItemAttributesDataModel } from './common/item-attributes-data-model.mjs';
+import { AttributesDataModel } from './common/attributes-data-model.mjs';
 import { ProgressDataModel } from './common/progress-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
@@ -6,7 +6,7 @@ import { FU } from '../../helpers/config.mjs';
  * @property {string} type.value
  * @property {string} summary
  * @property {string} description
- * @property {ItemAttributesDataModel} attributes
+ * @property {AttributesDataModel} attributes
  * @property {string} potency.value
  * @property {string} area.value
  * @property {number} MPCost.value
@@ -24,7 +24,7 @@ export class RitualDataModel extends foundry.abstract.TypeDataModel {
 			type: new SchemaField({ value: new StringField({ initial: 'arcanism', choices: Object.keys(FU.MagicDisciplines) }) }),
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
-			attributes: new EmbeddedDataField(ItemAttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
+			attributes: new EmbeddedDataField(AttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
 			potency: new SchemaField({ value: new StringField({ initial: 'minor', choices: Object.keys(FU.potencyList) }) }),
 			area: new SchemaField({ value: new StringField({ initial: 'individual', choices: Object.keys(FU.areaList) }) }),
 			hasReduction: new SchemaField({ value: new BooleanField({ initial: false }) }),
