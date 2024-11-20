@@ -74,4 +74,9 @@ export class FabulaItemSheet extends ItemSheet {
 		return data;
 	}
 
+	get isEquipped() {
+		if ( this.actor ) return this.actor.system.equip.isEquipped(this);
+		return false;
+	}
+
 }

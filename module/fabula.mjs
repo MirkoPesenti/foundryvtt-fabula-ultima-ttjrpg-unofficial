@@ -73,6 +73,9 @@ Hooks.once('init', async () => {
 
 Hooks.once('setup', () => {});
 
+Hooks.once('ready', async function () {
+});
+
 Hooks.on('updateItem', async ( item, updateData, options, userId ) => {
 	if ( item.type === 'project' && item.system.progress.current > item.system.progress.max ) {
 		await item.update({ 'system.progress.current': item.system.progress.max });

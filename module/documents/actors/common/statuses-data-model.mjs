@@ -8,7 +8,7 @@ import { StatusDataModel } from "./status-data-model.mjs";
  * @property {StatusDataModel} enraged
  * @property {StatusDataModel} poisoned
  */
-export class AttributesDataModel extends foundry.abstract.DataModel {
+export class StatusesDataModel extends foundry.abstract.DataModel {
 	static defineSchema() {
 		const { EmbeddedDataField } = foundry.data.fields;
 		return ({
