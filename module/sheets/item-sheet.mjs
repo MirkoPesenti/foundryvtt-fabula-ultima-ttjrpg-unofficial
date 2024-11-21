@@ -41,6 +41,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.areaList = CONFIG.FU.areaList;
 		context.usesList = CONFIG.FU.usesList;
 		context.rarityList = CONFIG.FU.rarityList;
+		context.martialItems = CONFIG.FU.martialItems;
 
 		context.enrichedHtml = {
 			description: await TextEditor.enrichHTML( context.system.description ?? '' ),

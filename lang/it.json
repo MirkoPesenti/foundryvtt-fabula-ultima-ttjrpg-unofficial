@@ -12,7 +12,9 @@
 			"consumable": "Consumabile",
 			"spell": "Incantesimi",
 			"ritual": "Rituale",
-			"project": "Progetto"
+			"project": "Progetto",
+			"class": "Classe",
+			"classFeature": "Abilità di classe"
 		}
 	},
 	"FU": {
@@ -168,6 +170,12 @@
 			"mistrust": "Sfiducia",
 			"affection": "Affetto",
 			"hatred": "Odio"
+		},
+		"martialItems": {
+			"meleeWeapon": "Armi da mischia marziali",
+			"rangedWeapon": "Armi a distanza marziali",
+			"armor": "Armature marziali",
+			"shield": "Scudi marziali"
 		}
 	}
 }

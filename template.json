@@ -6,15 +6,17 @@
 		"npc": {}
 	},
 	"Item": {
-		"types": ["spell", "ritual", "accessory", "armor", "weapon", "shield", "project", "consumable"],
+		"types": ["accessory", "armor", "class", "classFeature", "consumable", "project", "ritual", "shield", "spell", "weapon"],
 		"htmlFields": ["description"],
-		"spell": {},
-		"ritual": {},
 		"accessory": {},
 		"armor": {},
-		"weapon": {},
-		"shield": {},
+		"class": {},
+		"classFeature": {},
+		"consumable": {},
 		"project": {},
-		"consumable": {}
+		"ritual": {},
+		"shield": {},
+		"spell": {},
+		"weapon": {}
 	}
 }

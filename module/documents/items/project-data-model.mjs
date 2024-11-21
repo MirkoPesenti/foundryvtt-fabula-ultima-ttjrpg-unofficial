@@ -11,12 +11,11 @@ import { FU } from '../../helpers/config.mjs';
  * @property {boolean} hasReduction.value
  * @property {boolean} hasClock.value
  * @property {ProgressDataModel} progress
- * @property {string} isFavorite.value
  */
 
 export class ProjectDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, StringField, HTMLField, BooleanField, NumberField, EmbeddedDataField } = foundry.data.fields;
+		const { SchemaField, StringField, HTMLField, BooleanField, EmbeddedDataField } = foundry.data.fields;
 		return {
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
@@ -25,7 +24,6 @@ export class ProjectDataModel extends foundry.abstract.TypeDataModel {
 			uses: new SchemaField({ value: new StringField({ initial: 'consumable', choices: Object.keys(FU.usesList) }) }),
 			hasFlaw: new SchemaField({ value: new BooleanField({ initial: false }) }),
 			progress: new EmbeddedDataField(ProgressDataModel, { initial: { current: 0, step: 1, max: 1 } }),
-			isFavorite: new SchemaField({ value: new BooleanField() }),
 		};
 	}
 

@@ -19,12 +19,14 @@
         </button>
 
         <ul>
-            <li>Armatura: {{system.equip.armor}}</li>
-            <li>Mano primaria: {{system.equip.mainHand}}</li>
-            <li>Mano secondaria: {{system.equip.offHand}}</li>
-            <li>Accessorio: {{system.equip.accessory}}</li>
+            {{#each items}}
+            {{#if (eq this.type "class")}}
+                <li>{{this.name}}</li>
+            {{/if}}
+            {{/each}}
         </ul>
 
         <button type="button" class="getActor">log</button>
+        <button type="button" class="addClass">Classe</button>
     </section>
 </form>

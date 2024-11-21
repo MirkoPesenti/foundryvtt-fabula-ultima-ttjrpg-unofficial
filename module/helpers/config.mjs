@@ -145,6 +145,13 @@ FU.WeaponRanges = {
 	ranged: 'FU.WeaponRanges.ranged',
 };
 
+FU.martialItems = {
+	meleeWeapon: 'FU.martialItems.meleeWeapon',
+	rangedWeapon: 'FU.martialItems.rangedWeapon',
+	armor: 'FU.martialItems.armor',
+	shield: 'FU.martialItems.shield',
+};
+
 FU.bondType1 = {
 	admiration: 'FU.bond.admiration',
 	inferiority: 'FU.bond.inferiority',

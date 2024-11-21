@@ -10,9 +10,11 @@ import { FabulaItemSheet } from './sheets/item-sheet.mjs';
 import { FU, SYSTEM } from './helpers/config.mjs';
 import { preloadPartialTemplates } from './helpers/templates.mjs';
 
-// Data Models
+// Actors Data Models
 import { CharacterDataModel } from './documents/actors/character-data-model.mjs';
 import { NpcDataModel } from './documents/actors/npc-data-model.mjs';
+
+// Items Data Models
 import { AccessoryDataModel } from './documents/items/accessory-data-model.mjs';
 import { WeaponDataModel } from './documents/items/weapon-data-model.mjs';
 import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
@@ -21,6 +23,8 @@ import { SpellDataModel } from './documents/items/spell-data-model.mjs';
 import { ProjectDataModel } from './documents/items/project-data-model.mjs';
 import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
 import { ShieldDataModel } from './documents/items/shield-data-model.mjs';
+import { CLassDataModel } from './documents/items/class-data-model .mjs';
+import { CLassFeatureDataModel } from './documents/items/class-feature-model.mjs';
 
 /* ============================= */
 /* 			Init Hook			 */
@@ -55,6 +59,8 @@ Hooks.once('init', async () => {
 		project: ProjectDataModel,
 		ritual: RitualDataModel,
 		shield: ShieldDataModel,
+		class: CLassDataModel,
+		classFeature: CLassFeatureDataModel
 	};
 
 	// Register Sheets

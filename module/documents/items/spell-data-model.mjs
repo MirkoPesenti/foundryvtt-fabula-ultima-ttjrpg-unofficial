@@ -15,7 +15,6 @@ import { FU } from '../../helpers/config.mjs';
  * @property {string} duration.value
  * @property {boolean} opportunity.value
  * @property {string} opportunityEffect
- * @property {boolean} isFavorite.value
  */
 
 export class SpellDataModel extends foundry.abstract.TypeDataModel {
@@ -33,7 +32,6 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 			duration: new SchemaField({ value: new StringField({ initial: 'instantaneous', choices: Object.keys(FU.SpellDurations) }) }),
 			opportunity: new SchemaField({ value: new BooleanField() }),
 			opportunityEffect: new HTMLField(),
-			isFavorite: new SchemaField({ value: new BooleanField() }),
 		};
 	}
 

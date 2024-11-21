@@ -10,7 +10,6 @@ import { FU } from '../../helpers/config.mjs';
  * @property {number} defenseBonusFixed.value
  * @property {number} defenseBonus.value
  * @property {number} initiativeMalus.value
- * @property {boolean} isFavorite.value
  */
 
 export class ShieldDataModel extends foundry.abstract.TypeDataModel {
@@ -24,7 +23,6 @@ export class ShieldDataModel extends foundry.abstract.TypeDataModel {
 			cost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true }) }),
 			defenseBonus: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true, nullable: true }) }),
 			magicDefenseBonus: new SchemaField({ value: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }) }),
-			isFavorite: new SchemaField({ value: new BooleanField() }),
 		};
 	}
 }

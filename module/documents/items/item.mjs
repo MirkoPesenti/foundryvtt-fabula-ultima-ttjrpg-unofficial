@@ -1,5 +1,3 @@
-import { SYSTEM } from "../../helpers/config.mjs";
-
 /**
  * Extend basic Item
  * @extends {Item}

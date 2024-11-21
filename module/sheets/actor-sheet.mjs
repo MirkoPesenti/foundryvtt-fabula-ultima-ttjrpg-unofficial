@@ -40,6 +40,43 @@ export class FabulaActorSheet extends ActorSheet {
 
 		html.on('click','.roll', this._onRoll.bind(this));
 		html.on('click','.getActor', () => console.log(this.actor));
+		html.on('click','.addClass', () => {
+			const pack = game.packs.get('fabula.classes');
+			let options = '';
+			pack.index.forEach((value, key) => {
+				options += `<option value="${value.name}">${value.name}</option>`;
+			})
+			new Dialog({
+				title: 'Seleziona Classe',
+				content: `
+					<form>
+						<div class="form-group">
+							<label>Classe:</label>
+							<select id="formClass">
+								${options}
+							</select>
+						</div>
+					</form>
+				`,
+				buttons: {
+					confirm: {
+						label: 'Conferma',
+						callback: async (html) => {
+							const selectedClass = html.find('#formClass').val();
+							const entry = pack.index.find(e => e.name === selectedClass);
+							if (entry) {
+								const document = await pack.getDocument(entry._id);
+								await this._addClass( document.toObject() );
+							}
+							return null;
+						}
+					},
+					cancel: {
+						label: 'Annulla',
+					},
+				},
+			}).render(true);
+		});
 
 		if (!this.isEditable) return;
 	}
@@ -67,5 +104,9 @@ export class FabulaActorSheet extends ActorSheet {
 			});
 			return roll;
 		}
+	}
+
+	async _addClass( classItem ) {
+		await this.actor.createEmbeddedDocuments('Item', [classItem]);
 	}
 }

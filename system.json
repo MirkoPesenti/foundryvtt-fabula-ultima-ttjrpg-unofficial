@@ -20,6 +20,19 @@
 	},
 	"esmodules": ["module/fabula.mjs"],
 	"styles": ["assets/css/fabula.css"],
+	"packs": [
+		{
+			"name": "classes",
+			"label": "Classi",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/classes",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		}
+	],
 	"languages": [
 		{
 			"lang": "it",

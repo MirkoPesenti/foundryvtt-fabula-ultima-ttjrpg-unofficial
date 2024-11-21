@@ -14,7 +14,6 @@ import { FU } from '../../helpers/config.mjs';
  * @property {AttributesDataModel} precisionAttributes
  * @property {number} precisionBonus.value
  * @property {DamageDataModel} damage
- * @property {boolean} isFavorite.value
  */
 
 export class WeaponDataModel extends foundry.abstract.TypeDataModel {
@@ -32,7 +31,6 @@ export class WeaponDataModel extends foundry.abstract.TypeDataModel {
 			precisionAttributes: new EmbeddedDataField(AttributesDataModel, { initial: { primary: { value: 'dex' }, secondary: { value: 'ins' } } }),
 			precisionBonus: new SchemaField({ value: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }) }),
 			damage: new EmbeddedDataField(DamageDataModel, {}),
-			isFavorite: new SchemaField({ value: new BooleanField() }),
 		};
 	}
 }
