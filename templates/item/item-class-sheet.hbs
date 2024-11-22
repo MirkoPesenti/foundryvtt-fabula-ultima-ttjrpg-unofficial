@@ -14,12 +14,90 @@
         </div>
     </header>
 
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">Descrizione</a>
+        <a class="item" data-tab="benefits">Benefici gratuiti</a>
+        <a class="item" data-tab="features">Abilità</a>
+    </nav>
+
     <section class="sheet-body">
-        {{#each items}}
-            {{#if (eq this.type "classFeature")}}
-                <strong>{{this.name}}</strong>
-                <hr>
-            {{/if}}
-        {{/each}}
+		<div class="tab desc" data-group="primary" data-tab="description">
+            <div class="form-group">
+                <label for="system.alias.value">Alias:</label>
+                <input name="system.alias.value" type="text" value="{{system.alias.value}}">
+            </div>
+
+            Domande: <br>
+            <ul>
+                {{#each system.questions as |question questionIndex|}}
+                <li>
+                    <input name="system.questions.{{questionIndex}}" type="text" value="{{question}}">
+                </li>
+                {{/each}}
+            </ul>
+            <button type="button" class="add-question" style="max-width:100px;">+</button>
+
+            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+        </div>
+
+		<div class="tab benefits" data-group="primary" data-tab="benefits">
+            <div class="form-group">
+                <label for="system.bonus.hp">Punti vita (PV):</label>
+                <input name="system.bonus.hp" type="number" value="{{system.bonus.hp}}">
+            </div>
+            <div class="form-group">
+                <label for="system.bonus.mp">Punti mente (PM):</label>
+                <input name="system.bonus.mp" type="number" value="{{system.bonus.mp}}">
+            </div>
+            <div class="form-group">
+                <label for="system.bonus.ip">Punti inventario (PI):</label>
+                <input name="system.bonus.ip" type="number" value="{{system.bonus.ip}}">
+            </div>
+
+            <hr>
+
+            Rituali: <br>
+            <ul>
+                {{#each system.bonus.ritualType as |ritual ritualIndex|}}
+                <li>
+                    <select name="system.bonus.ritualType.{{ritualIndex}}">
+                        {{selectOptions MagicDisciplines selected=ritual sort=true localize=true}}
+                    </select>
+                </li>
+                {{/each}}
+            </ul>
+            <button type="button" class="add-ritualType" style="max-width:100px;">+</button>
+            
+            <hr>
+
+            Equipaggiamenti: <br>
+            <ul>
+                {{#each system.bonus.weaponType as |weapon weaponIndex|}}
+                <li>
+                    <select name="system.bonus.weaponType.{{weaponIndex}}">
+                        {{selectOptions martialItems selected=weapon sort=true localize=true}}
+                    </select>
+                </li>
+                {{/each}}
+            </ul>
+            <button type="button" class="add-weaponType" style="max-width:100px;">+</button>
+        </div>
+		
+        <div class="tab features" data-group="primary" data-tab="features">
+            <br>
+            Abilità di classe:
+            {{#each flags.fabula.subItems}}
+                {{#if (eq this.type "classFeature")}}
+                    <hr>
+                    <strong>{{this.name}}</strong>
+                    {{#gt this.system.level.max 1}}
+                        - {{this.system.level.max}}
+                    {{/gt}}
+                    <br>
+                    {{editor this.system.description target="this.system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=false }}
+                    <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
+                {{/if}}
+            {{/each}}
+        </div>
     </section>
 </form>

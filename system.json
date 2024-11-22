@@ -31,6 +31,35 @@
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
+		},
+		{
+			"name": "classfeatures",
+			"label": "Abilità di classe",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/classfeatures",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		}
+	],
+	"packFolders": [
+		{
+			"name": "Manuale Base",
+			"sorting": "m",
+			"color": "#31534a",
+			"folders": [
+				{
+					"name": "Premi Start",
+					"sorting": "m",
+					"color": "#31534a",
+					"packs": [
+						"classes",
+						"classfeatures"
+					]
+				}
+			]
 		}
 	],
 	"languages": [

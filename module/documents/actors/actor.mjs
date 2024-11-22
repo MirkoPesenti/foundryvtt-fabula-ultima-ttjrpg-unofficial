@@ -45,6 +45,13 @@ export class FabulaActor extends Actor {
 		// systemData.xp = (systemData.cr * systemData.cr) * 100;
 	}
 
+	applyActiveEffects() {
+		if (this.system.prepareEmbeddedData instanceof Function) {
+			this.system.prepareEmbeddedData();
+		}
+		return super.applyActiveEffects();
+	}
+
 	getRollData() {
 		const data = super.getRollData();
 	  

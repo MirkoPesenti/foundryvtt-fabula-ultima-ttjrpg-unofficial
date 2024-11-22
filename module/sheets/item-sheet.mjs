@@ -59,6 +59,33 @@ export class FabulaItemSheet extends ItemSheet {
 		html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
 		html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
 
+		html.on('drop', this._onDropItem.bind(this));
+		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
+
+		html.on('click', '.add-ritualType', async (ev) => {
+			ev.preventDefault();
+			const ritualType = this.item.system.bonus.ritualType;
+			const newRitualTypes = [...ritualType];
+			newRitualTypes.push('');
+			await this.item.update({ 'system.bonus.ritualType': newRitualTypes });
+		});
+
+		html.on('click', '.add-weaponType', async (ev) => {
+			ev.preventDefault();
+			const weaponType = this.item.system.bonus.weaponType;
+			const newWeaponTypes = [...weaponType];
+			newWeaponTypes.push('');
+			await this.item.update({ 'system.bonus.weaponType': newWeaponTypes });
+		});
+
+		html.on('click', '.add-question', async (ev) => {
+			ev.preventDefault();
+			const questions = this.item.system.questions;
+			const newQuestionss = [...questions];
+			newQuestionss.push('');
+			await this.item.update({ 'system.questions': newQuestionss });
+		});
+
 		if (!this.isEditable) return;
 	}
 
@@ -75,9 +102,75 @@ export class FabulaItemSheet extends ItemSheet {
 		return data;
 	}
 
-	get isEquipped() {
-		if ( this.actor ) return this.actor.system.equip.isEquipped(this);
-		return false;
+	async _onDropItem(event) {
+		event.preventDefault();
+		const data = JSON.parse(event.originalEvent.dataTransfer.getData("text/plain"));
+		const targetItem = this.item;
+
+		if ( data.type !== 'Item' ) {
+			ui.notifications.warn('Puoi trascinare solo oggetti.');
+			return;
+		}
+
+		const sourceItem = await fromUuid(data.uuid);
+
+		if ( !sourceItem ) {
+			ui.notifications.error("Impossibile trovare l'oggetto trascinato.");
+			return;
+		}
+
+		if ( sourceItem.type != 'classFeature' ) {
+			ui.notifications.error("Puoi trascinare solo Abilità di classe.");
+			return;
+		}
+
+		const subItems = targetItem.getFlag('fabula', 'subItems') || [];
+
+		if ( subItems.length == 5 ) {
+			ui.notifications.warn('Il numero massimo è già stato raggiunto.');
+			return;
+		}
+
+		let alreadyExist = false;
+		for (let i = 0; i < subItems.length; i++) {
+			if ( subItems[i]._id == sourceItem._id ) {
+				alreadyExist = true;
+				break;
+			}
+		}
+
+		if ( alreadyExist ) {
+			ui.notifications.error(`L'item ${sourceItem.name} è già allegato all'item ${targetItem.name}!`);
+			return;
+		}
+
+		subItems.push(sourceItem.toObject());
+		
+		await targetItem.setFlag('fabula', 'subItems', subItems);
+
+		ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
+	}
+
+	async _removeClassFeature(event) {
+		event.preventDefault();
+		const targetItem = this.item;
+		const subItems = targetItem.getFlag('fabula', 'subItems') || [];
+		const itemToBeRemoved = event.currentTarget.getAttribute('data-id');
+		let removed = false;
+		for (let i = 0; i < subItems.length; i++) {
+			if ( subItems[i]._id == itemToBeRemoved ) {
+				subItems.splice(i, 1);
+				removed = true;
+				break;
+			}
+		}
+		
+		await targetItem.setFlag('fabula', 'subItems', subItems);
+
+		if ( removed ) 
+			ui.notifications.info(`L'elemento è stato eliminato.`);
+		else
+			ui.notifications.error(`Non è stato possibili completare l'azione.`);
 	}
 
 }

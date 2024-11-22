@@ -28,6 +28,8 @@ export class FabulaActorSheet extends ActorSheet {
 		context.system = actorData.system;
 		context.flags = actorData.flags;
 
+		await this._prepareItems(context);
+
 		//Add required CONFIG data
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
@@ -93,6 +95,61 @@ export class FabulaActorSheet extends ActorSheet {
 		});
 
 		if (!this.isEditable) return;
+	}
+
+	async _prepareItems(context) {
+		const weapons = [];
+		const armor = [];
+		const shields = [];
+		const accessories = [];
+		const classes = [];
+		const spells = [];
+		const consumables = [];
+		const projects = [];
+		const rituals = [];
+
+		for (let i of context.items) {
+			i.img = i.img || CONST.DEFAULT_TOKEN;
+
+			if (i.type === 'weapon') {
+				weapons.push(i);
+			} else if (i.type === 'armor') {
+				armor.push(i);
+			} else if (i.type === 'shield') {
+				shields.push(i);
+			} else if (i.type === 'accessory') {
+				accessories.push(i);
+			} else if (i.type === 'class') {
+				classes.push(i);
+			} else if (i.type === 'spell') {
+				spells.push(i);
+			} else if (i.type === 'consumable') {
+				consumables.push(i);
+			} else if (i.type === 'project') {
+				projects.push(i);
+			} else if (i.type === 'ritual') {
+				rituals.push(i);
+			}
+		}
+
+		context.weapons = weapons;
+		context.armor = armor;
+		context.shields = shields;
+		context.accessories = accessories;
+		context.classes = classes;
+		context.spells = spells;
+		context.consumables = consumables;
+		context.projects = projects;
+		context.rituals = rituals;
+		context.classFeature = {};
+
+		for (const item of this.actor.itemTypes.classFeature) {
+			const featureType = (context.classFeature[item.system.featureType] ??= {
+				feature: item.system.data?.constructor,
+				items: {},
+			});
+			featureType.items[item.id] = { item, additionalData: await featureType.feature?.getAdditionalData(item.system.data) };
+		}
 	}
 
 	_onRoll(e) {

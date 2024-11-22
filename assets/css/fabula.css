@@ -21,7 +21,7 @@ End Typography
 .input-sm {display:inline-block;width:auto !important;}
 
 /* 【】 */
-.fabula .editor {height:100%;min-height:25em;}
+.fabula .editor:not(.features .editor) {height:100%;min-height:25em;}
 
 /* Sheets > Header */
 .sheet header.sheet-header {flex:0;position:relative;min-height:170px;align-items:flex-end;}

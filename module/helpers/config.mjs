@@ -52,14 +52,16 @@ FU.DamageTypes = {
 };
 
 FU.ItemTypes = {
-	spell: 'FU.ItemTpes.spell',
-	ritual: 'FU.ItemTpes.ritual',
-	accessory: 'FU.ItemTpes.accessory',
-	armor: 'FU.ItemTpes.armor',
-	weapon: 'FU.ItemTpes.weapon',
-	shield: 'FU.ItemTpes.shield',
-	project: 'FU.ItemTpes.project',
-	consumable: 'FU.ItemTpes.consumable',
+	spell: 'TYPES.Item.spell',
+	ritual: 'TYPES.Item.ritual',
+	accessory: 'TYPES.Item.accessory',
+	armor: 'TYPES.Item.armor',
+	weapon: 'TYPES.Item.weapon',
+	shield: 'TYPES.Item.shield',
+	project: 'TYPES.Item.project',
+	consumable: 'TYPES.Item.consumable',
+	class: 'TYPES.Item.class',
+	classFeature: 'TYPES.Item.classFeature',
 };
 
 /**

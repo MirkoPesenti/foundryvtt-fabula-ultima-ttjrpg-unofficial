@@ -62,6 +62,8 @@ Hooks.once('init', async () => {
 		class: CLassDataModel,
 		classFeature: CLassFeatureDataModel
 	};
+	
+	CONFIG.ActiveEffect.legacyTransferral = false;
 
 	// Register Sheets
 	Actors.unregisterSheet('core', ActorSheet);

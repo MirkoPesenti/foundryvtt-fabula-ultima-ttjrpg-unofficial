@@ -12,6 +12,10 @@
     </header>
 
     <section class="sheet-body">
-        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+        <div class="form-group">
+            <label for="system.level.max">Livello massimo:</label>
+            <input name="system.level.max" type="number" value="{{system.level.max}}" style="max-width:50px;">
+        </div>
+        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
     </section>
 </form>
