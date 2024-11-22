@@ -11,20 +11,113 @@
         </div>
     </header>
 
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
+        <a class="item" data-tab="class">CLasse</a>
+        <a class="item" data-tab="equip">Equipaggiamento</a>
+    </nav>
+
     <section class="sheet-body">
-        PERSONAGGIO
+        <div class="tab desc" data-group="primary" data-tab="description">
+            <table>
+                <tbody>
+                    <tr>
+                        <td style="text-align:left;vertical-align:top;width:33%;">
+                            <span data-tooltip="Lorem ipsum">Livello:</span> {{system.level.value}} | Esperienza: {{system.resources.exp}}<br>
+                            Punti Vita: {{system.resources.hp.value}} / {{system.resources.hp.max}} <br>
+                            Punti Mente: {{system.resources.mp.value}} / {{system.resources.mp.max}} <br>
+                            Punti Inventario: {{system.resources.ip.value}} / {{system.resources.ip.max}} <br>
+                            <ul>
+                                <li>Destrezza (DES): D{{system.resources.attributes.dex.value}}</li>
+                                <li>Intuito (INT): D{{system.resources.attributes.ins.value}}</li>
+                                <li>Vigore (VIG): D{{system.resources.attributes.mig.value}}</li>
+                                <li>Volontà (VOL): D{{system.resources.attributes.wlp.value}}</li>
+                            </ul>
+                            Punti Fabula: {{system.resources.fp}} <br>
+                            Zenit: {{system.resources.zenit}}z <br>
+                            <ul>
+                                <li>Difesa: {{system.resources.params.def.bonus}}</li>
+                                <li>Difesa magica: {{system.resources.params.mdef.bonus}}</li>
+                                <li>Modificatore iniziativa: {{system.resources.params.init.bonus}}</li>
+                            </ul>
+                        </td>
+                        <td style="text-align:left;vertical-align:top;width:33%;">
+                            Genere: {{system.features.pronouns}} <br>
+                            Identità: {{system.features.identity}} <br>
+                            Tema: {{system.features.theme}} <br>
+                            Origine: {{system.features.origin}} <br>
+                            Legami: <br>
+                            <ul>
+                                {{#each system.bond}}
+                                <li>
+                                    {{this.name}} | {{this.bond1}} | {{this.bond2}} | {{this.bond3}}
+                                </li>
+                                {{/each}}
+                            </ul>
+                            Classi: <br>
+                            <ul>
+                                {{#each items}}
+                                    {{#if (eq this.type "class")}}
+                                        <li>{{this.name}}</li>
+                                    {{/if}}
+                                {{/each}}
+                            </ul>
+                            <ul>
+                                <li>Armatura: {{system.equip.armor}}</li>
+                                <li>Mano primaria: {{system.equip.mainHand}}</li>
+                                <li>Mano secondaria: {{system.equip.offHand}}</li>
+                                <li>Accessio: {{system.equip.accessory}}</li>
+                                <li>Arcanum: {{system.equip.arcanum}}</li>
+                            </ul>
+                        </td>
+                        <td style="text-align:left;vertical-align:top;width:33%;">
+                            Affinità: <br>
+                            <ul>
+                                <li>Fisico: {{system.affinity.physical}}</li>
+                                <li>Aria: {{system.affinity.air}}</li>
+                                <li>Lampo: {{system.affinity.bolt}}</li>
+                                <li>Oscurità: {{system.affinity.dark}}</li>
+                                <li>Terra: {{system.affinity.earth}}</li>
+                                <li>Fuoco: {{system.affinity.fire}}</li>
+                                <li>Ghiaccio: {{system.affinity.ice}}</li>
+                                <li>Luce: {{system.affinity.light}}</li>
+                                <li>Veleno: {{system.affinity.poison}}</li>
+                            </ul>
+                            Status: <br>
+                            <ul>
+                                <li>Rallentato: {{system.status.slow.active}}</li>
+                                <li>Confuso: {{system.status.dazed.active}}</li>
+                                <li>Indebolito: {{system.status.weak.active}}</li>
+                                <li>Scosso: {{system.status.shaken.active}}</li>
+                                <li>Furente: {{system.status.enraged.active}}</li>
+                                <li>Avvelenato: {{system.status.poisoned.active}}</li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab desc" data-group="primary" data-tab="class">
+            {{#each items}}
+                {{#if (eq this.type "class")}}
+                    <strong>{{this.name}}</strong>
+                    <hr>
+                {{/if}}
+            {{/each}}
+        </div>
+        <div class="tab desc" data-group="primary" data-tab="equip">
+            <ul>
+                {{#each items}}
+                    {{#unless (eq this.type "class")}}
+                        <li>{{this.name}}</li>
+                    {{/unless}}
+                {{/each}}
+            </ul>
+        </div>
 
         <button type="button" class="roll" data-roll="d{{system.resources.attributes.dex.value}}+@level.value">
             roll dex: D{{system.resources.attributes.dex.value}} + Level: {{system.level.value}}
         </button>
-
-        <ul>
-            {{#each items}}
-            {{#if (eq this.type "class")}}
-                <li>{{this.name}}</li>
-            {{/if}}
-            {{/each}}
-        </ul>
 
         <button type="button" class="getActor">log</button>
         <button type="button" class="addClass">Classe</button>

@@ -176,6 +176,12 @@
 			"rangedWeapon": "Armi a distanza marziali",
 			"armor": "Armature marziali",
 			"shield": "Scudi marziali"
+		},
+		"affinity": {
+			"vulnerability": "Vulnerabile",
+			"resistance": "Resistente",
+			"immunity": "Immune",
+			"absorption": "Assorbimento"
 		}
 	}
 }

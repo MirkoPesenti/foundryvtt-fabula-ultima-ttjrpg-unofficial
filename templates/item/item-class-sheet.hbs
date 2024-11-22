@@ -15,6 +15,11 @@
     </header>
 
     <section class="sheet-body">
-        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+        {{#each items}}
+            {{#if (eq this.type "classFeature")}}
+                <strong>{{this.name}}</strong>
+                <hr>
+            {{/if}}
+        {{/each}}
     </section>
 </form>

@@ -166,3 +166,10 @@ FU.bondType3 = {
 	affection: 'FU.bond.affection',
 	hatred: 'FU.bond.hatred',
 };
+
+FU.affinity = {
+	vulnerability: 'FU.affinity.vulnerability',
+	resistance: 'FU.affinity.resistance',
+	immunity: 'FU.affinity.immunity',
+	absorption: 'FU.affinity.absorption',
+};

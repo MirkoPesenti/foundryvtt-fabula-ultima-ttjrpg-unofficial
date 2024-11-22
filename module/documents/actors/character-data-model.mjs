@@ -11,10 +11,10 @@ import { EquipDataModel } from "./common/equip-data-model.mjs";
  * @property {number} resources.mp.value
  * @property {number} resources.ip.value
  * @property {AttributesDataModel} resources.attributes
- * @property {number} resources.fp.value
- * @property {number} resources.exp.value
+ * @property {number} resources.fp
+ * @property {number} resources.exp
  * @property {DefencesDataModel} resources.params
- * @property {number} resources.zenit.value
+ * @property {number} resources.zenit
  * @property {BondDataModel[]} bond
  * @property {string} features.pronouns.value
  * @property {string} features.identity.value
@@ -37,7 +37,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				fp: new NumberField({ initial: 3, min: 0, integer: true, nullable: false }),
 				exp: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
 				params: new EmbeddedDataField(DefencesDataModel, {}),
-				zenit: new SchemaField({ value: new NumberField({ initial: 500, min: 0, integer: true, nullable: false }) }),
+				zenit: new NumberField({ initial: 500, min: 0, integer: true, nullable: false }),
 			}),
 			bond: new ArrayField(new EmbeddedDataField(BondDataModel, {}), {
 				validate: ( val ) => {
@@ -46,10 +46,10 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				}
 			}),
 			features: new SchemaField({
-				pronouns: new SchemaField({ value: new StringField() }),
-				identity: new SchemaField({ value: new StringField() }),
-				theme: new SchemaField({ value: new StringField() }),
-				origin: new SchemaField({ value: new StringField() }),
+				pronouns: new StringField(),
+				identity: new StringField(),
+				theme: new StringField(),
+				origin: new StringField(),
 			}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
 			status: new EmbeddedDataField(StatusesDataModel, {}),

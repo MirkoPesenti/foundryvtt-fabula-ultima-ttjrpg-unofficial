@@ -1,29 +1,29 @@
-import { AffinityDataModel } from "./affinity-data-model.mjs";
+import { FU } from "../../../helpers/config.mjs";
 
 /**
- * @property {AffinityDataModel} physical
- * @property {AffinityDataModel} air
- * @property {AffinityDataModel} bolt
- * @property {AffinityDataModel} dark
- * @property {AffinityDataModel} earth
- * @property {AffinityDataModel} fire
- * @property {AffinityDataModel} ice
- * @property {AffinityDataModel} light
- * @property {AffinityDataModel} poison
+ * @property {string} physical
+ * @property {string} air
+ * @property {string} bolt
+ * @property {string} dark
+ * @property {string} earth
+ * @property {string} fire
+ * @property {string} ice
+ * @property {string} light
+ * @property {string} poison
  */
 export class AffinitiesDataModel extends foundry.abstract.DataModel {
 	static defineSchema() {
-		const { EmbeddedDataField } = foundry.data.fields;
+		const { StringField } = foundry.data.fields;
 		return ({
-			physical: new EmbeddedDataField(AffinityDataModel, {}),
-			air: new EmbeddedDataField(AffinityDataModel, {}),
-			bolt: new EmbeddedDataField(AffinityDataModel, {}),
-			dark: new EmbeddedDataField(AffinityDataModel, {}),
-			earth: new EmbeddedDataField(AffinityDataModel, {}),
-			fire: new EmbeddedDataField(AffinityDataModel, {}),
-			ice: new EmbeddedDataField(AffinityDataModel, {}),
-			light: new EmbeddedDataField(AffinityDataModel, {}),
-			poison: new EmbeddedDataField(AffinityDataModel, {})
+			physical: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			air: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			bolt: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			dark: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			earth: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			fire: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			ice: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			light: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) }),
+			poison: new StringField({ initial: '', blank: true, choices: Object.keys(FU.affinity) })
 		});
 	}
 }

@@ -27,6 +27,20 @@ export class FabulaActorSheet extends ActorSheet {
 
 		context.system = actorData.system;
 		context.flags = actorData.flags;
+
+		//Add required CONFIG data
+		context.attributes = CONFIG.FU.attributes;
+		context.attributesAbbr = CONFIG.FU.attributesAbbr;
+		context.DamageTypes = CONFIG.FU.DamageTypes;
+		context.WeaponRanges = CONFIG.FU.WeaponRanges;
+		context.weaponCategories = CONFIG.FU.weaponCategories;
+		context.SpellDurations = CONFIG.FU.SpellDurations;
+		context.SpellDisciplines = CONFIG.FU.SpellDisciplines;
+		context.potencyList = CONFIG.FU.potencyList;
+		context.areaList = CONFIG.FU.areaList;
+		context.usesList = CONFIG.FU.usesList;
+		context.rarityList = CONFIG.FU.rarityList;
+		context.martialItems = CONFIG.FU.martialItems;
 		
 		context.rollData = context.actor.getRollData();
 
