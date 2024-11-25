@@ -107,48 +107,51 @@ export class FabulaItemSheet extends ItemSheet {
 		const data = JSON.parse(event.originalEvent.dataTransfer.getData("text/plain"));
 		const targetItem = this.item;
 
-		if ( data.type !== 'Item' ) {
-			ui.notifications.warn('Puoi trascinare solo oggetti.');
-			return;
-		}
-
-		const sourceItem = await fromUuid(data.uuid);
-
-		if ( !sourceItem ) {
-			ui.notifications.error("Impossibile trovare l'oggetto trascinato.");
-			return;
-		}
-
-		if ( sourceItem.type != 'classFeature' ) {
-			ui.notifications.error("Puoi trascinare solo Abilità di classe.");
-			return;
-		}
-
-		const subItems = targetItem.getFlag('fabula', 'subItems') || [];
-
-		if ( subItems.length == 5 ) {
-			ui.notifications.warn('Il numero massimo è già stato raggiunto.');
-			return;
-		}
-
-		let alreadyExist = false;
-		for (let i = 0; i < subItems.length; i++) {
-			if ( subItems[i]._id == sourceItem._id ) {
-				alreadyExist = true;
-				break;
+		if ( targetItem.type == 'class' ) {
+			// Check if dropped element is Item
+			if ( data.type !== 'Item' ) {
+				ui.notifications.warn('Puoi trascinare solo oggetti.');
+				return;
 			}
+
+			// Check if Item is found
+			const sourceItem = await fromUuid(data.uuid);
+			if ( !sourceItem ) {
+				ui.notifications.error("Impossibile trovare l'oggetto trascinato.");
+				return;
+			}
+
+			// Check if item is a Class Feature
+			if ( sourceItem.type != 'classFeature' ) {
+				ui.notifications.error("Puoi trascinare solo Abilità di classe.");
+				return;
+			}
+
+			// Check if Class has already 5 features
+			const subItems = targetItem.getFlag('fabula', 'subItems') || [];
+			if ( subItems.length == 5 ) {
+				ui.notifications.warn('Il numero massimo è già stato raggiunto.');
+				return;
+			}
+
+			// Check if Class featured is duplicated
+			let alreadyExist = false;
+			for (let i = 0; i < subItems.length; i++) {
+				if ( subItems[i]._id == sourceItem._id ) {
+					alreadyExist = true;
+					break;
+				}
+			}
+			if ( alreadyExist ) {
+				ui.notifications.error(`L'item ${sourceItem.name} è già allegato all'item ${targetItem.name}!`);
+				return;
+			}
+
+			// Update Class
+			subItems.push(sourceItem.toObject());
+			await targetItem.setFlag('fabula', 'subItems', subItems);
+			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
 		}
-
-		if ( alreadyExist ) {
-			ui.notifications.error(`L'item ${sourceItem.name} è già allegato all'item ${targetItem.name}!`);
-			return;
-		}
-
-		subItems.push(sourceItem.toObject());
-		
-		await targetItem.setFlag('fabula', 'subItems', subItems);
-
-		ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
 	}
 
 	async _removeClassFeature(event) {
