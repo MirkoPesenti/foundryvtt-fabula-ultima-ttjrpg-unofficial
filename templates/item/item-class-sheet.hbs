@@ -58,29 +58,53 @@
 
             Rituali: <br>
             <ul>
-                {{#each system.bonus.ritualType as |ritual ritualIndex|}}
                 <li>
-                    <select name="system.bonus.ritualType.{{ritualIndex}}">
-                        {{selectOptions MagicDisciplines selected=ritual sort=true localize=true}}
-                    </select>
+                    <label for="system.bonus.ritual.arcanism">Arcanismo:</label>
+                    <input name="system.bonus.ritual.arcanism" type="checkbox" {{checked system.bonus.ritual.arcanism}}>
                 </li>
-                {{/each}}
+                <li>
+                    <label for="system.bonus.ritual.chimerism">Chimerismo:</label>
+                    <input name="system.bonus.ritual.chimerism" type="checkbox" {{checked system.bonus.ritual.chimerism}}>
+                </li>
+                <li>
+                    <label for="system.bonus.ritual.elementalism">Elementalismo:</label>
+                    <input name="system.bonus.ritual.elementalism" type="checkbox" {{checked system.bonus.ritual.elementalism}}>
+                </li>
+                <li>
+                    <label for="system.bonus.ritual.entropism">Entropismo:</label>
+                    <input name="system.bonus.ritual.entropism" type="checkbox" {{checked system.bonus.ritual.entropism}}>
+                </li>
+                <li>
+                    <label for="system.bonus.ritual.ritualism">Ritualismo:</label>
+                    <input name="system.bonus.ritual.ritualism" type="checkbox" {{checked system.bonus.ritual.ritualism}}>
+                </li>
+                <li>
+                    <label for="system.bonus.ritual.spiritism">Spiritismo:</label>
+                    <input name="system.bonus.ritual.spiritism" type="checkbox" {{checked system.bonus.ritual.spiritism}}>
+                </li>
             </ul>
-            <button type="button" class="add-ritualType" style="max-width:100px;">+</button>
             
             <hr>
 
             Equipaggiamenti: <br>
             <ul>
-                {{#each system.bonus.weaponType as |weapon weaponIndex|}}
                 <li>
-                    <select name="system.bonus.weaponType.{{weaponIndex}}">
-                        {{selectOptions martialItems selected=weapon sort=true localize=true}}
-                    </select>
+                    <label for="system.bonus.weapon.meleeWeapon">Arma in mischia marziale:</label>
+                    <input name="system.bonus.weapon.meleeWeapon" type="checkbox" {{checked system.bonus.weapon.meleeWeapon}}>
                 </li>
-                {{/each}}
+                <li>
+                    <label for="system.bonus.weapon.rangedWeapon">Arma a distanza marziale:</label>
+                    <input name="system.bonus.weapon.rangedWeapon" type="checkbox" {{checked system.bonus.weapon.rangedWeapon}}>
+                </li>
+                <li>
+                    <label for="system.bonus.weapon.armor">Armatura marziale:</label>
+                    <input name="system.bonus.weapon.armor" type="checkbox" {{checked system.bonus.weapon.armor}}>
+                </li>
+                <li>
+                    <label for="system.bonus.weapon.shield">Scudo marziale:</label>
+                    <input name="system.bonus.weapon.shield" type="checkbox" {{checked system.bonus.weapon.shield}}>
+                </li>
             </ul>
-            <button type="button" class="add-weaponType" style="max-width:100px;">+</button>
         </div>
 		
         <div class="tab features" data-group="primary" data-tab="features">

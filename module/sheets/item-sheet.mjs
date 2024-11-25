@@ -41,7 +41,6 @@ export class FabulaItemSheet extends ItemSheet {
 		context.areaList = CONFIG.FU.areaList;
 		context.usesList = CONFIG.FU.usesList;
 		context.rarityList = CONFIG.FU.rarityList;
-		context.martialItems = CONFIG.FU.martialItems;
 
 		context.enrichedHtml = {
 			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
@@ -62,28 +61,12 @@ export class FabulaItemSheet extends ItemSheet {
 		html.on('drop', this._onDropItem.bind(this));
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
 
-		html.on('click', '.add-ritualType', async (ev) => {
-			ev.preventDefault();
-			const ritualType = this.item.system.bonus.ritualType;
-			const newRitualTypes = [...ritualType];
-			newRitualTypes.push('');
-			await this.item.update({ 'system.bonus.ritualType': newRitualTypes });
-		});
-
-		html.on('click', '.add-weaponType', async (ev) => {
-			ev.preventDefault();
-			const weaponType = this.item.system.bonus.weaponType;
-			const newWeaponTypes = [...weaponType];
-			newWeaponTypes.push('');
-			await this.item.update({ 'system.bonus.weaponType': newWeaponTypes });
-		});
-
 		html.on('click', '.add-question', async (ev) => {
 			ev.preventDefault();
 			const questions = this.item.system.questions;
-			const newQuestionss = [...questions];
-			newQuestionss.push('');
-			await this.item.update({ 'system.questions': newQuestionss });
+			const newQuestions = [...questions];
+			newQuestions.push('');
+			await this.item.update({ 'system.questions': newQuestions });
 		});
 
 		if (!this.isEditable) return;

@@ -1,5 +1,3 @@
-import { FU } from '../../helpers/config.mjs';
-
 /**
  * @property {string} summary.value
  * @property {string} description
@@ -9,9 +7,16 @@ import { FU } from '../../helpers/config.mjs';
  * @property {number} bonus.hp
  * @property {number} bonus.mp
  * @property {number} bonus.ip
- * @property {boolean} bonus.startProjects
- * @property {string[]} bonus.ritualType
- * @property {string[]} bonus.weaponType
+ * @property {boolean} bonus.ritual.arcanism
+ * @property {boolean} bonus.ritual.chimerism
+ * @property {boolean} bonus.ritual.elementalism
+ * @property {boolean} bonus.ritual.entropism
+ * @property {boolean} bonus.ritual.ritualism
+ * @property {boolean} bonus.ritual.spiritism
+ * @property {boolean} bonus.weapon.meleeWeapon
+ * @property {boolean} bonus.weapon.rangedWeapon
+ * @property {boolean} bonus.weapon.armor
+ * @property {boolean} bonus.weapon.shield
  */
 
 export class CLassDataModel extends foundry.abstract.TypeDataModel {
@@ -27,9 +32,20 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 				hp: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
 				mp: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
 				ip: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
-				startProject: new BooleanField({ initial: false }),
-				ritualType: new ArrayField( new StringField({ initial: '', blank: true, choices: Object.keys(FU.MagicDisciplines) }) ),
-				weaponType: new ArrayField( new StringField({ initial: '', blank: true, choices: Object.keys(FU.martialItems) }) ),
+				ritual: new SchemaField({
+					arcanism: new BooleanField({ initial: false }),
+					chimerism: new BooleanField({ initial: false }),
+					elementalism: new BooleanField({ initial: false }),
+					entropism: new BooleanField({ initial: false }),
+					ritualism: new BooleanField({ initial: false }),
+					spiritism: new BooleanField({ initial: false }),
+				}),
+				weapon: new SchemaField({
+					meleeWeapon: new BooleanField({ initial: false }),
+					rangedWeapon: new BooleanField({ initial: false }),
+					armor: new BooleanField({ initial: false }),
+					shield: new BooleanField({ initial: false }),
+				}),
 			}),
 		};
 	}
