@@ -21,6 +21,11 @@
     </nav>
 
     <section class="sheet-body">
+        {{#if @root.editable}}
+        <input name="system.art.src" type="text" placeholder="Immagine" value="{{system.art.src}}" readonly>
+        <button type="button" class="change-image">Cambia immagine</button>
+        {{/if}}
+        <img src="{{system.art.src}}" width="200">
 		<div class="tab desc" data-group="primary" data-tab="description">
             <div class="form-group">
                 <label for="system.alias.value">Alias:</label>
@@ -36,6 +41,7 @@
                 {{/each}}
             </ul>
             <button type="button" class="add-question" style="max-width:100px;">+</button>
+            <button type="button" class="remove-question" style="max-width:100px;">-</button>
 
             {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
         </div>
@@ -43,15 +49,15 @@
 		<div class="tab benefits" data-group="primary" data-tab="benefits">
             <div class="form-group">
                 <label for="system.bonus.hp">Punti vita (PV):</label>
-                <input name="system.bonus.hp" type="number" value="{{system.bonus.hp}}">
+                <input name="system.bonus.hp" type="checkbox" {{checked system.bonus.hp}}>
             </div>
             <div class="form-group">
                 <label for="system.bonus.mp">Punti mente (PM):</label>
-                <input name="system.bonus.mp" type="number" value="{{system.bonus.mp}}">
+                <input name="system.bonus.mp" type="checkbox" {{checked system.bonus.mp}}>
             </div>
             <div class="form-group">
                 <label for="system.bonus.ip">Punti inventario (PI):</label>
-                <input name="system.bonus.ip" type="number" value="{{system.bonus.ip}}">
+                <input name="system.bonus.ip" type="checkbox" {{checked system.bonus.ip}}>
             </div>
 
             <hr>
@@ -89,7 +95,7 @@
             Equipaggiamenti: <br>
             <ul>
                 <li>
-                    <label for="system.bonus.weapon.meleeWeapon">Arma in mischia marziale:</label>
+                    <label for="system.bonus.weapon.meleeWeapon">Arma da mischia marziale:</label>
                     <input name="system.bonus.weapon.meleeWeapon" type="checkbox" {{checked system.bonus.weapon.meleeWeapon}}>
                 </li>
                 <li>

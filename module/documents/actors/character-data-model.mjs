@@ -74,12 +74,17 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 		const itemTypes = data.actor.itemTypes;
 		let freeBenefits = itemTypes.class.reduce(
 			( add, curr ) => {
-				if ( curr.system.bonus.hp > 0 )
-					add.hp += curr.system.bonus.hp
-				if ( curr.system.bonus.mp > 0 )
-					add.mp += curr.system.bonus.mp
-				if ( curr.system.bonus.ip > 0 )
-					add.ip += curr.system.bonus.ip
+				if ( ( curr.system.bonus.hp + curr.system.bonus.mp + curr.system.bonus.ip ) > 1 ) {
+					console.error('più di uno');
+				} else {
+					if ( curr.system.bonus.hp == true )
+						add.hp += 5;
+					if ( curr.system.bonus.mp == true )
+						add.mp += 5;
+					if ( curr.system.bonus.ip == true )
+						add.ip += 2;
+				}
+				return add;
 			},
 			{ hp: 0, mp: 0, ip: 0 },
 		);

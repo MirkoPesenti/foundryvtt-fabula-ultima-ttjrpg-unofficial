@@ -81,8 +81,48 @@ export class FabulaActorSheet extends ActorSheet {
 							const selectedClass = html.find('#formClass').val();
 							const entry = pack.index.find(e => e.name === selectedClass);
 							if (entry) {
+								const actor = this;
 								const document = await pack.getDocument(entry._id);
-								await this._addClass( document.toObject() );
+								if ( ( document.system.bonus.hp + document.system.bonus.mp + document.system.bonus.ip ) > 1 ) {
+									let radios = '';
+									if ( document.system.bonus.hp )
+										radios += `<div class="form-group">
+													<label for="formClassBenefit">Punti Ferita</label>
+													<input type="radio" name="formClassBenefit" value="hp" />
+												</div>`;
+									if ( document.system.bonus.mp )
+										radios += `<div class="form-group">
+													<label for="formClassBenefit">Punti Mente</label>
+													<input type="radio" name="formClassBenefit" value="mp" />
+												</div>`;
+									if ( document.system.bonus.ip )
+										radios += `<div class="form-group">
+													<label for="formClassBenefit">Punti Inventario</label>
+													<input type="radio" name="formClassBenefit" value="ip" />
+												</div>`;
+									new Dialog({
+										title: 'Scegli beneficio',
+										content: `<form>${radios}</form>`,
+										buttons: {
+											confirm: {
+												label: 'Conferma',
+												callback: async (html) => {
+													const radio = html.find('[name="formClassBenefit"]').val();
+													document.system.bonus.hp = false;
+													document.system.bonus.mp = false;
+													document.system.bonus.ip = false;
+													document.system.bonus[radio] = true;
+													await actor._addClass( document );
+												}
+											},
+											cancel: {
+												label: 'Annulla',
+											},
+										},
+									}).render(true);
+								} else {
+									await actor._addClass( document.toObject() );
+								}
 							}
 							return null;
 						}
@@ -178,6 +218,8 @@ export class FabulaActorSheet extends ActorSheet {
 	}
 
 	async _addClass( classItem ) {
+		console.log(this.actor);
 		await this.actor.createEmbeddedDocuments('Item', [classItem]);
+		console.log(this.actor);
 	}
 }

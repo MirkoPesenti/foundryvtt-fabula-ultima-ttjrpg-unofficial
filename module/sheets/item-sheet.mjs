@@ -68,6 +68,26 @@ export class FabulaItemSheet extends ItemSheet {
 			newQuestions.push('');
 			await this.item.update({ 'system.questions': newQuestions });
 		});
+		html.on('click', '.remove-question', async (ev) => {
+			ev.preventDefault();
+			const questions = this.item.system.questions;
+			const newQuestions = [...questions];
+			newQuestions.splice( newQuestions.length - 1 ,1 );
+			await this.item.update({ 'system.questions': newQuestions });
+		});
+
+		html.on('click', '.change-image', async (ev) => {
+			const input = ev.currentTarget.previousElementSibling;
+			new FilePicker({
+				type: 'image',
+				callback: async (path) => {
+					input.value = path;
+					input.dispatchEvent( new Event('change') );
+					await this.item.update({ "system.art.src": path });
+				},
+				current: input.value,
+			}).render(true);
+		});
 
 		if (!this.isEditable) return;
 	}

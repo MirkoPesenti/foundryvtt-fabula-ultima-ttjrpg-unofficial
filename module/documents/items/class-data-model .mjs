@@ -1,12 +1,13 @@
 /**
+ * @property {string} art.src
  * @property {string} summary.value
  * @property {string} description
  * @property {string} alias.value
  * @property {string[]} questions
  * @property {number} level.value
- * @property {number} bonus.hp
- * @property {number} bonus.mp
- * @property {number} bonus.ip
+ * @property {boolean} bonus.hp
+ * @property {boolean} bonus.mp
+ * @property {boolean} bonus.ip
  * @property {boolean} bonus.ritual.arcanism
  * @property {boolean} bonus.ritual.chimerism
  * @property {boolean} bonus.ritual.elementalism
@@ -23,15 +24,16 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, ArrayField, BooleanField, NumberField } = foundry.data.fields;
 		return {
+			art: new SchemaField({ src: new StringField() }),
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
 			alias: new SchemaField({ value: new StringField() }),
 			questions: new ArrayField( new StringField() ),
 			level: new SchemaField({ value: new NumberField({ initial: 1, min: 1, max: 10, integer: true, nullable: false }) }),
 			bonus: new SchemaField({
-				hp: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
-				mp: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
-				ip: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				hp: new BooleanField({ initial: false }),
+				mp: new BooleanField({ initial: false }),
+				ip: new BooleanField({ initial: false }),
 				ritual: new SchemaField({
 					arcanism: new BooleanField({ initial: false }),
 					chimerism: new BooleanField({ initial: false }),
