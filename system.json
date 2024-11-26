@@ -34,10 +34,131 @@
 		},
 		{
 			"name": "classfeatures",
-			"label": "Abilità di classe",
+			"label": "Abilità di Classe",
 			"type": "Item",
 			"system": "fabula",
 			"path": "packs/classfeatures",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "baseweapons",
+			"label": "Armi Base",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/equipment/weapons/base",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "basearmors",
+			"label": "Armature Base",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/equipment/armors/base",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "baseshields",
+			"label": "Scudi Base",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/equipment/shields/base",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "beasts",
+			"label": "Bestie",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/beasts",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "construct",
+			"label": "Costrutti",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/construct",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "demons",
+			"label": "Demoni",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/demons",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "elementals",
+			"label": "Elementali",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/elementals",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "monsters",
+			"label": "Mostri",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/monsters",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "undeads",
+			"label": "Non morti",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/undeads",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "plants",
+			"label": "Piante",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/plants",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "humanoids",
+			"label": "Umanoidi",
+			"type": "Actor",
+			"system": "fabula",
+			"path": "packs/bestiary/humanoids",
 			"ownership": {
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
@@ -48,15 +169,52 @@
 		{
 			"name": "Manuale Base",
 			"sorting": "m",
-			"color": "#31534a",
+			"color": "#2B4B42",
 			"folders": [
+				{
+					"name": "Introduzione",
+					"sorting": "m",
+					"color": "#AC8344",
+					"packs": []
+				},
+				{
+					"name": "Regole di Gioco",
+					"sorting": "m",
+					"color": "#4271A3",
+					"packs": [
+						"baseweapons",
+						"basearmors",
+						"baseshields"
+					]
+				},
 				{
 					"name": "Premi Start",
 					"sorting": "m",
-					"color": "#31534a",
+					"color": "#31534A",
 					"packs": [
 						"classes",
 						"classfeatures"
+					]
+				},
+				{
+					"name": "Game Master",
+					"sorting": "m",
+					"color": "#97331E",
+					"packs": []
+				},
+				{
+					"name": "Bestiario",
+					"sorting": "m",
+					"color": "#6E4A70",
+					"packs": [
+						"beasts",
+						"construct",
+						"demons",
+						"elementals",
+						"monsters",
+						"undeads",
+						"plants",
+						"humanoids"
 					]
 				}
 			]
