@@ -58,8 +58,9 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click','.getActor', () => console.log(this.actor));
 		html.on('click','.addClass', () => {
 			const pack = game.packs.get('fabula.classes');
+			const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
 			let options = '';
-			pack.index.forEach((value, key) => {
+			sortedPack.forEach((value, key) => {
 				options += `<option value="${value.name}">${value.name}</option>`;
 			})
 			new Dialog({
@@ -121,7 +122,7 @@ export class FabulaActorSheet extends ActorSheet {
 										},
 									}).render(true);
 								} else {
-									await actor._addClass( document.toObject() );
+									await actor._addClass( document );
 								}
 							}
 							return null;
@@ -218,8 +219,11 @@ export class FabulaActorSheet extends ActorSheet {
 	}
 
 	async _addClass( classItem ) {
+		console.log(classItem);
+		const actorClasses = this.actor.getFlag('fabula', 'classes') || [];
+		actorClasses.push(classItem.toObject(false));
+		await this.actor.setFlag('fabula', 'classes', actorClasses);
 		console.log(this.actor);
-		await this.actor.createEmbeddedDocuments('Item', [classItem]);
-		console.log(this.actor);
+		// if ( choice != '' )
 	}
 }
