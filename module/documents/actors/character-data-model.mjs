@@ -29,7 +29,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, EmbeddedDataField, ArrayField, NumberField } = foundry.data.fields;
 		return {
-			level: new SchemaField({ value: new NumberField({ initial: 5, min: 5, max: 50, integer: true, nullable: false }) }),
+			level: new SchemaField({ value: new NumberField({ initial: 0, min: 0, max: 50, integer: true, nullable: false }) }),
 			resources: new SchemaField({
 				hp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
 				mp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
@@ -71,19 +71,15 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 
 	#prepareBasicResources() {
 		const data = this;
-		const itemTypes = data.actor.itemTypes;
-		let freeBenefits = itemTypes.class.reduce(
+		const actorClasses = data.parent.getFlag('fabula', 'classes') || [];
+		let freeBenefits = actorClasses.reduce(
 			( add, curr ) => {
-				if ( ( curr.system.bonus.hp + curr.system.bonus.mp + curr.system.bonus.ip ) > 1 ) {
-					console.error('più di uno');
-				} else {
-					if ( curr.system.bonus.hp == true )
-						add.hp += 5;
-					if ( curr.system.bonus.mp == true )
-						add.mp += 5;
-					if ( curr.system.bonus.ip == true )
-						add.ip += 2;
-				}
+				if ( curr.system.bonus.hp == true )
+					add.hp += 5;
+				if ( curr.system.bonus.mp == true )
+					add.mp += 5;
+				if ( curr.system.bonus.ip == true )
+					add.ip += 2;
 				return add;
 			},
 			{ hp: 0, mp: 0, ip: 0 },

@@ -1,5 +1,31 @@
 import { FU } from "../helpers/config.mjs";
 
+function checkParams( params ) {
+	const values = Object.values(params);
+	values.sort((a, b) => a - b);
+	const combinations = [
+		[8, 8, 8, 8],
+		[10, 8, 8, 6],
+		[10, 10, 6, 6]
+	];
+
+	function getFrequency(arr) {
+		return arr.reduce((acc, val) => {
+			acc[val] = ( acc[val] || 0 ) + 1;
+			return acc;
+		}, {});
+	}
+
+	const inputFrequency = getFrequency( values );
+
+	return combinations.some((combo) => {
+		const comboFrequency = getFrequency(combo);
+		return Object.keys(comboFrequency).every(
+			key => comboFrequency[key] === inputFrequency[key]
+		);
+	});
+}
+
 /**
  * Extend basic ActorSheet
  * @extends {ActorSheet}
@@ -47,6 +73,9 @@ export class FabulaActorSheet extends ActorSheet {
 		context.rollData = context.actor.getRollData();
 
 		context.FU = FU;
+
+		// if ( actorData.type == 'character' && actorData.system.level.value < 5 )
+		// 	await this._characterCreation( actorData );
 
 		return context;
 	}
@@ -108,12 +137,15 @@ export class FabulaActorSheet extends ActorSheet {
 											confirm: {
 												label: 'Conferma',
 												callback: async (html) => {
-													const radio = html.find('[name="formClassBenefit"]').val();
-													document.system.bonus.hp = false;
-													document.system.bonus.mp = false;
-													document.system.bonus.ip = false;
-													document.system.bonus[radio] = true;
-													await actor._addClass( document );
+													const radio = html.find('[name="formClassBenefit"]:checked').val();
+													let clonedDocument = document.toObject()
+													clonedDocument.system.bonus = {
+														hp: false,
+														mp: false,
+														ip: false,
+													}
+													clonedDocument.system.bonus[radio] = true;
+													await actor._addClass( clonedDocument );
 												}
 											},
 											cancel: {
@@ -122,7 +154,7 @@ export class FabulaActorSheet extends ActorSheet {
 										},
 									}).render(true);
 								} else {
-									await actor._addClass( document );
+									await actor._addClass( document.toObject() );
 								}
 							}
 							return null;
@@ -219,11 +251,8 @@ export class FabulaActorSheet extends ActorSheet {
 	}
 
 	async _addClass( classItem ) {
-		console.log(classItem);
 		const actorClasses = this.actor.getFlag('fabula', 'classes') || [];
-		actorClasses.push(classItem.toObject(false));
+		actorClasses.push(classItem);
 		await this.actor.setFlag('fabula', 'classes', actorClasses);
-		console.log(this.actor);
-		// if ( choice != '' )
 	}
 }

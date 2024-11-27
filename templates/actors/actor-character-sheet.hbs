@@ -13,7 +13,7 @@
 
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
-        <a class="item" data-tab="class">CLasse</a>
+        <a class="item" data-tab="class">Classi</a>
         <a class="item" data-tab="equip">Equipaggiamento</a>
     </nav>
 
@@ -54,14 +54,7 @@
                                 </li>
                                 {{/each}}
                             </ul>
-                            Classi: <br>
-                            <ul>
-                                {{#each items}}
-                                    {{#if (eq this.type "class")}}
-                                        <li>{{this.name}}</li>
-                                    {{/if}}
-                                {{/each}}
-                            </ul>
+                            Equipaggiamento: <br>
                             <ul>
                                 <li>Armatura: {{system.equip.armor}}</li>
                                 <li>Mano primaria: {{system.equip.mainHand}}</li>
@@ -85,12 +78,24 @@
                             </ul>
                             Status: <br>
                             <ul>
-                                <li>Rallentato: {{system.status.slow.active}}</li>
-                                <li>Confuso: {{system.status.dazed.active}}</li>
-                                <li>Indebolito: {{system.status.weak.active}}</li>
-                                <li>Scosso: {{system.status.shaken.active}}</li>
-                                <li>Furente: {{system.status.enraged.active}}</li>
-                                <li>Avvelenato: {{system.status.poisoned.active}}</li>
+                                {{#if system.status.slow.active}}
+                                    <li>Rallentato</li>
+                                {{/if}}
+                                {{#if system.status.dazed.active}}
+                                    <li>Confuso</li>
+                                {{/if}}
+                                {{#if system.status.weak.active}}
+                                    <li>Indebolito</li>
+                                {{/if}}
+                                {{#if system.status.shaken.active}}
+                                    <li>Scosso</li>
+                                {{/if}}
+                                {{#if system.status.enraged.active}}
+                                    <li>Furente</li>
+                                {{/if}}
+                                {{#if system.status.poisoned.active}}
+                                    <li>Avvelenato</li>
+                                {{/if}}
                             </ul>
                         </td>
                     </tr>
@@ -98,11 +103,9 @@
             </table>
         </div>
         <div class="tab desc" data-group="primary" data-tab="class">
-            {{#each items}}
-                {{#if (eq this.type "class")}}
-                    <strong>{{this.name}}</strong>
-                    <hr>
-                {{/if}}
+            {{#each flags.fabula.classes}}
+                <strong>{{this.name}}</strong>
+                <hr>
             {{/each}}
         </div>
         <div class="tab desc" data-group="primary" data-tab="equip">
