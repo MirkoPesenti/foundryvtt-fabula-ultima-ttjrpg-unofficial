@@ -47,10 +47,10 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				}
 			}),
 			features: new SchemaField({
-				pronouns: new StringField(),
-				identity: new StringField(),
-				theme: new StringField(),
-				origin: new StringField(),
+				pronouns: new StringField({ initial: '' }),
+				identity: new StringField({ initial: '' }),
+				theme: new StringField({ initial: '' }),
+				origin: new StringField({ initial: '' }),
 			}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
 			status: new EmbeddedDataField(StatusesDataModel, {}),
