@@ -29,7 +29,7 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 			description: new HTMLField(),
 			alias: new SchemaField({ value: new StringField() }),
 			questions: new ArrayField( new StringField() ),
-			level: new SchemaField({ value: new NumberField({ initial: 1, min: 1, max: 10, integer: true, nullable: false }) }),
+			level: new SchemaField({ value: new NumberField({ initial: 0, min: 0, max: 10, integer: true, nullable: false }) }),
 			bonus: new SchemaField({
 				hp: new BooleanField({ initial: false }),
 				mp: new BooleanField({ initial: false }),

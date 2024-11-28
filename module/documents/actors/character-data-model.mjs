@@ -29,7 +29,6 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, EmbeddedDataField, ArrayField, NumberField } = foundry.data.fields;
 		return {
-			level: new SchemaField({ value: new NumberField({ initial: 0, min: 0, max: 50, integer: true, nullable: false }) }),
 			resources: new SchemaField({
 				hp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
 				mp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
@@ -65,6 +64,18 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 		return this.parent;
 	}
 
+	prepareBaseData() {
+		const data = this;
+		const actorClasses = data.parent.getFlag('fabula', 'classes') || [];
+		let level = actorClasses.reduce(
+			( add, curr ) => {
+				add.value += curr.system.level.value;
+				return add;
+			}, { value: 0 },
+		);
+		(this.level ??= {}).value = level.value;
+	}
+
 	prepareEmbeddedData() {
 		this.#prepareBasicResources();
 	}
@@ -74,15 +85,14 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 		const actorClasses = data.parent.getFlag('fabula', 'classes') || [];
 		let freeBenefits = actorClasses.reduce(
 			( add, curr ) => {
-				if ( curr.system.bonus.hp == true )
+				if ( curr.system.bonus.hp == true && curr.system.level.value == 1 )
 					add.hp += 5;
-				if ( curr.system.bonus.mp == true )
+				if ( curr.system.bonus.mp == true && curr.system.level.value == 1 )
 					add.mp += 5;
-				if ( curr.system.bonus.ip == true )
+				if ( curr.system.bonus.ip == true && curr.system.level.value == 1 )
 					add.ip += 2;
 				return add;
-			},
-			{ hp: 0, mp: 0, ip: 0 },
+			}, { hp: 0, mp: 0, ip: 0 },
 		);
 
 		Object.defineProperty(this.resources.hp, 'max', {

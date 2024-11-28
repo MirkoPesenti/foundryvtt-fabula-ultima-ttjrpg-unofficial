@@ -9,7 +9,7 @@ import { FabulaItemSheet } from './sheets/item-sheet.mjs';
 // Helpers
 import { FU, SYSTEM } from './helpers/config.mjs';
 import { preloadPartialTemplates } from './helpers/templates.mjs';
-import { checkParams } from './helpers/helpers.mjs';
+import { checkParams, addClass } from './helpers/helpers.mjs';
 
 // Actors Data Models
 import { CharacterDataModel } from './documents/actors/character-data-model.mjs';
@@ -105,20 +105,14 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 	// Prepare classes options
 	const pack = game.packs.get('fabula.classes');
 	const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
-	// const actorClasses = actor.getFlag('fabula', 'classes') || [];
+	const actorClasses = actor.getFlag('fabula', 'classes') || [];
+	const actorClassFeatures = actor.getFlag('fabula', 'classFeatures') || [];
 	let classOptions = '';
 	sortedPack.forEach((value, key) => {
-		let selected = false;
-		// actorClasses.forEach((val) => {
-		// 	if ( val.name == value.name ) {
-		// 		selected = true;
-		// 		return;
-		// 	}
-		// });
 		classOptions += `
 			<div class="form-group">
 				<label for="class_${value.name}">${value.name}</label>
-				<input type="checkbox" id="class_${value.name}" value="${value._id}" ${selected ? 'selected' : ''} />
+				<input type="radio" name="formClass" id="class_${value.name}" value="${value._id}" />
 			</div>
 		`;
 	});
@@ -174,72 +168,88 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 			}
 		},
 		{
-			title: 'Scegli due o tre Classi iniziali',
+			title: 'Opzione di livello 1 (1/5)',
 			content: `
 				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
 				${classOptions}
 			`,
 			validate: async (html) => {
-				const classes = html.find('input[type="checkbox"]:checked').map((_, el) => el.value).get();
-				if ( classes.length > 3 ) {
-					ui.notifications.warn(`Non puoi scegliere più di 3 classi`);
-					return false;
-				} else if ( classes.length < 2 ) {
-					ui.notifications.warn(`Devi scegliere almeno 2 classi`);
+				const classID = html.find('[name="formClass"]:checked').val();
+				if ( !classID ) {
+					ui.notifications.warn('Devi scegliere una classe');
 					return false;
 				}
-				for ( const id of classes ) {
-					const entry = pack.index.find(e => e._id === id);
-					if (entry) {
-						const document = await pack.getDocument(entry._id);
-						let documentToAdd;
-						if ( ( document.system.bonus.hp + document.system.bonus.mp + document.system.bonus.ip ) > 1 ) {
-							let radios = '';
-							if ( document.system.bonus.hp )
-								radios += `<div class="form-group">
-											<label for="formClassBenefit">Punti Ferita</label>
-											<input type="radio" name="formClassBenefit" value="hp" />
-										</div>`;
-							if ( document.system.bonus.mp )
-								radios += `<div class="form-group">
-											<label for="formClassBenefit">Punti Mente</label>
-											<input type="radio" name="formClassBenefit" value="mp" />
-										</div>`;
-							if ( document.system.bonus.ip )
-								radios += `<div class="form-group">
-											<label for="formClassBenefit">Punti Inventario</label>
-											<input type="radio" name="formClassBenefit" value="ip" />
-										</div>`;
-							new Dialog({
-								title: 'Scegli beneficio',
-								content: `<form>${radios}</form>`,
-								buttons: {
-									confirm: {
-										label: 'Conferma',
-										callback: async (html) => {
-											const radio = html.find('[name="formClassBenefit"]:checked').val();
-											documentToAdd = document.toObject()
-											documentToAdd.system.bonus = {
-												hp: false,
-												mp: false,
-												ip: false,
-											}
-											documentToAdd.system.bonus[radio] = true;
-										}
-									},
-									cancel: {
-										label: 'Annulla',
-									},
-								},
-							}).render(true);
-						} else {
-							documentToAdd = document.toObject();
-						}
-						actorClasses.push( documentToAdd );
-					}
+				actorClasses.splice( 0, actorClasses.length );
+				actorClassFeatures.splice( 0, actorClassFeatures.length );
+				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+			}
+		},
+		{
+			title: 'Opzione di livello 2 (2/5)',
+			content: `
+				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
+				${classOptions}
+			`,
+			validate: async (html) => {
+				const classID = html.find('[name="formClass"]:checked').val();
+				if ( !classID ) {
+					ui.notifications.warn('Devi scegliere una classe');
+					return false;
 				}
-				await actor.setFlag('fabula', 'classes', actorClasses);
-				return true;
+				actorClasses.splice( 1, actorClasses.length - 1 );
+				actorClassFeatures.splice( 1, actorClassFeatures.length - 1 );
+				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+			}
+		},
+		{
+			title: 'Opzione di livello 3 (3/5)',
+			content: `
+				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
+				${classOptions}
+			`,
+			validate: async (html) => {
+				const classID = html.find('[name="formClass"]:checked').val();
+				if ( !classID ) {
+					ui.notifications.warn('Devi scegliere una classe');
+					return false;
+				}
+				actorClasses.splice( 2, actorClasses.length - 2 );
+				actorClassFeatures.splice( 2, actorClassFeatures.length - 2 );
+				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+			}
+		},
+		{
+			title: 'Opzione di livello 4 (4/5)',
+			content: `
+				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
+				${classOptions}
+			`,
+			validate: async (html) => {
+				const classID = html.find('[name="formClass"]:checked').val();
+				if ( !classID ) {
+					ui.notifications.warn('Devi scegliere una classe');
+					return false;
+				}
+				actorClasses.splice( 3, actorClasses.length - 3 );
+				actorClassFeatures.splice( 3, actorClassFeatures.length - 3 );
+				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+			}
+		},
+		{
+			title: 'Opzione di livello 5 (5/5)',
+			content: `
+				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
+				${classOptions}
+			`,
+			validate: async (html) => {
+				const classID = html.find('[name="formClass"]:checked').val();
+				if ( !classID ) {
+					ui.notifications.warn('Devi scegliere una classe');
+					return false;
+				}
+				actorClasses.splice( 4, actorClasses.length - 4 );
+				actorClassFeatures.splice( 4, actorClassFeatures.length - 4 );
+				return await addClass( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
 		{
@@ -293,6 +303,10 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					wlp: html.find('#wlp').val(),
 				};
 				if ( checkParams( params ) ) {
+					await actor.update({ 'system.resources.attributes.dex.value': params.dex });
+					await actor.update({ 'system.resources.attributes.ins.value': params.ins });
+					await actor.update({ 'system.resources.attributes.mig.value': params.mig });
+					await actor.update({ 'system.resources.attributes.wlp.value': params.wlp });
 					return true;
 				} else {
 					ui.notifications.warn('Devi selezionare una combinazione di attrivuti accettabili');
@@ -304,7 +318,7 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 
 	function updateDialog() {
 		const step = steps[currentStep];
-		return new Dialog({
+		new Dialog({
 			title: step.title,
 			content: step.content,
 			buttons: {
@@ -318,20 +332,20 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					},
 				},
 				next: {
-					label: currentStep === steps.length ? 'Conferma' : 'Avanti',
-					callback: (html) => {
-						step.validate(html).then((result) => {
-							if ( result ) {
-								if ( currentStep < steps.length ) {
-									currentStep++;
-									updateDialog();
-								} else {
-									characterCreationOpen = false;
-									ui.notifications.info('Personaggio creato con successo');
-								}
+					label: currentStep === steps.length - 1 ? 'Conferma' : 'Avanti',
+					callback: async (html) => {
+						const result = await step.validate(html);
+						if ( result ) {
+							if ( currentStep < steps.length - 1 ) {
+								currentStep++;
+								updateDialog();
+							} else {
+								characterCreationOpen = false;
+								ui.notifications.info('Personaggio creato con successo');
 							}
+						} else {
 							updateDialog();
-						});
+						}
 					},
 				}
 			},
