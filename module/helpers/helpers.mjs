@@ -54,8 +54,131 @@ function openFreeBenefirsChildDialog( radios, actorClasses, clonedDocument ) {
 	});
 }
 
-export async function addClass( classID, actorClasses, actorClassFeatures, actor ) {
+function openAttributesIncreaseChildDialog( actor ) {
+	const attributes = actor.system.resources.attributes;
+	const newAttributes = {
+		dex: attributes.dex.value == 12 ? 12 : attributes.dex.value + 2,
+		ins: attributes.ins.value == 12 ? 12 : attributes.ins.value + 2,
+		mig: attributes.mig.value == 12 ? 12 : attributes.mig.value + 2,
+		wlp: attributes.wlp.value == 12 ? 12 : attributes.wlp.value + 2,
+	};
+	return new Promise((resolve) => {
+		new Dialog({
+			title: `Hai raggiunto il livello ${actor.system.level.value + 1}`,
+			content: `
+				<p>Devi scegliere una delle tue Caratteristiche e ne incrementi la taglia di dado base di un grado (massimo <strong>d12</strong>)</p>
+				<div class="form-group">
+					<label for="radioDex">Destrezza ( d${attributes.dex.value} => d${newAttributes.dex} )</label>
+					<input type="radio" id="radioDex" name="formAttributeIncrease" value="dex" ${attributes.dex.value == 12 ? 'disabled' : ''} />
+				</div>
+				<div class="form-group">
+					<label for="radioIns">Intuito ( d${attributes.ins.value} => d${newAttributes.ins} )</label>
+					<input type="radio" id="radioIns" name="formAttributeIncrease" value="ins" ${attributes.ins.value == 12 ? 'disabled' : ''} />
+				</div>
+				<div class="form-group">
+					<label for="radioMig">Vigore ( d${attributes.mig.value} => d${newAttributes.mig} )</label>
+					<input type="radio" id="radioMig" name="formAttributeIncrease" value="mig" ${attributes.mig.value == 12 ? 'disabled' : ''} />
+				</div>
+				<div class="form-group">
+					<label for="radioWlp">Volontà ( d${attributes.wlp.value} => d${newAttributes.wlp} )</label>
+					<input type="radio" id="radioWlp" name="formAttributeIncrease" value="wlp" ${attributes.wlp.value == 12 ? 'disabled' : ''} />
+				</div>
+			`,
+			buttons: {
+				confirm: {
+					label: 'Conferma',
+					callback: async (html) => {
+						const increase = html.find('[name="formAttributeIncrease"]:checked').val();
+						newAttributes.dex = newAttributes.dex == 12 ? 12 : newAttributes.dex - 2;
+						newAttributes.ins = newAttributes.ins == 12 ? 12 : newAttributes.ins - 2;
+						newAttributes.mig = newAttributes.mig == 12 ? 12 : newAttributes.mig - 2;
+						newAttributes.wlp = newAttributes.wlp == 12 ? 12 : newAttributes.wlp - 2;
+						newAttributes[increase] += 2;
+						
+						await actor.update({ 'system.resources.attributes.dex.value': newAttributes.dex });
+						await actor.update({ 'system.resources.attributes.ins.value': newAttributes.ins });
+						await actor.update({ 'system.resources.attributes.mig.value': newAttributes.mig });
+						await actor.update({ 'system.resources.attributes.wlp.value': newAttributes.wlp });
+						resolve(true);
+					}
+				},
+			}
+		}).render(true);
+	});
+}
+
+function openClassFeaturesChildDialog( document, actorClassFeatures, actor ) {
+	const classFeatures = document.flags.fabula.subItems;
+	let options = '';
+	classFeatures.forEach((value, key) => {
+		let level = 0;
+		options += `
+			<div class="form-group">
+				<label for="${value._id}">
+					<strong>${value.name}</strong>`;
+
+		actorClassFeatures.forEach((item, k) => {
+			if ( item._id == value._id )
+				level += item.system.level.current;
+		});
+		if ( value.system.level.max > 1 ) {
+			options += ` ( ${level} / ${value.system.level.max} )`;
+		}
+
+		options += `<br>
+					${value.system.description}
+				</label>
+				<input type="radio" name="formClassFeature" id="${value._id}" value="${value._id}" ${level == value.system.level.max ? 'disabled' : ''} />
+				<hr>
+			</div>
+		`;
+	});
+	return new Promise((resolve) => {
+		new Dialog({
+			title: `Hai scelto la classe ${document.name}: ora devi scegliere l'abilità da ottenere`,
+			content: `
+				<p>Scegli una delle seguenti opzioni:</p>
+				${options}
+			`,
+			buttons: {
+				cancel: {
+					label: 'Annulla',
+					callback: () => resolve(false),
+				},
+				confirm: {
+					label: 'Conferma',
+					callback: async (html) => {
+						const featureID = html.find('input[name="formClassFeature"]:checked').val();
+						const feature = classFeatures.find((element) => element._id == featureID);
+						feature.system.level.current++;
+						let featureFound = false;
+
+						for ( const doc of actorClassFeatures ) {
+							if ( feature._id == doc._id ) {
+								doc.system.level.current++;
+								featureFound = true;
+								break;
+							}
+						}
+						if ( !featureFound )
+							actorClassFeatures.push( feature );
+
+						actorClassFeatures.sort((a, b) => {
+							return a.name.localeCompare(b.name);
+						});
+
+						await actor.setFlag('fabula', 'classFeatures', actorClassFeatures);
+						resolve(true);
+					}
+				}
+			}
+		}).render(true);
+	});
+}
+
+export async function addClassToActor( classID, actorClasses, actorClassFeatures, actor ) {
 	let returnValue = false;
+	let isMastered = false;
 	const pack = game.packs.get('fabula.classes');
 	const entry = pack.index.find( e => e._id === classID );
 
@@ -72,13 +195,25 @@ export async function addClass( classID, actorClasses, actorClassFeatures, actor
 	}
 
 	if ( entry ) {
+
+		// Check if actor is level 20 or 40
+		if ( actor.system.level.value == 19 || actor.system.level.value == 39 ) {
+			await openAttributesIncreaseChildDialog( actor );
+		}
+
 		const document = await pack.getDocument( entry._id );
 		const clonedDocument = document.toObject();
 		let classFound = false;
 		for ( const doc of actorClasses ) {
 			if ( clonedDocument._id == doc._id ) {
+				if ( doc.system.level.value == 10 ) {
+					ui.notifications.warn('Non puoi aumentare il livello in una classe sopra il 10');
+					return false;
+				}
 				doc.system.level.value++;
 				classFound = true;
+				if ( doc.system.level.value == 10 )
+					isMastered = true;
 				break;
 			}
 		}
@@ -109,9 +244,22 @@ export async function addClass( classID, actorClasses, actorClassFeatures, actor
 
 			returnValue = true;
 		}
+
+		await openClassFeaturesChildDialog( clonedDocument, actorClassFeatures, actor );
+
 	} else {
 		ui.notifications.error('Non è stato potuto trovare la classe nel compendio');
 	}
+	
+	actorClasses.sort((a, b) => {
+		return a.name.localeCompare(b.name);
+	});
 	await actor.setFlag('fabula', 'classes', actorClasses);
+
+	// Add Heroic skill for mastered class
+	if ( isMastered ) {
+		ui.notifications.warn('Aggiungi abilità eroica!');
+	}
+
 	return returnValue;
 }

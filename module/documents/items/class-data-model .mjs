@@ -1,4 +1,7 @@
+import { FU } from "../../helpers/config.mjs";
+
 /**
+ * @property {string} sourcebook
  * @property {string} art.src
  * @property {string} summary.value
  * @property {string} description
@@ -24,6 +27,7 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, ArrayField, BooleanField, NumberField } = foundry.data.fields;
 		return {
+			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			art: new SchemaField({ src: new StringField() }),
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),

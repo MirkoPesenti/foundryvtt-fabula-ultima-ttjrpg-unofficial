@@ -3,6 +3,7 @@ import { DamageDataModel } from './common/damage-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
 /**
+ * @property {string} sourcebook
  * @property {string} type.value
  * @property {string} summary.value
  * @property {string} description
@@ -21,6 +22,7 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, BooleanField, NumberField, EmbeddedDataField } = foundry.data.fields;
 		return {
+			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			type: new SchemaField({ value: new StringField({ initial: 'chimerism', choices: Object.keys(FU.SpellDisciplines) }) }),
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),

@@ -150,6 +150,8 @@ export class FabulaItemSheet extends ItemSheet {
 				return;
 			}
 
+			await sourceItem.update({ 'system.origin': targetItem._id });
+
 			// Update Class
 			subItems.push(sourceItem.toObject());
 			await targetItem.setFlag('fabula', 'subItems', subItems);

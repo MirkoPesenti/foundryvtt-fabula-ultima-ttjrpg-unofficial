@@ -104,7 +104,18 @@
         </div>
         <div class="tab desc" data-group="primary" data-tab="class">
             {{#each flags.fabula.classes}}
-                <strong>{{this.name}}</strong>
+                <strong>{{name}} ({{system.level.value}})</strong>
+                <ul>
+                    {{#each ../flags.fabula.classFeatures}}
+                        {{#if (eq system.origin ../_id)}}
+                        <li>
+                            <strong>{{name}} ( Lv. {{system.level.current}} )</strong>
+                            <br>
+                            {{{system.description}}}
+                        </li>
+                        {{/if}}
+                    {{/each}}
+                </ul>
                 <hr>
             {{/each}}
         </div>

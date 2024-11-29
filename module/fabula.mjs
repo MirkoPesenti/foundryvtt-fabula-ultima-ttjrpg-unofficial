@@ -9,7 +9,7 @@ import { FabulaItemSheet } from './sheets/item-sheet.mjs';
 // Helpers
 import { FU, SYSTEM } from './helpers/config.mjs';
 import { preloadPartialTemplates } from './helpers/templates.mjs';
-import { checkParams, addClass } from './helpers/helpers.mjs';
+import { checkParams, addClassToActor } from './helpers/helpers.mjs';
 
 // Actors Data Models
 import { CharacterDataModel } from './documents/actors/character-data-model.mjs';
@@ -181,7 +181,7 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 				}
 				actorClasses.splice( 0, actorClasses.length );
 				actorClassFeatures.splice( 0, actorClassFeatures.length );
-				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
 		{
@@ -198,7 +198,7 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 				}
 				actorClasses.splice( 1, actorClasses.length - 1 );
 				actorClassFeatures.splice( 1, actorClassFeatures.length - 1 );
-				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
 		{
@@ -215,7 +215,7 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 				}
 				actorClasses.splice( 2, actorClasses.length - 2 );
 				actorClassFeatures.splice( 2, actorClassFeatures.length - 2 );
-				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
 		{
@@ -232,7 +232,7 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 				}
 				actorClasses.splice( 3, actorClasses.length - 3 );
 				actorClassFeatures.splice( 3, actorClassFeatures.length - 3 );
-				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
 		{
@@ -249,7 +249,7 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 				}
 				actorClasses.splice( 4, actorClasses.length - 4 );
 				actorClassFeatures.splice( 4, actorClassFeatures.length - 4 );
-				return await addClass( classID, actorClasses, actorClassFeatures, actor );
+				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
 		{

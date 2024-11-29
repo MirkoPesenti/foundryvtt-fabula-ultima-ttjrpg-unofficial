@@ -2,6 +2,10 @@ export const SYSTEM = 'Fabula Ultima';
 
 export const FU = {};
 
+FU.sourcebook = {
+	base: 'FU.sourcebook.base',
+}
+
 /**
  * Ability scores used in the system
  * @type {Object}

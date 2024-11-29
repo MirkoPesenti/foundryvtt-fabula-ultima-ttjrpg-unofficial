@@ -3,7 +3,8 @@ import { DamageDataModel } from './common/damage-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
 /**
- * @property {string} summary
+ * @property {string} sourcebook
+ * @property {string} summary.value
  * @property {boolean} isMartial.value
  * @property {string} description
  * @property {string} rarity.value
@@ -20,6 +21,7 @@ export class WeaponDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, BooleanField, NumberField, EmbeddedDataField } = foundry.data.fields;
 		return {
+			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new SchemaField({ value: new StringField() }),
 			isMartial: new SchemaField({ value: new BooleanField() }),
 			description: new HTMLField(),

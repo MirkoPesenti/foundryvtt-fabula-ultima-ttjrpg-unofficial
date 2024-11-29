@@ -3,6 +3,7 @@ import { ProgressDataModel } from './common/progress-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
 /**
+ * @property {string} sourcebook
  * @property {string} type.value
  * @property {string} summary
  * @property {string} description
@@ -20,6 +21,7 @@ export class RitualDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, BooleanField, EmbeddedDataField } = foundry.data.fields;
 		return {
+			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			type: new SchemaField({ value: new StringField({ initial: 'arcanism', choices: Object.keys(FU.MagicDisciplines) }) }),
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),

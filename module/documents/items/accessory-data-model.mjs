@@ -1,8 +1,9 @@
 import { FU } from '../../helpers/config.mjs';
 
 /**
+ * @property {string} sourcebook
+ * @property {string} summary.value
  * @property {string} description
- * @property {string} summary
  * @property {string} rarity.value
  * @property {number} cost.value
  */
@@ -11,6 +12,7 @@ export class AccessoryDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, NumberField } = foundry.data.fields;
 		return {
+			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
 			rarity: new SchemaField({ value: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }) }),

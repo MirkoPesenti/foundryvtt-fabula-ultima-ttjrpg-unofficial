@@ -2,7 +2,8 @@ import { ProgressDataModel } from './common/progress-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
 /**
- * @property {string} summary
+ * @property {string} sourcebook
+ * @property {string} summary.value
  * @property {string} description
  * @property {string} potency.value
  * @property {string} area.value
@@ -17,6 +18,7 @@ export class ProjectDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, BooleanField, EmbeddedDataField } = foundry.data.fields;
 		return {
+			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
 			potency: new SchemaField({ value: new StringField({ initial: 'minor', choices: Object.keys(FU.potencyList) }) }),
