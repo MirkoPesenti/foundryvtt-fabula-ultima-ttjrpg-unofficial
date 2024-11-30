@@ -2,6 +2,9 @@
 
     <header class="sheet-header">
         <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+        <div class="class-icon">
+            <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+        </div>
     </header>
 
     {{!-- <select name="system.sourcebook">
@@ -19,44 +22,46 @@
         <input name="system.art.src" type="text" placeholder="Immagine" value="{{system.art.src}}" readonly>
         <button type="button" class="change-image">Cambia immagine</button>
         {{/if}}
+        
 		<div class="tab desc" data-group="primary" data-tab="description">
             <div class="form-group form-alias">
                 <label>Anche:</label>
                 <input name="system.alias.value" type="text" value="{{system.alias.value}}">
             </div>
+
             <img src="{{system.art.src}}" class="img-class-primary">
 
-            <div class="desc-container">
-                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+            <div class="summary-container">
+                {{#if @root.editable}}
+                    <textarea name="system.summary.value" cols="3" rows="1">{{system.summary.value}}</textarea>
+                {{else}}
+                    {{system.summary.value}}
+                {{/if}}
             </div>
 
-            {{!-- Domande: <br>
-            <ul>
-                {{#each system.questions as |question questionIndex|}}
-                <li>
-                    <input name="system.questions.{{questionIndex}}" type="text" value="{{question}}">
-                </li>
-                {{/each}}
-            </ul>
-            <button type="button" class="add-question" style="max-width:100px;">+</button>
+            <div class="desc-container">
+                <div class="box">
+                    <ul class="list-questions">
+                        {{#each system.questions as |question questionIndex|}}
+                        <li>
+                            {{#if @root.editable}}
+                                <input name="system.questions.{{questionIndex}}" type="text" value="{{question}}">
+                            {{else}}
+                                {{question}}
+                            {{/if}}
+                        </li>
+                        {{/each}}
+                    </ul>
+                </div>
+                <div class="box">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+                </div>
+            </div>
+            {{!-- <button type="button" class="add-question" style="max-width:100px;">+</button>
             <button type="button" class="remove-question" style="max-width:100px;">-</button> --}}
         </div>
 
 		<div class="tab benefits" data-group="primary" data-tab="benefits">
-            <div class="profile-container">
-                <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-            </div>
-            <div class="header-fields">
-                <h1 class="charname">
-                </h1>
-                <div class="textarea-container">
-                    <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-                </div>
-            </div>
-
-
-
-
             <div class="form-group">
                 <label for="system.bonus.hp">Punti vita (PV):</label>
                 <input name="system.bonus.hp" type="checkbox" {{checked system.bonus.hp}}>
