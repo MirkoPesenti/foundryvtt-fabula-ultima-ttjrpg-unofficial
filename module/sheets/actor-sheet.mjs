@@ -31,6 +31,7 @@ export class FabulaActorSheet extends ActorSheet {
 		await this._prepareItems(context);
 
 		//Add required CONFIG data
+		context.sourcebook = CONFIG.FU.sourcebook;
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
 		context.DamageTypes = CONFIG.FU.DamageTypes;

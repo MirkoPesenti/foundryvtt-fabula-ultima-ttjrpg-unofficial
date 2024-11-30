@@ -1,38 +1,36 @@
 <form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-            <div class="textarea-container">
-                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-            </div>
-        </div>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
     </header>
 
-    <nav class="sheet-tabs tabs" data-group="primary">
+    {{!-- <select name="system.sourcebook">
+        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+    </select> --}}
+
+    {{!-- <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="description">Descrizione</a>
         <a class="item" data-tab="benefits">Benefici gratuiti</a>
         <a class="item" data-tab="features">Abilità</a>
-    </nav>
+    </nav> --}}
 
     <section class="sheet-body">
         {{#if @root.editable}}
         <input name="system.art.src" type="text" placeholder="Immagine" value="{{system.art.src}}" readonly>
         <button type="button" class="change-image">Cambia immagine</button>
         {{/if}}
-        <img src="{{system.art.src}}" width="200">
 		<div class="tab desc" data-group="primary" data-tab="description">
-            <div class="form-group">
-                <label for="system.alias.value">Alias:</label>
+            <div class="form-group form-alias">
+                <label>Anche:</label>
                 <input name="system.alias.value" type="text" value="{{system.alias.value}}">
             </div>
+            <img src="{{system.art.src}}" class="img-class-primary">
 
-            Domande: <br>
+            <div class="desc-container">
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+            </div>
+
+            {{!-- Domande: <br>
             <ul>
                 {{#each system.questions as |question questionIndex|}}
                 <li>
@@ -41,12 +39,24 @@
                 {{/each}}
             </ul>
             <button type="button" class="add-question" style="max-width:100px;">+</button>
-            <button type="button" class="remove-question" style="max-width:100px;">-</button>
-
-            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+            <button type="button" class="remove-question" style="max-width:100px;">-</button> --}}
         </div>
 
 		<div class="tab benefits" data-group="primary" data-tab="benefits">
+            <div class="profile-container">
+                <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+            </div>
+            <div class="header-fields">
+                <h1 class="charname">
+                </h1>
+                <div class="textarea-container">
+                    <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
+                </div>
+            </div>
+
+
+
+
             <div class="form-group">
                 <label for="system.bonus.hp">Punti vita (PV):</label>
                 <input name="system.bonus.hp" type="checkbox" {{checked system.bonus.hp}}>
@@ -124,7 +134,7 @@
                         - {{this.system.level.max}}
                     {{/gt}}
                     <br>
-                    {{editor this.system.description target="this.system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=false }}
+                    {{{this.system.description}}}
                     <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
                 {{/if}}
             {{/each}}

@@ -18,6 +18,14 @@
 		}
 	},
 	"FU": {
+		"sourcebook": {
+			"base": "Manuale Base",
+			"bonusAce": "Bonus: Pesca la tua Carta!",
+			"bonusNecromancer": "Bonus: Un regalo bello da Morire!",
+			"atlasHighFantasy": "Atlante High Fantasy",
+			"atlasTechnoFantasy": "Atlante Techno Fantasy",
+			"atlasNaturalFantasy": "Atlante Natural Fantasy"
+		},
 		"attributes": {
 			"dex": "Destrezza",
 			"ins": "Intuito",

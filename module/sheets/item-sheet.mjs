@@ -10,7 +10,7 @@ export class FabulaItemSheet extends ItemSheet {
 
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
-			classes: ['fabula', 'sheet', 'item', 'backgroundstyle'],
+			classes: ['fabula', 'sheet', 'item'],
 			width: 700,
 			height: 700,
 			tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'description', }],
@@ -30,6 +30,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.flags = itemData.flags;
 
 		//Add required CONFIG data
+		context.sourcebook = CONFIG.FU.sourcebook;
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
 		context.DamageTypes = CONFIG.FU.DamageTypes;
@@ -48,6 +49,14 @@ export class FabulaItemSheet extends ItemSheet {
 		};
 
 		context.FU = FU;
+
+		// Add class to Sheet based of Item sourcebook
+		const sourcebookClass = context.item.system.sourcebook;
+		if ( sourcebookClass ) {
+			itemData._sheet.options.classes.splice(-1);
+			itemData._sheet.options.classes.push(sourcebookClass);
+			itemData._sheet.render(true);
+		}
 
 		return context;
 	}
@@ -154,6 +163,10 @@ export class FabulaItemSheet extends ItemSheet {
 
 			// Update Class
 			subItems.push(sourceItem.toObject());
+			subItems.sort((a, b) => {
+				return a.name.localeCompare(b.name);
+			});
+
 			await targetItem.setFlag('fabula', 'subItems', subItems);
 			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
 		}

@@ -109,6 +109,11 @@ function openAttributesIncreaseChildDialog( actor ) {
 
 function openClassFeaturesChildDialog( document, actorClassFeatures, actor ) {
 	const classFeatures = document.flags.fabula.subItems;
+	if ( classFeatures.length == 0 ) {
+		ui.notifications.warn('La classe non ha abilità selezionabili');
+		return true;
+	}
+
 	let options = '';
 	classFeatures.forEach((value, key) => {
 		let level = 0;

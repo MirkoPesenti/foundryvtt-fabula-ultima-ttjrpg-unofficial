@@ -4,6 +4,11 @@ export const FU = {};
 
 FU.sourcebook = {
 	base: 'FU.sourcebook.base',
+	bonusAce: 'FU.sourcebook.bonusAce',
+	bonusNecromancer: 'FU.sourcebook.bonusNecromancer',
+	atlasHighFantasy: 'FU.sourcebook.atlasHighFantasy',
+	atlasTechnoFantasy: 'FU.sourcebook.atlasTechnoFantasy',
+	atlasNaturalFantasy: 'FU.sourcebook.atlasNaturalFantasy',
 }
 
 /**

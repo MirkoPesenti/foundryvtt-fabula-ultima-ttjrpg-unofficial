@@ -180,7 +180,10 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 0, actorClasses.length );
-				actorClassFeatures.splice( 0, actorClassFeatures.length );
+				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+				else 
+					actorClassFeatures.splice( 0, actorClassFeatures.length );
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -197,7 +200,10 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 1, actorClasses.length - 1 );
-				actorClassFeatures.splice( 1, actorClassFeatures.length - 1 );
+				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+				else 
+					actorClassFeatures.splice( 1, actorClassFeatures.length - 1 );
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -214,7 +220,10 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 2, actorClasses.length - 2 );
-				actorClassFeatures.splice( 2, actorClassFeatures.length - 2 );
+				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+				else 
+					actorClassFeatures.splice( 2, actorClassFeatures.length - 2 );
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -231,7 +240,10 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 3, actorClasses.length - 3 );
-				actorClassFeatures.splice( 3, actorClassFeatures.length - 3 );
+				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+				else 
+					actorClassFeatures.splice( 3, actorClassFeatures.length - 3 );
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -248,8 +260,16 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 4, actorClasses.length - 4 );
-				actorClassFeatures.splice( 4, actorClassFeatures.length - 4 );
-				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
+				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+				else 
+					actorClassFeatures.splice( 4, actorClassFeatures.length - 4 );
+				let classResult = await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
+				if ( actorClasses.length < 2 ) {
+					ui.notifications.warn('Devi scegliere almeno due classi');
+					return false;
+				}
+				return classResult;
 			}
 		},
 		{

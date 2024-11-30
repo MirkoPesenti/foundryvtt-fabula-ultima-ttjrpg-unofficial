@@ -7,8 +7,87 @@ Typography
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Antonio:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans+Caption:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P:wght@400;700&display=swap");
+
+@font-face {
+	font-family: "RPGAwesome";
+	src: url("../fonts/rpgawesome-webfont.eot?v=0.1.0");
+	src: url("../fonts/rpgawesome-webfont.eot?#iefix&v=0.1.0") format("embedded-opentype"), url("../fonts/rpgawesome-webfont.woff?v=0.1.0") format("woff"), url("../fonts/rpgawesome-webfont.ttf?v=0.1.0") format("truetype"), url("../fonts/rpgawesome-webfont.svg?v=0.1.0#rpg-awesome") format("svg");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Yanone Kaffeesatz";
+	src: url("../fonts/yanone-kafffeesatz/YanoneKaffeesatz-VariableFont_wght.ttf") format("truetype");
+	font-optical-sizing: auto;
+	font-weight: 200 700;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Fabula Ultima icons";
+	src: url("../fonts/fabula-ultima/FabulaUltimaIcons-Regular.otf") format("opentype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "CreditValley";
+	src: url("../fonts/credit-valley/CreditValley.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "CreditValleybold";
+	src: url("../fonts/credit-valley/CreditValleybold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "trigger-bold";
+	src: url("../fonts/trigger-bold/trigger-bold.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Evilz";
+	src: url("../fonts/evil-font/Evilz.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "FnT_BasicShapes1";
+	src: url("../fonts/fnt-bs/FNT_BS.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "old retro labels tfb";
+	src: url("../fonts/old-retro-labels-tfb/old_retro_labels_tfb.ttf") format("truetype");
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: "Material Symbols Outlined";
+	font-style: normal;
+	src: url("../fonts/material-symbols/MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].woff2") format("woff");
+}
+@font-face {
+	font-family: "Material Symbols Rounded";
+	font-style: normal;
+	src: url("../fonts/material-symbols/MaterialSymbolsRounded[FILL,GRAD,opsz,wght].woff2") format("woff");
+}
+@font-face {
+	font-family: "Material Symbols Sharp";
+	font-style: normal;
+	src: url("../fonts/material-symbols/MaterialSymbolsSharp[FILL,GRAD,opsz,wght].woff2") format("woff");
+}
+@counter-style diamonds {
+	system: cyclic;
+	suffix: " ";
+	symbols: "◆";
+}
 
 /* 
 ------------------------------------------
@@ -16,38 +95,19 @@ End Typography
 ------------------------------------------
 */
 
-/* Utilities */
-.text-center {text-align:center;}
-.input-sm {display:inline-block;width:auto !important;}
+/* Sheets > General */
+.window-app.sheet .window-content {background-image:none;background-color:#FFF;padding:0;}
+.window-app.sheet .window-resizable-handle {display:none;}
 
-/* 【】 */
-.fabula .editor:not(.features .editor) {height:100%;min-height:25em;}
-
-/* Sheets > Header */
-.sheet header.sheet-header {flex:0;position:relative;min-height:170px;align-items:flex-end;}
-.sheet header.sheet-header .profile-container {position:absolute;bottom:0;left:0;z-index:1;border-radius:100%;overflow:hidden;width:150px;height:150px;border:3px solid #a1c4b6;flex:0 0 150px;padding:3px;background:url(/ui/parchment.jpg) repeat;}
-.sheet header.sheet-header img {width:100%;height:100%;object-fit:contain;border:2px solid #a1c4b6;margin:0;border-radius:100%;}
-.sheet header.sheet-header .header-fields {flex:0;flex-grow:1;}
-.sheet header.sheet-header .header-fields > select {position:absolute;top:0;right:0;}
-.sheet header.sheet-header h1 {padding-left:180px;position:relative;}
-.sheet header.sheet-header h1 .icon-offensive {width:20px;height:20px;border-radius:100%;background-color:red;position:absolute;top:50%;left:150px;transform:translate(0,-50%);}
-.sheet header.sheet-header h1 input {width:100%;margin:0;padding:0;box-shadow:none;border:0;border-radius:0;background-color:transparent;text-transform:uppercase;color:#31534a;font-weight:700;}
-.sheet header.sheet-header .textarea-container {margin-left:75px;border-radius:0 20px 20px 0;border:1px solid #a1c4b6;border-left:0;padding:2px;}
-.sheet header.sheet-header textarea {padding:15px;padding-left:95px;border:2px solid #a1c4b6;border-left:0;border-radius:0 18px 18px 0;resize:none;box-shadow:none;font-size:14px;background-color:transparent;min-height:85px;display:block;background:linear-gradient(to right,  rgba(234,243,235,1) 0%,rgba(234,243,235,0) 40%);}
-
-/* Sheets > Tabs */
-.sheet nav.sheet-tabs {margin:0;padding:15px 0 1px;flex:0;border:0;border-bottom:1px solid #31534a;}
-.sheet nav.sheet-tabs > [data-tab] {background-color:transparent;color:#31534a;text-transform:uppercase;width:100%;padding:5px;border-radius:10px 10px 0 0;border-bottom:2px solid #31534a;text-shadow:none;transition:all .15s ease-in-out;}
-.sheet nav.sheet-tabs > [data-tab]:hover {background-color:rgba(49,83,74,.1);}
-.sheet nav.sheet-tabs > [data-tab].active {background-color:#31534a;color:#fff;}
-.sheet nav.sheet-tabs > [data-tab].disabled {color:rgba(49,83,74,.3);background-color:transparent;pointer-events:none;}
-
-/* Sheets > Tables */
-.sheet .sheet-body table tbody td {text-align:center;}
-
-/* Project > Progressbar */
-.project-progressbar {display:flex;gap:10px;}
-.project-progressbar button {width:34px;flex-shrink:0;}
-.project-progressbar button[disabled] {opacity:.3;pointer-events:none;}
-.project-progressbar .progressbar {flex-grow:1;border:1px solid #31534a;border-radius:15px;position:relative;overflow:hidden;}
-.project-progressbar .progressbar .progress {position:absolute;top:0;left:0;bottom:0;height:100%;display:flex;align-items:center;justify-content:center;background-color:#31534a;color:#fff;min-width:100px;max-width:100%;}
+/* Sheets > Class */
+.sheet .class .sheet-header {position:relative;padding:40px 60px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:url(../img/bg-class-header.png);flex-grow:0;outline:1px solid #2B4A42;outline-offset:1px;}
+.sheet .class .sheet-header input {border:0;border-radius:0;background-color:transparent;width:100%;padding:0;height:auto;color:#FFF;text-transform:uppercase;font-family:CreditValley;font-size:50px;}
+.sheet .class .sheet-body {display:flex;flex-direction:column;padding-left:50px;flex-grow:1;background-repeat:no-repeat;background-position:center left;background-size:50px 100%;background-image:url(../img/bg-class-body.png);}
+.sheet .class .sheet-body .tab:first-child {display:block;min-height:100%;border-left:2px solid #2B4A42;outline:1px solid #2B4A42;outline-offset:1px;position:relative;}
+.sheet .class .img-class-primary {border:0;border-radius:0;max-width:100%;height:100%;width:auto;position:absolute;bottom:0;height:530px;left:-52px;}
+.sheet .class .form-alias {width:70%;margin:0;position:absolute;top:15px;padding:8px 20px 3px;background-image:linear-gradient(to right, rgba(227,240,228,1) 0%, rgba(227,240,228,1) 30%, rgba(227,240,228,0) 100%);font-family:"Yanone Kaffeesatz", sans-serif;font-size:25px;}
+.sheet .class .form-alias::before {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;background-image:linear-gradient(to left, rgba(43,74,66,0) 0%, rgba(43,74,66,.4) 30%, rgb(43,74,66) 100%);}
+.sheet .class .form-alias::after {content:"";position:absolute;bottom:0;left:0;right:0;width:100%;height:1px;background-image:linear-gradient(to left, rgba(43,74,66,0) 0%, rgba(43,74,66,.4) 30%, rgb(43,74,66) 100%);}
+.sheet .class .form-alias label {flex:unset;text-transform:uppercase;line-height:1;color:#2A3331;margin-right:5px;}
+.sheet .class .form-alias input {width:auto;background:transparent;padding:0;border-radius:0;line-height:1;color:#2A3331;}
+.sheet .class .desc-container {position:absolute;right:30px;bottom:30px;z-index:1;padding:5px 15px;border:1px solid rgba(43,74,66,.3);border-radius:10px;width:60%;background-image:linear-gradient(to left, rgba(229, 241, 231,0) 0%, rgb(229, 241, 231) 100%);}
