@@ -21,11 +21,9 @@ export class FabulaItemSheet extends ItemSheet {
 	}
 
 	render( force = false, options = {} ) {
-		if ( this.object.type == 'class' )
+		if ( this.object.type == 'class' || this.object.type == 'rule' )
 			options.height = 700;
-		else if ( this.object.type == 'classFeature' )
-			options.height = 500;
-		else if ( this.object.type == 'arcanum' )
+		else if ( this.object.type == 'classFeature' || this.object.type == 'arcanum' || this.object.type == 'heroicSkill' )
 			options.height = 500;
 
 		super.render(force, options);
@@ -43,7 +41,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.system = itemData.system;
 		context.flags = itemData.flags;
 
-		//Add required CONFIG data
+		// Add required CONFIG data
 		context.sourcebook = CONFIG.FU.sourcebook;
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
@@ -58,10 +56,32 @@ export class FabulaItemSheet extends ItemSheet {
 		context.rarityList = CONFIG.FU.rarityList;
 
 		context.enrichedHtml = {
-			description: await TextEditor.enrichHTML( context.system?.description ?? '' ),
-			opportunity: await TextEditor.enrichHTML( context.system?.opportunityEffect ?? '' ),
-			projectCondition: await TextEditor.enrichHTML( context.system?.bonus?.projects?.condition ?? '' ),
+			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
+			opportunity: await TextEditor.enrichHTML( context.system.opportunityEffect ?? '' ),
+			projectCondition: await TextEditor.enrichHTML( context.system.bonus?.projects?.condition ?? '' ),
 		};
+		
+		// Add list of classes sorted by packs to CONFIG data
+		const packClasses = game.packs.get('fabula.classes');
+		const sortedClases = packClasses.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
+		const classList = Array.from(
+			sortedClases.reduce((acc, item) => {
+				if ( !acc.has( item.folder ) ) {
+					const foundFolder = packClasses.folders.find( folder => folder._id === item.folder );
+					acc.set( item.folder, { folder: foundFolder.name, classes: [] } );
+				}
+
+				acc.get( item.folder ).classes.push( item );
+				return acc;
+			}, new Map()).values()
+		);
+		const sortedClassList = classList.sort((a, b) => {
+			if ( a.folder === 'Manuale Base' ) return -1;
+			if ( b.folder === 'Manuale Base' ) return 1;
+
+			return a.folder.localeCompare(b.folder);
+		});
+		context.classList = sortedClassList;
 
 		context.FU = FU;
 
@@ -112,6 +132,117 @@ export class FabulaItemSheet extends ItemSheet {
 					await this.item.update({ "system.art.src": path });
 				},
 				current: input.value,
+			}).render(true);
+		});
+
+		html.on('click', '.js_editHeroicSkillReq', async (ev) => {
+			const context = await this.getData();
+			let options = '';
+			if ( context.classList.length > 0 ) {
+				const twoOrMoreChecked = context.item.system.requirements.multiClass ? true : false;
+				options += `
+					<div class="flexrow">
+						<div class="form-group w-100">
+							<input type="checkbox" name="formHeroicSkill_twoOrMore" id="twoOrMore" ${twoOrMoreChecked ? 'checked' : ''} />
+							<label for="twoOrMore">Devi padroneggiare <strong>due o più</strong></label>
+						</div>
+						<div class="form-group w-100">
+							<label for="heroicSkill_level">Livello minimo da raggiungere</label>
+							<input type="number" name="formHeroicSkill_level" id="heroicSkill_level" value="${context.item.system.requirements.level}" />
+						</div>
+					</div>
+				`;
+				for ( let i = 0; i < context.classList.length; i++ ) {
+					options += `<div class="title">${context.classList[i].folder}</div>`;
+					if ( context.classList[i].classes.length > 0 ) {
+						options += '<div class="flexrow">';
+						for ( let a = 0; a < context.classList[i].classes.length; a++ ) {
+							const checked = context.item.system.requirements.class.includes( context.classList[i].classes[a].name );
+							options += `
+								<div class="form-group">
+									<input type="checkbox" name="formHeroicSkill_Class" id="${context.classList[i].classes[a]._id}" value="${context.classList[i].classes[a].name}" ${checked ? 'checked' : ''} />
+									<label for="${context.classList[i].classes[a]._id}">${context.classList[i].classes[a].name}</label>
+								</div>
+							`;
+						}
+						options += '</div>';
+					}
+				}
+			}
+			new Dialog({
+				title: 'Scegli i prerequisiti',
+				content: `
+					<div class="form-checks">
+						${options}
+					</div>
+				`,
+				buttons: {
+					cancel: {
+						label: 'Annulla',
+					},
+					confirm: {
+						label: 'Conferma',
+						callback: async (dialogHtml) => {
+							const multiClass = dialogHtml.find('input[name="formHeroicSkill_twoOrMore"]:checked');
+							if ( multiClass.length > 0 ) {
+								await context.item.update({ 'system.requirements.multiClass': true });
+							} else {
+								await context.item.update({ 'system.requirements.multiClass': false });
+							}
+							
+							const level = dialogHtml.find('input[name="formHeroicSkill_level"]').val();
+							if ( level >= 0 ) {
+								await context.item.update({ 'system.requirements.level': level });
+							}
+
+							const inputs = dialogHtml.find('input[name="formHeroicSkill_Class"]:checked');
+							const classes = [];
+							for ( let i = 0; i < inputs.length; i++ ) {
+								classes.push( $(inputs[i]).val() );
+							}
+							await context.item.update({ 'system.requirements.class': classes });
+
+							if ( classes.length == 1 ) {
+								const pack = game.packs.get('fabula.classes');
+								const document = await pack.getDocument( $(inputs[0]).attr('id') );
+								const features = document.flags.fabula.subItems;
+								let featureOptions = `
+									<div class="form-group">
+										<select name="formHeroicSkill_ClassFeature">`;
+								for ( let i = 0; i < features.length; i++ ) {
+									featureOptions += `<option value="${features[i].name}">${features[i].name}</option>`;
+								}
+								featureOptions += `
+										</select>
+									</div>`;
+								new Dialog({
+									title: 'Scegli un eventuale abilità presequisita',
+									content: `
+										<div class="form-checks">
+											${featureOptions}
+										</div>
+									`,
+									buttons: {
+										calcel: {
+											label: 'Annulla',
+										},
+										confirm: {
+											label: 'Conferma',
+											callback: async (dialogChildHtml) => {
+												const choosedFeature = dialogChildHtml.find('[name="formHeroicSkill_ClassFeature"]').val();
+												if ( choosedFeature ) {
+													await context.item.update({ 'system.requirements.classFeature': choosedFeature });
+												}
+											}
+										},
+									},
+								}).render(true);
+							} else {
+								await context.item.update({ 'system.requirements.classFeature': '' });
+							}
+						},
+					},
+				},
 			}).render(true);
 		});
 

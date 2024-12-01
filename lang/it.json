@@ -5,17 +5,19 @@
 			"npc": "PNG"
 		},
 		"Item": {
-			"weapon": "Arma",
-			"shield": "Scudo",
-			"armor": "Armatura",
 			"accessory": "Accessorio",
-			"consumable": "Consumabile",
-			"spell": "Incantesimi",
-			"ritual": "Rituale",
-			"project": "Progetto",
+			"arcanum": "Arcanum",
+			"armor": "Armatura",
 			"class": "Classe",
 			"classFeature": "Abilità di classe",
-			"arcanum": "Arcanum"
+			"consumable": "Consumabile",
+			"heroicSkill": "Abilità eroica",
+			"project": "Progetto",
+			"ritual": "Rituale",
+			"rule": "Regola",
+			"spell": "Incantesimi",
+			"shield": "Scudo",
+			"weapon": "Arma"
 		}
 	},
 	"FU": {

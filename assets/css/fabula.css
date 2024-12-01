@@ -121,6 +121,42 @@ body {
 .list-base > li::marker {font-size:12px;color:var(--color-primary);}
 .list-base > li {padding-left:5px;}
 
+/* UI */
+.directory .directory-item img {object-fit:contain;}
+
+/* Dialog */
+.dialog-content {
+	--checkbox-background-color: var(--color-primary);
+	font-family: "PT Sans Narrow", sans-serif;
+	font-size: 16px;
+}
+.dialog-content .title {font-family:"Yanone Kaffeesatz", sans-serif;font-size:18px;font-weight:500;color:var(--color-white);background-color:var(--color-primary);padding:6px 18px 3px;margin:15px -8px 8px;}
+.dialog-content .title:first-child {margin-top:0;}
+.dialog-content input[type="checkbox"]:checked, .dialog-content input[type="radio"]:checked {--color-checkbox-checked:var(--color-primary);}
+.dialog-content .form-checks {margin-bottom:8px;}
+.dialog-content .flexrow {gap:10px 0;}
+.dialog-content .flexrow .form-group {flex-basis:33%;display:flex;align-items:center;}
+.dialog-content .flexrow .form-group.w-100 {flex-basis:100%;}
+.dialog-content .flexrow .form-group input[type="checkbox"] {margin:0;flex-shrink:0;}
+.dialog-content .flexrow .form-group input:not([type="checkbox"]):not([type="radio"]) {width:auto;margin-left:auto;}
+.dialog-content .flexrow .form-group label {padding-left:5px;}
+
+/* Editor */
+.editor-content h2 {position:relative;width:80%;border:0;text-transform:uppercase;font-family:"Yanone Kaffeesatz", sans-serif;font-weight:500;font-size:23px;padding:8px 15px 3px;margin:20px 0 5px;background:linear-gradient(to right, rgba(var(--color-gradient-bg-rgb),1) 0%, rgba(var(--color-gradient-bg-rgb),1) 30%, rgba(var(--color-gradient-bg-rgb),0) 100%);}
+.editor-content h2:first-of-type {margin-top:0;}
+.editor-content h2::after {content:"";position:absolute;bottom:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
+.editor-content ul {list-style:diamonds;padding-left:12px;}
+.editor-content ul > li::marker {font-size:12px;color:var(--color-primary);}
+.editor-content ul > li {padding-left:5px;}
+.editor-content ul > li + li {margin-top:0.5em;}
+.editor-content ul > li p:first-child {margin-top:0;}
+.editor-content ul > li p:last-child {margin-bottom:0;}
+.editor-content blockquote {transform:translateX(-15px);border:0;margin-left:0;margin-right:0;font-style:inherit;padding-left:15px;background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);}
+.editor-content blockquote > * {display:inline-block;}
+.editor-content a.content-link, .editor-content a.inline-roll {background-color:var(--color-primary);color:var(--color-white);font-weight:400;text-transform:uppercase;border-radius:5px;text-shadow:none;transition:box-shadow .15s ease-in-out;}
+.editor-content a.content-link:hover, .editor-content a.inline-roll:hover {box-shadow:0 0 10px rgba(var(--color-primary-rgb));}
+.editor-content a.content-link i, .editor-content a.inline-roll i {color:var(--color-white);}
+
 /* Sheets > General */
 .window-app.sheet .window-content {background-image:none;background-color:var(--color-white);padding:0;}
 .window-app.sheet .window-resizable-handle {display:none;}
@@ -192,8 +228,17 @@ body {
 .sheet .sheet-header .class-icon {position:absolute;bottom:0;right:50px;z-index:1;width:54px;height:54px;padding:9px;border:3px solid var(--color-primary);outline:1px solid var(--color-primary);outline-offset:-6px;background-color:var(--color-white);transform:translate(50%, 50%) rotate(45deg);}
 .sheet .sheet-header .class-icon img {border:0;margin:0;width:100%;height:100%;object-position:center center;object-fit:contain;transform:rotate(-45deg);}
 .sheet .sheet-header .select-source {background-color:var(--color-white);border:1px solid var(--color-primary);border-radius:10px;box-shadow:none;color:var(--color-primary);padding:5px 10px;height:auto;text-transform:uppercase;position:absolute;left:50px;}
+.sheet .sheet-header .select-source.is-top-right {top:5px;right:5px;left:unset;}
 .sheet:not([id*="Compendium"]) .sheet-header .select-source {display:none;}
 .sheet .sheet-header .select-source option {text-transform:none;}
+
+.sheet .sheet-tabs.tabs-bookmark {position:absolute;top:165px;right:52px;z-index:3;border:0;margin:0;flex-direction:column;align-items:flex-end;gap:5px;overflow:hidden;padding-left:15px;}
+.sheet .sheet-tabs.tabs-bookmark > [data-tab] {position:relative;display:flex;align-items:center;padding:11px 25px 7px 15px;border-radius:15px 0 0 15px;text-transform:uppercase;text-shadow:none;letter-spacing:1px;font-family:"Yanone Kaffeesatz", sans-serif;font-size:20px;color:var(--color-white);background:linear-gradient(to right, rgba(var(--color-green-rgb),1) 0%, rgba(var(--color-green-rgb),.6) 80%, rgba(var(--color-green-rgb),.2) 100%);transform:translateX(calc(100% - 40px));transition:transform .3s ease-in-out;}
+.sheet .sheet-tabs.tabs-bookmark > [data-tab]::before {content:"◆";font-size:11px;line-height:1;margin-right:5px;}
+.sheet .sheet-tabs.tabs-bookmark > [data-tab] span {opacity:0;transition:opacity .3s ease-in-out;}
+.sheet .sheet-tabs.tabs-bookmark > [data-tab]:hover {transform:none;}
+.sheet .sheet-tabs.tabs-bookmark > [data-tab]:hover span {opacity:1;transition:opacity .3s ease-in-out;}
+.sheet .sheet-tabs.tabs-bookmark > [data-tab].active {display:none;}
 
 .sheet .sheet-body {max-height:calc(100% - 93px);display:flex;flex-direction:column;padding:0 50px;flex-grow:1;background-repeat:no-repeat;background-position:center left, center right;background-size:50px 600px;background-image:var(--sheet-body-bg-left), var(--sheet-body-bg-right);}
 .sheet .sheet-body .tab {padding:15px;overflow:hidden;overflow-y:auto;min-height:100%;max-height:577px;border-left:2px solid var(--color-primary);border-right:2px solid var(--color-primary);outline:1px solid var(--color-primary);outline-offset:1px;position:relative;font-family:"PT Sans Narrow", sans-serif;font-size:16px;}
@@ -202,9 +247,8 @@ body {
 .sheet .title:first-of-type {margin-top:0;}
 .sheet .title::after {content:"";position:absolute;bottom:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
 .sheet .title input {margin:0;height:20px;border-radius:0;border:0;background:transparent;padding:0;line-height:1.2;text-transform:uppercase;}
-
 .sheet .editor {min-height:150px;}
-
+.sheet .editor-full, .sheet .editor-full .editor {height:100%;}
 .sheet .sheet-body .btn-container {display:flex;flex-wrap:wrap;gap:10px;margin-bottom:5px;}
 .sheet .sheet-body .btn-container button[data-target] {font-size:19px;padding:0;display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;}
 
@@ -216,6 +260,9 @@ body {
 .sheet .feature-box .feature-head > span span {font-family:"FnT_BasicShapes1",sans-serif;}
 .sheet .feature-box .feature-head input {height:auto;width:50%;border-radius:10px;border:1px solid var(--color-white);box-shadow:none;padding:1px 10px;text-align:left;color:var(--color-white);}
 .sheet .feature-box .feature-head span input {width:50px;margin:0 5px;padding:1px 3px;text-align:center;}
+.sheet .feature-box .feature-sub {padding:5px 15px 7px;background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);}
+.sheet .feature-box .feature-sub p {margin:0;}
+.sheet .editable .feature-box .feature-sub button {margin-bottom:5px;}
 .sheet .feature-box .feature-body {padding:5px 15px 0;}
 .sheet .feature-box .feature-body p {margin:5px 0;}
 .sheet .feature-box .prosemirror menu {border-radius:0;}
@@ -223,7 +270,7 @@ body {
 .sheet .arcanum-box {display:flex;flex-direction:column;}
 .sheet .arcanum-box .arcanum-head {display:flex;}
 .sheet .arcanum-box .arcanum-head > * {flex-grow:1;}
-.sheet .arcanum-box .arcanum-head img {width:70px;height:70px;border-radius:0;border:1px solid var(--color-primary);border-left:0;border-bottom:0;flex-grow:unset;flex-shrink:0;}
+.sheet .arcanum-box .arcanum-head img {width:70px;height:70px;padding:5px;border-radius:0;border:1px solid var(--color-primary);border-left:0;border-bottom:0;flex-grow:unset;flex-shrink:0;}
 .sheet .arcanum-box .arcanum-head p {padding:0 15px;display:flex;align-items:center;gap:5px;}
 .sheet .arcanum-box .arcanum-head p input, .sheet .arcanum-box .arcanum-body input {background:transparent;border:0;margin:0;padding:0;height:auto;line-height:1.2;}
 .sheet .arcanum-box .arcanum-body {border-top:1px solid var(--color-primary);padding:5px 15px;padding-left:40px;overflow:hidden;position:relative;}
@@ -236,23 +283,24 @@ body {
 .sheet .arcanum-box .p-container p:not(:last-child) {margin-bottom:0;}
 .sheet .arcanum-box .p-container p + p {margin-top:0;}
 
-/* Sheets > Class */
+/* Sheets > Is Feature */
+.sheet .editable .is-feature .feature-box .feature-body {padding:0;}
+.sheet .is-feature .sheet-body .tab:first-child {display:flex;flex-direction:column;}
+.sheet .is-feature .sheet-body .tab[data-tab]:not(.active) {display:none;}
+.sheet .is-feature .title {transform:translateX(-15px);}
+.sheet .is-feature .feature-box {flex-grow:1;display:flex;flex-direction:column;}
+.sheet .is-feature .feature-box .feature-body {flex-grow:1;}
+.sheet .is-feature .feature-box .editor {min-height:100%;}
+
+/* Sheets > Classes */
 .sheet .class.editable .flexrow .form-group {flex-basis:33%;}
 .sheet .class.editable .flexrow .form-group.w-50 {flex-basis:50%;}
 .sheet .class.editable .editor-container {min-height:100px;}
 .sheet .class.editable .desc-container .editor-container {min-height:200px;}
 
-.sheet .class .sheet-header .select-source {top:5px;right:5px;left:unset;}
-.sheet .class .sheet-tabs {position:absolute;top:165px;right:52px;z-index:3;border:0;margin:0;flex-direction:column;align-items:flex-end;gap:5px;overflow:hidden;padding-left:15px;}
-.sheet .class .sheet-tabs > [data-tab] {position:relative;display:flex;align-items:center;padding:11px 25px 7px 15px;border-radius:15px 0 0 15px;text-transform:uppercase;text-shadow:none;letter-spacing:1px;font-family:"Yanone Kaffeesatz", sans-serif;font-size:20px;color:var(--color-white);background:linear-gradient(to right, rgba(var(--color-green-rgb),1) 0%, rgba(var(--color-green-rgb),.6) 80%, rgba(var(--color-green-rgb),.2) 100%);transform:translateX(calc(100% - 40px));transition:transform .3s ease-in-out;}
-.sheet .class .sheet-tabs > [data-tab]::before {content:"◆";font-size:11px;line-height:1;margin-right:5px;}
-.sheet .class .sheet-tabs > [data-tab] span {opacity:0;transition:opacity .3s ease-in-out;}
-.sheet .class .sheet-tabs > [data-tab]:hover {transform:none;}
-.sheet .class .sheet-tabs > [data-tab]:hover span {opacity:1;transition:opacity .3s ease-in-out;}
-.sheet .class .sheet-tabs > [data-tab].active {display:none;}
-
 .sheet .class .sheet-body {background-size:50px 100%;}
 .sheet .class .sheet-body .tab.desc {overflow:visible;}
+.sheet .class .sheet-body .title {transform:translateX(-15px);}
 .sheet .class .change-image {position:absolute;bottom:15px;left:15px;z-index:2;padding:7px 15px 5px;}
 .sheet .class .img-class-primary {border:0;border-radius:0;max-width:100%;height:100%;width:auto;position:absolute;bottom:0;height:525px;left:-52px;}
 .sheet .class .form-alias {width:80%;margin:0;position:absolute;top:15px;left:0;padding:8px 20px 3px;background:linear-gradient(to right, rgba(var(--color-gradient-bg-rgb),1) 0%, rgba(var(--color-gradient-bg-rgb),1) 30%, rgba(var(--color-gradient-bg-rgb),0) 100%);font-size:25px;font-family:"Yanone Kaffeesatz", sans-serif;}
@@ -271,13 +319,11 @@ body {
 .sheet .class .list-questions input {border:0;width:100%;margin:0;background:none;line-height:1.2;height:auto;padding:0;padding-left:5px;color:var(--text-color);}
 .sheet .class .feature-box .feature-head button {position:relative;bottom:2px;margin-right:15px;}
 
-/* Sheets > Class features */
-.sheet .classFeature.editable .feature-box .feature-body {padding:0;}
-.sheet .classFeature .sheet-body .tab {display:flex;flex-direction:column;}
-.sheet .classFeature .title {transform:translateX(-15px);}
-.sheet .classFeature .feature-box {flex-grow:1;display:flex;flex-direction:column;}
-.sheet .classFeature .feature-box .feature-body {flex-grow:1;}
-.sheet .classFeature .feature-box .editor {min-height:100%;}
-
-/* Sheets > Arcanum */
+/* Sheets > Arcanums */
 .sheet .arcanum .sheet-body .tab {padding:15px 0;}
+
+/* Sheets > Rules */
+.sheet .rule .sheet-body .tab {padding:0;}
+.sheet .rule .editor-container {margin:0;}
+.sheet .rule .editor-content {padding:15px;}
+.sheet .rule .editor-content h2 {transform:translateX(-15px);}

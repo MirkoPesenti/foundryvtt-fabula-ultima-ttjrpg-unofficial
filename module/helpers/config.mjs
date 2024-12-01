@@ -2,6 +2,22 @@ export const SYSTEM = 'Fabula Ultima';
 
 export const FU = {};
 
+FU.ItemTypes = {
+	accessory: 'TYPES.Item.accessory',
+	arcanum: 'TYPES.Item.arcanum',
+	armor: 'TYPES.Item.armor',
+	class: 'TYPES.Item.class',
+	classFeature: 'TYPES.Item.classFeature',
+	consumable: 'TYPES.Item.consumable',
+	heroicSkill: 'TYPES.Item.heroicSkill',
+	project: 'TYPES.Item.project',
+	ritual: 'TYPES.Item.ritual',
+	rule: 'TYPES.Item.rule',
+	shield: 'TYPES.Item.shield',
+	spell: 'TYPES.Item.spell',
+	weapon: 'TYPES.Item.weapon',
+};
+
 FU.sourcebook = {
 	base: 'FU.sourcebook.base',
 	bonusAce: 'FU.sourcebook.bonusAce',
@@ -58,20 +74,6 @@ FU.DamageTypes = {
 	ice: 'FU.DamageTypes.ice',
 	light: 'FU.DamageTypes.light',
 	poison: 'FU.DamageTypes.poison',
-};
-
-FU.ItemTypes = {
-	spell: 'TYPES.Item.spell',
-	ritual: 'TYPES.Item.ritual',
-	accessory: 'TYPES.Item.accessory',
-	armor: 'TYPES.Item.armor',
-	weapon: 'TYPES.Item.weapon',
-	shield: 'TYPES.Item.shield',
-	project: 'TYPES.Item.project',
-	consumable: 'TYPES.Item.consumable',
-	class: 'TYPES.Item.class',
-	classFeature: 'TYPES.Item.classFeature',
-	arcanum: 'TYPES.Item.arcanum',
 };
 
 /**

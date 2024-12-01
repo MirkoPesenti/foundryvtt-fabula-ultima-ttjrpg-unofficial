@@ -7,13 +7,13 @@
         </div>
         
         {{#if @root.editable}}
-            <select class="select-source" name="system.sourcebook">
+            <select class="select-source is-top-right" name="system.sourcebook">
                 {{selectOptions sourcebook selected=system.sourcebook localize=true}}
             </select>
         {{/if}}
     </header>
 
-    <nav class="sheet-tabs tabs" data-group="primary">
+    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
         <a class="item" data-tab="description">
             <span>Descrizione</span>
         </a>

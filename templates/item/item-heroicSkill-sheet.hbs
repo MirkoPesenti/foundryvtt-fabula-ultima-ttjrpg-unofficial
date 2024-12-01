@@ -1,0 +1,66 @@
+<form class="{{cssClass}} {{item.type}} is-feature flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        {{#if @root.editable}}
+            <select class="select-source" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
+    </header>
+
+    <section class="sheet-body">
+		<div class="tab">
+            <div class="feature-box">
+                <div class="feature-head">
+                    {{#if @root.editable}}
+                        <input name="name" type="text" value="{{item.name}}" />
+                    {{else}}
+                        {{item.name}}
+                    {{/if}}
+                </div>
+                {{#if (or @root.editable (arrayLengthGt system.requirements.class 0))}}
+                    <div class="feature-sub">
+                        {{#if @root.editable}}
+                            <button type="button" class="js_editHeroicSkillReq">Modifica</button>
+                        {{/if}}
+                        <p>
+                            <strong>Requisiti:</strong>
+                            {{#if (arrayLengthGt system.requirements.class 0)}}
+                                devi aver padroneggiato
+                                {{#if (arrayLengthGt system.requirements.class 1)}}
+                                    {{#if system.requirements.multiClass}}
+                                        <strong>due o più</strong>
+                                    {{else}}
+                                        una o più
+                                    {{/if}}
+                                    Classi tra
+                                {{else}}
+                                    la Classe
+                                {{/if}}
+                            {{/if}}
+                            {{#each system.requirements.class as |class classIndex|}}
+                                {{#unless (eq classIndex 0)}}
+                                    {{#if (arrayLastIndex classIndex ../system.requirements.class)}}
+                                        e
+                                    {{else}}
+                                        ,
+                                    {{/if}}
+                                {{/unless}}
+                                <strong>{{class}}</strong>
+                            {{/each}}
+                            {{#if system.requirements.classFeature}}
+                                e aver acquistato l'Abilità <strong>{{system.requirements.classFeature}}</strong>
+                            {{/if}}
+                            {{#gt system.requirements.level 0}}
+                                e aver raggiunto il <strong>livello {{system.requirements.level}}</strong>
+                            {{/gt}}
+                        </p>
+                    </div>
+                {{/if}}
+                <div class="feature-body">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

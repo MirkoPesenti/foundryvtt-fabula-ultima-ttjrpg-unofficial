@@ -261,9 +261,20 @@ export async function addClassToActor( classID, actorClasses, actorClassFeatures
 	});
 	await actor.setFlag('fabula', 'classes', actorClasses);
 
-	// Add Heroic skill for mastered class
+	// Open Heroic skill list if class is mastered
 	if ( isMastered ) {
-		ui.notifications.warn('Aggiungi abilità eroica!');
+		ui.notifications.info(`Hai padroneggiato la classe ${entry.name}! Ora puoi acquisire un'Abilità Eroica`);
+		const heroicSkills = game.packs.get('fabula.heroikskill');
+		const itemID = '1rMuu2Rly4ueElJd';
+
+		if ( heroicSkills ) {
+			heroicSkills.getDocument( itemID ).then(item => {
+				if ( item )
+					item.sheet.render(true);
+				else
+					console.error(`L'Item con ID: ${itemID} non è stato trovato!`);
+			});
+		}
 	}
 
 	return returnValue;

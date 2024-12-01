@@ -17,16 +17,18 @@ import { NpcDataModel } from './documents/actors/npc-data-model.mjs';
 
 // Items Data Models
 import { AccessoryDataModel } from './documents/items/accessory-data-model.mjs';
-import { WeaponDataModel } from './documents/items/weapon-data-model.mjs';
+import { ArcanumDataModel } from './documents/items/arcanum-data-model.mjs';
 import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
-import { ConsumableDataModel } from './documents/items/consumable-data-model.mjs';
-import { SpellDataModel } from './documents/items/spell-data-model.mjs';
-import { ProjectDataModel } from './documents/items/project-data-model.mjs';
-import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
-import { ShieldDataModel } from './documents/items/shield-data-model.mjs';
 import { CLassDataModel } from './documents/items/class-data-model .mjs';
 import { CLassFeatureDataModel } from './documents/items/class-feature-model.mjs';
-import { ArcanumDataModel } from './documents/items/arcanum-data-model.mjs';
+import { ConsumableDataModel } from './documents/items/consumable-data-model.mjs';
+import { HeroicSkillDataModel } from './documents/items/heroicSkill-data-model.mjs';
+import { ProjectDataModel } from './documents/items/project-data-model.mjs';
+import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
+import { RuleDataModel } from './documents/items/rule-data-model.mjs';
+import { ShieldDataModel } from './documents/items/shield-data-model.mjs';
+import { SpellDataModel } from './documents/items/spell-data-model.mjs';
+import { WeaponDataModel } from './documents/items/weapon-data-model.mjs';
 
 /* ============================= */
 /* 			Init Hook			 */
@@ -54,16 +56,18 @@ Hooks.once('init', async () => {
 	CONFIG.Item.documentClass = FabulaItem;
 	CONFIG.Item.dataModels = {
 		accessory: AccessoryDataModel,
+		arcanum: ArcanumDataModel,
 		armor: ArmorDataModel,
-		weapon: WeaponDataModel,
-		consumable: ConsumableDataModel,
-		spell: SpellDataModel,
-		project: ProjectDataModel,
-		ritual: RitualDataModel,
-		shield: ShieldDataModel,
 		class: CLassDataModel,
 		classFeature: CLassFeatureDataModel,
-		arcanum: ArcanumDataModel,
+		consumable: ConsumableDataModel,
+		heroicSkill: HeroicSkillDataModel,
+		project: ProjectDataModel,
+		ritual: RitualDataModel,
+		rule: RuleDataModel,
+		shield: ShieldDataModel,
+		spell: SpellDataModel,
+		weapon: WeaponDataModel,
 	};
 	
 	CONFIG.ActiveEffect.legacyTransferral = false;
@@ -87,8 +91,25 @@ Hooks.once('setup', () => {});
 Hooks.once('ready', async function () {
 });
 
-let characterCreationOpen = false;
+Hooks.on("preCreateItem", (item, options, userId) => {
+	if ( item.type == "rule" ) {
+		if (!item.img || item.img === "icons/svg/item-bag.svg") {
+			item.updateSource({ img: "systems/fabula/assets/icons/default-rule.png" });
+		}
+	} else if ( item.type == "heroicSkill" ) {
+		if (!item.img || item.img === "icons/svg/item-bag.svg") {
+			item.updateSource({ img: "systems/fabula/assets/icons/default-skill.png" });
+		}
+	}
+});
 
+Hooks.on('updateItem', async ( item, updateData, options, userId ) => {
+	if ( item.type === 'project' && item.system.progress.current > item.system.progress.max ) {
+		await item.update({ 'system.progress.current': item.system.progress.max });
+	}
+});
+
+let characterCreationOpen = false;
 Hooks.on('renderActorSheet', (sheet, html, data)  => {
 	const actor = sheet.actor;
 
@@ -182,10 +203,12 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 0, actorClasses.length );
-				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-				else 
-					actorClassFeatures.splice( 0, actorClassFeatures.length );
+				if ( actorClassFeatures.length > 0 ) {
+					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+					else 
+						actorClassFeatures.splice( 0, actorClassFeatures.length );
+				}
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -202,10 +225,12 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 1, actorClasses.length - 1 );
-				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-				else 
-					actorClassFeatures.splice( 1, actorClassFeatures.length - 1 );
+				if ( actorClassFeatures.length > 0 ) {
+					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+					else 
+						actorClassFeatures.splice( 1, actorClassFeatures.length - 1 );
+				}
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -222,10 +247,12 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 2, actorClasses.length - 2 );
-				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-				else 
-					actorClassFeatures.splice( 2, actorClassFeatures.length - 2 );
+				if ( actorClassFeatures.length > 0 ) {
+					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+					else 
+						actorClassFeatures.splice( 2, actorClassFeatures.length - 2 );
+				}
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -242,10 +269,12 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 3, actorClasses.length - 3 );
-				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-				else 
-					actorClassFeatures.splice( 3, actorClassFeatures.length - 3 );
+				if ( actorClassFeatures.length > 0 ) {
+					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+					else 
+						actorClassFeatures.splice( 3, actorClassFeatures.length - 3 );
+				}
 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 			}
 		},
@@ -262,10 +291,12 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					return false;
 				}
 				actorClasses.splice( 4, actorClasses.length - 4 );
-				if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-					actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-				else 
-					actorClassFeatures.splice( 4, actorClassFeatures.length - 4 );
+				if ( actorClassFeatures.length > 0 ) {
+					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
+						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
+					else 
+						actorClassFeatures.splice( 4, actorClassFeatures.length - 4 );
+				}
 				let classResult = await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
 				if ( actorClasses.length < 2 ) {
 					ui.notifications.warn('Devi scegliere almeno due classi');
@@ -386,12 +417,6 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 	updateDialog();
 });
 
-Hooks.on('updateItem', async ( item, updateData, options, userId ) => {
-	if ( item.type === 'project' && item.system.progress.current > item.system.progress.max ) {
-		await item.update({ 'system.progress.current': item.system.progress.max });
-	}
-});
-
 /* ============================= */
 /* 		Handlebars Helpers		 */
 /* ============================= */
@@ -427,8 +452,11 @@ Handlebars.registerHelper("arrayLengthGt", function(array, length, options) {
 	return Array.isArray(array) && array.length > length;
 });
 
+Handlebars.registerHelper("arrayLastIndex", function(index, array, options) {
+	return Array.isArray(array) && (array.length - 1) == index;
+});
+
 Handlebars.registerHelper('gt', function( a, b ){
-	console.log(arguments);
 	var next =  arguments[arguments.length-1];
 	return (a > b) ? next.fn(this) : next.inverse(this);
 });

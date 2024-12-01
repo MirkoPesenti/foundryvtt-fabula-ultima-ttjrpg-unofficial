@@ -55,6 +55,17 @@
 			}
 		},
 		{
+			"name": "heroicskill",
+			"label": "Abilità Eroiche",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/heroicskill",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
 			"name": "baseweapons",
 			"label": "Armi Base",
 			"type": "Item",
@@ -200,6 +211,7 @@
 			"packs": [
 				"classes",
 				"classfeatures",
+				"heroicskill",
 				"arcanum"
 			]
 		},
