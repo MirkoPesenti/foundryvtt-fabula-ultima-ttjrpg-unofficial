@@ -1,0 +1,76 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        {{#if @root.editable}}
+            <select class="select-source" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
+    </header>
+
+    <section class="sheet-body">
+        <div class="tab">
+            <div class="arcanum-box">
+                <div class="arcanum-head">
+                    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+                    <div>
+                        <div class="title">
+                            <input type="text" name="name" value="{{item.name}}">
+                        </div>
+                        <p>
+                            <strong>Domini:</strong>
+                            <input type="text" name="system.domain" value="{{system.domain}}">
+                        </p>
+                    </div>
+                </div>
+                <div class="arcanum-body">
+                    <label>Fusione</label>
+                    {{#if @root.editable}}
+                        {{editor enrichedHtml.description target="system.merge" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                    {{else}}
+                        {{{system.merge}}}
+                    {{/if}}
+                </div>
+                {{#if (arrayLengthGt system.dismiss 0)}}
+                    <div class="arcanum-body">
+                        <label>Congedo</label>
+                        {{#if @root.editable}}
+                            <div class="btn-container">
+                                <button type="button" class="js_newEntryToArray" data-target="system.dismiss">+</button>
+                                <button type="button" class="js_removeLastToArray" data-target="system.dismiss">-</button>
+                            </div>
+                        {{else}}
+                            {{#if (arrayLengthGt system.dismiss 1)}}
+                                <p>
+                                    Quando <strong>congedi</strong> questo Arcanum, scegli tra
+                                    {{#each system.dismiss as |dismiss dismissIndex|}}
+                                        {{#unless (eq dismissIndex 0)}}
+                                            e
+                                        {{/unless}}
+                                        <strong>{{dismiss.name}}</strong>
+                                    {{/each}}
+                                </p>
+                            {{/if}}
+                        {{/if}}
+                        {{#each system.dismiss as |dismiss dismissIndex|}}
+                            {{#if @root.editable}}
+                                <input type="text" name="system.dismiss.{{dismissIndex}}.name" value="{{dismiss.name}}">
+                                {{editor enrichedHtml.description target=(concat "system.dismiss." dismissIndex ".effect") engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                            {{else}}
+                                <div class="p-container">
+                                    <p><strong>{{dismiss.name}}</strong>.</p>
+                                    {{{dismiss.effect}}}
+                                </div>
+                            {{/if}}
+                        {{/each}}
+                    </div>
+                {{/if}}
+            </div>
+            
+            {{#if (or @root.editable (not (eq system.description "")))}}
+                <div class="title">Descrizione</div>
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+            {{/if}}
+        </div>
+    </section>
+</form>

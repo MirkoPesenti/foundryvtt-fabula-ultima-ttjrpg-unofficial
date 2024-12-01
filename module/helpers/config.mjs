@@ -71,6 +71,7 @@ FU.ItemTypes = {
 	consumable: 'TYPES.Item.consumable',
 	class: 'TYPES.Item.class',
 	classFeature: 'TYPES.Item.classFeature',
+	arcanum: 'TYPES.Item.arcanum',
 };
 
 /**

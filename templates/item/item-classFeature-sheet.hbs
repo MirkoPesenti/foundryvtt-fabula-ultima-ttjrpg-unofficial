@@ -1,25 +1,37 @@
 <form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
+        <div class="class-icon">
+            <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-        </div>
+
+        {{#if @root.editable}}
+            <select class="select-source" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
     </header>
 
-    <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select>
-
     <section class="sheet-body">
-        <div class="form-group">
-            <label for="system.level.max">Livello massimo:</label>
-            <input name="system.level.max" type="number" value="{{system.level.max}}" style="max-width:50px;">
+        <div class="tab">
+            <div class="feature-box">
+                <div class="feature-head">
+                    {{#if @root.editable}}
+                        <input name="name" type="text" value="{{item.name}}" />
+                        <span>
+                            (<span>l</span><input name="system.level.max" type="number" value="{{system.level.max}}">)
+                        </span>
+                    {{else}}
+                        {{item.name}}
+                        <span>
+                            (<span>l</span>{{this.system.level.max}})
+                        </span>
+                    {{/if}}
+                </div>
+                <div class="feature-body">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData owner=owner editable=editable }}
+                </div>
+            </div>
         </div>
-        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
     </section>
 </form>

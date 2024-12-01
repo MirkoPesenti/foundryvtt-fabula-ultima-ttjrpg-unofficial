@@ -44,6 +44,17 @@
 			}
 		},
 		{
+			"name": "arcanum",
+			"label": "Arcana",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/arcanum",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
 			"name": "baseweapons",
 			"label": "Armi Base",
 			"type": "Item",
@@ -167,56 +178,50 @@
 	],
 	"packFolders": [
 		{
-			"name": "Manuale Base",
+			"name": "Introduzione",
 			"sorting": "m",
-			"color": "#2B4B42",
-			"folders": [
-				{
-					"name": "Introduzione",
-					"sorting": "m",
-					"color": "#AC8344",
-					"packs": []
-				},
-				{
-					"name": "Regole di Gioco",
-					"sorting": "m",
-					"color": "#4271A3",
-					"packs": [
-						"baseweapons",
-						"basearmors",
-						"baseshields"
-					]
-				},
-				{
-					"name": "Premi Start",
-					"sorting": "m",
-					"color": "#31534A",
-					"packs": [
-						"classes",
-						"classfeatures"
-					]
-				},
-				{
-					"name": "Game Master",
-					"sorting": "m",
-					"color": "#97331E",
-					"packs": []
-				},
-				{
-					"name": "Bestiario",
-					"sorting": "m",
-					"color": "#6E4A70",
-					"packs": [
-						"beasts",
-						"construct",
-						"demons",
-						"elementals",
-						"monsters",
-						"undeads",
-						"plants",
-						"humanoids"
-					]
-				}
+			"color": "#8B5C00",
+			"packs": []
+		},
+		{
+			"name": "Regole di Gioco",
+			"sorting": "m",
+			"color": "#005995",
+			"packs": [
+				"baseweapons",
+				"basearmors",
+				"baseshields"
+			]
+		},
+		{
+			"name": "Premi Start",
+			"sorting": "m",
+			"color": "#2F6A29",
+			"packs": [
+				"classes",
+				"classfeatures",
+				"arcanum"
+			]
+		},
+		{
+			"name": "Game Master",
+			"sorting": "m",
+			"color": "#871906",
+			"packs": []
+		},
+		{
+			"name": "Bestiario",
+			"sorting": "m",
+			"color": "#572D57",
+			"packs": [
+				"beasts",
+				"construct",
+				"demons",
+				"elementals",
+				"monsters",
+				"undeads",
+				"plants",
+				"humanoids"
 			]
 		}
 	],

@@ -26,6 +26,7 @@ import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
 import { ShieldDataModel } from './documents/items/shield-data-model.mjs';
 import { CLassDataModel } from './documents/items/class-data-model .mjs';
 import { CLassFeatureDataModel } from './documents/items/class-feature-model.mjs';
+import { ArcanumDataModel } from './documents/items/arcanum-data-model.mjs';
 
 /* ============================= */
 /* 			Init Hook			 */
@@ -61,7 +62,8 @@ Hooks.once('init', async () => {
 		ritual: RitualDataModel,
 		shield: ShieldDataModel,
 		class: CLassDataModel,
-		classFeature: CLassFeatureDataModel
+		classFeature: CLassFeatureDataModel,
+		arcanum: ArcanumDataModel,
 	};
 	
 	CONFIG.ActiveEffect.legacyTransferral = false;
@@ -394,10 +396,24 @@ Hooks.on('updateItem', async ( item, updateData, options, userId ) => {
 /* 		Handlebars Helpers		 */
 /* ============================= */
 
+Handlebars.registerHelper('or', function() {
+	const args = Array.from(arguments).slice(0, -1);
+	return args.some(arg => !!arg);
+});
+
+Handlebars.registerHelper('allTrue', function(...args) {
+	const options = args.pop(); 
+	return args.every(Boolean) ? options.fn(this) : options.inverse(this);
+});
+
+Handlebars.registerHelper('atLeastTwoTrue', function(a, b, c, options) {
+	const truthyCount = [a, b, c].filter(Boolean).length;
+	return truthyCount >= 2 ? options.fn(this) : options.inverse(this);
+});
+
 Handlebars.registerHelper('percentage', function( a, b ){
 	return ( ( a / b ) * 100 );
 });
-
 
 Handlebars.registerHelper('multiply', function( a, b ){
 	return ( a / b );
@@ -407,7 +423,12 @@ Handlebars.registerHelper('divide', function( a, b ){
 	return ( a / b );
 });
 
+Handlebars.registerHelper("arrayLengthGt", function(array, length, options) {
+	return Array.isArray(array) && array.length > length;
+});
+
 Handlebars.registerHelper('gt', function( a, b ){
+	console.log(arguments);
 	var next =  arguments[arguments.length-1];
 	return (a > b) ? next.fn(this) : next.inverse(this);
 });

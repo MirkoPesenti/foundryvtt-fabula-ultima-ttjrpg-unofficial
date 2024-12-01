@@ -12,9 +12,23 @@ export class FabulaItemSheet extends ItemSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ['fabula', 'sheet', 'item'],
 			width: 700,
-			height: 700,
-			tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'description', }],
+			tabs: [{ 
+				navSelector: '.sheet-tabs', 
+				contentSelector: '.sheet-body', 
+				initial: 'description', 
+			}],
 		});
+	}
+
+	render( force = false, options = {} ) {
+		if ( this.object.type == 'class' )
+			options.height = 700;
+		else if ( this.object.type == 'classFeature' )
+			options.height = 500;
+		else if ( this.object.type == 'arcanum' )
+			options.height = 500;
+
+		super.render(force, options);
 	}
 
 	get template() {
@@ -44,8 +58,9 @@ export class FabulaItemSheet extends ItemSheet {
 		context.rarityList = CONFIG.FU.rarityList;
 
 		context.enrichedHtml = {
-			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
-			opportunity: await TextEditor.enrichHTML( context.system.opportunityEffect ?? '' ),
+			description: await TextEditor.enrichHTML( context.system?.description ?? '' ),
+			opportunity: await TextEditor.enrichHTML( context.system?.opportunityEffect ?? '' ),
+			projectCondition: await TextEditor.enrichHTML( context.system?.bonus?.projects?.condition ?? '' ),
 		};
 
 		context.FU = FU;
@@ -70,19 +85,21 @@ export class FabulaItemSheet extends ItemSheet {
 		html.on('drop', this._onDropItem.bind(this));
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
 
-		html.on('click', '.add-question', async (ev) => {
+		html.on('click', '.js_newEntryToArray', async (ev) => {
 			ev.preventDefault();
-			const questions = this.item.system.questions;
-			const newQuestions = [...questions];
-			newQuestions.push('');
-			await this.item.update({ 'system.questions': newQuestions });
+			const string = $(ev.currentTarget).data('target'); 
+			const array = string.split('.').reduce((obj, key) => obj?.[key], this.item);
+			const newArray = [...array];
+			newArray.push('');
+			await this.item.update({ [string]: newArray });
 		});
-		html.on('click', '.remove-question', async (ev) => {
+		html.on('click', '.js_removeLastToArray', async (ev) => {
 			ev.preventDefault();
-			const questions = this.item.system.questions;
-			const newQuestions = [...questions];
-			newQuestions.splice( newQuestions.length - 1 ,1 );
-			await this.item.update({ 'system.questions': newQuestions });
+			const string = $(ev.currentTarget).data('target'); 
+			const array = string.split('.').reduce((obj, key) => obj?.[key], this.item);
+			const newArray = [...array];
+			newArray.splice( newArray.length - 1 ,1 );
+			await this.item.update({ [string]: newArray });
 		});
 
 		html.on('click', '.change-image', async (ev) => {

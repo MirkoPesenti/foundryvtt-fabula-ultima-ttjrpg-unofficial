@@ -6,7 +6,19 @@
 		"npc": {}
 	},
 	"Item": {
-		"types": ["accessory", "armor", "class", "classFeature", "consumable", "project", "ritual", "shield", "spell", "weapon"],
+		"types": [
+			"accessory", 
+			"armor", 
+			"class", 
+			"classFeature", 
+			"consumable", 
+			"project", 
+			"ritual", 
+			"shield", 
+			"spell", 
+			"weapon",
+			"arcanum"
+		],
 		"htmlFields": ["description"],
 		"accessory": {},
 		"armor": {},

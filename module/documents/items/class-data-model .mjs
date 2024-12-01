@@ -21,6 +21,8 @@ import { FU } from "../../helpers/config.mjs";
  * @property {boolean} bonus.weapon.rangedWeapon
  * @property {boolean} bonus.weapon.armor
  * @property {boolean} bonus.weapon.shield
+ * @property {boolean} bonus.projects.value
+ * @property {string} bonus.projects.condition
  */
 
 export class CLassDataModel extends foundry.abstract.TypeDataModel {
@@ -51,6 +53,10 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 					rangedWeapon: new BooleanField({ initial: false }),
 					armor: new BooleanField({ initial: false }),
 					shield: new BooleanField({ initial: false }),
+				}),
+				projects: new SchemaField({
+					value: new BooleanField({ initial: false }),
+					condition: new StringField(),
 				}),
 			}),
 		};

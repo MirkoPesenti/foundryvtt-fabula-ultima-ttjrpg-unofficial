@@ -5,24 +5,24 @@
         <div class="class-icon">
             <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
         </div>
+        
+        {{#if @root.editable}}
+            <select class="select-source" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
     </header>
 
-    {{!-- <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select> --}}
-
-    {{!-- <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">Descrizione</a>
-        <a class="item" data-tab="benefits">Benefici gratuiti</a>
-        <a class="item" data-tab="features">Abilità</a>
-    </nav> --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="description">
+            <span>Descrizione</span>
+        </a>
+        <a class="item" data-tab="benefits">
+            <span>Benefici</span>
+        </a>
+    </nav>
 
     <section class="sheet-body">
-        {{#if @root.editable}}
-        <input name="system.art.src" type="text" placeholder="Immagine" value="{{system.art.src}}" readonly>
-        <button type="button" class="change-image">Cambia immagine</button>
-        {{/if}}
-        
 		<div class="tab desc" data-group="primary" data-tab="description">
             <div class="form-group form-alias">
                 <label>Anche:</label>
@@ -30,6 +30,9 @@
             </div>
 
             <img src="{{system.art.src}}" class="img-class-primary">
+            {{#if @root.editable}}
+                <button type="button" class="change-image">Cambia immagine</button>
+            {{/if}}
 
             <div class="summary-container">
                 {{#if @root.editable}}
@@ -52,95 +55,227 @@
                         </li>
                         {{/each}}
                     </ul>
+                    {{#if @root.editable}}
+                        <div class="btn-container">
+                            <button type="button" class="js_newEntryToArray" data-target="system.questions">+</button>
+                            <button type="button" class="js_removeLastToArray" data-target="system.questions">-</button>
+                        </div>
+                    {{/if}}
                 </div>
                 <div class="box">
                     {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
                 </div>
             </div>
-            {{!-- <button type="button" class="add-question" style="max-width:100px;">+</button>
-            <button type="button" class="remove-question" style="max-width:100px;">-</button> --}}
         </div>
 
 		<div class="tab benefits" data-group="primary" data-tab="benefits">
-            <div class="form-group">
-                <label for="system.bonus.hp">Punti vita (PV):</label>
-                <input name="system.bonus.hp" type="checkbox" {{checked system.bonus.hp}}>
-            </div>
-            <div class="form-group">
-                <label for="system.bonus.mp">Punti mente (PM):</label>
-                <input name="system.bonus.mp" type="checkbox" {{checked system.bonus.mp}}>
-            </div>
-            <div class="form-group">
-                <label for="system.bonus.ip">Punti inventario (PI):</label>
-                <input name="system.bonus.ip" type="checkbox" {{checked system.bonus.ip}}>
-            </div>
+            {{#if @root.editable}}
+                <div class="title">Aumento punti caratteristica</div>
+                <div class="flexrow">
+                    <div class="form-group">
+                        <input name="system.bonus.hp" type="checkbox" {{checked system.bonus.hp}}>
+                        <label>Punti vita (PV)</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.mp" type="checkbox" {{checked system.bonus.mp}}>
+                        <label>Punti mente (PM)</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.ip" type="checkbox" {{checked system.bonus.ip}}>
+                        <label>Punti inventario (PI)</label>
+                    </div>
+                </div>
+                
+                <div class="title">Rituali</div>
+                <div class="flexrow">
+                    <div class="form-group">
+                        <input name="system.bonus.ritual.arcanism" type="checkbox" {{checked system.bonus.ritual.arcanism}}>
+                        <label>Arcanismo</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.ritual.chimerism" type="checkbox" {{checked system.bonus.ritual.chimerism}}>
+                        <label>Chimerismo</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.ritual.elementalism" type="checkbox" {{checked system.bonus.ritual.elementalism}}>
+                        <label>Elementalismo</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.ritual.entropism" type="checkbox" {{checked system.bonus.ritual.entropism}}>
+                        <label>Entropismo</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.ritual.ritualism" type="checkbox" {{checked system.bonus.ritual.ritualism}}>
+                        <label>Ritualismo</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.ritual.spiritism" type="checkbox" {{checked system.bonus.ritual.spiritism}}>
+                        <label>Spiritismo</label>
+                    </div>
+                </div>
+                
+                <div class="title">Equipaggiamenti</div>
+                <div class="flexrow">
+                    <div class="form-group w-50">
+                        <input name="system.bonus.weapon.meleeWeapon" type="checkbox" {{checked system.bonus.weapon.meleeWeapon}}>
+                        <label>Arma da mischia marziale</label>
+                    </div>
+                    <div class="form-group w-50">
+                        <input name="system.bonus.weapon.rangedWeapon" type="checkbox" {{checked system.bonus.weapon.rangedWeapon}}>
+                        <label>Arma a distanza marziale</label>
+                    </div>
+                    <div class="form-group w-50">
+                        <input name="system.bonus.weapon.armor" type="checkbox" {{checked system.bonus.weapon.armor}}>
+                        <label>Armatura marziale</label>
+                    </div>
+                    <div class="form-group w-50">
+                        <input name="system.bonus.weapon.shield" type="checkbox" {{checked system.bonus.weapon.shield}}>
+                        <label>Scudo marziale</label>
+                    </div>
+                </div>
+                
+                <div class="title">Progetti</div>
+                <div class="form-group">
+                    <input name="system.bonus.projects.value" type="checkbox" {{checked system.bonus.projects.value}}>
+                    <label>Può avviare i Progetti</label>
+                </div>
+                {{#if system.bonus.projects.value}}
+                    {{editor enrichedHtml.projectCondition target="system.bonus.projects.condition" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                {{/if}}
+            {{else}}
+                <div class="title">Benefici gratuiti</div>
+                <ul class="list-base">
+                    {{#if (or system.bonus.hp system.bonus.mp system.bonus.ip)}}
+                        <li>
+                            Aumenti permanentemente i tuoi
+                            {{#if system.bonus.hp}}
+                                Punti Vita
+                            {{/if}}
+                            {{#allTrue system.bonus.hp system.bonus.mp}}
+                                <strong>o</strong>
+                            {{/allTrue}}
+                            {{#allTrue system.bonus.hp system.bonus.ip}}
+                                <strong>o</strong>
+                            {{/allTrue}}
+                            {{#if system.bonus.mp}}
+                                Punti Mente
+                            {{/if}}
+                            {{#allTrue system.bonus.mp system.bonus.ip}}
+                                <strong>o</strong>
+                            {{/allTrue}}
+                            {{#if system.bonus.ip}}
+                                Punti Inventario
+                            {{/if}}
 
-            <hr>
+                            massimi di 
+                            {{#if (or system.bonus.hp system.bonus.mp)}}
+                                5
+                            {{/if}}
+                            {{#if system.bonus.ip}}
+                                2
+                            {{/if}}
+                            {{#atLeastTwoTrue system.bonus.hp system.bonus.mp system.bonus.ip}}
+                                (a tua scelta)
+                            {{/atLeastTwoTrue}}
+                            .
+                        </li>
+                    {{/if}}
 
-            Rituali: <br>
-            <ul>
-                <li>
-                    <label for="system.bonus.ritual.arcanism">Arcanismo:</label>
-                    <input name="system.bonus.ritual.arcanism" type="checkbox" {{checked system.bonus.ritual.arcanism}}>
-                </li>
-                <li>
-                    <label for="system.bonus.ritual.chimerism">Chimerismo:</label>
-                    <input name="system.bonus.ritual.chimerism" type="checkbox" {{checked system.bonus.ritual.chimerism}}>
-                </li>
-                <li>
-                    <label for="system.bonus.ritual.elementalism">Elementalismo:</label>
-                    <input name="system.bonus.ritual.elementalism" type="checkbox" {{checked system.bonus.ritual.elementalism}}>
-                </li>
-                <li>
-                    <label for="system.bonus.ritual.entropism">Entropismo:</label>
-                    <input name="system.bonus.ritual.entropism" type="checkbox" {{checked system.bonus.ritual.entropism}}>
-                </li>
-                <li>
-                    <label for="system.bonus.ritual.ritualism">Ritualismo:</label>
-                    <input name="system.bonus.ritual.ritualism" type="checkbox" {{checked system.bonus.ritual.ritualism}}>
-                </li>
-                <li>
-                    <label for="system.bonus.ritual.spiritism">Spiritismo:</label>
-                    <input name="system.bonus.ritual.spiritism" type="checkbox" {{checked system.bonus.ritual.spiritism}}>
-                </li>
-            </ul>
+                    {{#if (or system.bonus.ritual.arcanism system.bonus.ritual.chimerism system.bonus.ritual.elementalism system.bonus.ritual.entropism system.bonus.ritual.ritualism system.bonus.ritual.spiritism)}}
+                        <li>
+                            Puoi eseguire i Rituali i cui effetti rientrino nella disciplina di 
+                            {{#if system.bonus.ritual.arcanism}}
+                                <strong>Arcanismo</strong>.
+                            {{/if}}
+                            {{#if system.bonus.ritual.chimerism}}
+                                <strong>Chimerismo</strong>.
+                            {{/if}}
+                            {{#if system.bonus.ritual.elementalism}}
+                                <strong>Elementalismo</strong>.
+                            {{/if}}
+                            {{#if system.bonus.ritual.entropism}}
+                                <strong>Entropismo</strong>.
+                            {{/if}}
+                            {{#if system.bonus.ritual.ritualism}}
+                                <strong>Ritualismo</strong>.
+                            {{/if}}
+                            {{#if system.bonus.ritual.spiritism}}
+                                <strong>Spiritismo</strong>.
+                            {{/if}}
+                        </li>
+                    {{/if}}
+
+                    {{#if (or system.bonus.weapon.meleeWeapon system.bonus.weapon.rangedWeapon system.bonus.weapon.armor system.bonus.weapon.shield)}}
+                        <li>
+                            Puoi equipaggiare le
+                            {{#if system.bonus.weapon.meleeWeapon}}
+                                <strong>armi da mischia marziali</strong>
+                            {{/if}}
+
+                            {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.rangedWeapon}}
+                                e le
+                            {{/allTrue}}
+                            {{#if system.bonus.weapon.rangedWeapon}}
+                                <strong>armi a distanza marziali</strong>
+                            {{/if}}
+
+                            {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.armor}}
+                                e le
+                            {{/allTrue}}
+                            {{#allTrue system.bonus.weapon.rangedWeapon system.bonus.weapon.armor}}
+                                e le
+                            {{/allTrue}}
+                            {{#if system.bonus.weapon.armor}}
+                                <strong>armature marziali</strong>
+                            {{/if}}
+                            
+                            {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.shield}}
+                                e gli
+                            {{/allTrue}}
+                            {{#allTrue system.bonus.weapon.rangedWeapon system.bonus.weapon.shield}}
+                                e gli
+                            {{/allTrue}}
+                            {{#allTrue system.bonus.weapon.armor system.bonus.weapon.shield}}
+                                e gli
+                            {{/allTrue}}
+                            {{#if system.bonus.weapon.shield}}
+                                <strong>scudi marziali</strong>
+                            {{/if}}
+                            .
+                        </li>
+                    {{/if}}
+
+                    {{#if system.bonus.projects.value}}
+                        <li>
+                            Puoi avviare i <strong>Progetti</strong>.
+                            {{#if system.bonus.projects.condition}}
+                                {{{system.bonus.projects.condition}}}
+                            {{/if}}
+                        </li>
+                    {{/if}}
+                </ul>
+            {{/if}}
             
-            <hr>
-
-            Equipaggiamenti: <br>
-            <ul>
-                <li>
-                    <label for="system.bonus.weapon.meleeWeapon">Arma da mischia marziale:</label>
-                    <input name="system.bonus.weapon.meleeWeapon" type="checkbox" {{checked system.bonus.weapon.meleeWeapon}}>
-                </li>
-                <li>
-                    <label for="system.bonus.weapon.rangedWeapon">Arma a distanza marziale:</label>
-                    <input name="system.bonus.weapon.rangedWeapon" type="checkbox" {{checked system.bonus.weapon.rangedWeapon}}>
-                </li>
-                <li>
-                    <label for="system.bonus.weapon.armor">Armatura marziale:</label>
-                    <input name="system.bonus.weapon.armor" type="checkbox" {{checked system.bonus.weapon.armor}}>
-                </li>
-                <li>
-                    <label for="system.bonus.weapon.shield">Scudo marziale:</label>
-                    <input name="system.bonus.weapon.shield" type="checkbox" {{checked system.bonus.weapon.shield}}>
-                </li>
-            </ul>
-        </div>
-		
-        <div class="tab features" data-group="primary" data-tab="features">
-            <br>
-            Abilità di classe:
+            <div class="title">Abilità di classe</div>
             {{#each flags.fabula.subItems}}
                 {{#if (eq this.type "classFeature")}}
-                    <hr>
-                    <strong>{{this.name}}</strong>
-                    {{#gt this.system.level.max 1}}
-                        - {{this.system.level.max}}
-                    {{/gt}}
-                    <br>
-                    {{{this.system.description}}}
-                    <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
+                    <div class="feature-box">
+                        <div class="feature-head">
+                            {{#if @root.editable}}
+                                <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
+                            {{/if}}
+                            
+                            {{this.name}}
+                            {{#gt this.system.level.max 1}}
+                                <span>
+                                    (<span>l</span>{{this.system.level.max}})
+                                </span>
+                            {{/gt}}
+                        </div>
+                        <div class="feature-body">
+                            {{{this.system.description}}}
+                        </div>
+                    </div>
                 {{/if}}
             {{/each}}
         </div>
