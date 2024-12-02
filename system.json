@@ -44,11 +44,11 @@
 			}
 		},
 		{
-			"name": "arcanum",
-			"label": "Arcana",
+			"name": "spells",
+			"label": "Incantesimi",
 			"type": "Item",
 			"system": "fabula",
-			"path": "packs/arcanum",
+			"path": "packs/spells",
 			"ownership": {
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
@@ -60,6 +60,17 @@
 			"type": "Item",
 			"system": "fabula",
 			"path": "packs/heroicskill",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "arcanum",
+			"label": "Arcana",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/arcanum",
 			"ownership": {
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
@@ -211,6 +222,7 @@
 			"packs": [
 				"classes",
 				"classfeatures",
+				"spells",
 				"heroicskill",
 				"arcanum"
 			]

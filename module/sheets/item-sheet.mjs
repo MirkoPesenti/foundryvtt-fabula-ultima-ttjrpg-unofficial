@@ -23,7 +23,7 @@ export class FabulaItemSheet extends ItemSheet {
 	render( force = false, options = {} ) {
 		if ( this.object.type == 'class' || this.object.type == 'rule' )
 			options.height = 700;
-		else if ( this.object.type == 'classFeature' || this.object.type == 'arcanum' || this.object.type == 'heroicSkill' )
+		else if ( this.object.type == 'classFeature' || this.object.type == 'arcanum' || this.object.type == 'heroicSkill' || this.object.type == 'spell' )
 			options.height = 500;
 
 		super.render(force, options);
