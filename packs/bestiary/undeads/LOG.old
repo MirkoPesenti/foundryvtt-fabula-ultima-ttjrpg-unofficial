@@ -1,7 +1,4 @@
-2024/12/02-13:33:00.761289 30bae0000 Recovering log #163
-2024/12/02-13:33:00.761657 30bae0000 Delete type=3 #161
-2024/12/02-13:33:00.761701 30bae0000 Delete type=0 #163
-2024/12/02-13:33:15.529348 30614f000 Level-0 table #168: started
-2024/12/02-13:33:15.529535 30614f000 Level-0 table #168: 0 bytes OK
-2024/12/02-13:33:15.529741 30614f000 Delete type=0 #166
-2024/12/02-13:33:15.530663 30614f000 Manual compaction at level-0 from 'undefined' @ 72057594037927935 : 1 .. 'undefined' @ 0 : 0; will stop at (end)
+2024/12/02-18:44:54.433 1818 Log #170: 0 ops saved to Table #171 OK
+2024/12/02-18:44:54.434 1818 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\undeads/000170.log: OK
+2024/12/02-18:44:54.434 1818 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\undeads/MANIFEST-000169: OK
+2024/12/02-18:44:54.434 1818 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\undeads; recovered 0 files; 0 bytes. Some data may have been lost. ****

@@ -1,7 +1,4 @@
-2024/12/02-13:33:00.734350 30c2e3000 Recovering log #163
-2024/12/02-13:33:00.734750 30c2e3000 Delete type=3 #161
-2024/12/02-13:33:00.734789 30c2e3000 Delete type=0 #163
-2024/12/02-13:33:15.525292 30614f000 Level-0 table #168: started
-2024/12/02-13:33:15.525393 30614f000 Level-0 table #168: 0 bytes OK
-2024/12/02-13:33:15.525592 30614f000 Delete type=0 #166
-2024/12/02-13:33:15.527446 30614f000 Manual compaction at level-0 from 'undefined' @ 72057594037927935 : 1 .. 'undefined' @ 0 : 0; will stop at (end)
+2024/12/02-18:44:54.281 10f4 Log #170: 0 ops saved to Table #171 OK
+2024/12/02-18:44:54.282 10f4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\shields\base/000170.log: OK
+2024/12/02-18:44:54.284 10f4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\shields\base/MANIFEST-000169: OK
+2024/12/02-18:44:54.287 10f4 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\shields\base; recovered 0 files; 0 bytes. Some data may have been lost. ****

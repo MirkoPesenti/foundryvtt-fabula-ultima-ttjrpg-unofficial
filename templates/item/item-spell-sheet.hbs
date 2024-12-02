@@ -2,6 +2,15 @@
 
     <header class="sheet-header">
         <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+        {{#if system.isOffensive.value}}
+            <div class="icon icon-offensive"></div>
+        {{/if}}
+
+        {{#if system.type.value}}
+            <div class="class-icon">
+                <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+            </div>
+        {{/if}}
 
         {{#if @root.editable}}
             <select class="select-source is-top-right" name="system.sourcebook">
@@ -12,9 +21,8 @@
 
     <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
         <a class="item" data-tab="description"><span>{{localize 'FU.Sheet.DescriptionTab'}}</span></a>
-        <a class="item" data-tab="details"><span>{{localize 'FU.Sheet.DetailsTab'}}</span></a>
-        {{#if system.isOffensive.value}}
-            <a class="item" data-tab="damage"><span>{{localize 'FU.Sheet.DamageTab'}}</span></a>
+        {{#if @root.editable}}
+            <a class="item" data-tab="details"><span>Offensivo</span></a>
         {{/if}}
     </nav>
 
@@ -31,13 +39,30 @@
                 <tbody>
                     <tr>
                         <td>
-                            {{system.MPCost.value}}
-                            {{#gt system.target.number 1}}
-                            x {{localize 'FU.targetAbbr'}}
-                            {{/gt}}
+                            {{#if @root.editable}}
+                                <div class="form-group mp">
+                                    <input name="system.MPCost.upTo" type="checkbox" {{checked system.MPCost.upTo}} data-tooltip="Fino a {{system.MPCost.value}} PM">
+                                    <input name="system.MPCost.value" type="number" value="{{system.MPCost.value}}">
+                                </div>
+                            {{else}}
+                                {{#if system.MPCost.upTo}}
+                                    Fino a
+                                {{/if}}
+
+                                {{system.MPCost.value}}
+
+                                {{#gt system.target.number 1}}
+                                    x {{localize 'FU.targetAbbr'}}
+                                {{/gt}}
+                            {{/if}}
                         </td>
                         <td>
-                            <input type="text" name="system.target.value" value="{{system.target.value}}" placeholder="{{localize 'FU.target'}}">
+                            <div class="form-group">
+                                <input type="text" name="system.target.value" value="{{system.target.value}}">
+                                {{#if @root.editable}}
+                                    <input class="input-sm" name="system.target.number" type="number" value="{{system.target.number}}">
+                                {{/if}}
+                            </div>
                         </td>
                         <td>
                             <select name="system.duration.value">
@@ -47,50 +72,66 @@
                     </tr>
                 </tbody>
             </table>
-            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+            <div class="body-container">
+                {{#if @root.editable}}
+                    <div class="title">Tipologia</div>
+                    <div class="form-group form-type">
+                        <select name="system.type.value">
+                            {{selectOptions SpellDisciplines selected=system.type.value sort=true localize=true}}
+                        </select>
+                        <p>
+                            Test di Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' system.attributes.primary)}} + {{localize (concat 'FU.attributesAbbr.' system.attributes.secondary)}}】</strong>
+                        </p>
+                    </div>
+                {{/if}}
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
 
-            {{#if system.opportunity.value}}
-                {{editor enrichedHtml.opportunity target="system.opportunityEffect" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-            {{/if}}
+                {{#unless @root.editable}}
+                    {{#if system.opportunity.value}}
+                        <div class="title">Opportunità</div>
+                        {{editor enrichedHtml.opportunity target="system.opportunityEffect" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                    {{/if}}
+                {{/unless}}
+            </div>
 		</div>
 
-		<div class="tab details" data-group="primary" data-tab="details">
-            <div class="form-group">
-                <label for="system.isOffensive.value">{{localize 'FU.spellOffensive'}}?</label>
-                <input type="checkbox" name="system.isOffensive.value" {{checked system.isOffensive.value}}>
-            </div>
-            <div class="form-group">
-                <label>{{localize 'FU.target'}}</label>
-                <input type="number" name="system.MPCost.value" value="{{system.MPCost.value}}" placeholder="{{localize 'FU.MP'}}">
-                x
-                <input type="number" name="system.target.number" value="{{system.target.number}}" placeholder="{{localize 'FU.targetPL'}}">
-            </div>
-            <div class="form-group">
-                <label for="system.opportunity.value">{{localize 'FU.spellOpportunity'}}?</label>
-                <input type="checkbox" name="system.opportunity.value" {{checked system.opportunity.value}}>
-            </div>
-		</div>
-        <div class="tab dmg" data-gr="primary" data-tab="damage">
-            <div class="form-group">
-                <label>Test di Magia:</label>
-                <select name="system.attributes.primary">
-                    {{selectOptions attributes selected=system.attributes.primary sort=true localize=true}}
-                </select>
-                +
-                <select name="system.attributes.secondary">
-                    {{selectOptions attributes selected=system.attributes.secondary sort=true localize=true}}
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="system.damage.hasDamage.value">Danno:</label>
-                <input type="checkbox" name="system.damage.hasDamage.value" {{checked system.damage.hasDamage.value}}>
-                {{#if system.damage.hasDamage.value}}
-                <input type="number" name="system.damage.value" value="{{system.target.MPCost}}" placeholder="Danno">
-                <select name="system.damage.type">
-                    {{selectOptions DamageTypes selected=system.damage.type sort=true localize=true}}
-                </select>
+        {{#if (or @root.editable system.isOffensive.value)}}
+            <div class="tab details" data-group="primary" data-tab="details">
+                <div class="form-group">
+                    <input type="checkbox" name="system.isOffensive.value" id="system.isOffensive.value" {{checked system.isOffensive.value}}>
+                    <label for="system.isOffensive.value">Si tratta di un incantesimo <strong>offensivo</strong>?</label>
+                </div>
+
+                {{#if system.isOffensive.value}}
+                    {{#if @root.editable}}
+                        <div class="form-group">
+                            <input type="checkbox" id="system.damage.hasDamage.value" name="system.damage.hasDamage.value" {{checked system.damage.hasDamage.value}}>
+                            <label for="system.damage.hasDamage.value">Infligge danno?</label>
+                        </div>
+
+                        {{#if system.damage.hasDamage.value}}
+                            <div class="form-group form-dmg">
+                                <p><strong>【TM +</strong></p>
+                                <input type="number" name="system.damage.value" value="{{system.damage.value}}" placeholder="Danno">
+                                <p><strong>】</strong> danni da</p>
+
+                                <select name="system.damage.type.value">
+                                    {{selectOptions DamageTypes selected=system.damage.type.value sort=true localize=true}}
+                                </select>
+                            </div>
+                        {{/if}}
+
+                        <div class="form-group">
+                            <input type="checkbox" id="system.opportunity.value" name="system.opportunity.value" {{checked system.opportunity.value}}>
+                            <label for="system.opportunity.value">Questo incantesimo possiede un'<strong>Opportunità</strong>?</label>
+                        </div>
+                    {{/if}}
+
+                    {{#if system.opportunity.value}}
+                        {{editor enrichedHtml.opportunity target="system.opportunityEffect" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                    {{/if}}
                 {{/if}}
             </div>
-        </div>
+        {{/if}}
     </section>
 </form>

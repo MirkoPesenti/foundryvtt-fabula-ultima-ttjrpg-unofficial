@@ -1,8 +1,5 @@
-2024/12/02-13:33:00.722889 30c2e3000 Recovering log #18
-2024/12/02-13:33:00.723322 30c2e3000 Delete type=3 #16
-2024/12/02-13:33:00.723373 30c2e3000 Delete type=0 #18
-2024/12/02-13:33:15.523732 30614f000 Level-0 table #23: started
-2024/12/02-13:33:15.523846 30614f000 Level-0 table #23: 0 bytes OK
-2024/12/02-13:33:15.524095 30614f000 Delete type=0 #21
-2024/12/02-13:33:15.524916 30614f000 Manual compaction at level-0 from '!folders!Uwh7ykulLYTvqOd6' @ 72057594037927935 : 1 .. '!items!za1eM6sfGyD52IyQ' @ 0 : 0; will stop at (end)
-2024/12/02-13:33:15.524975 30614f000 Manual compaction at level-1 from '!folders!Uwh7ykulLYTvqOd6' @ 72057594037927935 : 1 .. '!items!za1eM6sfGyD52IyQ' @ 0 : 0; will stop at (end)
+2024/12/02-18:44:54.119 f34 Log #25: 0 ops saved to Table #26 OK
+2024/12/02-18:44:54.119 f34 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\heroicskill/000025.log: OK
+2024/12/02-18:44:54.119 f34 Table #5: 250 entries OK
+2024/12/02-18:44:54.127 f34 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\heroicskill/MANIFEST-000024: OK
+2024/12/02-18:44:54.131 f34 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\heroicskill; recovered 1 files; 71112 bytes. Some data may have been lost. ****

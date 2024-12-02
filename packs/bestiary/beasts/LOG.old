@@ -1,7 +1,4 @@
-2024/12/02-13:33:00.737346 30cae6000 Recovering log #163
-2024/12/02-13:33:00.737723 30cae6000 Delete type=3 #161
-2024/12/02-13:33:00.737763 30cae6000 Delete type=0 #163
-2024/12/02-13:33:15.525639 30614f000 Level-0 table #168: started
-2024/12/02-13:33:15.526545 30614f000 Level-0 table #168: 0 bytes OK
-2024/12/02-13:33:15.526720 30614f000 Delete type=0 #166
-2024/12/02-13:33:15.527456 30614f000 Manual compaction at level-0 from 'undefined' @ 72057594037927935 : 1 .. 'undefined' @ 0 : 0; will stop at (end)
+2024/12/02-18:44:54.309 1818 Log #170: 0 ops saved to Table #171 OK
+2024/12/02-18:44:54.310 1818 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\beasts/000170.log: OK
+2024/12/02-18:44:54.315 1818 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\beasts/MANIFEST-000169: OK
+2024/12/02-18:44:54.317 1818 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\beasts; recovered 0 files; 0 bytes. Some data may have been lost. ****

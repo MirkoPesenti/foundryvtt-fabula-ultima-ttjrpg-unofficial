@@ -21,9 +21,17 @@ export class FabulaItemSheet extends ItemSheet {
 	}
 
 	render( force = false, options = {} ) {
-		if ( this.object.type == 'class' || this.object.type == 'rule' )
+		if ( 
+			this.object.type == 'class' || 
+			this.object.type == 'rule' 
+		)
 			options.height = 700;
-		else if ( this.object.type == 'classFeature' || this.object.type == 'arcanum' || this.object.type == 'heroicSkill' || this.object.type == 'spell' )
+		else if ( 
+			this.object.type == 'classFeature' || 
+			this.object.type == 'arcanum' || 
+			this.object.type == 'heroicSkill' || 
+			this.object.type == 'spell' 
+		)
 			options.height = 500;
 
 		super.render(force, options);
@@ -99,8 +107,8 @@ export class FabulaItemSheet extends ItemSheet {
 	activateListeners( html ) {
 		super.activateListeners( html );
 
-		html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
-		html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
+		// html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
+		// html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
 
 		html.on('drop', this._onDropItem.bind(this));
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
@@ -122,7 +130,7 @@ export class FabulaItemSheet extends ItemSheet {
 			await this.item.update({ [string]: newArray });
 		});
 
-		html.on('click', '.change-image', async (ev) => {
+		html.on('click', '.js_changeImage', async (ev) => {
 			const input = ev.currentTarget.previousElementSibling;
 			new FilePicker({
 				type: 'image',
@@ -251,6 +259,16 @@ export class FabulaItemSheet extends ItemSheet {
 
 	_getSubmitData( updateData = {} ) {
 		const data = super._getSubmitData( updateData );
+		
+		if ( data['system.type.value'] ) {
+			const typeImages = {
+				chimerism: 'systems/fabula/assets/icons/classes/chimerist.png',
+				elementalism: 'systems/fabula/assets/icons/classes/elementalist.png',
+				entropism: 'systems/fabula/assets/icons/classes/entropist.png',
+				spiritism: 'systems/fabula/assets/icons/classes/spiritist.png'
+			};
+			data['img'] = typeImages[data['system.type.value']];
+		}
 		const overrides = foundry.utils.flattenObject( this.item.overrides );
 
 		for ( let key of Object.keys(overrides) ) {

@@ -24,13 +24,18 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 		return {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			type: new SchemaField({ value: new StringField({ initial: 'chimerism', choices: Object.keys(FU.SpellDisciplines) }) }),
-			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
 			isOffensive: new SchemaField({ value: new BooleanField({ initial: false }) }),
 			attributes: new EmbeddedDataField(AttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
 			damage: new EmbeddedDataField(DamageDataModel, {}),
-			MPCost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true }) }),
-			target: new SchemaField({ value: new StringField(), number: new NumberField({ initial: 1, min: 1, integer: true }) }),
+			MPCost: new SchemaField({ 
+				value: new NumberField({ initial: 1, min: 0, integer: true }), 
+				upTo: new BooleanField({ initial: false }) 
+			}),
+			target: new SchemaField({ 
+				value: new StringField(), 
+				number: new NumberField({ initial: 1, min: 1, integer: true }) 
+			}),
 			duration: new SchemaField({ value: new StringField({ initial: 'instantaneous', choices: Object.keys(FU.SpellDurations) }) }),
 			opportunity: new SchemaField({ value: new BooleanField() }),
 			opportunityEffect: new HTMLField(),
