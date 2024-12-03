@@ -1,3 +1,4 @@
-2024/12/03-10:28:00.563291 30c1ca000 Recovering log #175
-2024/12/03-10:28:00.564860 30c1ca000 Delete type=0 #175
-2024/12/03-10:28:00.564896 30c1ca000 Delete type=3 #174
+2024/12/03-20:14:55.610 4cac Log #179: 0 ops saved to Table #180 OK
+2024/12/03-20:14:55.610 4cac Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\armors\base/000179.log: OK
+2024/12/03-20:14:55.617 4cac Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\armors\base/MANIFEST-000178: OK
+2024/12/03-20:14:55.620 4cac **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\armors\base; recovered 0 files; 0 bytes. Some data may have been lost. ****

@@ -59,10 +59,54 @@ export class FabulaActorSheet extends ActorSheet {
 	activateListeners( html ) {
 		super.activateListeners( html );
 
+		// Show Actor's Item in chat
 		html.on('click', '.js_showInChat', (e) => {
 			e.preventDefault();
 			const data = e.currentTarget.dataset;
-			showItemInChat( data );
+			showItemInChat( data, this.actor );
+		});
+
+		// Roll Spell magic test
+		html.on('click','.js_rollSpellTest', async (e) => {
+			e.preventDefault();
+			const actor = this.actor;
+			const data = e.currentTarget.dataset;
+			const spell = actor.items.get( data.id );
+			const roll = new Roll( data.roll, actor.getRollData() );
+			const template = 'systems/fabula/templates/chat/chat-check.hbs';
+
+			await roll.evaluate();
+			const checkData = {
+				spell: spell,
+				spellTest: `【${game.i18n.localize(FU.attributesAbbr[spell.system.attributes.primary.value])} + ${game.i18n.localize(FU.attributesAbbr[spell.system.attributes.secondary.value])}】`,
+				roll: roll,
+			};
+
+			renderTemplate( template, checkData ).then(content => {
+				roll.toMessage({
+					flavor: null,
+					content: content,
+					speaker: ChatMessage.getSpeaker({ actor: actor }),
+					rollMode: game.settings.get( 'core', 'rollMode' ),
+				}).then(chatMessage => {
+					setTimeout(() => {
+						const message = document.querySelector(`.message[data-message-id="${chatMessage.id}"]`);
+						const buttons = message.querySelectorAll(".js_rerollDice");
+
+						buttons.forEach(btn => {
+							btn.addEventListener('click', (ev) => {
+								const reRoll = ev.currentTarget.dataset.roll;
+								new Roll( reRoll, actor.getRollData() ).toMessage({
+									flavor: 'Hai ritirato il dado',
+									speaker: ChatMessage.getSpeaker({ actor: actor }),
+									rollMode: game.settings.get( 'core', 'rollMode' ),
+								});
+								$(ev.currentTarget).addClass('disabled');
+							});
+						});
+					}, 100);
+				});
+			});
 		});
 
 		html.on('click','.roll', this._onRoll.bind(this));

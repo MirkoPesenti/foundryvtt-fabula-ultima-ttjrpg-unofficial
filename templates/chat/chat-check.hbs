@@ -1,0 +1,22 @@
+<div class="check-card">
+	<header class="card-header">
+		<h3>{{spell.name}}</h3>
+		<h3>Test di Magia: {{spellTest}}</h3>
+	</header>
+	<div class="card-body">
+		<div class="dice-roll">
+			<div class="dice-formula">{{roll.formula}}</div>
+			<div class="flexrow">
+				<div style="flex:0 0 50%">
+					<div class="dice-formula {{#if (eq roll.dice.0.results.0.result 1)}}failure{{/if}} {{#if (eq roll.dice.0.results.0.result roll.dice.0.faces)}}success{{/if}}">{{roll.dice.0.results.0.result}}</div>
+					<button type="button" class="js_rerollDice" data-roll="d{{roll.dice.0.faces}}">Reroll</button>
+				</div>
+				<div style="flex:0 0 50%">
+					<div class="dice-formula {{#if (eq roll.dice.1.results.0.result 1)}}failure{{/if}} {{#if (eq roll.dice.1.results.0.result roll.dice.1.faces)}}success{{/if}}">{{roll.dice.1.results.0.result}}</div>
+					<button type="button" class="js_rerollDice" data-roll="d{{roll.dice.1.faces}}">Reroll</button>
+				</div>
+			</div>
+			<div class="dice-total" style="flex:0 0 100%;">{{roll.total}}</div>
+		</div>
+	</div>
+</div>

@@ -124,10 +124,12 @@
                 {{#each items as |subItem subItemIndex|}}
                     {{#unless (eq this.type "class")}}
                         <li>
-                            <button type="button" class="roll" data-roll="d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.primary.value}}+d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.secondary.value}}">
-                                Test Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.secondary.value)}}】</strong>
-                            </button>
-                            <button type="button" class="js_showInChat" data-id="{{subItem._id}}" data-type="{{subImte.type}}">
+                            {{#if subItem.system.isOffensive.value}}
+                                <button type="button" class="js_rollSpellTest" data-roll="d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.primary.value}}+d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.secondary.value}}" data-id="{{subItem._id}}">
+                                    Test Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.secondary.value)}}】</strong>
+                                </button>
+                            {{/if}}
+                            <button type="button" class="js_showInChat" data-id="{{subItem._id}}" data-type="{{subItem.type}}">
                                 Chat
                             </button>
                             <table>
@@ -166,7 +168,7 @@
                                 </tbody>
                             </table>
                             {{{subItem.system.description}}}
-                            {{#if subItem.system.opportunity}}
+                            {{#if subItem.system.opportunity.value}}
                                 <strong>Opportunità:</strong>
                                 {{{subItem.system.opportunityEffect}}}
                             {{/if}}

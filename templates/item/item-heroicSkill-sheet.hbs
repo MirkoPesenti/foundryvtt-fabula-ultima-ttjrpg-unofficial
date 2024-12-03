@@ -48,17 +48,76 @@
                                 {{/unless}}
                                 <strong>{{class}}</strong>
                             {{/each}}
-                            {{#if system.requirements.classFeature}}
-                                e aver acquistato l'Abilità <strong>{{system.requirements.classFeature}}</strong>
+                            {{#if (arrayLengthGt system.requirements.classFeature 0)}}
+                                e aver acquistato
+                                {{#if (arrayLengthGt system.requirements.classFeature 1)}} 
+                                    una o più Abilità tra
+                                {{else}}
+                                    l'Abilità 
+                                {{/if}}
+                                {{#each system.requirements.classFeature as |classFeature classFeatureIndex|}}
+                                    {{#unless (eq classFeatureIndex 0)}}
+                                        {{#if (arrayLastIndex classFeatureIndex ../system.requirements.classFeature)}}
+                                            e
+                                        {{else}}
+                                            ,
+                                        {{/if}}
+                                    {{/unless}}
+                                    <strong>{{classFeature}}</strong>
+                                {{/each}}
                             {{/if}}
                             {{#gt system.requirements.level 0}}
                                 e aver raggiunto il <strong>livello {{system.requirements.level}}</strong>
                             {{/gt}}
+                            {{#gt system.requirements.offensiveSpells 0}}
+                                e devi conoscere almeno <strong>{{system.requirements.offensiveSpells}}</strong> incantesimi offensivi
+                            {{/gt}}
                         </p>
                     </div>
                 {{/if}}
-                <div class="feature-body">
+                <div class="feature-body {{#if flags.fabula.spells}}has-subitem{{/if}}">
                     {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+                    {{#each flags.fabula.spells as |spell spellIndex|}}
+                        {{#if (eq spell.type "spell")}}
+                            <table class="is-4">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <strong>{{spell.name}}</strong>
+                                            {{#if spell.system.isOffensive.value}}
+                                                <div class="icon icon-offensive"></div>
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            <strong>PM:</strong>
+                                            {{#if spell.system.MPCost.upTo}}
+                                                Fino a
+                                            {{/if}}
+
+                                            {{spell.system.MPCost.value}}
+
+                                            {{#gt spell.system.target.number 1}}
+                                                x {{localize 'FU.targetAbbr'}}
+                                            {{/gt}}
+                                        </td>
+                                        <td>
+                                            <strong>Bersaglio:</strong>
+                                            {{spell.system.target.value}}
+                                        </td>
+                                        <td>
+                                            <strong>Durata:</strong>
+                                            {{localize (concat 'FU.SpellDurations.' spell.system.duration.value)}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            {{{spell.system.description}}}
+                            {{#if spell.system.opportunity.value}}
+                                <p><strong>Opportunità:</strong></p>
+                                {{{spell.system.opportunityEffect}}}
+                            {{/if}}
+                        {{/if}}
+                    {{/each}}
                 </div>
             </div>
         </div>

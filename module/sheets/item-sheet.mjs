@@ -152,11 +152,15 @@ export class FabulaItemSheet extends ItemSheet {
 					<div class="flexrow">
 						<div class="form-group w-100">
 							<input type="checkbox" name="formHeroicSkill_twoOrMore" id="twoOrMore" ${twoOrMoreChecked ? 'checked' : ''} />
-							<label for="twoOrMore">Devi padroneggiare <strong>due o più</strong></label>
+							<label for="twoOrMore">Devi padroneggiare <strong>due o più</strong> Classi</label>
 						</div>
 						<div class="form-group w-100">
 							<label for="heroicSkill_level">Livello minimo da raggiungere</label>
 							<input type="number" name="formHeroicSkill_level" id="heroicSkill_level" value="${context.item.system.requirements.level}" />
+						</div>
+						<div class="form-group w-100">
+							<label for="heroicSkill_spells">Numero minimo di incantesimi offensivi</label>
+							<input type="number" name="formHeroicSkill_spells" id="heroicSkill_spells" value="${context.item.system.requirements.offensiveSpells}" />
 						</div>
 					</div>
 				`;
@@ -203,6 +207,11 @@ export class FabulaItemSheet extends ItemSheet {
 								await context.item.update({ 'system.requirements.level': level });
 							}
 
+							const spells = dialogHtml.find('input[name="formHeroicSkill_spells"]').val();
+							if ( spells >= 0 ) {
+								await context.item.update({ 'system.requirements.offensiveSpells': spells });
+							}
+
 							const inputs = dialogHtml.find('input[name="formHeroicSkill_Class"]:checked');
 							const classes = [];
 							for ( let i = 0; i < inputs.length; i++ ) {
@@ -210,44 +219,45 @@ export class FabulaItemSheet extends ItemSheet {
 							}
 							await context.item.update({ 'system.requirements.class': classes });
 
-							if ( classes.length == 1 ) {
-								const pack = game.packs.get('fabula.classes');
-								const document = await pack.getDocument( $(inputs[0]).attr('id') );
+							const pack = game.packs.get('fabula.classes');
+							let featureOptions = `
+								<div class="form-group">
+									<select name="formHeroicSkill_ClassFeature" multiple>
+										<option value="">Nessuna</option>`;
+							
+							for ( let i = 0; i < inputs.length; i++ ) {
+								featureOptions += '<option disabled>──────────</option>';
+								const document = await pack.getDocument( $(inputs[i]).attr('id') );
 								const features = document.flags.fabula.subItems;
-								let featureOptions = `
-									<div class="form-group">
-										<select name="formHeroicSkill_ClassFeature">`;
-								for ( let i = 0; i < features.length; i++ ) {
-									featureOptions += `<option value="${features[i].name}">${features[i].name}</option>`;
+
+								for ( let a = 0; a < features.length; a++ ) {
+									const selected = context.item.system.requirements.classFeature.includes( features[a].name );
+									featureOptions += `<option value="${features[a].name}" ${selected ? 'selected' : ''}>${features[a].name}</option>`;
 								}
-								featureOptions += `
-										</select>
-									</div>`;
-								new Dialog({
-									title: 'Scegli un eventuale abilità presequisita',
-									content: `
-										<div class="form-checks">
-											${featureOptions}
-										</div>
-									`,
-									buttons: {
-										calcel: {
-											label: 'Annulla',
-										},
-										confirm: {
-											label: 'Conferma',
-											callback: async (dialogChildHtml) => {
-												const choosedFeature = dialogChildHtml.find('[name="formHeroicSkill_ClassFeature"]').val();
-												if ( choosedFeature ) {
-													await context.item.update({ 'system.requirements.classFeature': choosedFeature });
-												}
-											}
-										},
-									},
-								}).render(true);
-							} else {
-								await context.item.update({ 'system.requirements.classFeature': '' });
 							}
+							featureOptions += `
+									</select>
+								</div>`;
+							new Dialog({
+								title: 'Scegli un eventuale abilità presequisita',
+								content: `
+									<div class="form-checks">
+										${featureOptions}
+									</div>
+								`,
+								buttons: {
+									calcel: {
+										label: 'Annulla',
+									},
+									confirm: {
+										label: 'Conferma',
+										callback: async (dialogChildHtml) => {
+											const choosedFeature = dialogChildHtml.find('[name="formHeroicSkill_ClassFeature"]').val() ? dialogChildHtml.find('[name="formHeroicSkill_ClassFeature"]').val() : [];
+											await context.item.update({ 'system.requirements.classFeature': choosedFeature });
+										}
+									},
+								},
+							}).render(true);
 						},
 					},
 				},
@@ -286,6 +296,7 @@ export class FabulaItemSheet extends ItemSheet {
 		const targetItem = this.item;
 
 		if ( targetItem.type == 'class' ) {
+
 			// Check if dropped element is Item
 			if ( data.type !== 'Item' ) {
 				ui.notifications.warn('Puoi trascinare solo oggetti.');
@@ -335,6 +346,42 @@ export class FabulaItemSheet extends ItemSheet {
 
 			await targetItem.setFlag('fabula', 'subItems', subItems);
 			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
+
+		} else if ( targetItem.type == 'heroicSkill' ) {
+
+			// Check if dropped element is Item
+			if ( data.type !== 'Item' ) {
+				ui.notifications.warn('Puoi trascinare solo oggetti.');
+				return;
+			}
+
+			// Check if Item is found
+			const sourceItem = await fromUuid(data.uuid);
+			if ( !sourceItem ) {
+				ui.notifications.error("Impossibile trovare l'oggetto trascinato.");
+				return;
+			}
+
+			// Check if item is a Spell
+			if ( sourceItem.type != 'spell' ) {
+				ui.notifications.error("Puoi trascinare solo Incantesimi.");
+				return;
+			}
+
+			const spells = [];
+			await sourceItem.update({ 'system.origin': targetItem._id });
+
+			// Update Heroic Skill
+			spells.push(sourceItem.toObject());
+			spells.sort((a, b) => {
+				return a.name.localeCompare(b.name);
+			});
+
+			await targetItem.setFlag('fabula', 'spells', spells);
+			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
+
+			console.log(targetItem);
+
 		}
 	}
 
