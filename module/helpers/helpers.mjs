@@ -24,6 +24,23 @@ export function checkParams( params ) {
 	});
 }
 
+export function showItemInChat( data ) {
+	if ( data.id ) {
+		const item = game.items.get( data.id );
+
+		if ( item ) {
+			ChatMessage.create({
+				content: `
+					<h4>${item.name}</h4>
+				`,
+				speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+			});
+		} else {
+			ui.notifications.error(`L'item con id: ${data.id} non è stato trovato!`);
+		}
+	}
+}
+
 function openFreeBenefirsChildDialog( radios, actorClasses, clonedDocument ) {
 	return new Promise((resolve) => {
 		new Dialog({

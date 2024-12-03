@@ -2,7 +2,7 @@ import { FU } from '../../../helpers/config.mjs';
 
 /**
  * @property {"dex", "ins", "mig", "wlp"} primary.value
- * @property {"dex", "ins", "mig", "wlp"} primary.value
+ * @property {"dex", "ins", "mig", "wlp"} secondary.value
  */
 
 export class AttributesDataModel extends foundry.abstract.DataModel {

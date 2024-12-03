@@ -1,4 +1,5 @@
 import { FU } from "../helpers/config.mjs";
+import { showItemInChat } from "../helpers/helpers.mjs";
 
 /**
  * Extend basic ActorSheet
@@ -57,6 +58,12 @@ export class FabulaActorSheet extends ActorSheet {
 
 	activateListeners( html ) {
 		super.activateListeners( html );
+
+		html.on('click', '.js_showInChat', (e) => {
+			e.preventDefault();
+			const data = e.currentTarget.dataset;
+			showItemInChat( data );
+		});
 
 		html.on('click','.roll', this._onRoll.bind(this));
 		html.on('click','.getActor', () => console.log(this.actor));

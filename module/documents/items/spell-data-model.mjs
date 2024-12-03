@@ -51,7 +51,7 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 		};
 
 		const attributes = typeAttributes[this.type.value];
-		(this.attributes ??= {}).primary = attributes[0];
-		(this.attributes ??= {}).secondary = attributes[1];
+		(this.attributes ??= {}).primary.value = attributes[0];
+		(this.attributes ??= {}).secondary.value = attributes[1];
 	}
 }

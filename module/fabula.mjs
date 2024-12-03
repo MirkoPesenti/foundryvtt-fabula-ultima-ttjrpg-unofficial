@@ -436,6 +436,11 @@ Handlebars.registerHelper('atLeastTwoTrue', function(a, b, c, options) {
 	return truthyCount >= 2 ? options.fn(this) : options.inverse(this);
 });
 
+Handlebars.registerHelper('getAttributeValue', function(resourcePath, attributeKey, options) {
+    const value = resourcePath[attributeKey]?.value;
+    return value !== undefined ? value : 0;
+});
+
 Handlebars.registerHelper('percentage', function( a, b ){
 	return ( ( a / b ) * 100 );
 });

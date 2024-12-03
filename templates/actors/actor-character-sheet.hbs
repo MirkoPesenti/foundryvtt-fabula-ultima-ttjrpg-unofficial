@@ -11,10 +11,10 @@
         </div>
     </header>
 
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
-        <a class="item" data-tab="class">Classi</a>
-        <a class="item" data-tab="equip">Equipaggiamento</a>
+    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
+        <a class="item" data-tab="description"><span>{{localize 'FU.Sheet.DescriptionTab'}}</span></a>
+        <a class="item" data-tab="class"><span>Classi</span></a>
+        <a class="item" data-tab="equip"><span>Equipaggiamento</span></a>
     </nav>
 
     <section class="sheet-body">
@@ -121,9 +121,57 @@
         </div>
         <div class="tab desc" data-group="primary" data-tab="equip">
             <ul>
-                {{#each items}}
+                {{#each items as |subItem subItemIndex|}}
                     {{#unless (eq this.type "class")}}
-                        <li>{{this.name}}</li>
+                        <li>
+                            <button type="button" class="roll" data-roll="d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.primary.value}}+d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.secondary.value}}">
+                                Test Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.secondary.value)}}】</strong>
+                            </button>
+                            <button type="button" class="js_showInChat" data-id="{{subItem._id}}" data-type="{{subImte.type}}">
+                                Chat
+                            </button>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th>PM</th>
+                                        <th>Bersaglio</th>
+                                        <th>Durata</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            {{subItem.name}}
+                                            {{#if subItem.system.isOffensive.value}}
+                                                <div class="icon icon-offensive"></div>
+                                            {{/if}}
+                                        </td>
+                                        <td>
+                                            {{#if subItem.system.MPCost.upTo}}
+                                                Fino a
+                                            {{/if}}
+                                            {{subItem.system.MPCost.value}}
+                                            {{#gt subItem.system.target.number 1}}
+                                                x B
+                                            {{/gt}}
+                                        </td>
+                                        <td>
+                                            {{subItem.system.target.value}}
+                                        </td>
+                                        <td>
+                                            {{subItem.system.duration.value}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            {{{subItem.system.description}}}
+                            {{#if subItem.system.opportunity}}
+                                <strong>Opportunità:</strong>
+                                {{{subItem.system.opportunityEffect}}}
+                            {{/if}}
+                            <hr>
+                        </li>
                     {{/unless}}
                 {{/each}}
             </ul>
