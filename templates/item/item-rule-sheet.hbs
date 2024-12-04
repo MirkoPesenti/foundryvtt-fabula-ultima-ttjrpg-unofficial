@@ -23,19 +23,21 @@
                         {{/if}}
                     </div>
                     <div class="list-content">
-                        <div class="flexrow">
-                            <div class="form-group">
-                                <input type="checkbox" id="system.itemList.active" name="system.itemList.active" {{checked system.itemList.active}}>
-                                <label for="system.itemList.active">Mostrare elenco di oggetti</label>
-                            </div>
-                            {{#if system.itemList.active}}
+                        {{#if @root.editable}}
+                            <div class="flexrow">
                                 <div class="form-group">
-                                    <select name="system.itemList.list">
-                                        {{selectOptions ItemTypes selected=system.itemList.list localize=true}}
-                                    </select>
+                                    <input type="checkbox" id="system.itemList.active" name="system.itemList.active" {{checked system.itemList.active}}>
+                                    <label for="system.itemList.active">Mostrare elenco di oggetti</label>
                                 </div>
-                            {{/if}}
-                        </div>
+                                {{#if system.itemList.active}}
+                                    <div class="form-group">
+                                        <select name="system.itemList.list">
+                                            {{selectOptions ItemTypes selected=system.itemList.list localize=true}}
+                                        </select>
+                                    </div>
+                                {{/if}}
+                            </div>
+                        {{/if}}
                         {{#allTrue system.itemList.active system.itemList.list}}
                             {{renderItemList itemLists system.itemList.list}}
                         {{/allTrue}}

@@ -93,6 +93,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.rarityList = CONFIG.FU.rarityList;
 
 		context.enrichedHtml = {
+			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
 			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
 			opportunity: await TextEditor.enrichHTML( context.system.opportunityEffect ?? '' ),
 			projectCondition: await TextEditor.enrichHTML( context.system.bonus?.projects?.condition ?? '' ),
@@ -159,7 +160,7 @@ export class FabulaItemSheet extends ItemSheet {
 		html.on('click', '.js_editHeroicSkillReq', async (ev) => {
 			const context = await this.getData();
 			let options = '';
-			if ( context.itemLists.classes.length > 0 ) {
+			if ( context.itemLists.class.length > 0 ) {
 				const twoOrMoreChecked = context.item.system.requirements.multiClass ? true : false;
 				options += `
 					<div class="flexrow">
@@ -177,16 +178,16 @@ export class FabulaItemSheet extends ItemSheet {
 						</div>
 					</div>
 				`;
-				for ( let i = 0; i < context.itemLists.classes.length; i++ ) {
-					options += `<div class="title">${context.itemLists.classes[i].folder}</div>`;
-					if ( context.itemLists.classes[i].items.length > 0 ) {
+				for ( let i = 0; i < context.itemLists.class.length; i++ ) {
+					options += `<div class="title">${context.itemLists.class[i].folder}</div>`;
+					if ( context.itemLists.class[i].items.length > 0 ) {
 						options += '<div class="flexrow">';
-						for ( let a = 0; a < context.itemLists.classes[i].items.length; a++ ) {
-							const checked = context.item.system.requirements.class.includes( context.itemLists.classes[i].items[a].name );
+						for ( let a = 0; a < context.itemLists.class[i].items.length; a++ ) {
+							const checked = context.item.system.requirements.class.includes( context.itemLists.class[i].items[a].name );
 							options += `
 								<div class="form-group">
-									<input type="checkbox" name="formHeroicSkill_Class" id="${context.itemLists.classes[i].items[a]._id}" value="${context.itemLists.classes[i].items[a].name}" ${checked ? 'checked' : ''} />
-									<label for="${context.itemLists.classes[i].items[a]._id}">${context.itemLists.classes[i].items[a].name}</label>
+									<input type="checkbox" name="formHeroicSkill_Class" id="${context.itemLists.class[i].items[a]._id}" value="${context.itemLists.class[i].items[a].name}" ${checked ? 'checked' : ''} />
+									<label for="${context.itemLists.class[i].items[a]._id}">${context.itemLists.class[i].items[a].name}</label>
 								</div>
 							`;
 						}

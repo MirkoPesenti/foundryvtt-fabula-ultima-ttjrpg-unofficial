@@ -85,7 +85,7 @@
 
 ## Actors
 
-### Actor
+### PG
 
 - FE: Scheda
 - Interazioni con i vari oggetti

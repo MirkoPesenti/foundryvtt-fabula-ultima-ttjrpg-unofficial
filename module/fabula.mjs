@@ -109,6 +109,59 @@ Hooks.on('updateItem', async ( item, updateData, options, userId ) => {
 	}
 });
 
+Hooks.on('renderItemSheet', (sheet, html, data) => {
+	const item = sheet.item;
+
+	if ( item.type == 'rule' ) {
+		const heroicSkillReq = document.querySelectorAll('#js_heroicSkillRequirements');
+		heroicSkillReq.forEach(async element => {
+
+			const uuid = $(element).data('uuid');
+			if ( uuid ) {
+				const itemData = await fromUuid( uuid );
+				if ( itemData.system.requirements.class.length > 0 ) {
+
+					let template = '<strong>';
+					if ( itemData.system.requirements.multiClass )
+						template += 'Due tra ';
+
+					for ( let i = 0; i < itemData.system.requirements.class.length; i++ ) {
+						if ( i > 0 ) {
+							if ( i == itemData.system.requirements.class.length - 1 ) {
+								if ( itemData.system.requirements.multiClass )
+									template += ' e ';
+								else
+									template += ' o ';
+							} else {
+								template += ', ';
+							}
+						}
+						template += itemData.system.requirements.class[i];
+					}
+					template += '</strong>';
+					$(element).html( template );
+
+				}
+			}
+
+		});
+
+		const heroicSkillSum = document.querySelectorAll('#js_heroicSkillSummary');
+		heroicSkillSum.forEach(async element => {
+
+			const uuid = $(element).data('uuid');
+			if ( uuid ) {
+				const itemData = await fromUuid( uuid );
+				if ( itemData.system.summary ) {
+					$(element).html( itemData.system.summary );
+				}
+			}
+
+		});
+	}
+
+});
+
 let characterCreationOpen = false;
 Hooks.on('renderActorSheet', (sheet, html, data)  => {
 	const actor = sheet.actor;
@@ -500,23 +553,29 @@ Handlebars.registerHelper("renderItemList", function(obj, key) {
 		`;
 
 		if ( key == 'heroicSkill' ) {
-			for ( let i = 0; i < pack.length; i++ ) {
+			for ( const folder of pack ) {
 				template += `
 					<tr>
-						<th colspan="2">${pack[i].folder}</th>
+						<th colspan="3">${folder.folder}</th>
 					</tr>
 				`;
-				for ( let a = 0; a < pack[i].items.length; a++ ) {
-					console.log(pack[i].items[a]);
+				for ( const item of folder.items ) {
+					const itemType = item.uuid.split(".")[3];
+					const itemPack = `${item.uuid.split(".")[1]}.${item.uuid.split(".")[2]}`;
 					template += `
 						<tr>
 							<td>
-								<a class="content-link" draggable="true" data-link data-uuid="${pack[i].items[a].uuid}" data-id="${pack[i].items[a]._id}" data-type="${pack[i].items[a].uuid.split(".")[3]}" data-pack="${pack[i].items[a].uuid.split(".")[1]}.${pack[i].items[a].uuid.split(".")[2]}">
+								<a class="content-link" draggable="true" data-link data-uuid="${item.uuid}" data-id="${item._id}" data-type="${itemType}" data-pack="${itemPack}">
 									<i class="fas fa-suitcase"></i>
-									${pack[i].items[a].name}
+									${item.name}
 								</a>
 							</td>
-							<td>CLASSI</td>
+							<td>
+								<div id="js_heroicSkillRequirements" data-uuid="${item.uuid}"></div>
+							</td>
+							<td>
+								<div id="js_heroicSkillSummary" data-uuid="${item.uuid}"></div>
+							</td>
 						</tr>
 					`;
 				}
@@ -529,8 +588,7 @@ Handlebars.registerHelper("renderItemList", function(obj, key) {
 		`;
 
 		return new Handlebars.SafeString(template);
-
 	}
 
-  });
+});
   
