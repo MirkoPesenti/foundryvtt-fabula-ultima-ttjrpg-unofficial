@@ -1,4 +1,1 @@
-2024/12/03-20:14:55.706 11a8 Log #179: 0 ops saved to Table #180 OK
-2024/12/03-20:14:55.706 11a8 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\construct/000179.log: OK
-2024/12/03-20:14:55.711 11a8 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\construct/MANIFEST-000178: OK
-2024/12/03-20:14:55.711 11a8 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\construct; recovered 0 files; 0 bytes. Some data may have been lost. ****
+2024/12/03-20:14:55.722 11a8 Delete type=3 #1

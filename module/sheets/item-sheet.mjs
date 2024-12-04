@@ -1,6 +1,34 @@
 import { FU } from "../helpers/config.mjs";
 import { changeProjectProgress } from "../helpers/effects.mjs";
 
+function returnSortedPack( packId, itemType ) {
+	const pack = game.packs.get( packId );
+	const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
+
+	const items = Array.from(
+		sortedPack.reduce((acc, item) => {
+			if ( item.type == itemType ) {
+				if ( !acc.has( item.folder ) ) {
+					const foundFolder = pack.folders.find( folder => folder._id === item.folder );
+					acc.set( item.folder, { folder: foundFolder.name, items: [] } );
+				}
+
+				acc.get( item.folder ).items.push( item );
+			}
+			return acc;
+		}, new Map()).values()
+	);
+
+	const sortedItemsList = items.sort((a, b) => {
+		if ( a.folder === game.i18n.localize('FU.sourcebook.base') ) return -1;
+		if ( b.folder === game.i18n.localize('FU.sourcebook.base') ) return 1;
+
+		return a.folder.localeCompare(b.folder);
+	});
+
+	return sortedItemsList;
+}
+
 /**
  * Extend basic ItemSheet
  * @extends {ItemSheet}
@@ -51,6 +79,7 @@ export class FabulaItemSheet extends ItemSheet {
 
 		// Add required CONFIG data
 		context.sourcebook = CONFIG.FU.sourcebook;
+		context.ItemTypes = CONFIG.FU.ItemTypes;
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
 		context.DamageTypes = CONFIG.FU.DamageTypes;
@@ -69,27 +98,11 @@ export class FabulaItemSheet extends ItemSheet {
 			projectCondition: await TextEditor.enrichHTML( context.system.bonus?.projects?.condition ?? '' ),
 		};
 		
-		// Add list of classes sorted by packs to CONFIG data
-		const packClasses = game.packs.get('fabula.classes');
-		const sortedClases = packClasses.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
-		const classList = Array.from(
-			sortedClases.reduce((acc, item) => {
-				if ( !acc.has( item.folder ) ) {
-					const foundFolder = packClasses.folders.find( folder => folder._id === item.folder );
-					acc.set( item.folder, { folder: foundFolder.name, classes: [] } );
-				}
-
-				acc.get( item.folder ).classes.push( item );
-				return acc;
-			}, new Map()).values()
-		);
-		const sortedClassList = classList.sort((a, b) => {
-			if ( a.folder === 'Manuale Base' ) return -1;
-			if ( b.folder === 'Manuale Base' ) return 1;
-
-			return a.folder.localeCompare(b.folder);
-		});
-		context.classList = sortedClassList;
+		// Add list of items sorted by packs to CONFIG data
+		context.itemLists = {
+			class: returnSortedPack( 'fabula.classes', 'class' ),
+			heroicSkill: returnSortedPack( 'fabula.heroicskill', 'heroicSkill' ),
+		}
 
 		context.FU = FU;
 
@@ -146,7 +159,7 @@ export class FabulaItemSheet extends ItemSheet {
 		html.on('click', '.js_editHeroicSkillReq', async (ev) => {
 			const context = await this.getData();
 			let options = '';
-			if ( context.classList.length > 0 ) {
+			if ( context.itemLists.classes.length > 0 ) {
 				const twoOrMoreChecked = context.item.system.requirements.multiClass ? true : false;
 				options += `
 					<div class="flexrow">
@@ -164,16 +177,16 @@ export class FabulaItemSheet extends ItemSheet {
 						</div>
 					</div>
 				`;
-				for ( let i = 0; i < context.classList.length; i++ ) {
-					options += `<div class="title">${context.classList[i].folder}</div>`;
-					if ( context.classList[i].classes.length > 0 ) {
+				for ( let i = 0; i < context.itemLists.classes.length; i++ ) {
+					options += `<div class="title">${context.itemLists.classes[i].folder}</div>`;
+					if ( context.itemLists.classes[i].items.length > 0 ) {
 						options += '<div class="flexrow">';
-						for ( let a = 0; a < context.classList[i].classes.length; a++ ) {
-							const checked = context.item.system.requirements.class.includes( context.classList[i].classes[a].name );
+						for ( let a = 0; a < context.itemLists.classes[i].items.length; a++ ) {
+							const checked = context.item.system.requirements.class.includes( context.itemLists.classes[i].items[a].name );
 							options += `
 								<div class="form-group">
-									<input type="checkbox" name="formHeroicSkill_Class" id="${context.classList[i].classes[a]._id}" value="${context.classList[i].classes[a].name}" ${checked ? 'checked' : ''} />
-									<label for="${context.classList[i].classes[a]._id}">${context.classList[i].classes[a].name}</label>
+									<input type="checkbox" name="formHeroicSkill_Class" id="${context.itemLists.classes[i].items[a]._id}" value="${context.itemLists.classes[i].items[a].name}" ${checked ? 'checked' : ''} />
+									<label for="${context.itemLists.classes[i].items[a]._id}">${context.itemLists.classes[i].items[a].name}</label>
 								</div>
 							`;
 						}
@@ -379,8 +392,6 @@ export class FabulaItemSheet extends ItemSheet {
 
 			await targetItem.setFlag('fabula', 'spells', spells);
 			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
-
-			console.log(targetItem);
 
 		}
 	}

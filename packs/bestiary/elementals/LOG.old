@@ -1,4 +1,1 @@
-2024/12/03-20:14:55.772 4dc0 Log #179: 0 ops saved to Table #180 OK
-2024/12/03-20:14:55.773 4dc0 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\elementals/000179.log: OK
-2024/12/03-20:14:55.776 4dc0 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\elementals/MANIFEST-000178: OK
-2024/12/03-20:14:55.780 4dc0 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\elementals; recovered 0 files; 0 bytes. Some data may have been lost. ****
+2024/12/03-20:14:55.795 4dc0 Delete type=3 #1

@@ -1,4 +1,1 @@
-2024/12/03-20:14:55.610 4cac Log #179: 0 ops saved to Table #180 OK
-2024/12/03-20:14:55.610 4cac Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\armors\base/000179.log: OK
-2024/12/03-20:14:55.617 4cac Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\armors\base/MANIFEST-000178: OK
-2024/12/03-20:14:55.620 4cac **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment\armors\base; recovered 0 files; 0 bytes. Some data may have been lost. ****
+2024/12/03-20:14:55.633 3324 Delete type=3 #1

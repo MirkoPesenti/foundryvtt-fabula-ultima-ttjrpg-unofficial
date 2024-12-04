@@ -111,11 +111,13 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            {{{spell.system.description}}}
-                            {{#if spell.system.opportunity.value}}
-                                <p><strong>Opportunità:</strong></p>
-                                {{{spell.system.opportunityEffect}}}
-                            {{/if}}
+                            <div class="editor">
+                                {{{spell.system.description}}}
+                                {{#if spell.system.opportunity.value}}
+                                    <p><strong>Opportunità:</strong></p>
+                                    {{{spell.system.opportunityEffect}}}
+                                {{/if}}
+                            </div>
                         {{/if}}
                     {{/each}}
                 </div>

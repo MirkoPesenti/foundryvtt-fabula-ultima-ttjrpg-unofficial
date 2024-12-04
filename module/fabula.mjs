@@ -441,6 +441,11 @@ Handlebars.registerHelper('getAttributeValue', function(resourcePath, attributeK
     return value !== undefined ? value : 0;
 });
 
+Handlebars.registerHelper("getProperty", function(obj, key) {
+	console.log(obj[key]);
+	return obj[key];
+});  
+
 Handlebars.registerHelper('percentage', function( a, b ){
 	return ( ( a / b ) * 100 );
 });
@@ -480,3 +485,52 @@ Handlebars.registerHelper('sm_e', function( a, b ){
 	var next =  arguments[arguments.length-1];
 	return (a <= b) ? next.fn(this) : next.inverse(this);
 });
+
+Handlebars.registerHelper("renderItemList", function(obj, key) {
+
+	const pack = obj[key];
+
+	if ( pack.length < 1 ) {
+		return new Handlebars.SafeString(`<div style="color:red">Error obj[key] not valid</div>`);
+	} else {
+
+		let template = `
+			<table class="table-list ${key}">
+				<tbody>
+		`;
+
+		if ( key == 'heroicSkill' ) {
+			for ( let i = 0; i < pack.length; i++ ) {
+				template += `
+					<tr>
+						<th colspan="2">${pack[i].folder}</th>
+					</tr>
+				`;
+				for ( let a = 0; a < pack[i].items.length; a++ ) {
+					console.log(pack[i].items[a]);
+					template += `
+						<tr>
+							<td>
+								<a class="content-link" draggable="true" data-link data-uuid="${pack[i].items[a].uuid}" data-id="${pack[i].items[a]._id}" data-type="${pack[i].items[a].uuid.split(".")[3]}" data-pack="${pack[i].items[a].uuid.split(".")[1]}.${pack[i].items[a].uuid.split(".")[2]}">
+									<i class="fas fa-suitcase"></i>
+									${pack[i].items[a].name}
+								</a>
+							</td>
+							<td>CLASSI</td>
+						</tr>
+					`;
+				}
+			}
+		}
+
+		template += `
+				</tbody>
+			</table>
+		`;
+
+		return new Handlebars.SafeString(template);
+
+	}
+
+  });
+  
