@@ -154,6 +154,9 @@ Hooks.on('renderItemSheet', (sheet, html, data) => {
 				const itemData = await fromUuid( uuid );
 				if ( itemData.system.summary ) {
 					$(element).html( itemData.system.summary );
+				} else {
+					$(element).prev().attr('colspan','2');
+					$(element).remove();
 				}
 			}
 
@@ -570,12 +573,8 @@ Handlebars.registerHelper("renderItemList", function(obj, key) {
 									${item.name}
 								</a>
 							</td>
-							<td>
-								<div id="js_heroicSkillRequirements" data-uuid="${item.uuid}"></div>
-							</td>
-							<td>
-								<div id="js_heroicSkillSummary" data-uuid="${item.uuid}"></div>
-							</td>
+							<td id="js_heroicSkillRequirements" data-uuid="${item.uuid}"></td>
+							<td id="js_heroicSkillSummary" data-uuid="${item.uuid}"></td>
 						</tr>
 					`;
 				}

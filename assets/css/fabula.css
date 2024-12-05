@@ -263,7 +263,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .sheet-body .btn-container button[data-target] {font-size:19px;padding:0;display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;}
 
 /* Sheets > Table */
-.sheet table {margin:15px 0 0;border:0;background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);;}
+.sheet table {margin:15px 0 0;border:0;background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);}
 .sheet table thead {background-color:var(--color-primary);color:var(--color-white);text-shadow:none;border:0;text-transform:uppercase;letter-spacing:1px;font-family:"Yanone Kaffeesatz", sans-serif;font-size:20px;}
 .sheet table thead tr th {font-weight:500;padding:7px 5px 4px;text-align:center;}
 .sheet table.is-3 thead tr th {width:33%;}
@@ -272,6 +272,16 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet table input {width:auto;}
 .sheet table input:disabled {background-color:transparent;}
 .sheet table select:disabled {background-color:transparent;border:0;appearance:none;width:100%;text-align:center;opacity:1;}
+
+/* Sheets > Table > Lists */
+.sheet table.table-list {background:transparent;}
+.sheet table.table-list tbody tr th {background-color:var(--color-primary);color:var(--color-white);text-transform:uppercase;letter-spacing:1px;font-family:"Yanone Kaffeesatz", sans-serif;font-size:20px;font-weight:500;padding:6px 15px 2px;text-align:left;border:0;}
+.sheet table.table-list tbody tr:not(:first-child) th {border-top:20px solid var(--color-white);}
+.sheet table.table-list tbody tr td {border-color:transparent;padding:7px 10px;position:relative;}
+.sheet table.table-list tbody tr td:first-child {text-align:left;padding-left:15px;width:30%;}
+.sheet table.table-list tbody tr td:last-child:not([colspan]) {text-align:left;padding-right:15px;}
+.sheet table.table-list tbody tr + tr td:first-child::before {content:"";position:absolute;top:0;left:0;transform:translate(0,-100%);width:150%;height:1px;background:linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);}
+.sheet table.table-list p {margin:0;}
 
 /* Sheets > Feature Box */
 .sheet .feature-box {transform:translateX(-15px);position:relative;margin-bottom:15px;}
@@ -353,7 +363,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .rule .editor-container {margin:0;}
 .sheet .rule .editor-content {padding:15px;}
 .sheet .rule .editor-content h2 {transform:translateX(-15px);}
-.sheet .rule .list-content {padding:0 15px;}
+.sheet .rule .list-content {padding:0 0 15px;}
 
 /* Sheets > Speel */
 .sheet .spell .tab.desc {padding:0;}
