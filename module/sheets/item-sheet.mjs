@@ -58,7 +58,8 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'classFeature' || 
 			this.object.type == 'arcanum' || 
 			this.object.type == 'heroicSkill' || 
-			this.object.type == 'spell' 
+			this.object.type == 'spell' || 
+			this.object.type == 'shield' 
 		)
 			options.height = 500;
 
@@ -102,6 +103,7 @@ export class FabulaItemSheet extends ItemSheet {
 		// Add list of items sorted by packs to CONFIG data
 		context.itemLists = {
 			class: returnSortedPack( 'fabula.classes', 'class' ),
+			spell: returnSortedPack( 'fabula.spells', 'spell' ),
 			heroicSkill: returnSortedPack( 'fabula.heroicskill', 'heroicSkill' ),
 		}
 
@@ -172,10 +174,6 @@ export class FabulaItemSheet extends ItemSheet {
 							<label for="heroicSkill_level">Livello minimo da raggiungere</label>
 							<input type="number" name="formHeroicSkill_level" id="heroicSkill_level" value="${context.item.system.requirements.level}" />
 						</div>
-						<div class="form-group w-100">
-							<label for="heroicSkill_spells">Numero minimo di incantesimi offensivi</label>
-							<input type="number" name="formHeroicSkill_spells" id="heroicSkill_spells" value="${context.item.system.requirements.offensiveSpells}" />
-						</div>
 					</div>
 				`;
 				for ( let i = 0; i < context.itemLists.class.length; i++ ) {
@@ -221,11 +219,6 @@ export class FabulaItemSheet extends ItemSheet {
 								await context.item.update({ 'system.requirements.level': level });
 							}
 
-							const spells = dialogHtml.find('input[name="formHeroicSkill_spells"]').val();
-							if ( spells >= 0 ) {
-								await context.item.update({ 'system.requirements.offensiveSpells': spells });
-							}
-
 							const inputs = dialogHtml.find('input[name="formHeroicSkill_Class"]:checked');
 							const classes = [];
 							for ( let i = 0; i < inputs.length; i++ ) {
@@ -252,11 +245,23 @@ export class FabulaItemSheet extends ItemSheet {
 							featureOptions += `
 									</select>
 								</div>`;
+							const allClassFeatures = context.item.system.requirements.multiClassFeature ? true : false;
+
 							new Dialog({
 								title: 'Scegli un eventuale abilità presequisita',
 								content: `
-									<div class="form-checks">
-										${featureOptions}
+									<div class="flexrow">
+										<div class="form-group">
+											<input type="checkbox" name="formHeroicSkill_classFeatureMultiple" id="classFeatureMultiple" ${allClassFeatures ? 'checked' : ''} />
+											<label for="classFeatureMultiple">Devi aver acquisito tutte le abilità selezionate</label>
+										</div>
+										<div class="form-group w-100">
+											<label for="heroicSkill_featureLevel">Livello minimo da raggiungere</label>
+											<input type="number" name="formHeroicSkill_featureLevel" id="heroicSkill_featureLevel" value="${context.item.system.requirements.classFeatureLevel}" />
+										</div>
+										<div class="form-group form-checks w-100">
+											${featureOptions}
+										</div>
 									</div>
 								`,
 								buttons: {
@@ -268,6 +273,74 @@ export class FabulaItemSheet extends ItemSheet {
 										callback: async (dialogChildHtml) => {
 											const choosedFeature = dialogChildHtml.find('[name="formHeroicSkill_ClassFeature"]').val() ? dialogChildHtml.find('[name="formHeroicSkill_ClassFeature"]').val() : [];
 											await context.item.update({ 'system.requirements.classFeature': choosedFeature });
+
+											const featureLevel = dialogChildHtml.find('input[name="formHeroicSkill_featureLevel"]').val();
+											if ( featureLevel >= 0 ) {
+												await context.item.update({ 'system.requirements.classFeatureLevel': featureLevel });
+											}
+
+											const multiClassFeature = dialogChildHtml.find('input[name="formHeroicSkill_classFeatureMultiple"]:checked');
+											if ( multiClassFeature.length > 0 ) {
+												await context.item.update({ 'system.requirements.multiClassFeature': true });
+											} else {
+												await context.item.update({ 'system.requirements.multiClassFeature': false });
+											}
+
+											let spellOptions = '';
+											if ( context.itemLists.spell.length > 0 ) {
+												for ( let i = 0; i < context.itemLists.spell.length; i++ ) {
+													spellOptions += `<div class="title">${context.itemLists.spell[i].folder}</div>`;
+													if ( context.itemLists.spell[i].items.length > 0 ) {
+														spellOptions += '<div class="flexrow">';
+														for ( let a = 0; a < context.itemLists.spell[i].items.length; a++ ) {
+															const checked = context.item.system.requirements.spell.includes( context.itemLists.spell[i].items[a].name );
+															spellOptions += `
+																<div class="form-group">
+																	<input type="checkbox" name="formHeroicSkill_singleSpell" id="${context.itemLists.spell[i].items[a]._id}" value="${context.itemLists.spell[i].items[a].name}" ${checked ? 'checked' : ''} />
+																	<label for="${context.itemLists.spell[i].items[a]._id}">${context.itemLists.spell[i].items[a].name}</label>
+																</div>
+															`;
+														}
+														spellOptions += '</div>';
+													}
+												}
+											}
+
+											new Dialog({
+												title: 'Scegli un eventuale incantesimo presequisito',
+												content: `
+													<div class="flexrow">
+														<div class="form-group w-100">
+															<label for="heroicSkill_spells">Numero minimo di incantesimi offensivi</label>
+															<input type="number" name="formHeroicSkill_spells" id="heroicSkill_spells" value="${context.item.system.requirements.offensiveSpells}" />
+														</div>
+													</div>
+													<div class="form-checks">
+														${spellOptions}
+													</div>
+												`,
+												buttons: {
+													cancel: {
+														label: 'Annulla',
+													},
+													confirm: {
+														label: 'Conferma',
+														callback: async (dialogSpellHtml) => {
+															const offensiveSpells = dialogSpellHtml.find('input[name="formHeroicSkill_spells"]').val();
+															if ( offensiveSpells >= 0 ) {
+																await context.item.update({ 'system.requirements.offensiveSpells': offensiveSpells });
+															}
+
+															const inputs = dialogSpellHtml.find('input[name="formHeroicSkill_singleSpell"]:checked');
+															const spells = [];
+															for ( let i = 0; i < inputs.length; i++ ) {
+																spells.push( $(inputs[i]).val() );
+															}
+															await context.item.update({ 'system.requirements.spell': spells });
+														},
+													},
+												},
+											}).render(true);
 										}
 									},
 								},

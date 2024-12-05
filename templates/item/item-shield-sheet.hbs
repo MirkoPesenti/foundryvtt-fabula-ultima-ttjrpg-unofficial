@@ -1,59 +1,80 @@
 <form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                {{#if system.isMartial.value}}
-                <div class="icon-offensive"></div>
-                {{/if}}
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-            <div class="textarea-container">
-                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-            </div>
-        </div>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+        {{#if system.isMartial.value}}
+            <div class="martial-icon">l</div>
+        {{/if}}
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
     </header>
 
-    <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select>
-
     <section class="sheet-body">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{localize 'FU.rarity'}}</th>
-                    <th>{{localize 'FU.cost'}}</th>
-                    <th>{{localize 'FU.defence'}}</th>
-                    <th>{{localize 'FU.magicDefenceAbbr'}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <select name="system.rarity.value">
-                            {{selectOptions rarityList selected=system.rarity.value localize=true}}
-                        </select>
-                    </td>
-                    <td>
-                        <input name="system.cost.value" type="number" class="input-sm" value="{{system.cost.value}}" placeholder="{{localize 'FU.Zenit'}}"/> {{localize 'FU.ZenitAbbr'}}
-                    </td>
-                    <td>
-                        <input name="system.defenceBonus.value" type="number" value="{{system.defenceBonus.value}}" placeholder="{{localize 'FU.defence'}}"/>
-                    </td>
-                    <td>
-                        <input name="system.magicDefenceBonus.value" type="number" value="{{system.magicDefenceBonus.value}}" placeholder="{{localize 'FU.magicDefence'}}"/>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="form-group">
-            <label for="system.isMartial.value">{{localize 'FU.equipmentMartial'}}?</label>
-            <input type="checkbox" name="system.isMartial.value" {{checked system.isMartial.value}}>
+        <div class="tab">
+            {{#if @root.editable}}
+                <div class="editable-options">
+                    <div class="flexrow">
+                        <div class="form-group">
+                            <input type="checkbox" name="system.isMartial.value" id="system.isMartial.value" {{checked system.isMartial.value}}>
+                            <label for="system.isMartial.value">Oggetto Marziale:</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="system.rarity">Rarità:</label>
+                            <select name="system.rarity" id="system.rarity">
+                                {{selectOptions rarityList selected=system.rarity localize=true}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+
+            <div class="equip-box">
+                <div class="equip-head">
+                    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Costo{{#unless @root.editable}} (z){{/unless}}</th>
+                                <th>Difesa</th>
+                                <th>D. Magica</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="number" name="system.cost" value="{{system.cost}}">
+                                    {{#unless @root.editable}}z{{/unless}}
+                                </td>
+                                <td>
+                                    {{#unless @root.editable}}
+                                        +
+                                    {{/unless}}
+                                    <input type="number" name="system.defenseBonus" value="{{system.defenseBonus}}">
+                                </td>
+                                <td>
+                                    {{#unless @root.editable}}
+                                        +
+                                    {{/unless}}
+                                    <input type="number" name="system.magicDefenseBonus" value="{{system.magicDefenseBonus}}">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="equip-body">
+                    <textarea name="system.summary" rows="2">{{system.summary}}</textarea>
+                </div>
+            </div>
+            
+            {{#if (or @root.editable (not (eq system.description "")))}}
+                <div class="title">Descrizione</div>
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+            {{/if}}
         </div>
-        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
     </section>
 </form>

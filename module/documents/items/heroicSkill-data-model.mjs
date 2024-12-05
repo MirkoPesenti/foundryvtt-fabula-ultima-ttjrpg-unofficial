@@ -16,10 +16,13 @@ export class HeroicSkillDataModel extends foundry.abstract.TypeDataModel {
 			description: new HTMLField(),
 			requirements: new SchemaField({
 				class: new ArrayField( new StringField() ),
-				classFeature: new ArrayField( new StringField() ),
 				multiClass: new BooleanField({ initial: false }),
+				classFeature: new ArrayField( new StringField() ),
+				multiClassFeature: new BooleanField({ initial: false }),
+				classFeatureLevel: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }),
 				level: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }),
 				offensiveSpells: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }),
+				spell: new ArrayField( new StringField() ),
 			}),
 		};
 	}
@@ -52,11 +55,19 @@ export class HeroicSkillDataModel extends foundry.abstract.TypeDataModel {
 				req += ` <strong>${el}</strong>`;
 			});
 			if ( this.requirements.classFeature.length > 0 ) {
-				req += ' e aver acquistato';
-				if ( this.requirements.classFeature.length > 1 )
-					req += ' una o più Abilità tra';
-				else
-					req += ` l'Abilità`;
+				req += ' e aver acquisito';
+				if ( this.requirements.classFeature.length > 1 ) {
+					if ( this.requirements.multiClassFeature )
+						req += ' le Abilità';
+					else
+						req += ' una o più Abilità tra';
+				} else {
+					if ( this.requirements.classFeatureLevel > 1 )
+						req += ` <strong>${this.requirements.classFeatureLevel} Livelli Abilità</strong> in`;
+					else
+						req += ` l'Abilità`;
+				}
+
 				this.requirements.classFeature.forEach(( el, index ) => {
 					if ( index != 0 ) {
 						if ( index == this.requirements.classFeature.length - 1 )
@@ -71,6 +82,23 @@ export class HeroicSkillDataModel extends foundry.abstract.TypeDataModel {
 				req += `, e aver raggiunto il <strong>livello ${this.requirements.level}</strong>`;
 			if ( this.requirements.offensiveSpells > 0 )
 				req += `, e devi conoscere almeno <strong>${this.requirements.offensiveSpells}</strong> incantesimi offensivi`;
+			if ( this.requirements.spell.length > 0 ) {
+				req += ', e devi aver appreso';
+				if ( this.requirements.spell.length > 1 )
+					req += ' entrambi gli incantesimi';
+				else
+					req += ' l\'incantesimo';
+
+				this.requirements.spell.forEach(( el, index ) =>  {
+					if ( index != 0 ) {
+						if ( index == this.requirements.class.length - 1 )
+							req += ' e';
+						else
+							req += ',';
+					}
+					req += ` <strong>${el}</strong>`
+				});
+			}
 
 			req += '.';
 		}

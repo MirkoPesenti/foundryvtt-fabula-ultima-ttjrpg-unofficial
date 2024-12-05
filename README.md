@@ -27,15 +27,14 @@
 
 ### Heroic Skill
 
+- FE: Popup requisiti
 - Quando viene droppata la fature su un actor fare un check se può acquisirla
 - Aggiungere come requisito le Abilità Tecnologiche dell'Artefice
-- Aggiungere come requisito aver imparato specifici incantesimi (es. Falciarimpianti)
-- Aggiungere come requisito uno specifico livello dell'abilità (es. Rito Proibito)
-- Lista Abilità Eroiche
 
 ### Arcana
 
 - Lista Arcana
+- Data entry Arcana Bonus
 - Interazioni Arcana con Actor
 
 ### Accessory

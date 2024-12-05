@@ -99,6 +99,7 @@ End Typography
 body {
 	/* Fabula */
 	--color-white: #FFFFFF;
+	--color-red: #B82315;
 	--text-color: #2A3331;
 	--color-primary: #2B4A42;
 	--color-primary-rgb: 43,74,66;
@@ -164,6 +165,20 @@ body {
 a.content-link, a.inline-roll {background-color:var(--color-primary);color:var(--color-white);font-weight:400;text-transform:uppercase;border-radius:5px;text-shadow:none;transition:box-shadow .15s ease-in-out;}
 a.content-link:hover, a.inline-roll:hover {box-shadow:0 0 10px rgba(var(--color-primary-rgb));}
 a.content-link i, a.inline-roll i {color:var(--color-white);}
+
+/* Editor > Table */
+.editor-content table {background:transparent !important;margin-top:15px !important;}
+.editor-content table tbody tr th {background-color:var(--color-primary);color:var(--color-white);text-transform:uppercase;letter-spacing:1px;font-family:"Yanone Kaffeesatz", sans-serif;font-size:20px;font-weight:500;padding:6px 15px 2px;text-align:left;border:0;}
+.editor-content table tbody tr:not(:first-child) th {border-top:20px solid var(--color-white);}
+.editor-content table tbody tr td {border-color:transparent !important;padding:7px 10px;position:relative;}
+.editor-content table tbody tr:not(:first-child) td {background:none !important;}
+.editor-content table tbody tr td:first-child {padding-left:15px;width:25%;}
+.editor-content table tbody tr td:last-child:not([colspan]) {text-align:left;padding-right:15px;}
+.editor-content table tbody tr:first-child {background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);}
+.editor-content table tbody tr:first-child td {border-bottom:2px solid var(--color-primary) !important;}
+.editor-content table tbody tr + tr td:first-child::before {content:"";position:absolute;top:0;left:0;transform:translate(0,-100%);width:200%;height:1px;background:linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);}
+.editor-content table tbody tr:first-child + tr td:first-child::before {display:none;}
+.editor-content table p {margin:0 !important;}
 
 /* Sheets > General */
 .window-app.sheet .window-content {background-image:none;background-color:var(--color-white);padding:0;}
@@ -234,6 +249,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .sheet-header {position:relative;min-height:93px;padding:40px 75px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:var(--sheet-header-bg);flex-grow:0;outline:1px solid var(--color-primary);outline-offset:1px;}
 .sheet .sheet-header input {border:0;border-radius:0;background-color:transparent;width:100%;padding:0;height:auto;color:var(--color-white);text-transform:uppercase;font-family:CreditValley;font-size:50px;}
 .sheet .sheet-header .icon {position:absolute;bottom:14px;left:35px;width:30px;height:30px;background-repeat:no-repeat;background-position:center center;background-size:contain;}
+.sheet .sheet-header .martial-icon {position:absolute;bottom:5px;left:35px;font-family:"FnT_BasicShapes1",sans-serif;font-size:35px;color:var(--color-red);}
 .sheet .sheet-header .class-icon {position:absolute;bottom:0;right:50px;z-index:1;width:54px;height:54px;padding:9px;border:3px solid var(--color-primary);outline:1px solid var(--color-primary);outline-offset:-6px;background-color:var(--color-white);transform:translate(50%, 50%) rotate(45deg);}
 .sheet .sheet-header .class-icon img {border:0;margin:0;width:100%;height:100%;object-position:center center;object-fit:contain;transform:rotate(-45deg);}
 .sheet .sheet-header .select-source {background-color:var(--color-white);border:1px solid var(--color-primary);border-radius:10px;box-shadow:none;color:var(--color-primary);padding:5px 10px;height:auto;text-transform:uppercase;position:absolute;left:50px;}
@@ -316,6 +332,18 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .arcanum-box .p-container p:not(:last-child) {margin-bottom:0;}
 .sheet .arcanum-box .p-container p + p {margin-top:0;}
 
+/* Sheets > Equip */
+.sheet .equip-box {display:flex;flex-direction:column;}
+.sheet .equip-box .equip-head {display:flex;}
+.sheet .equip-box .equip-head > * {flex-grow:1;}
+.sheet .equip-box .equip-head img {width:70px;height:70px;padding:3px;border-radius:0;border:1px solid var(--color-primary);border-left:0;border-bottom:0;flex-grow:unset;flex-shrink:0;}
+.sheet .equip-box .equip-head table {margin:0;}
+.sheet .equip-box .equip-head table tr td {border:0;padding-left:5px;padding-right:5px;}
+.sheet .equip-box .equip-head table input {width:80px;}
+.sheet .equip-box .equip-body {position:relative;padding-top:1px;}
+.sheet .equip-box .equip-body::before {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;transform:translate(0,-100%);background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
+.sheet .equip-box textarea {resize:none;border-radius:0;background-color:transparent;font-family:"PT Sans Narrow", sans-serif;border:0;border-bottom:1px solid var(--color-primary);box-shadow:none;font-size:16px;padding:5px;display:block;}
+
 /* Sheets > Is Feature */
 .sheet .editable .is-feature .feature-box .feature-body {padding:0;}
 .sheet .is-feature .sheet-body .tab:first-child {display:flex;flex-direction:column;}
@@ -357,6 +385,11 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 
 /* Sheets > Arcanums */
 .sheet .arcanum .sheet-body .tab {padding:15px 0;}
+
+/* Sheets > Shield */
+.sheet .shield .sheet-body .tab {padding:15px 0;}
+.sheet .shield .editable-options {padding:0 0 15px;}
+.sheet .shield .editable-options .form-group {padding:0 15px;}
 
 /* Sheets > Rules */
 .sheet .rule .sheet-body .tab {padding:0;}

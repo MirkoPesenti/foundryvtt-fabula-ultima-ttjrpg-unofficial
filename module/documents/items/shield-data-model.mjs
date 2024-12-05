@@ -2,15 +2,13 @@ import { FU } from '../../helpers/config.mjs';
 
 /**
  * @property {string} sourcebook
- * @property {string} summary.value
+ * @property {string} summary
  * @property {boolean} isMartial.value
  * @property {string} description
- * @property {string} rarity.value
- * @property {number} cost.value
- * @property {boolean} isDefenseFixed.value
- * @property {number} defenseBonusFixed.value
- * @property {number} defenseBonus.value
- * @property {number} initiativeMalus.value
+ * @property {string} rarity
+ * @property {number} cost
+ * @property {number} defenseBonus
+ * @property {number} initiativeMalus
  */
 
 export class ShieldDataModel extends foundry.abstract.TypeDataModel {
@@ -18,13 +16,13 @@ export class ShieldDataModel extends foundry.abstract.TypeDataModel {
 		const { SchemaField, StringField, HTMLField, BooleanField, NumberField } = foundry.data.fields;
 		return {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
-			summary: new SchemaField({ value: new StringField() }),
+			summary: new StringField({ initial: 'Nessuna Qualità.' }),
 			isMartial: new SchemaField({ value: new BooleanField() }),
 			description: new HTMLField(),
-			rarity: new SchemaField({ value: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }) }),
-			cost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true }) }),
-			defenseBonus: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true, nullable: true }) }),
-			magicDefenseBonus: new SchemaField({ value: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }) }),
+			rarity: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }),
+			cost: new NumberField({ initial: 1, min: 0, integer: true }),
+			defenseBonus: new NumberField({ initial: 1, min: 0, integer: true, nullable: true }),
+			magicDefenseBonus: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }),
 		};
 	}
 }
