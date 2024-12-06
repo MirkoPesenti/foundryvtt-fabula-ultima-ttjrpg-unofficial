@@ -1,7 +1,23 @@
-2024/12/05-22:54:38.213 1ce0 Recovering log #4
-2024/12/05-22:54:38.217 1ce0 Delete type=0 #4
-2024/12/05-22:54:38.217 1ce0 Delete type=3 #2
-2024/12/05-23:14:40.586 290c Level-0 table #9: started
-2024/12/05-23:14:40.596 290c Level-0 table #9: 1831 bytes OK
-2024/12/05-23:14:40.597 290c Delete type=0 #7
-2024/12/05-23:14:40.598 290c Manual compaction at level-0 from '!folders!7XRpO0nEeKErqy7B' @ 72057594037927935 : 1 .. '!items!7bvi8HjpygzrqFq3' @ 0 : 0; will stop at (end)
+2024/12/06-20:19:50.058 361c Recovering log #11
+2024/12/06-20:19:50.058 361c Level-0 table #13: started
+2024/12/06-20:19:50.071 361c Level-0 table #13: 2824 bytes OK
+2024/12/06-20:19:50.073 361c Delete type=0 #11
+2024/12/06-20:19:50.073 361c Delete type=3 #10
+2024/12/06-22:36:37.011 28cc Level-0 table #16: started
+2024/12/06-22:36:37.011 28cc Level-0 table #16: 0 bytes OK
+2024/12/06-22:36:37.012 28cc Delete type=0 #14
+2024/12/06-22:36:37.012 28cc Manual compaction at level-0 from '!folders!7XRpO0nEeKErqy7B' @ 72057594037927935 : 1 .. '!items!Zk5bN9wGf4mtNaLf' @ 0 : 0; will stop at '!items!Zk5bN9wGf4mtNaLf' @ 19 : 1
+2024/12/06-22:36:37.012 28cc Compacting 1@0 + 0@1 files
+2024/12/06-22:36:37.025 28cc Generated table #17@0: 3 keys, 848 bytes
+2024/12/06-22:36:37.025 28cc Compacted 1@0 + 0@1 files => 848 bytes
+2024/12/06-22:36:37.026 28cc compacted to: files[ 0 1 1 0 0 0 0 ]
+2024/12/06-22:36:37.027 28cc Delete type=2 #13
+2024/12/06-22:36:37.034 28cc Manual compaction at level-0 from '!items!Zk5bN9wGf4mtNaLf' @ 19 : 1 .. '!items!Zk5bN9wGf4mtNaLf' @ 0 : 0; will stop at (end)
+2024/12/06-22:36:37.034 28cc Manual compaction at level-1 from '!folders!7XRpO0nEeKErqy7B' @ 72057594037927935 : 1 .. '!items!Zk5bN9wGf4mtNaLf' @ 0 : 0; will stop at '!items!Zk5bN9wGf4mtNaLf' @ 33 : 1
+2024/12/06-22:36:37.034 28cc Compacting 1@1 + 1@2 files
+2024/12/06-22:36:37.046 28cc Generated table #18@1: 6 keys, 1174 bytes
+2024/12/06-22:36:37.046 28cc Compacted 1@1 + 1@2 files => 1174 bytes
+2024/12/06-22:36:37.047 28cc compacted to: files[ 0 0 1 0 0 0 0 ]
+2024/12/06-22:36:37.047 28cc Delete type=2 #9
+2024/12/06-22:36:37.048 28cc Delete type=2 #17
+2024/12/06-22:36:37.067 28cc Manual compaction at level-1 from '!items!Zk5bN9wGf4mtNaLf' @ 33 : 1 .. '!items!Zk5bN9wGf4mtNaLf' @ 0 : 0; will stop at (end)

@@ -76,11 +76,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 		(this.level ??= {}).value = level.value;
 	}
 
-	prepareEmbeddedData() {
-		this.#prepareBasicResources();
-	}
-
-	#prepareBasicResources() {
+	async prepareEmbeddedData() {
+		
 		const data = this;
 		const actorClasses = data.parent.getFlag('fabula', 'classes') || [];
 		let freeBenefits = actorClasses.reduce(
@@ -107,6 +104,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				this.max = newVal;
 			},
 		});
+		this.resources.hp.crisis = Math.floor( this.resources.hp.max / 2 );
 
 		Object.defineProperty(this.resources.mp, 'max', {
 			configurable: true,
@@ -132,5 +130,16 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				this.max = newVal;
 			},
 		});
+
+		// Equipped items bonus
+		if ( this.parent.system.equip.offHand ) {
+			const offHand = this.parent.system.equip.offHand;
+			const offHandItem = await this.parent.items.find(i => i.id === offHand && i.system.isEquipped === true);
+			if ( offHandItem ) {
+				this.parent.system.resources.params.def.bonus += offHandItem.system.defenseBonus;
+				this.parent.system.resources.params.mdef.bonus += offHandItem.system.magicDefenseBonus;
+			}
+		}
+
 	}
 }

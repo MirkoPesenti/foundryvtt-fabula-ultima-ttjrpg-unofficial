@@ -56,6 +56,54 @@ export class FabulaActorSheet extends ActorSheet {
 		return context;
 	}
 
+	async _onDrop(e) {
+		e.preventDefault();
+		const data = TextEditor.getDragEventData(e);
+		const actor = this.actor;
+
+		if ( data.type == 'Item' ) {
+			const sourceItem = await fromUuid(data.uuid);
+
+			if ( !sourceItem ) {
+				ui.notifications.error('Impossibile trovare l\'Item');
+				return false;
+			}
+
+			new Dialog({
+				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
+				content: `
+					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
+				`,
+				buttons: {
+					no: {
+						label: 'No',
+						callback: async () => {
+							const newItemData = sourceItem.toObject();
+							await actor.createEmbeddedDocuments("Item", [newItemData]);
+							ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto all'equipaggiamento!`);
+						},
+					},
+					yes: {
+						label: 'Si',
+						callback: async () => {
+							const actorZenits = actor.system.resources.zenit;
+							if ( actorZenits < sourceItem.system.cost ) {
+								ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
+							} else {
+								actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
+								ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
+							}
+						},
+					},
+				}
+			}).render(true);
+			
+			return true;
+		}
+
+		return super._onDrop(e);
+	}
+
 	activateListeners( html ) {
 		super.activateListeners( html );
 
@@ -107,6 +155,40 @@ export class FabulaActorSheet extends ActorSheet {
 					}, 100);
 				});
 			});
+		});
+
+		// Equip Item
+		html.on('click','.js_equipItem', async (e) => {
+			e.preventDefault();
+			const itemType = e.currentTarget.dataset.type;
+			if ( itemType == 'shield' ) {
+				const itemID = e.currentTarget.dataset.id;
+				const prevItemId = this.actor.system.equip.offHand;
+				const item = this.actor.items.find(i => i.id === itemID && i.type === itemType);
+				if ( prevItemId ) {
+					const prevItem = this.actor.items.find(i => i.id === prevItemId);
+					await prevItem.update({ 'system.isEquipped': false });
+				}
+				await item.update({ 'system.isEquipped': true });
+				await this.actor.update({ 'system.equip.offHand': itemID });
+			}
+		});
+
+		// Remove equipped Item
+		html.on('click','.js_removeEquipItem', async (e) => {
+			e.preventDefault();
+			const itemType = e.currentTarget.dataset.type;
+			const itemID = e.currentTarget.dataset.id;
+			const item = this.actor.items.find(i => i.id === itemID);
+			await item.update({ 'system.isEquipped': false });
+			await this.actor.update({ [itemType]: null });
+		});
+
+		// Remove Item from Actor
+		html.on('click','.js_removeItem', async (e) => {
+			e.preventDefault();
+			const itemID = e.currentTarget.dataset.id;
+			await this.actor.deleteEmbeddedDocuments('Item', [itemID]);
 		});
 
 		html.on('click','.roll', this._onRoll.bind(this));

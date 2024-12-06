@@ -24,7 +24,7 @@
                     <tr>
                         <td style="text-align:left;vertical-align:top;width:33%;">
                             <span data-tooltip="Lorem ipsum">Livello:</span> {{system.level.value}} | Esperienza: {{system.resources.exp}}<br>
-                            Punti Vita: {{system.resources.hp.current}} / {{system.resources.hp.max}} <br>
+                            Punti Vita: {{system.resources.hp.current}} / {{system.resources.hp.max}} | Crisi: {{system.resources.hp.crisis}} <br>
                             Punti Mente: {{system.resources.mp.current}} / {{system.resources.mp.max}} <br>
                             Punti Inventario: {{system.resources.ip.current}} / {{system.resources.ip.max}} <br>
                             <ul>
@@ -56,11 +56,71 @@
                             </ul>
                             Equipaggiamento: <br>
                             <ul>
-                                <li>Armatura: {{system.equip.armor}}</li>
-                                <li>Mano primaria: {{system.equip.mainHand}}</li>
-                                <li>Mano secondaria: {{system.equip.offHand}}</li>
-                                <li>Accessio: {{system.equip.accessory}}</li>
-                                <li>Arcanum: {{system.equip.arcanum}}</li>
+                                <li>
+                                    Armatura: <br>
+                                    {{#each items as |subItem subItemIndex|}}
+                                        {{#if (eq subItem._id ../system.equip.armor)}}
+                                            {{subItem.name}}
+                                        {{/if}}
+                                    {{/each}}
+                                    {{#if system.equip.armor}}
+                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.armor}}" data-type="system.equip.armor">
+                                            Rimuovi
+                                        </button>
+                                    {{/if}}
+                                </li>
+                                <li>
+                                    Mano primaria: <br>
+                                    {{#each items as |subItem subItemIndex|}}
+                                        {{#if (eq subItem._id ../system.equip.mainHand)}}
+                                            {{subItem.name}}
+                                        {{/if}}
+                                    {{/each}}
+                                    {{#if system.equip.mainHand}}
+                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.mainHand}}" data-type="system.equip.mainHand">
+                                            Rimuovi
+                                        </button>
+                                    {{/if}}
+                                </li>
+                                <li>
+                                    Mano secondaria: <br>
+                                    {{#each items as |subItem subItemIndex|}}
+                                        {{#if (eq subItem._id ../system.equip.offHand)}}
+                                            {{subItem.name}}
+                                        {{/if}}
+                                    {{/each}}
+                                    {{#if system.equip.offHand}}
+                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.offHand}}" data-type="system.equip.offHand">
+                                            Rimuovi
+                                        </button>
+                                    {{/if}}
+                                </li>
+                                <li>
+                                    Accessio: <br>
+                                    {{#each items as |subItem subItemIndex|}}
+                                        {{#if (eq subItem._id ../system.equip.accessory)}}
+                                            {{subItem.name}}
+                                        {{/if}}
+                                    {{/each}}
+                                    {{#if system.equip.accessory}}
+                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.accessory}}" data-type="system.equip.accessory">
+                                            Rimuovi
+                                        </button>
+                                    {{/if}}
+                                </li>
+                                <li>
+                                    Arcanum: <br>
+                                    {{#each items as |subItem subItemIndex|}}
+                                        {{#if (eq subItem._id ../system.equip.arcanum)}}
+                                            {{subItem.name}}
+                                        {{/if}}
+                                    {{/each}}
+                                    {{#if system.equip.arcanum}}
+                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.arcanum}}" data-type="system.equip.arcanum">
+                                            Rimuovi
+                                        </button>
+                                    {{/if}}
+                                </li>
                             </ul>
                         </td>
                         <td style="text-align:left;vertical-align:top;width:33%;">
@@ -101,6 +161,23 @@
                     </tr>
                 </tbody>
             </table>
+            <ul>
+                {{#each items as |subItem subItemIndex|}}
+                    {{#allTrue (eq this.type "shield") (not (eq this._id ../system.equip.offHand))}}
+                        <li style="display:flex;">
+                            <span style="flex:1;">
+                                {{subItem.name}} {{#if subItem.system.isMartial.value}}<span>l</span>{{/if}}
+                                <br>
+                                Difesa: + {{subItem.system.defenseBonus}} | D. Magica: + {{subItem.system.magicDefenseBonus}}
+                            </span>
+                            <div style="flex-grow:1">
+                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
+                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
+                            </div>
+                        </li>
+                    {{/allTrue}}
+                {{/each}}
+            </ul>
         </div>
         <div class="tab desc" data-group="primary" data-tab="class">
             {{#each flags.fabula.classes}}

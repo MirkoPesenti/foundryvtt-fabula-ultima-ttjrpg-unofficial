@@ -17,6 +17,7 @@ export class ShieldDataModel extends foundry.abstract.TypeDataModel {
 		return {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new StringField({ initial: 'Nessuna Qualità.' }),
+			isEquipped: new BooleanField({ initial: false }),
 			isMartial: new SchemaField({ value: new BooleanField() }),
 			description: new HTMLField(),
 			rarity: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }),

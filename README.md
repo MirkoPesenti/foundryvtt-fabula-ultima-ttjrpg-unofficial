@@ -56,12 +56,6 @@
 - Interazioni Armatura con Actor
 - Data entry Armature
 
-### Shield
-
-- FE: Scheda
-- Interazioni Scudo con Actor
-- Data entry Scudi
-
 ### Consumable
 
 - FE: Scheda

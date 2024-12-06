@@ -39,7 +39,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>Costo{{#unless @root.editable}} (z){{/unless}}</th>
+                                <th>Costo</th>
                                 <th>Difesa</th>
                                 <th>D. Magica</th>
                             </tr>
@@ -47,20 +47,27 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <input type="number" name="system.cost" value="{{system.cost}}">
-                                    {{#unless @root.editable}}z{{/unless}}
+                                    {{#if @root.editable}}
+                                        <input type="number" name="system.cost" value="{{system.cost}}">
+                                    {{else}}
+                                        {{system.cost}}z
+                                    {{/if}}
                                 </td>
                                 <td>
-                                    {{#unless @root.editable}}
-                                        +
-                                    {{/unless}}
-                                    <input type="number" name="system.defenseBonus" value="{{system.defenseBonus}}">
+                                    {{#if @root.editable}}
+                                        <input type="number" name="system.defenseBonus" value="{{system.defenseBonus}}">
+                                    {{else}}
+                                        {{#gt system.defenseBonus 0}} + {{/gt}}
+                                        {{system.defenseBonus}}
+                                    {{/if}}
                                 </td>
                                 <td>
-                                    {{#unless @root.editable}}
-                                        +
-                                    {{/unless}}
+                                    {{#if @root.editable}}
                                     <input type="number" name="system.magicDefenseBonus" value="{{system.magicDefenseBonus}}">
+                                    {{else}}
+                                        {{#gt system.magicDefenseBonus 0}} + {{/gt}}
+                                        {{system.magicDefenseBonus}}
+                                    {{/if}}
                                 </td>
                             </tr>
                         </tbody>

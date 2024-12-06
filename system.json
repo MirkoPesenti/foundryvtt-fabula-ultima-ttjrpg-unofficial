@@ -88,6 +88,17 @@
 			}
 		},
 		{
+			"name": "rareequipment",
+			"label": "Equipaggiamento Raro",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/equipment/rare",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
 			"name": "beasts",
 			"label": "Bestie",
 			"type": "Actor",
@@ -188,7 +199,8 @@
 			"sorting": "m",
 			"color": "#005995",
 			"packs": [
-				"baseequipment"
+				"baseequipment",
+				"rareequipment"
 			]
 		},
 		{
