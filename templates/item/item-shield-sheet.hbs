@@ -1,4 +1,4 @@
-<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
 
     <header class="sheet-header">
         <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
@@ -50,23 +50,37 @@
                                     {{#if @root.editable}}
                                         <input type="number" name="system.cost" value="{{system.cost}}">
                                     {{else}}
-                                        {{system.cost}}z
+                                        {{#gt system.cost 0}}
+                                            {{system.cost}}z
+                                        {{else}}
+                                            -
+                                        {{/gt}}
                                     {{/if}}
                                 </td>
                                 <td>
                                     {{#if @root.editable}}
                                         <input type="number" name="system.defenseBonus" value="{{system.defenseBonus}}">
                                     {{else}}
-                                        {{#gt system.defenseBonus 0}} + {{/gt}}
-                                        {{system.defenseBonus}}
+                                        <strong>
+                                            {{#gt system.defenseBonus 0}}
+                                                + {{system.defenseBonus}}
+                                            {{else}}
+                                                -
+                                            {{/gt}}
+                                        </strong>
                                     {{/if}}
                                 </td>
                                 <td>
                                     {{#if @root.editable}}
                                     <input type="number" name="system.magicDefenseBonus" value="{{system.magicDefenseBonus}}">
                                     {{else}}
-                                        {{#gt system.magicDefenseBonus 0}} + {{/gt}}
-                                        {{system.magicDefenseBonus}}
+                                        <strong>
+                                            {{#gt system.magicDefenseBonus 0}}
+                                                + {{system.magicDefenseBonus}}
+                                            {{else}}
+                                                -
+                                            {{/gt}}
+                                        </strong>
                                     {{/if}}
                                 </td>
                             </tr>

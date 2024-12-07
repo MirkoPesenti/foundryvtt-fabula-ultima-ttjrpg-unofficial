@@ -2,15 +2,16 @@ import { FU } from '../../helpers/config.mjs';
 
 /**
  * @property {string} sourcebook
- * @property {string} summary.value
+ * @property {string} summary
  * @property {boolean} isMartial.value
  * @property {string} description
- * @property {string} rarity.value
- * @property {number} cost.value
- * @property {boolean} isDefenseFixed.value
- * @property {number} defenseBonusFixed.value
- * @property {number} defenseBonus.value
- * @property {number} initiativeMalus.value
+ * @property {string} rarity
+ * @property {number} cost
+ * @property {boolean} defBonus.def.isFixes
+ * @property {number} defBonus.def.value
+ * @property {boolean} defBonus.mdef.isFixes
+ * @property {number} defBonus.mdef.value
+ * @property {number} initiativeMalus
  */
 
 export class ArmorDataModel extends foundry.abstract.TypeDataModel {
@@ -18,16 +19,22 @@ export class ArmorDataModel extends foundry.abstract.TypeDataModel {
 		const { SchemaField, StringField, HTMLField, BooleanField, NumberField } = foundry.data.fields;
 		return {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
-			summary: new SchemaField({ value: new StringField() }),
+			summary: new StringField({ initial: 'Nessuna Qualità.' }),
 			isMartial: new SchemaField({ value: new BooleanField() }),
 			description: new HTMLField(),
-			rarity: new SchemaField({ value: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }) }),
-			cost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true }) }),
-			isDefenseFixed: new SchemaField({ value: new BooleanField() }),
-			defenseBonusFixed: new SchemaField({ value: new NumberField({ initial: 10, min: 0, integer: true, nullable: true }) }),
-			defenseBonus: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true, nullable: true }) }),
-			magicDefenseBonus: new SchemaField({ value: new NumberField({ initial: 0, min: 0, integer: true }) }),
-			initiativeMalus: new SchemaField({ value: new NumberField({ initial: 2, min: 0, integer: true }) }),
+			rarity: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }),
+			cost: new NumberField({ initial: 1, min: 0, integer: true }),
+			defBonus: new SchemaField({ 
+				def: new SchemaField({
+					isFixed: new BooleanField({ initial: false }),
+					value: new NumberField({ initial: 1, min: 0, integer: true }),
+				}),
+				mdef: new SchemaField({
+					isFixed: new BooleanField({ initial: false }),
+					value: new NumberField({ initial: 0, min: 0, integer: true }),
+				}),
+			}),
+			initiativeMalus: new NumberField({ initial: 0, min: 0, integer: true }),
 		};
 	}
 }

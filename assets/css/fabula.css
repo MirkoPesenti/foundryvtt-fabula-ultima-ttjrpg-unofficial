@@ -386,10 +386,10 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 /* Sheets > Arcanums */
 .sheet .arcanum .sheet-body .tab {padding:15px 0;}
 
-/* Sheets > Shield */
-.sheet .shield .sheet-body .tab {padding:15px 0;}
-.sheet .shield .editable-options {padding:0 0 15px;}
-.sheet .shield .editable-options .form-group {padding:0 15px;}
+/* Sheets > Equipment */
+.sheet .equip .sheet-body .tab {padding:15px 0;}
+.sheet .equip .editable-options {padding:0 0 15px;}
+.sheet .equip .editable-options .form-group {padding:0 15px;}
 
 /* Sheets > Rules */
 .sheet .rule .sheet-body .tab {padding:0;}

@@ -58,10 +58,14 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'classFeature' || 
 			this.object.type == 'arcanum' || 
 			this.object.type == 'heroicSkill' || 
-			this.object.type == 'spell' || 
-			this.object.type == 'shield' 
+			this.object.type == 'spell' 
 		)
 			options.height = 500;
+		else if ( 
+			this.object.type == 'shield' ||
+			this.object.type == 'armor'
+		)
+			options.height = 300;
 
 		super.render(force, options);
 	}
