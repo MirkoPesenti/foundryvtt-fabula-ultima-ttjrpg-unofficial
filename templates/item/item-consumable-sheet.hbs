@@ -1,42 +1,51 @@
-<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-            <div class="textarea-container">
-                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-            </div>
-        </div>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
     </header>
 
-    <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select>
-
     <section class="sheet-body">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{localize 'FU.type'}}</th>
-                    <th>{{localize 'FU.IP'}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <input name="system.type.value" type="text" value="{{system.type.value}}"/>
-                    </td>
-                    <td>
-                        <input name="system.cost.value" class="input-sm" type="number" value="{{system.IPcost.value}}"/> {{localize 'FU.IPabbr'}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+        <div class="tab">
+            <div class="equip-box">
+                <div class="equip-head">
+                    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>PI</th>
+                                <th>Tipologia</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <input type="number" name="system.IPCost" value="{{system.IPCost}}">
+                                    {{else}}
+                                        {{system.IPCost}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    <select name="system.type">
+                                        {{selectOptions consumableType selected=system.type localize=true}}
+                                    </select>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="equip-body">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                </div>
+            </div>
+        </div>
     </section>
 </form>

@@ -2,7 +2,6 @@ import { FU } from '../../helpers/config.mjs';
 
 /**
  * @property {string} sourcebook
- * @property {string} summary
  * @property {boolean} isMartial.value
  * @property {string} description
  * @property {string} rarity

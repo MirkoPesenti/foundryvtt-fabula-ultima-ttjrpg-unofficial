@@ -347,7 +347,9 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .equip-box .equip-head table select {width:auto;}
 .sheet .equip-box .equip-body {position:relative;padding-top:1px;}
 .sheet .equip-box .equip-body::before {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;transform:translate(0,-100%);background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
-.sheet .equip-box textarea, .sheet .locked .equip-box .editor, .sheet .equip-box .desc-container {resize:none;border-radius:0;background-color:transparent;font-family:"PT Sans Narrow", sans-serif;border:0;border-bottom:1px solid var(--color-primary);box-shadow:none;font-size:16px;padding:5px;display:block;min-height:unset;user-select:text;}
+.sheet .equip-box textarea, .sheet .locked .equip-box .editor, .sheet .equip-box .desc-container {resize:none;border-radius:0;background-color:transparent;font-family:"PT Sans Narrow", sans-serif;border:0;border-bottom:1px solid var(--color-primary);box-shadow:none;font-size:16px;padding:5px 15px;display:block;min-height:unset;user-select:text;}
+.sheet .equip-box .desc-container > *:first-child {margin-top:0;}
+.sheet .equip-box .desc-container > *:last-child {margin-bottom:0;}
 .sheet .locked .equip-box .editor {padding-top:0;padding-bottom:0;}
 .sheet .equip-box .desc-container .diamond-char {color:var(--color-primary);font-size:70%;}
 
@@ -355,6 +357,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .editable .is-feature .feature-box .feature-body {padding:0;}
 .sheet .is-feature .sheet-body .tab:first-child {display:flex;flex-direction:column;}
 .sheet .is-feature .sheet-body .tab[data-tab]:not(.active) {display:none;}
+.sheet .is-feature .sheet-body .tab .equip-box {margin:0 -15px;}
 .sheet .is-feature .title {transform:translateX(-15px);}
 .sheet .is-feature .feature-box {flex-grow:1;display:flex;flex-direction:column;}
 .sheet .is-feature .feature-box .feature-body {flex-grow:1;}
@@ -381,14 +384,16 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .class .form-alias input {width:auto;background:transparent;padding:0;border:0;border-radius:0;line-height:1;color:var(--text-color);}
 .sheet .class .summary-container {position:absolute;bottom:405px;right:40px;z-index:1;width:40%;font-family:'EB Garamond',sans-serif;font-size:20px;font-style:italic;color:var(--sheet-text-color);}
 .sheet .class .summary-container textarea {font-family:'EB Garamond',sans-serif;font-size:20px;font-style:italic;color:var(--sheet-text-color);margin:0;border:0;border-radius:0;padding:0;max-width:100%;width:100%;background:none;}
-.sheet .class .desc-container {position:absolute;right:15px;bottom:15px;z-index:1;width:60%;max-height:382px;overflow:hidden;overflow-y:auto;}
-.sheet .class .desc-container .box {padding:5px 15px;border:1px solid rgba(var(--color-primary-rgb),.3);border-radius:10px;background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);font-size:15px;text-align:justify;color:var(--text-color);}
-.sheet .class .desc-container .box + .box {margin-top:15px;}
+.sheet .class .desc-container:not(.equip-box .desc-container) {position:absolute;right:15px;bottom:15px;z-index:1;width:60%;max-height:382px;overflow:hidden;overflow-y:auto;}
+.sheet .class .desc-container:not(.equip-box .desc-container) .box {padding:5px 15px;border:1px solid rgba(var(--color-primary-rgb),.3);border-radius:10px;background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);font-size:15px;text-align:justify;color:var(--text-color);}
+.sheet .class .desc-container:not(.equip-box .desc-container) .box + .box {margin-top:15px;}
 .sheet .class .list-questions {list-style:diamonds;padding-left:12px;color:var(--text-color);}
 .sheet .class .list-questions > li {padding-left:5px;}
 .sheet .class .list-questions > li::marker {font-size:12px;color:var(--color-primary);}
 .sheet .class .list-questions input {border:0;width:100%;margin:0;background:none;line-height:1.2;height:auto;padding:0;padding-left:5px;color:var(--text-color);}
 .sheet .class .feature-box .feature-head button {position:relative;bottom:2px;margin-right:15px;}
+.sheet .class .equip-box {transform:translateX(-15px);margin-bottom:15px;}
+.sheet .class .equip-box .equip-head img {height:60px;width:60px;}
 
 /* Sheets > Arcanums */
 .sheet .arcanum .sheet-body .tab {padding:15px 0;}
@@ -404,6 +409,16 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .equip.accessory.locked table thead tr th:last-child {width:80%;}
 .sheet .accessory header.sheet-header {padding-left:50px;padding-right:50px;}
 .sheet .accessory .sheet-header input {font-size:45px;}
+
+/* Sheets > Equipment > Artifacts */
+.sheet .equip.artifact table thead {background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
+.sheet .equip.artifact table thead tr th, .sheet .equip.artifact table tbody tr td {padding-left:15px;padding-right:15px;text-align:left;}
+.sheet .equip.artifact .equip-box .equip-head table input {width:100%;text-align:left;padding:0;border:0;height:auto;box-shadow:none;background:none;}
+.sheet .artifact header.sheet-header {padding-left:50px;padding-right:50px;}
+.sheet .artifact .sheet-header input {font-size:45px;}
+
+/* Sheets > Equipment > Consumables */
+.sheet .equip.consumable thead tr th:last-child {width:50%;}
 
 /* Sheets > Rules */
 .sheet .rule .sheet-body .tab {padding:0;}

@@ -58,17 +58,19 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'classFeature' || 
 			this.object.type == 'arcanum' || 
 			this.object.type == 'heroicSkill' || 
-			this.object.type == 'spell' 
+			this.object.type == 'spell'
 		)
 			options.height = 500;
 		else if ( 
-			this.object.type == 'weapon'
+			this.object.type == 'weapon' ||
+			this.object.type == 'artifact'
 		)
-			options.height = 350;
+			options.height = 375;
 		else if ( 
 			this.object.type == 'shield' ||
 			this.object.type == 'armor' ||
-			this.object.type == 'accessory'
+			this.object.type == 'accessory' ||
+			this.object.type == 'consumable'
 		)
 			options.height = 300;
 
@@ -101,6 +103,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.areaList = CONFIG.FU.areaList;
 		context.usesList = CONFIG.FU.usesList;
 		context.rarityList = CONFIG.FU.rarityList;
+		context.consumableType = CONFIG.FU.consumableType;
 
 		context.enrichedHtml = {
 			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
@@ -442,6 +445,36 @@ export class FabulaItemSheet extends ItemSheet {
 			});
 
 			await targetItem.setFlag('fabula', 'subItems', subItems);
+			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
+
+		} else if ( targetItem.type == 'classFeature' ) {
+
+			// Check if dropped element is Item
+			if ( data.type !== 'Item' ) {
+				ui.notifications.warn('Puoi trascinare solo oggetti.');
+				return;
+			}
+
+			// Check if Item is found
+			const sourceItem = await fromUuid(data.uuid);
+			if ( !sourceItem ) {
+				ui.notifications.error("Impossibile trovare l'oggetto trascinato.");
+				return;
+			}
+
+			// Check if item is a Weapon
+			if ( sourceItem.type != 'weapon' ) {
+				ui.notifications.error("Puoi trascinare solo armi.");
+				return;
+			}
+
+			const items = [];
+			await sourceItem.update({ 'system.origin': targetItem._id });
+
+			// Update Class Feature
+			items.push(sourceItem.toObject());
+
+			await targetItem.setFlag('fabula', 'subItems', items);
 			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
 
 		} else if ( targetItem.type == 'heroicSkill' ) {

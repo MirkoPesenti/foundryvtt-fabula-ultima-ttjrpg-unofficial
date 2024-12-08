@@ -64,6 +64,8 @@ export class FabulaActorSheet extends ActorSheet {
 		if ( data.type == 'Item' ) {
 			const sourceItem = await fromUuid(data.uuid);
 
+			if ( sourceItem.type == 'consumable' ) return;
+
 			if ( !sourceItem ) {
 				ui.notifications.error('Impossibile trovare l\'Item');
 				return false;

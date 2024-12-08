@@ -77,11 +77,33 @@
 			}
 		},
 		{
+			"name": "consumable",
+			"label": "Consumabili",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/consumable",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
 			"name": "equipment",
 			"label": "Equipaggiamento",
 			"type": "Item",
 			"system": "fabula",
 			"path": "packs/equipment",
+			"ownership": {
+				"PLAYER": "OBSERVER",
+				"ASSISTANT": "OWNER"
+			}
+		},
+		{
+			"name": "artifacts",
+			"label": "Artefatti",
+			"type": "Item",
+			"system": "fabula",
+			"path": "packs/artifacts",
 			"ownership": {
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
@@ -188,7 +210,9 @@
 			"sorting": "m",
 			"color": "#005995",
 			"packs": [
-				"equipment"
+				"consumable",
+				"equipment",
+				"artifacts"
 			]
 		},
 		{

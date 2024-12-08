@@ -1,0 +1,46 @@
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+        {{#if system.isMartial.value}}
+            <div class="martial-icon">l</div>
+        {{/if}}
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
+    </header>
+
+    <section class="sheet-body">
+        <div class="tab">
+            <div class="equip-box">
+                <div class="equip-head">
+                    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Descrizione</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <input type="text" name="system.summary" value="{{system.summary}}">
+                                    {{else}}
+                                        {{system.summary}}
+                                    {{/if}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="equip-body">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

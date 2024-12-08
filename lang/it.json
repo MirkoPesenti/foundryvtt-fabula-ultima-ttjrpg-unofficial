@@ -8,6 +8,7 @@
 			"accessory": "Accessorio",
 			"arcanum": "Arcanum",
 			"armor": "Armatura",
+			"artifact": "Artefatto",
 			"class": "Classe",
 			"classFeature": "Abilità di classe",
 			"consumable": "Consumabile",
@@ -193,6 +194,10 @@
 			"resistance": "Resistente",
 			"immunity": "Immune",
 			"absorption": "Assorbimento"
+		},
+		"consumable": {
+			"potion": "Pozione",
+			"utility": "Utilità"
 		}
 	}
 }

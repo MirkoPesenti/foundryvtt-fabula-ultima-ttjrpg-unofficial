@@ -6,6 +6,7 @@ FU.ItemTypes = {
 	accessory: 'TYPES.Item.accessory',
 	arcanum: 'TYPES.Item.arcanum',
 	armor: 'TYPES.Item.armor',
+	artifact: 'TYPES.Item.artifact',
 	class: 'TYPES.Item.class',
 	classFeature: 'TYPES.Item.classFeature',
 	consumable: 'TYPES.Item.consumable',
@@ -186,4 +187,9 @@ FU.affinity = {
 	resistance: 'FU.affinity.resistance',
 	immunity: 'FU.affinity.immunity',
 	absorption: 'FU.affinity.absorption',
+};
+
+FU.consumableType = {
+	potion: 'FU.consumable.potion',
+	utility: 'FU.consumable.utility',
 };

@@ -20,8 +20,6 @@
 
 ### Class Feature
 
-- Items allegati alla feature
-- FE: Class Feature con Item allegati (es. Doppio Scudo)
 - Aggiunta automatica di Item quando vengono acquisite
 - Quando viene droppata la fature su un actor chiede se vuole fare un livello
 
@@ -35,16 +33,6 @@
 
 - Data entry Arcana Bonus
 - Interazioni Arcana con Actor
-
-### Weapon
-
-- Data entry Armi
-
-### Consumable
-
-- FE: Scheda
-- Interazioni Consumabile con Actor
-- Data entry Consumabili
 
 ### Project
 

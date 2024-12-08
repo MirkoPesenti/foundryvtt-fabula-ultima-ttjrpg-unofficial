@@ -1,18 +1,20 @@
+import { FU } from '../../helpers/config.mjs';
+
 /**
- * @property {string} summary
+ * @property {string} sourcebook
  * @property {string} type
  * @property {string} description
- * @property {number} IPCost.value
+ * @property {number} IPCost
  */
 
 export class ConsumableDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, StringField, HTMLField, NumberField } = foundry.data.fields;
+		const { StringField, HTMLField, NumberField } = foundry.data.fields;
 		return {
-			summary: new SchemaField({ value: new StringField() }),
-			type: new SchemaField({ value: new StringField() }),
+			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
+			type: new StringField({ initial: 'potion', choices: Object.keys(FU.consumableType) }),
 			description: new HTMLField(),
-			IPCost: new SchemaField({ value: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
+			IPCost: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }),
 		};
 	}
 }
