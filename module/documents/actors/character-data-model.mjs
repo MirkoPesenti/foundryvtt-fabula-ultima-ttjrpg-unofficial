@@ -80,6 +80,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 		
 		const data = this;
 		const actorClasses = data.parent.getFlag('fabula', 'classes') || [];
+
+		// Classes Free Benefits
 		let freeBenefits = actorClasses.reduce(
 			( add, curr ) => {
 				if ( curr.system.bonus.hp == true && curr.system.level.value == 1 )
@@ -92,6 +94,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			}, { hp: 0, mp: 0, ip: 0 },
 		);
 
+		// Generate Max HP, MP and IP values
 		Object.defineProperty(this.resources.hp, 'max', {
 			configurable: true,
 			enumerable: true,
@@ -105,7 +108,6 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			},
 		});
 		this.resources.hp.crisis = Math.floor( this.resources.hp.max / 2 );
-
 		Object.defineProperty(this.resources.mp, 'max', {
 			configurable: true,
 			enumerable: true,
@@ -118,7 +120,6 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				this.max = newVal;
 			},
 		});
-
 		Object.defineProperty(this.resources.ip, 'max', {
 			configurable: true,
 			enumerable: true,
@@ -131,7 +132,37 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			},
 		});
 
-		// Equipped items bonus
+		// Armor
+		if ( this.parent.system.equip.armor ) {
+			const armor = this.parent.system.equip.armor;
+			const armorItem = await this.parent.items.find(i => i.id === armor && i.system.isEquipped === true);
+			if ( armorItem ) {
+				let defBonus = 0;
+				let mdefBonus = 0;
+				// Def
+				if ( armorItem.system.defBonus.def.isFixed )
+					defBonus = armorItem.system.defBonus.def.value;
+				else
+					defBonus = this.parent.system.resources.attributes.dex.value + armorItem.system.defBonus.def.value;
+				
+				// M. Def
+				if ( armorItem.system.defBonus.mdef.isFixed )
+					mdefBonus = armorItem.system.defBonus.mdef.value;
+				else
+					mdefBonus = this.parent.system.resources.attributes.ins.value + armorItem.system.defBonus.mdef.value;
+
+				// Init
+				this.parent.system.resources.params.init.bonus += armorItem.system.initiativeMalus;
+
+				this.parent.system.resources.params.def.bonus = defBonus;
+				this.parent.system.resources.params.mdef.bonus = mdefBonus;
+			}
+		} else {
+			this.parent.system.resources.params.def.bonus = this.parent.system.resources.attributes.dex.value;
+			this.parent.system.resources.params.mdef.bonus = this.parent.system.resources.attributes.ins.value;
+		}
+
+		// OffHand
 		if ( this.parent.system.equip.offHand ) {
 			const offHand = this.parent.system.equip.offHand;
 			const offHandItem = await this.parent.items.find(i => i.id === offHand && i.system.isEquipped === true);

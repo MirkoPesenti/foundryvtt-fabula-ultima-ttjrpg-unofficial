@@ -161,6 +161,20 @@ Hooks.on('renderItemSheet', (sheet, html, data) => {
 			}
 
 		});
+
+		const arcanumDomain = document.querySelectorAll('#js_arcanumDomain');
+		arcanumDomain.forEach(async element => {
+
+			const uuid = $(element).data('uuid');
+			if ( uuid ) {
+				const itemData = await fromUuid( uuid );
+				if ( itemData.system.domain ) {
+					$(element).attr('style','text-align:center');
+					$(element).html( '<strong>Domini:</strong> ' + itemData.system.domain );
+				}
+			}
+
+		});
 	}
 
 });
@@ -575,6 +589,29 @@ Handlebars.registerHelper("renderItemList", function(obj, key) {
 							</td>
 							<td id="js_heroicSkillRequirements" data-uuid="${item.uuid}"></td>
 							<td id="js_heroicSkillSummary" data-uuid="${item.uuid}"></td>
+						</tr>
+					`;
+				}
+			}
+		} else if ( key == 'arcanum' ) {
+			for ( const folder of pack ) {
+				template += `
+					<tr>
+						<th colspan="2">${folder.folder}</th>
+					</tr>
+				`;
+				for ( const item of folder.items ) {
+					const itemType = item.uuid.split(".")[3];
+					const itemPack = `${item.uuid.split(".")[1]}.${item.uuid.split(".")[2]}`;
+					template += `
+						<tr>
+							<td>
+								<a class="content-link" draggable="true" data-link data-uuid="${item.uuid}" data-id="${item._id}" data-type="${itemType}" data-pack="${itemPack}">
+									<i class="fas fa-suitcase"></i>
+									${item.name}
+								</a>
+							</td>
+							<td id="js_arcanumDomain" data-uuid="${item.uuid}"></td>
 						</tr>
 					`;
 				}

@@ -88,14 +88,9 @@
                     </table>
                 </div>
                 <div class="equip-body">
-                    <textarea name="system.summary" rows="2">{{system.summary}}</textarea>
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                 </div>
             </div>
-            
-            {{#if (or @root.editable (not (eq system.description "")))}}
-                <div class="title">Descrizione</div>
-                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-            {{/if}}
         </div>
     </section>
 </form>

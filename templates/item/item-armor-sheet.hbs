@@ -103,10 +103,15 @@
                                         <input type="number" name="system.initiativeMalus" value="{{system.initiativeMalus}}">
                                     {{else}}
                                         <strong>
-                                            -
-                                            {{#gt system.initiativeMalus 0}}
-                                                {{system.initiativeMalus}}
-                                            {{/gt}}
+                                            {{#unless (eq system.initiativeMalus 0)}}
+                                                {{#gt system.initiativeMalus 0}}
+                                                    +{{system.initiativeMalus}}
+                                                {{else}}
+                                                    {{system.initiativeMalus}}
+                                                {{/gt}}
+                                            {{else}}
+                                                -
+                                            {{/unless}}
                                         </strong>
                                     {{/if}}
                                 </td>
@@ -115,14 +120,9 @@
                     </table>
                 </div>
                 <div class="equip-body">
-                    <textarea name="system.summary" rows="2">{{system.summary}}</textarea>
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                 </div>
             </div>
-            
-            {{#if (or @root.editable (not (eq system.description "")))}}
-                <div class="title">Descrizione</div>
-                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-            {{/if}}
         </div>
     </section>
 </form>

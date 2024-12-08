@@ -62,8 +62,13 @@ export class FabulaItemSheet extends ItemSheet {
 		)
 			options.height = 500;
 		else if ( 
+			this.object.type == 'weapon'
+		)
+			options.height = 350;
+		else if ( 
 			this.object.type == 'shield' ||
-			this.object.type == 'armor'
+			this.object.type == 'armor' ||
+			this.object.type == 'accessory'
 		)
 			options.height = 300;
 
@@ -109,6 +114,7 @@ export class FabulaItemSheet extends ItemSheet {
 			class: returnSortedPack( 'fabula.classes', 'class' ),
 			spell: returnSortedPack( 'fabula.spells', 'spell' ),
 			heroicSkill: returnSortedPack( 'fabula.heroicskill', 'heroicSkill' ),
+			arcanum: returnSortedPack( 'fabula.arcanum', 'arcanum' ),
 		}
 
 		context.FU = FU;

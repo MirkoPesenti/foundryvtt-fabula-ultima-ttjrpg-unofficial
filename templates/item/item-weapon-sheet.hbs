@@ -1,96 +1,150 @@
-<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <select name="system.type.value">
-                {{selectOptions weaponCategories selected=system.type.value sort=true localize=true}}
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+        {{#if system.isMartial.value}}
+            <div class="martial-icon">l</div>
+        {{/if}}
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
             </select>
-            <h1 class="charname">
-                {{#if system.isMartial.value}}
-                <div class="icon-offensive"></div>
-                {{/if}}
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-            <div class="textarea-container">
-                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-            </div>
-        </div>
+        {{/if}}
     </header>
 
-    <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select>
-
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
-        <a class="item" data-tab="damage">{{localize 'FU.Sheet.DamageTab'}}</a>
-    </nav>
-
     <section class="sheet-body">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{localize 'FU.rarity'}}</th>
-                    <th>{{localize 'FU.cost'}}</th>
-                    <th>{{localize 'FU.range'}}</th>
-                    <th>{{localize 'FU.requiredHands'}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <select name="system.rarity.value">
-                            {{selectOptions rarityList selected=system.rarity.value localize=true}}
-                        </select>
-                    </td>
-                    <td>
-                        <input name="system.cost.value" class="input-sm" type="number" value="{{system.cost.value}}" placeholder="{{localize 'FU.Zenit'}}"/> {{localize 'FU.ZenitAbbr'}}
-                    </td>
-                    <td>
-                        <select name="system.range.value">
-                            {{selectOptions WeaponRanges selected=system.range.value localize=true}}
-                        </select>
-                    </td>
-                    <td>
-						{{#if system.needTwoHands.value}}
-							{{localize 'FU.twoHands'}}
-						{{else}}
-                            {{localize 'FU.oneHand'}}
-						{{/if}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-		<div class="tab desc" data-group="primary" data-tab="description">
-            <div class="form-group">
-                <label for="system.isMartial.value">{{localize 'FU.equipmentMartial'}}?</label>
-                <input type="checkbox" name="system.isMartial.value" {{checked system.isMartial.value}}>
-            </div>
-            <div class="form-group">
-                <label for="system.needTwoHands.value">{{localize 'FU.twoHands'}}?</label>
-                <input type="checkbox" name="system.needTwoHands.value" {{checked system.needTwoHands.value}}>
-            </div>
-            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-        </div>
-        <div class="tab dmg" data-gr="primary" data-tab="damage">
-            <div class="form-group">
-                <label>Test di Magia:</label>
-                <select name="system.attributes.primary">
-                    {{selectOptions attributes selected=system.attributes.primary sort=true localize=true}}
-                </select>
-                +
-                <select name="system.attributes.secondary">
-                    {{selectOptions attributes selected=system.attributes.secondary sort=true localize=true}}
-                </select>
-            </div>
-            <div class="form-group">
-                <input type="number" name="system.damage.value" value="{{system.damage.value}}" placeholder="Danno">
-                <select name="system.damage.type">
-                    {{selectOptions DamageTypes selected=system.damage.type sort=true localize=true}}
-                </select>
+        <div class="tab">
+            {{#if @root.editable}}
+                <div class="editable-options">
+                    <div class="flexrow">
+                        <div class="form-group">
+                            <input type="checkbox" name="system.isMartial.value" id="system.isMartial.value" {{checked system.isMartial.value}}>
+                            <label for="system.isMartial.value">Oggetto Marziale:</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="system.rarity">Rarità:</label>
+                            <select name="system.rarity" id="system.rarity">
+                                {{selectOptions rarityList selected=system.rarity localize=true}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+
+            <div class="equip-box">
+                <div class="equip-head">
+                    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Arma</th>
+                                <th>Costo</th>
+                                <th>Precisione</th>
+                                <th>Danno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <select name="system.type">
+                                            {{selectOptions weaponCategories selected=system.type localize=true}}
+                                        </select>
+                                    {{else}}
+                                        {{localize (concat 'FU.weaponCategories.' system.type)}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <input type="number" name="system.cost" value="{{system.cost}}">
+                                    {{else}}
+                                        {{#gt system.cost 0}}
+                                            {{system.cost}}z
+                                        {{else}}
+                                            -
+                                        {{/gt}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <div class="form-group">
+                                            <select name="system.precisionAttributes.primary.value">
+                                                {{selectOptions attributesAbbr selected=system.precisionAttributes.primary.value localize=true}}
+                                            </select>
+                                            <select name="system.precisionAttributes.secondary.value">
+                                                {{selectOptions attributesAbbr selected=system.precisionAttributes.secondary.value localize=true}}
+                                            </select>
+                                            +
+                                            <input type="number" name="system.precisionBonus" value="{{system.precisionBonus}}">
+                                        </div>
+                                    {{else}}
+                                        <strong>
+                                            【{{localize (concat 'FU.attributesAbbr.' system.precisionAttributes.primary.value)}}
+                                            + 
+                                            {{localize (concat 'FU.attributesAbbr.' system.precisionAttributes.secondary.value)}}】
+                                            {{#unless (eq system.precisionBonus 0)}}
+                                                {{#gt system.precisionBonus 0}}
+                                                    +{{system.precisionBonus}}
+                                                {{else}}
+                                                    {{system.precisionBonus}}
+                                                {{/gt}}
+                                            {{/unless}}
+                                        </strong>
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <div class="form-group">
+                                            <input type="number" name="system.damage.value" value="{{system.damage.value}}">
+                                            <select name="system.damage.type.value">
+                                                {{selectOptions DamageTypes selected=system.damage.type.value localize=true}}
+                                            </select>
+                                        </div>
+                                    {{else}}
+                                        <strong>
+                                            【TM
+                                            {{#gt_e system.damage.value 0}}
+                                                + {{system.damage.value}}】
+                                            {{else}}
+                                                - {{multiply system.damage.value -1}}】
+                                            {{/gt_e}}
+                                            {{localize (concat 'FU.DamageTypes.' system.damage.type.value)}}
+                                        </strong>
+                                    {{/if}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="equip-body">
+                    {{#if @root.editable}}
+                        <div class="flexrow">
+                            <div class="form-group">
+                                <input type="checkbox" id="system.needTwoHands" name="system.needTwoHands" {{checked system.needTwoHands}}>
+                                <label for="system.needTwoHands">Arma a due mani</label>
+                            </div>
+                            <div class="form-group">
+                                <label>Gittata:</label>
+                                <select name="system.range">
+                                    {{selectOptions WeaponRanges selected=system.range localize=true}}
+                                </select>
+                            </div>
+                        </div>
+                    {{else}}
+                        <div class="desc-container">
+                            {{#if system.needTwoHands}}
+                                Due mani
+                            {{else}}
+                                Una mano
+                            {{/if}}
+                            <span class="diamond-char">◆</span>
+                            {{localize (concat 'FU.WeaponRanges.' system.range)}}
+                        </div>
+                    {{/if}}
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                </div>
             </div>
         </div>
     </section>

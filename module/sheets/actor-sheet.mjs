@@ -91,6 +91,8 @@ export class FabulaActorSheet extends ActorSheet {
 								ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
 							} else {
 								actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
+								const newItemData = sourceItem.toObject();
+								await actor.createEmbeddedDocuments("Item", [newItemData]);
 								ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
 							}
 						},
@@ -161,16 +163,44 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click','.js_equipItem', async (e) => {
 			e.preventDefault();
 			const itemType = e.currentTarget.dataset.type;
-			if ( itemType == 'shield' ) {
-				const itemID = e.currentTarget.dataset.id;
-				const prevItemId = this.actor.system.equip.offHand;
+			const itemID = e.currentTarget.dataset.id;
+
+			if ( itemType == 'shield' || itemType == 'armor' || itemType == 'accessory' ) {
+				
+				const equipPlace = itemType == 'shield' ? 'offHand' : itemType;
+				const prevItemId = this.actor.system.equip[equipPlace];
 				const item = this.actor.items.find(i => i.id === itemID && i.type === itemType);
+				if ( prevItemId ) {
+					const prevItem = this.actor.items.find(i => i.id === prevItemId);
+
+					if ( equipPlace == 'offHand' && this.actor.system.equip.mainHand == prevItem.id ) {
+						ui.notifications.error(`L\'oggetto ${item.name} ha bisogno che la Mano Secondaria sia libera per essere equipaggiato!`);
+						return;
+					}
+
+					await prevItem.update({ 'system.isEquipped': false });
+				}
+				await item.update({ 'system.isEquipped': true });
+				const objAttr = 'system.equip.' + equipPlace;
+				await this.actor.update({ [objAttr]: itemID });
+
+			} else if ( itemType == 'weapon' ) {
+				const item = this.actor.items.find(i => i.id === itemID && i.type === itemType);
+				if ( item.system.needTwoHands && this.actor.system.equip.offHand ) {
+					ui.notifications.error(`L\'oggetto ${item.name} ha bisogno di Due Mani per essere equipaggiato!`);
+					return;
+				}
+
+				const prevItemId = this.actor.system.equip.mainHand;
 				if ( prevItemId ) {
 					const prevItem = this.actor.items.find(i => i.id === prevItemId);
 					await prevItem.update({ 'system.isEquipped': false });
 				}
 				await item.update({ 'system.isEquipped': true });
-				await this.actor.update({ 'system.equip.offHand': itemID });
+				await this.actor.update({ 'system.equip.mainHand': itemID });
+				if ( item.system.needTwoHands ) {
+					await this.actor.update({ 'system.equip.offHand': itemID });
+				}
 			}
 		});
 
@@ -182,6 +212,9 @@ export class FabulaActorSheet extends ActorSheet {
 			const item = this.actor.items.find(i => i.id === itemID);
 			await item.update({ 'system.isEquipped': false });
 			await this.actor.update({ [itemType]: null });
+			if ( itemType == 'system.equip.mainHand' && item.system.needTwoHands ) {
+				await this.actor.update({ 'system.equip.offHand': null });
+			}
 		});
 
 		// Remove Item from Actor

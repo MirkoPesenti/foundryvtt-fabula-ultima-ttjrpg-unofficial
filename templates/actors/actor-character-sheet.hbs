@@ -82,8 +82,10 @@
                                         </button>
                                     {{/if}}
                                 </li>
+                                {{#if (or (not (eq system.equip.mainHand system.equip.offHand)) (not system.equip.offHand))}}
                                 <li>
                                     Mano secondaria: <br>
+                                    <span>
                                     {{#each items as |subItem subItemIndex|}}
                                         {{#if (eq subItem._id ../system.equip.offHand)}}
                                             {{subItem.name}}
@@ -94,7 +96,9 @@
                                             Rimuovi
                                         </button>
                                     {{/if}}
+                                    </span>
                                 </li>
+                                {{/if}}
                                 <li>
                                     Accessio: <br>
                                     {{#each items as |subItem subItemIndex|}}
@@ -164,17 +168,133 @@
             <ul>
                 {{#each items as |subItem subItemIndex|}}
                     {{#allTrue (eq this.type "shield") (not (eq this._id ../system.equip.offHand))}}
-                        <li style="display:flex;">
-                            <span style="flex:1;">
+                        {{!-- Item: Shields --}}
+                        <li style="display:flex;flex-wrap:wrap;">
+                            <span style="width:50%;">
                                 {{subItem.name}} {{#if subItem.system.isMartial.value}}<span>l</span>{{/if}}
                                 <br>
                                 Difesa: + {{subItem.system.defenseBonus}} | D. Magica: + {{subItem.system.magicDefenseBonus}}
                             </span>
-                            <div style="flex-grow:1">
+                            <div style="flex-grow:1;width:50%;">
                                 <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
                                 <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
                             </div>
+                            <div class="width:100%">
+                                {{{subItem.system.description}}}
+                            </div>
                         </li>
+                        <hr>
+                    {{/allTrue}}
+                    
+                    {{#allTrue (eq this.type "armor") (not (eq this._id ../system.equip.armor))}}
+                        {{!-- Item: Armors --}}
+                        <li style="display:flex;flex-wrap:wrap;">
+                            <span style="width:50%;">
+                                {{subItem.name}} {{#if subItem.system.isMartial.value}}<span>l</span>{{/if}}
+                                <br>
+                                Difesa:
+                                {{#if subItem.system.defBonus.def.isFixed}}
+                                    {{subItem.system.defBonus.def.value}}
+                                {{else}}
+                                    Taglia DES
+                                    {{#gt subItem.system.defBonus.def.value 0}}
+                                        + {{subItem.system.defBonus.def.value}}
+                                    {{/gt}}
+                                {{/if}}
+                                <br>
+                                D. Magica:
+                                {{#if subItem.system.defBonus.mdef.isFixed}}
+                                    {{subItem.system.defBonus.mdef.value}}
+                                {{else}}
+                                    Taglia INT
+                                    {{#gt subItem.system.defBonus.mdef.value 0}}
+                                        + {{subItem.system.defBonus.mdef.value}}
+                                    {{/gt}}
+                                {{/if}}
+                                {{#unless (eq system.initiativeMalus 0)}}
+                                    <br>
+                                    iniziativa:
+                                    {{#gt system.initiativeMalus 0}}
+                                        +{{system.initiativeMalus}}
+                                    {{else}}
+                                        {{system.initiativeMalus}}
+                                    {{/gt}}
+                                {{/unless}}
+                            </span>
+                            <div style="flex-grow:1;width:50%;">
+                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
+                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
+                            </div>
+                            <div class="width:100%">
+                                {{{subItem.system.description}}}
+                            </div>
+                        </li>
+                        <hr>
+                    {{/allTrue}}
+
+                    {{#allTrue (eq this.type "accessory") (not (eq this._id ../system.equip.accessory))}}
+                        {{!-- Item: Accessories --}}
+                        <li style="display:flex;flex-wrap:wrap;">
+                            <span style="width:50%;">
+                                {{subItem.name}}
+                                <br>
+                            </span>
+                            <div style="flex-grow:1;width:50%;">
+                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
+                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
+                            </div>
+                            <div class="width:100%">
+                                {{{subItem.system.description}}}
+                            </div>
+                        </li>
+                        <hr>
+                    {{/allTrue}}
+
+                    {{#allTrue (eq this.type "weapon") (not (eq this._id ../system.equip.mainHand)) (not (eq this._id ../system.equip.offHand))}}
+                        {{!-- Item: Accessories --}}
+                        <li style="display:flex;flex-wrap:wrap;">
+                            <span style="width:50%;">
+                                {{subItem.name}}
+                                <br>
+                                <button type="button" class="roll" data-roll="d{{getAttributeValue ../system.resources.attributes subItem.system.precisionAttributes.primary.value}}+d{{getAttributeValue ../system.resources.attributes subItem.system.precisionAttributes.secondary.value}}{{#unless (eq subItem.system.precisionBonus 0)}}{{#gt subItem.system.precisionBonus 0}}+{{subItem.system.precisionBonus}}{{else}}{{subItem.system.precisionBonus}}{{/gt}}{{/unless}}">
+                                    【{{localize (concat 'FU.attributesAbbr.' subItem.system.precisionAttributes.primary.value)}}
+                                    + 
+                                    {{localize (concat 'FU.attributesAbbr.' subItem.system.precisionAttributes.secondary.value)}}】
+                                    {{#unless (eq subItem.system.precisionBonus 0)}}
+                                        {{#gt subItem.system.precisionBonus 0}}
+                                            +{{subItem.system.precisionBonus}}
+                                        {{else}}
+                                            {{subItem.system.precisionBonus}}
+                                        {{/gt}}
+                                    {{/unless}}
+                                </button>
+                                <br>
+                                <strong>
+                                    【TM
+                                    {{#gt_e subItem.system.damage.value 0}}
+                                        + {{subItem.system.damage.value}}】
+                                    {{else}}
+                                        - {{multiply subItem.system.damage.value -1}}】
+                                    {{/gt_e}}
+                                    {{localize (concat 'FU.DamageTypes.' subItem.system.damage.type.value)}}
+                                </strong>
+                            </span>
+                            <div style="flex-grow:1;width:50%;">
+                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
+                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
+                            </div>
+                            <div class="width:100%">
+                                {{#if subItem.system.needTwoHands}}
+                                    Due mani
+                                {{else}}
+                                    Una mano
+                                {{/if}}
+                                <span class="diamond-char">◆</span>
+                                {{localize (concat 'FU.WeaponRanges.' subItem.system.range)}}
+                                {{{subItem.system.description}}}
+                            </div>
+                        </li>
+                        <hr>
                     {{/allTrue}}
                 {{/each}}
             </ul>

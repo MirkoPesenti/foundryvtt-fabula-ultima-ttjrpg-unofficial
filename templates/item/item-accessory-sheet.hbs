@@ -1,44 +1,59 @@
-<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-            <div class="textarea-container">
-                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-            </div>
-        </div>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
     </header>
 
-    <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select>
-
     <section class="sheet-body">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{localize 'FU.rarity'}}</th>
-                    <th>{{localize 'FU.cost'}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <select name="system.rarity.value">
-                            {{selectOptions rarityList selected=system.rarity.value localize=true}}
-                        </select>
-                    </td>
-                    <td>
-                        <input name="system.cost.value" class="input-sm" type="number" value="{{system.cost.value}}" placeholder="{{localize 'FU.Zenit'}}"/> {{localize 'FU.ZenitAbbr'}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+        <div class="tab">
+            <div class="equip-box">
+                <div class="equip-head">
+                    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Costo</th>
+                                {{#if @root.editable}}
+                                    <th>Rarità</th>
+                                {{/if}}
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <input type="number" name="system.cost" value="{{system.cost}}">
+                                    {{else}}
+                                        {{#gt system.cost 0}}
+                                            {{system.cost}}z
+                                        {{else}}
+                                            -
+                                        {{/gt}}
+                                    {{/if}}
+                                </td>
+                                {{#if @root.editable}}
+                                    <td>
+                                        <select name="system.rarity" id="system.rarity">
+                                            {{selectOptions rarityList selected=system.rarity localize=true}}
+                                        </select>
+                                    </td>
+                                {{/if}}
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="equip-body">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                </div>
+            </div>
+        </div>
     </section>
 </form>

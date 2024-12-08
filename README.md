@@ -33,28 +33,12 @@
 
 ### Arcana
 
-- Lista Arcana
 - Data entry Arcana Bonus
 - Interazioni Arcana con Actor
 
-### Accessory
-
-- FE: Scheda
-- Interazioni Accessorio con Actor
-- Data entry Accessori
-
 ### Weapon
 
-- FE: Scheda
-- Interazioni Arma con Actor
-- Lancio di dadi
 - Data entry Armi
-
-### Armor
-
-- FE: Scheda
-- Interazioni Armatura con Actor
-- Data entry Armature
 
 ### Consumable
 
