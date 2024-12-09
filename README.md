@@ -16,7 +16,7 @@
 - Gourmet: Ingredienti e Delizie + Data entry
 - Invocatore: Sorgenti e Invocazioni + Data entry
 - Asso delle Carte: Gestione del mazzo
-- Quando viene droppata la fature su un actor chiede se vuole fare un livello
+- Quando viene droppata la classe su un actor chiede se vuole fare un livello
 
 ### Class Feature
 

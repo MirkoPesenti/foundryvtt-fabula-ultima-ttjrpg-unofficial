@@ -198,6 +198,26 @@
 		"consumable": {
 			"potion": "Pozione",
 			"utility": "Utilità"
+		},
+		"villainTypes": {
+			"minor": "Minore",
+			"major": "Maggiore",
+			"supreme": "Supremo"
+		},
+		"enemyRanks": {
+			"soldier": "Soldato",
+			"elite": "Élite",
+			"champion": "Campione"
+		},
+		"species": {
+			"beast": "Bestia",
+			"construct": "Costrutto",
+			"demon": "Demone",
+			"elemental": "Elementale",
+			"monster": "Mostro",
+			"plant": "Pianta",
+			"undead": "Non morto",
+			"humanoid": "Umanoide"
 		}
 	}
 }

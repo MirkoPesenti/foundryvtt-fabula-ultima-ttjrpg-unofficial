@@ -270,6 +270,19 @@
 			"paths": ["css", "lang", "templates"]
 		}
 	},
+    "media": [
+        {
+            "type": "cover",
+            "loop": false,
+            "flags": {}
+        },
+        {
+            "type": "setup",
+            "url": "systems/fabula/assets/img/ui/fabula-repo.jpg",
+            "thumbnail": "systems/fabula/assets/img/ui/fabula-thumbnail.jpg"
+        }
+    ],
+    "background": "systems/fabula/assets/img/ui/fabula-background.webp",
 	"socket": true,
 	"readme": "README.md",
 	"url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical"

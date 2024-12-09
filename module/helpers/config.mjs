@@ -193,3 +193,26 @@ FU.consumableType = {
 	potion: 'FU.consumable.potion',
 	utility: 'FU.consumable.utility',
 };
+
+FU.villainTypes = {
+	minor: 'FU.villain.minor',
+	major: 'FU.villain.major',
+	supreme: 'FU.villain.supreme',
+};
+
+FU.enemyRanks = {
+	soldier: 'FU.enemy.soldier',
+	elite: 'FU.enemy.elite',
+	champion: 'FU.enemy.champion',
+};
+
+FU.species = {
+	beast: 'FU.species.beast',
+	construct: 'FU.species.construct',
+	demon: 'FU.species.demon',
+	elemental: 'FU.species.elemental',
+	monster: 'FU.species.monster',
+	plant: 'FU.species.plant',
+	undead: 'FU.species.undead',
+	humanoid: 'FU.species.humanoid',
+};
