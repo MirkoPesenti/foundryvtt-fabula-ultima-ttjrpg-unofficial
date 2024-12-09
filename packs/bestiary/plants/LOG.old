@@ -1,3 +1,4 @@
-2024/12/09-08:53:03.495572 314505000 Recovering log #263
-2024/12/09-08:53:03.496062 314505000 Delete type=0 #263
-2024/12/09-08:53:03.496097 314505000 Delete type=3 #262
+2024/12/09-19:59:40.415 1404 Log #267: 0 ops saved to Table #268 OK
+2024/12/09-19:59:40.416 1404 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\plants/000267.log: OK
+2024/12/09-19:59:40.418 1404 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\plants/MANIFEST-000266: OK
+2024/12/09-19:59:40.421 1404 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\plants; recovered 0 files; 0 bytes. Some data may have been lost. ****

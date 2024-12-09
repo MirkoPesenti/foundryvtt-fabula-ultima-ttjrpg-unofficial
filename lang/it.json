@@ -200,9 +200,9 @@
 			"utility": "Utilità"
 		},
 		"villainTypes": {
-			"minor": "Minore",
-			"major": "Maggiore",
-			"supreme": "Supremo"
+			"minor": "minore",
+			"major": "maggiore",
+			"supreme": "supremo"
 		},
 		"enemyRanks": {
 			"soldier": "Soldato",

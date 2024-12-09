@@ -1,3 +1,4 @@
-2024/12/09-08:53:03.473132 313d02000 Recovering log #263
-2024/12/09-08:53:03.474173 313d02000 Delete type=0 #263
-2024/12/09-08:53:03.474212 313d02000 Delete type=3 #262
+2024/12/09-19:59:40.309 4d2c Log #267: 0 ops saved to Table #268 OK
+2024/12/09-19:59:40.310 4d2c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\construct/000267.log: OK
+2024/12/09-19:59:40.311 4d2c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\construct/MANIFEST-000266: OK
+2024/12/09-19:59:40.316 4d2c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\construct; recovered 0 files; 0 bytes. Some data may have been lost. ****

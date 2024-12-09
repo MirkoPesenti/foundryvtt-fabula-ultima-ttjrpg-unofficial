@@ -1,17 +1,32 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
-
-    <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-        </div>
-    </header>
-
     <section class="sheet-body">
-        NPC
+        <div class="tab">
+            <div class="header">
+                <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+                <div class="header-body">
+                    <div class="head">
+                        <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'FU.Sheet.Name'}}" class="name"/>
+
+                        <div class="data-group">
+                            <div class="form-group">
+                                <label>Liv</label>
+                                <input type="number" name="system.level.value" value="{{system.level.value}}"/>
+                            </div>
+                            <select name="system.species">
+                                {{selectOptions species selected=system.species localize=true}}
+                            </select>
+                        </div>
+                    </div>
+
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+
+                    <div class="traits">
+                        <label>Tratti:</label>
+                        <input type="text" name="system.traits" value="{{system.traits}}"/>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="getActor">log</button>
+        </div>
     </section>
 </form>

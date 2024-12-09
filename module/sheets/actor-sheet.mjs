@@ -45,6 +45,9 @@ export class FabulaActorSheet extends ActorSheet {
 		context.usesList = CONFIG.FU.usesList;
 		context.rarityList = CONFIG.FU.rarityList;
 		context.martialItems = CONFIG.FU.martialItems;
+		context.villainTypes = CONFIG.FU.villainTypes;
+		context.enemyRanks = CONFIG.FU.enemyRanks;
+		context.species = CONFIG.FU.species;
 		
 		context.rollData = context.actor.getRollData();
 

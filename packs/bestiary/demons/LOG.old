@@ -1,3 +1,4 @@
-2024/12/09-08:53:03.482955 314505000 Recovering log #263
-2024/12/09-08:53:03.484201 314505000 Delete type=0 #263
-2024/12/09-08:53:03.484231 314505000 Delete type=3 #262
+2024/12/09-19:59:40.328 32a4 Log #267: 0 ops saved to Table #268 OK
+2024/12/09-19:59:40.329 32a4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\demons/000267.log: OK
+2024/12/09-19:59:40.331 32a4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\demons/MANIFEST-000266: OK
+2024/12/09-19:59:40.334 32a4 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\demons; recovered 0 files; 0 bytes. Some data may have been lost. ****

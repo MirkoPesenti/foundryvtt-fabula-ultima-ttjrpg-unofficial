@@ -1,5 +1,6 @@
-2024/12/09-08:53:03.414048 313d02000 Recovering log #331
-2024/12/09-08:53:03.414208 313d02000 Level-0 table #333: started
-2024/12/09-08:53:03.414402 313d02000 Level-0 table #333: 5812 bytes OK
-2024/12/09-08:53:03.414672 313d02000 Delete type=3 #330
-2024/12/09-08:53:03.414701 313d02000 Delete type=0 #331
+2024/12/09-19:59:40.010 1404 Log #336: 0 ops saved to Table #337 OK
+2024/12/09-19:59:40.011 1404 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures/000336.log: OK
+2024/12/09-19:59:40.011 1404 Table #317: 172 entries OK
+2024/12/09-19:59:40.012 1404 Table #333: 11 entries OK
+2024/12/09-19:59:40.015 1404 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures/MANIFEST-000335: OK
+2024/12/09-19:59:40.017 1404 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures; recovered 2 files; 77696 bytes. Some data may have been lost. ****

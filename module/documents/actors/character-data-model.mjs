@@ -65,6 +65,9 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	}
 
 	prepareBaseData() {
+		this.resources.hp.attribute = 'mig';
+		this.resources.mp.attribute = 'wlp';
+		
 		const data = this;
 		const actorClasses = data.parent.getFlag('fabula', 'classes') || [];
 		let level = actorClasses.reduce(
@@ -99,7 +102,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			configurable: true,
 			enumerable: true,
 			get() {
-				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.resources.attributes[this.attribute].value : data.resources.attributes.ins.value;
+				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.resources.attributes[this.attribute].value : data.resources.attributes.mig.value;
 				return baseAttr * 5  + data.level.value + freeBenefits.hp;
 			},
 			set( newVal ) {
