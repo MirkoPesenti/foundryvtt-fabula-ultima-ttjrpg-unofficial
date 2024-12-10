@@ -18,14 +18,77 @@
                         </div>
                     </div>
 
-                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
-
-                    <div class="traits">
+                    <div class="desc">
                         <label>Tratti:</label>
                         <input type="text" name="system.traits" value="{{system.traits}}"/>
                     </div>
                 </div>
             </div>
+
+            <div class="attributes-container">
+                <div class="attr">
+                    <label>DES</label>
+                    <select name="system.resources.attributes.dex.value">
+                        <option value="6" {{#if (eq system.resources.attributes.dex.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.resources.attributes.dex.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.resources.attributes.dex.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.resources.attributes.dex.value 12)}}selected{{/if}}>d12</option>
+                    </select>
+                </div>
+                <div class="attr">
+                    <label>INT</label>
+                    <select name="system.resources.attributes.ins.value">
+                        <option value="6" {{#if (eq system.resources.attributes.ins.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.resources.attributes.ins.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.resources.attributes.ins.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.resources.attributes.ins.value 12)}}selected{{/if}}>d12</option>
+                    </select>
+                </div>
+                <div class="attr">
+                    <label>VIG</label>
+                    <select name="system.resources.attributes.mig.value">
+                        <option value="6" {{#if (eq system.resources.attributes.mig.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.resources.attributes.mig.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.resources.attributes.mig.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.resources.attributes.mig.value 12)}}selected{{/if}}>d12</option>
+                    </select>
+                </div>
+                <div class="attr">
+                    <label>VOL</label>
+                    <select name="system.resources.attributes.wlp.value">
+                        <option value="6" {{#if (eq system.resources.attributes.wlp.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.resources.attributes.wlp.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.resources.attributes.wlp.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.resources.attributes.wlp.value 12)}}selected{{/if}}>d12</option>
+                    </select>
+                </div>
+
+                <div class="attr hp">
+                    <label>PV</label>
+                    <div class="info">
+                        {{system.resources.hp.max}}
+                        ◆
+                        {{system.resources.hp.crisis}}
+                    </div>
+                </div>
+
+                <div class="attr mp">
+                    <label>PM</label>
+                    <div class="info">
+                        {{system.resources.mp.max}}
+                    </div>
+                </div>
+
+                <div class="attr">
+                    <label>Iniz.</label>
+                    <div class="info">
+                        {{system.resources.params.init.bonus}}
+                    </div>
+                </div>
+            </div>
+
+            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
+            
             <button type="button" class="getActor">log</button>
         </div>
     </section>

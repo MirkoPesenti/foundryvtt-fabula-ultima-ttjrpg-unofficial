@@ -1,6 +1,1 @@
-2024/12/09-19:59:40.199 32a4 Log #52: 0 ops saved to Table #53 OK
-2024/12/09-19:59:40.201 32a4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment/000052.log: OK
-2024/12/09-19:59:40.202 32a4 Table #33: 367 entries OK
-2024/12/09-19:59:40.203 32a4 Table #49: 2 entries OK
-2024/12/09-19:59:40.206 32a4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment/MANIFEST-000051: OK
-2024/12/09-19:59:40.209 32a4 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment; recovered 2 files; 117894 bytes. Some data may have been lost. ****
+2024/12/09-19:59:40.226 32a4 Delete type=3 #1

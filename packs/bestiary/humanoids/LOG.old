@@ -1,4 +1,1 @@
-2024/12/09-19:59:40.437 4d2c Log #267: 0 ops saved to Table #268 OK
-2024/12/09-19:59:40.438 4d2c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\humanoids/000267.log: OK
-2024/12/09-19:59:40.439 4d2c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\humanoids/MANIFEST-000266: OK
-2024/12/09-19:59:40.442 4d2c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\humanoids; recovered 0 files; 0 bytes. Some data may have been lost. ****
+2024/12/09-19:59:40.449 4d2c Delete type=3 #1

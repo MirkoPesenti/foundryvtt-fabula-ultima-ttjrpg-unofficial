@@ -2,7 +2,7 @@
 	"id": "fabula",
 	"title": "Fabula Ultima TTJRPG (Unofficial)",
 	"description": "An Unofficial system for playing Fabula Ultima in the Foundry Virtual Tabletop environment.",
-	"version": "0.0.3",
+	"version": "0.1.0",
 	"authors": [
 		{
 			"name": "OmegaPrime",

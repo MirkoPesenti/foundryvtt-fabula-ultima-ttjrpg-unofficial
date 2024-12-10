@@ -1,6 +1,1 @@
-2024/12/09-19:59:39.975 4768 Log #407: 0 ops saved to Table #408 OK
-2024/12/09-19:59:39.977 4768 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classes/000407.log: OK
-2024/12/09-19:59:39.977 4768 Table #388: 34 entries OK
-2024/12/09-19:59:39.977 4768 Table #404: 2 entries OK
-2024/12/09-19:59:39.980 4768 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classes/MANIFEST-000406: OK
-2024/12/09-19:59:39.986 4768 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classes; recovered 2 files; 90747 bytes. Some data may have been lost. ****
+2024/12/09-19:59:39.998 4768 Delete type=3 #1

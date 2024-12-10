@@ -1,6 +1,1 @@
-2024/12/09-19:59:40.164 32a4 Log #12: 0 ops saved to Table #13 OK
-2024/12/09-19:59:40.164 32a4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/000012.log: OK
-2024/12/09-19:59:40.165 32a4 Table #5: 26 entries OK
-2024/12/09-19:59:40.165 32a4 Table #9: 33 entries OK
-2024/12/09-19:59:40.166 32a4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/MANIFEST-000011: OK
-2024/12/09-19:59:40.169 32a4 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable; recovered 2 files; 7175 bytes. Some data may have been lost. ****
+2024/12/09-19:59:40.184 32a4 Delete type=3 #1
