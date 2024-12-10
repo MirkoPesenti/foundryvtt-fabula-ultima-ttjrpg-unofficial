@@ -12,7 +12,7 @@ export class FabulaActorSheet extends ActorSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ['fabula', 'sheet', 'actor', 'backgroundstyle'],
 			width: 700,
-			height: 700,
+			height: 600,
 			tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'description', }],
 		});
 	}
@@ -227,6 +227,55 @@ export class FabulaActorSheet extends ActorSheet {
 			e.preventDefault();
 			const itemID = e.currentTarget.dataset.id;
 			await this.actor.deleteEmbeddedDocuments('Item', [itemID]);
+		});
+
+		// Set affinities
+		html.on('click','.js_btnAffinity', async (e) => {
+			e.preventDefault();
+			const actor = this.actor; 
+			const affinity = e.currentTarget.dataset.affinity;
+			if ( affinity ) {
+
+				const property = 'system.affinity.' + affinity;
+				let affinityVal = '';
+
+				if ( actor.system.affinity[affinity] == '' )
+					affinityVal = 'vulnerability';
+				else if ( actor.system.affinity[affinity] == 'vulnerability' )
+					affinityVal = 'resistance';
+				else if ( actor.system.affinity[affinity] == 'resistance' )
+					affinityVal = 'immunity';
+				else if ( actor.system.affinity[affinity] == 'immunity' )
+					affinityVal = 'absorption';
+
+				await actor.update({ [property]: affinityVal });
+
+			}
+		});
+
+		// Toggle collapse elements
+		html.on('click','.js_toggleCollapse', (e) => {
+			e.preventDefault();
+			if ( $(e.currentTarget).attr('aria-expanded') == 'false' ) {
+				$(e.currentTarget).attr('aria-expanded', 'true');
+			} else {
+				$(e.currentTarget).attr('aria-expanded', 'false');
+			}
+			$(e.currentTarget).closest('.content-collapse').toggleClass('open');
+		});
+
+		// Add elements to lists
+		html.on('click','.js_addElementToList', async (e) => {
+			e.preventDefault();
+			const actor = this.actor;
+			const type = e.currentTarget.dataset.type;
+			if ( type ) {
+				const string = 'system.' + type;
+				const array = string.split('.').reduce((obj, key) => obj?.[key], actor);
+				const newArray = [...array];
+				newArray.push({});
+				await actor.update({ [string]: newArray });
+			}
 		});
 
 		html.on('click','.roll', this._onRoll.bind(this));

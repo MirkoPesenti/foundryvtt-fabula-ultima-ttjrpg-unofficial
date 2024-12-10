@@ -110,88 +110,33 @@
 			}
 		},
 		{
-			"name": "beasts",
-			"label": "Bestie",
-			"type": "Actor",
+			"name": "npcFeatures",
+			"label": "Abilità",
+			"type": "Item",
 			"system": "fabula",
-			"path": "packs/bestiary/beasts",
+			"path": "packs/bestiary/npcFeatures",
 			"ownership": {
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
 		},
 		{
-			"name": "construct",
-			"label": "Costrutti",
+			"name": "villains",
+			"label": "Cattivi",
 			"type": "Actor",
 			"system": "fabula",
-			"path": "packs/bestiary/construct",
+			"path": "packs/bestiary/villains",
 			"ownership": {
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
 			}
 		},
 		{
-			"name": "demons",
-			"label": "Demoni",
+			"name": "npc",
+			"label": "PNG",
 			"type": "Actor",
 			"system": "fabula",
-			"path": "packs/bestiary/demons",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "elementals",
-			"label": "Elementali",
-			"type": "Actor",
-			"system": "fabula",
-			"path": "packs/bestiary/elementals",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "monsters",
-			"label": "Mostri",
-			"type": "Actor",
-			"system": "fabula",
-			"path": "packs/bestiary/monsters",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "undeads",
-			"label": "Non morti",
-			"type": "Actor",
-			"system": "fabula",
-			"path": "packs/bestiary/undeads",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "plants",
-			"label": "Piante",
-			"type": "Actor",
-			"system": "fabula",
-			"path": "packs/bestiary/plants",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "humanoids",
-			"label": "Umanoidi",
-			"type": "Actor",
-			"system": "fabula",
-			"path": "packs/bestiary/humanoids",
+			"path": "packs/bestiary/npc",
 			"ownership": {
 				"PLAYER": "OBSERVER",
 				"ASSISTANT": "OWNER"
@@ -238,14 +183,9 @@
 			"sorting": "m",
 			"color": "#572D57",
 			"packs": [
-				"beasts",
-				"construct",
-				"demons",
-				"elementals",
-				"monsters",
-				"undeads",
-				"plants",
-				"humanoids"
+				"npcFeatures",
+				"villains",
+				"npc"
 			]
 		}
 	],

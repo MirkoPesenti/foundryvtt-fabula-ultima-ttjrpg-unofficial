@@ -195,6 +195,12 @@
 			"immunity": "Immune",
 			"absorption": "Assorbimento"
 		},
+		"affinityAbbr": {
+			"vulnerability": "VU",
+			"resistance": "RE",
+			"immunity": "IM",
+			"absorption": "AS"
+		},
 		"consumable": {
 			"potion": "Pozione",
 			"utility": "Utilità"
