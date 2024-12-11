@@ -160,6 +160,12 @@ FU.WeaponRanges = {
 	ranged: 'FU.WeaponRanges.ranged',
 };
 
+FU.NPCactionTypes = {
+	attack: 'FU.NPCactions.attack',
+	other: 'FU.NPCactions.other',
+	rule: 'FU.NPCactions.rule',
+};
+
 FU.martialItems = {
 	meleeWeapon: 'FU.martialItems.meleeWeapon',
 	rangedWeapon: 'FU.martialItems.rangedWeapon',

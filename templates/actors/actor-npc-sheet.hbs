@@ -157,10 +157,10 @@
                 </div>
             </div>
 
-            <div class="content-collapse">
+            <div class="content-collapse attack">
                 <div class="title">
                     Attacchi base
-                    <button type="button" class="js_addElementToList" data-type="attacks">
+                    <button type="button" class="js_addAction" data-type="attack">
                         <i class="fa fa-plus"></i>
                     </button>
                     <button type="button" class="js_toggleCollapse" aria-expanded="false">
@@ -169,37 +169,97 @@
                 </div>
                 <div class="collapse">
                     <ul class="list-attacks">
-                        {{#each system.attacks as |attack indexAttack|}}
+                        {{#each system.actions as |action indexAction|}}
+                            {{#if (eq action.type 'attack')}}
                             <li>
-                                <select name="system.attacks.{{indexAttack}}.range">
-                                    {{selectOptions ../WeaponRanges selected=attack.range localize=true}}
-                                </select>
-                                <input type="text" name="system.attacks.{{indexAttack}}.name" value="{{attack.name}}">
+                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="attack">
+                                    <div class="fa fa-remove"></div>
+                                </button>
+                                <div class="flexrow">
+                                    <select name="system.attacks.{{indexAction}}.range">
+                                        {{selectOptions ../WeaponRanges selected=action.range localize=true}}
+                                    </select>
+                                    <input type="text" name="system.attacks.{{indexAction}}.name" value="{{action.name}}">
+                                </div>
+
+                                <div class="flexrow">
+                                    <select name="system.attacks.{{indexAction}}.precisionAttr.primary.value">
+                                        {{selectOptions ../attributes selected=action.precisionAttr.primary.value localize=true}}
+                                    </select>
+                                    +
+                                    <select name="system.attacks.{{indexAction}}.precisionAttr.secondary.value">
+                                        {{selectOptions ../attributes selected=action.precisionAttr.secondary.value localize=true}}
+                                    </select>
+                                    <input type="number" name="system.attacks.{{indexAction}}.precisionBonus" value="{{action.precisionBonus}}">
+                                </div>
+
+                                <div class="flexrow">
+                                    TM +
+                                    <input type="number" name="system.attacks.{{indexAction}}.damage.value" value="{{action.damage.value}}">
+                                    <select name="system.attacks.{{indexAction}}.damage.type.value">
+                                        {{selectOptions ../DamageTypes selected=action.damage.type.value localize=true}}
+                                    </select>
+                                </div>
+
+                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.attacks.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                            </li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-collapse spell">
+                <div class="title">
+                    Incantesimi
+                    <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                        <i class="fa fa-angle-down"></i>
+                    </button>
+                </div>
+                <div class="collapse">
+                    <ul class="list-spells">
+                        {{#each spells}}
+                            <li>
+                                <strong>Nome:</strong> {{this.name}} 
+                                {{#if this.isOffensive.value}}v{{/if}} <br>
+
+                                <strong>PM:</strong> 
+                                {{#if this.system.MPCost.upTo}}
+                                Fino a
+                                {{/if}}
+                                {{this.system.MPCost.value}}
+                                {{#gt this.system.target.number 1}}
+                                x B
+                                {{/gt}}
+                                <br>
+
+                                <strong>Test di Magia:</strong> 
+                                【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
+
+                                {{#if this.system.damage.hasDamage}}
+                                <strong>Danno:</strong> {{this.system.damage.value}} {{localize (concat 'FU.DamageTypes.' this.system.damage.type)}} <br>
+                                {{/if}}
+
+                                <strong>Bersaglio:</strong> {{this.system.target.value}} <br>
+
+                                <strong>Durata:</strong> {{localize (concat 'FU.SpellDurations.' this.system.duration.value)}} <br>
+
+                                {{{this.system.description}}}
+                                
+                                {{#if this.system.opportunity.value}}
+                                    <strong>Opportunità:</strong>
+                                    {{{this.system.opportunityEffect}}}
+                                {{/if}}
                             </li>
                         {{/each}}
                     </ul>
                 </div>
             </div>
 
-            <div class="content-collapse">
-                <div class="title">
-                    Incantesimi
-                    <button type="button" class="js_addElementToList" data-type="">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                    <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                        <i class="fa fa-angle-down"></i>
-                    </button>
-                </div>
-                <div class="collapse">
-                    Lorem ipsum
-                </div>
-            </div>
-
-            <div class="content-collapse">
+            <div class="content-collapse other">
                 <div class="title">
                     Altre azioni
-                    <button type="button" class="js_addElementToList" data-type="">
+                    <button type="button" class="js_addAction" data-type="other">
                         <i class="fa fa-plus"></i>
                     </button>
                     <button type="button" class="js_toggleCollapse" aria-expanded="false">
@@ -207,14 +267,27 @@
                     </button>
                 </div>
                 <div class="collapse">
-                    Lorem ipsum
+                    <ul class="list-other-actions">
+                        {{#each system.actions as |action indexAction|}}
+                            {{#if (eq action.type 'other')}}
+                            <li>
+                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="other">
+                                    <div class="fa fa-remove"></div>
+                                </button>
+                                <input type="text" name="system.attacks.{{indexAction}}.name" value="{{action.name}}">
+
+                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.attacks.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                            </li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
 
-            <div class="content-collapse">
+            <div class="content-collapse rule">
                 <div class="title">
                     Regole speciali
-                    <button type="button" class="js_addElementToList" data-type="">
+                    <button type="button" class="js_addAction" data-type="rule">
                         <i class="fa fa-plus"></i>
                     </button>
                     <button type="button" class="js_toggleCollapse" aria-expanded="false">
@@ -222,7 +295,20 @@
                     </button>
                 </div>
                 <div class="collapse">
-                    Lorem ipsum
+                    <ul class="list-special-rules">
+                        {{#each system.actions as |action indexAction|}}
+                            {{#if (eq action.type 'rule')}}
+                            <li>
+                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="rule">
+                                    <div class="fa fa-remove"></div>
+                                </button>
+                                <input type="text" name="system.attacks.{{indexAction}}.name" value="{{action.name}}">
+
+                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.attacks.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                            </li>
+                            {{/if}}
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
 

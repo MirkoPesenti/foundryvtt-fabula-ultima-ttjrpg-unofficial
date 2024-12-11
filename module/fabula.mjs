@@ -516,6 +516,11 @@ Handlebars.registerHelper("getProperty", function(obj, key) {
 	return obj[key];
 });  
 
+Handlebars.registerHelper('concatPath', function (...args) {
+	const options = args.pop();
+	return args.join('');
+}); 
+
 Handlebars.registerHelper('percentage', function( a, b ){
 	return ( ( a / b ) * 100 );
 });

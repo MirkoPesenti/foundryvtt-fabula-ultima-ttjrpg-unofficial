@@ -1,6 +1,7 @@
 import { AttributesDataModel } from "./common/attributes-data-model.mjs";
 import { DefencesDataModel } from "./common/defences-data-model.mjs";
 import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
+import { PrecisionDataModel } from "./common/precision-data-model.mjs";
 import { DamageDataModel } from "../items/common/damage-data-model.mjs";
 import { FU } from '../../helpers/config.mjs';
 
@@ -28,21 +29,14 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 				params: new EmbeddedDataField(DefencesDataModel, {}),
 			}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
-			attacks: new ArrayField(new SchemaField({
+			actions: new ArrayField(new SchemaField({
 				name: new StringField(),
 				description: new HTMLField(),
+				type: new StringField({ initial: 'attack', choices: Object.keys(FU.NPCactionTypes) }),
 				range: new StringField({ initial: 'melee', choices: Object.keys(FU.WeaponRanges) }),
-				precisionAttr: new EmbeddedDataField(AttributesDataModel, {}),
+				precisionAttr: new EmbeddedDataField(PrecisionDataModel, {}),
 				precisionBonus: new NumberField({ initial: 0, nullable: true }),
 				damage: new EmbeddedDataField(DamageDataModel, {}),
-			})),
-			otherActions: new ArrayField(new SchemaField({
-				name: new StringField(),
-				description: new HTMLField(),
-			})),
-			specialRules: new ArrayField(new SchemaField({
-				name: new StringField(),
-				description: new HTMLField(),
 			})),
 		};
 	}

@@ -1,6 +1,13 @@
 import { FU } from "../helpers/config.mjs";
 import { showItemInChat } from "../helpers/helpers.mjs";
 
+const NPCaccordions = {
+	attack: false,
+	spell: false,
+	other: false,
+	rule: false,
+};
+
 /**
  * Extend basic ActorSheet
  * @extends {ActorSheet}
@@ -48,6 +55,18 @@ export class FabulaActorSheet extends ActorSheet {
 		context.villainTypes = CONFIG.FU.villainTypes;
 		context.enemyRanks = CONFIG.FU.enemyRanks;
 		context.species = CONFIG.FU.species;
+
+		context.enrichedHtml = {
+			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
+			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
+			actionDescription: [],
+		};
+
+		context.system.actions.forEach(async (el) => {
+			context.enrichedHtml.actionDescription.push(
+				await TextEditor.enrichHTML( el.description ?? '' ),
+			);
+		});
 		
 		context.rollData = context.actor.getRollData();
 
@@ -113,6 +132,27 @@ export class FabulaActorSheet extends ActorSheet {
 
 	activateListeners( html ) {
 		super.activateListeners( html );
+
+		$(html).find('.content-collapse').each(() => {
+			const content = this;
+			console.log(NPCaccordions);
+			for ( const key in NPCaccordions ) {
+				console.log( $(content).hasClass(`${key}`), key );
+				if ( $(content).hasClass(key) && NPCaccordions[key] == true ) {
+
+					$(content).find('.btn[aria-expanded]').attr('aria-expanded', 'true');
+					const contentChild = $(content).children('.collapse');
+		
+					$(content).addClass('open');
+					contentChild.css('height', contentChild[0].scrollHeight + 'px');
+					
+					contentChild.on('transitionend', function() {
+						if ( $(content).hasClass('open') )
+							$(content).css('height', 'auto');
+					});
+				}
+			}
+		});
 
 		// Show Actor's Item in chat
 		html.on('click', '.js_showInChat', (e) => {
@@ -256,25 +296,66 @@ export class FabulaActorSheet extends ActorSheet {
 		// Toggle collapse elements
 		html.on('click','.js_toggleCollapse', (e) => {
 			e.preventDefault();
+			let accordionOpen = false;
 			if ( $(e.currentTarget).attr('aria-expanded') == 'false' ) {
 				$(e.currentTarget).attr('aria-expanded', 'true');
 			} else {
 				$(e.currentTarget).attr('aria-expanded', 'false');
 			}
-			$(e.currentTarget).closest('.content-collapse').toggleClass('open');
+			const content = $(e.currentTarget).closest('.content-collapse');
+			const contentChild = $(e.currentTarget).closest('.content-collapse').children('.collapse');
+
+			if ( content.hasClass('open') ) {
+				contentChild.css('height', contentChild[0].scrollHeight + 'px')
+				content.removeClass('open');
+				setTimeout(() => {
+					contentChild.css('height','0');
+				}, 0);
+			} else {
+				content.addClass('open');
+				contentChild.css('height', contentChild[0].scrollHeight + 'px');
+				
+				contentChild.on('transitionend', function() {
+					if ( content.hasClass('open') )
+						content.css('height', 'auto');
+				});
+				accordionOpen = true;
+			}
+
+			const classes = content.attr('class').split(' ');
+			for ( const key in NPCaccordions ) {
+				if ( classes.includes( key ) )
+					NPCaccordions[key] = accordionOpen;
+			}
+			
 		});
 
-		// Add elements to lists
-		html.on('click','.js_addElementToList', async (e) => {
+		// Add element to list
+		html.on('click','.js_addAction', async (e) => {
 			e.preventDefault();
 			const actor = this.actor;
 			const type = e.currentTarget.dataset.type;
 			if ( type ) {
-				const string = 'system.' + type;
+				const string = 'system.actions';
 				const array = string.split('.').reduce((obj, key) => obj?.[key], actor);
 				const newArray = [...array];
-				newArray.push({});
-				await actor.update({ [string]: newArray });
+				newArray.push({ type: type });
+				await actor.update({ 'system.actions': newArray });
+			}
+		});
+
+		// Remove elemet to list
+		html.on('click','.js_removeElementoToList', async (e) => {
+			e.preventDefault();
+			const actor = this.actor;
+			const type = e.currentTarget.dataset.type;
+			const id = e.currentTarget.dataset.id;
+			if ( type ) {
+				const newArray = actor.system[type] ?? [];
+				if ( id <= newArray.length - 1 && newArray[id].type == type ) {
+					newArray.splice( id, 1 );
+					await actor.update({ 'system.actions': newArray });
+				}
 			}
 		});
 

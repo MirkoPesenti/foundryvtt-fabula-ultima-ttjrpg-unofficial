@@ -485,6 +485,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .sheet-body {padding:0;max-height:unset;background:none;}
 
 /* Sheets > Actors > NPC */
+.sheet.actor .npc .sheet-body {height:100%;}
 .sheet.actor .npc .title {font-size:18px;letter-spacing:.8px;width:100%;margin:10px 0 0;color:var(--color-white);}
 .sheet.actor .npc .title button {position:absolute;top:50%;right:15px;transform:translate(0,-50%);display:flex;align-items:center;justify-content:center;}
 .sheet.actor .npc .title button:not([aria-expanded]) {right:50px;pointer-events:none;opacity:0;transition:opacity .3s ease-in-out, box-shadow .15s ease-in-out;}
@@ -492,7 +493,6 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .content-collapse .collapse {overflow:hidden;overflow-y:auto;height:0;transition:height .3s ease-in-out;}
 .sheet.actor .npc .content-collapse.open button:not([aria-expanded]) {pointer-events:all;opacity:1;}
 .sheet.actor .npc .content-collapse.open .title button[aria-expanded="true"] .fa {transform:rotate(180deg);}
-.sheet.actor .npc .content-collapse.open .collapse {height:150px;}
 .sheet.actor .npc .header {display:flex;position:relative;}
 .sheet.actor .npc .header::after {content:"";position:absolute;bottom:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
 .sheet.actor .npc .header img {flex:0 0 100px;height:100px;margin:0;border:1px solid var(--color-primary);border-bottom:0;border-radius:0;}
@@ -518,12 +518,9 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .header .affinities button span {position:relative;top:2px;}
 .sheet.actor .npc .attributes-container {display:flex;border-left:1px solid var(--color-primary);padding-bottom:1px;position:relative;}
 .sheet.actor .npc .attributes-container.params .attr {justify-content:center;}
-.sheet.actor .npc .attributes-container.params .attr:first-child {flex:0 0 186px;}
-.sheet.actor .npc .attributes-container.params .attr:nth-child(2) {flex:0 0 189px;}
-.sheet.actor .npc .attributes-container.params .attr:last-child {flex:0 0 186px;}
 .sheet.actor .npc .attributes-container.params .attr label {margin:0;font-size:20px;}
 .sheet.actor .npc .attributes-container::after {content:"";position:absolute;bottom:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
-.sheet.actor .npc .attributes-container .attr {display:flex;align-items:center;background-color:rgba(var(--color-primary-rgb),.2);padding:5px 10px;min-height:36px;}
+.sheet.actor .npc .attributes-container .attr {flex:1;display:flex;align-items:center;background-color:rgba(var(--color-primary-rgb),.2);padding:5px 10px;min-height:36px;}
 .sheet.actor .npc .attributes-container .attr + .attr {margin-left:1px;}
 .sheet.actor .npc .attributes-container .attr label {font-family:"Yanone Kaffeesatz", sans-serif;font-weight:700;font-size:16px;margin-right:5px;position:relative;top:2px;}
 .sheet.actor .npc .attributes-container .attr select {width:auto;font-size:16px;text-align:center;border:1px solid var(--color-primary);border-radius:3px;padding:4px 4px 0px;font-family:"Yanone Kaffeesatz", sans-serif;background-color:var(--color-white);}

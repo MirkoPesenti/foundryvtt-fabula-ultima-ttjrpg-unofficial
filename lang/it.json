@@ -224,6 +224,11 @@
 			"plant": "Pianta",
 			"undead": "Non morto",
 			"humanoid": "Umanoide"
+		},
+		"NPCactions": {
+			"attack": "Attacco base",
+			"other": "Altra azione",
+			"rule": "Regola speciale"
 		}
 	}
 }
