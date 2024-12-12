@@ -20,7 +20,7 @@ export class FabulaActorSheet extends ActorSheet {
 			classes: ['fabula', 'sheet', 'actor', 'backgroundstyle'],
 			width: 700,
 			height: 600,
-			tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'description', }],
+			tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'base', }],
 		});
 	}
 
@@ -55,15 +55,28 @@ export class FabulaActorSheet extends ActorSheet {
 		context.villainTypes = CONFIG.FU.villainTypes;
 		context.enemyRanks = CONFIG.FU.enemyRanks;
 		context.species = CONFIG.FU.species;
+		context.NPCactionTypes = CONFIG.FU.NPCactionTypes;
 
 		context.enrichedHtml = {
 			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
 			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
-			actionDescription: [],
+			attacksDesc: [],
+			actionsDesc: [],
+			rulesDesc: [],
 		};
 
-		context.system.actions.forEach(async (el) => {
-			context.enrichedHtml.actionDescription.push(
+		context.system.baseAttacks.forEach(async (el) => {
+			context.enrichedHtml.attacksDesc.push(
+				await TextEditor.enrichHTML( el.description ?? '' ),
+			);
+		});
+		context.system.otherActions.forEach(async (el) => {
+			context.enrichedHtml.actionsDesc.push(
+				await TextEditor.enrichHTML( el.description ?? '' ),
+			);
+		});
+		context.system.specialRules.forEach(async (el) => {
+			context.enrichedHtml.rulesDesc.push(
 				await TextEditor.enrichHTML( el.description ?? '' ),
 			);
 		});
@@ -71,9 +84,6 @@ export class FabulaActorSheet extends ActorSheet {
 		context.rollData = context.actor.getRollData();
 
 		context.FU = FU;
-
-		// if ( actorData.type == 'character' && actorData.system.level.value < 5 )
-		// 	await this._characterCreation( actorData );
 
 		return context;
 	}
@@ -323,30 +333,28 @@ export class FabulaActorSheet extends ActorSheet {
 		});
 
 		// Add element to list
-		html.on('click','.js_addAction', async (e) => {
+		html.on('click','.js_addElementToList', async (e) => {
 			e.preventDefault();
-			const actor = this.actor;
-			const type = e.currentTarget.dataset.type;
-			if ( type ) {
-				const string = 'system.actions';
-				const array = string.split('.').reduce((obj, key) => obj?.[key], actor);
-				const newArray = [...array];
-				newArray.push({ type: type });
-				await actor.update({ 'system.actions': newArray });
+			const target = e.currentTarget.dataset.target;
+			if ( target ) {
+				const array = target.split('.').reduce((obj, key) => obj?.[key], this.actor);
+				const list = [...array];
+				list.push({});
+				await this.actor.update({ [target]: list });
 			}
 		});
 
-		// Remove elemet to list
-		html.on('click','.js_removeElementoToList', async (e) => {
+		// Remove element to list
+		html.on('click','.js_removeElementToList', async (e) => {
 			e.preventDefault();
-			const actor = this.actor;
-			const type = e.currentTarget.dataset.type;
+			const target = e.currentTarget.dataset.target;
 			const id = e.currentTarget.dataset.id;
-			if ( type ) {
-				const newArray = actor.system[type] ?? [];
-				if ( id <= newArray.length - 1 && newArray[id].type == type ) {
-					newArray.splice( id, 1 );
-					await actor.update({ 'system.actions': newArray });
+			if ( target ) {
+				const array = target.split('.').reduce((obj, key) => obj?.[key], this.actor);
+				const list = [...array];
+				if ( id <= list.length - 1 ) {
+					list.splice( id, 1 );
+					await this.actor.update({ [target]: list });
 				}
 			}
 		});

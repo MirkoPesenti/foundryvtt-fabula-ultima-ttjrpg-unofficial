@@ -483,13 +483,15 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 /* Sheets > Actors */
 .sheet.actor form {padding:0 50px;background-repeat:no-repeat;background-position:center left, center right;background-size:50px 600px;background-image:var(--sheet-body-bg-left), var(--sheet-body-bg-right);}
 .sheet.actor .sheet-body {padding:0;max-height:unset;background:none;}
+.sheet.actor .sheet-body .tab .tab {padding:0;overflow:auto;min-height:unset;max-height:unset;border:0;outline:0;}
 
 /* Sheets > Actors > NPC */
 .sheet.actor .npc .sheet-body {height:100%;}
 .sheet.actor .npc .title {font-size:18px;letter-spacing:.8px;width:100%;margin:10px 0 0;color:var(--color-white);}
 .sheet.actor .npc .title button {position:absolute;top:50%;right:15px;transform:translate(0,-50%);display:flex;align-items:center;justify-content:center;}
-.sheet.actor .npc .title button:not([aria-expanded]) {right:50px;pointer-events:none;opacity:0;transition:opacity .3s ease-in-out, box-shadow .15s ease-in-out;}
-.sheet.actor .npc .title button .fa {margin:0;transition:transform .3s ease-in-out;}
+.sheet.actor .npc .title button:not([aria-expanded]) {right:50px;pointer-events:none;opacity:0;}
+.sheet.actor .npc .title button .fa {margin:0;}
+.sheet.actor .npc .title + .editor {margin-top:10px;}
 .sheet.actor .npc .content-collapse .collapse {overflow:hidden;overflow-y:auto;height:0;}
 .sheet.actor .npc .content-collapse.open button:not([aria-expanded]) {pointer-events:all;opacity:1;}
 .sheet.actor .npc .content-collapse.open .title button[aria-expanded="true"] .fa {transform:rotate(180deg);}
@@ -524,7 +526,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .attributes-container .attr {flex:1;display:flex;align-items:center;background-color:rgba(var(--color-primary-rgb),.2);padding:5px 10px;min-height:36px;}
 .sheet.actor .npc .attributes-container .attr + .attr {margin-left:1px;}
 .sheet.actor .npc .attributes-container .attr label {font-family:"Yanone Kaffeesatz", sans-serif;font-weight:700;font-size:16px;margin-right:5px;position:relative;top:2px;}
-.sheet.actor .npc .attributes-container .attr select {width:auto;font-size:16px;text-align:center;border:1px solid var(--color-primary);border-radius:3px;padding:4px 4px 0px;font-family:"Yanone Kaffeesatz", sans-serif;background-color:var(--color-white);}
+.sheet.actor .npc .attributes-container .attr select {width:auto;font-size:16px;text-align:center;border:1px solid var(--color-primary);border-radius:3px;padding:4px 0 0px;font-family:"Yanone Kaffeesatz", sans-serif;background-color:var(--color-white);}
 .sheet.actor .npc .attributes-container .attr .info {font-family:"Yanone Kaffeesatz", sans-serif;font-size:16px;text-align:center;padding:0 5px;height:100%;display:flex;align-items:center;justify-content:center;}
 .sheet.actor .npc .attributes-container .attr .info span {font-size:10px;margin:0 5px;}
 .sheet.actor .npc .attributes-container .attr.hp {padding:0;background-color:transparent;}
@@ -533,3 +535,26 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .attributes-container .attr.mp {padding:0;background-color:transparent;}
 .sheet.actor .npc .attributes-container .attr.mp label {padding:0 10px;margin:0;}
 .sheet.actor .npc .attributes-container .attr.mp .info {background-color:var(--color-mp);color:var(--color-white);width:45px;}
+.sheet.actor .npc .list select, .sheet.actor .npc .list input {width:auto;font-size:16px;border:1px solid var(--color-primary);border-radius:3px;padding:1px 4px;background-color:var(--color-white);}
+.sheet.actor .npc .list {margin-bottom:0;list-style:none;padding:0;}
+.sheet.actor .npc .list > li {position:relative;padding-left:30px;}
+.sheet.actor .npc .list > li + li {margin-top:10px;padding-top:10px;border-top:1px solid transparent;}
+.sheet.actor .npc .list > li + li::after {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
+.sheet.actor .npc .list > li + li .btn-del {top:12px;}
+.sheet.actor .npc .list > li .btn-del {position:absolute;left:0;top:2px;padding:0;width:20px;height:20px;display:flex;align-items:center;justify-content:center;}
+.sheet.actor .npc .list .flex-head {margin-bottom:10px;}
+.sheet.actor .npc .list .editor {border:1px solid var(--color-primary);border-radius:3px;overflow:hidden;}
+.sheet.actor .npc .list .editor .editor-menu {border-radius:0;}
+.sheet.actor .npc .list-attacks .flex-head select {flex:0 0 auto;margin-left:10px;}
+.sheet.actor .npc .list-attacks .flex-precision {margin-bottom:10px;}
+.sheet.actor .npc .list-attacks .flex-precision label {flex:1 0 auto;font-weight:700;margin:0;margin-right:10px;position:relative;top:2px;}
+.sheet.actor .npc .list-attacks .flex-precision label:not(:first-child) {flex:0 0 auto;margin-left:30px;}
+.sheet.actor .npc .list-attacks .flex-precision select {flex:0 0 auto;}
+.sheet.actor .npc .list-attacks .flex-precision input {text-align:center;}
+.sheet.actor .npc .list-attacks .flex-precision span {position:relative;top:2px;flex:0 0 auto;margin:0 5px;}
+.sheet.actor .npc .list-attacks .flex-damage {margin-bottom:10px;}
+.sheet.actor .npc .list-attacks .flex-damage label {flex:1 0 auto;font-weight:700;margin:0;margin-right:10px;position:relative;top:2px;}
+.sheet.actor .npc .list-attacks .flex-damage label:not(:first-child) {flex:0 0 auto;margin-left:30px;}
+.sheet.actor .npc .list-attacks .flex-damage select {flex:0 0 auto;}
+.sheet.actor .npc .list-attacks .flex-damage input {text-align:center;}
+.sheet.actor .npc .list-attacks .flex-damage span {position:relative;top:2px;flex:0 0 auto;margin-right:5px;font-weight:700;}

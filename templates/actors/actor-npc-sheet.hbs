@@ -1,4 +1,19 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
+
+    <button type="button" class="getActor" style="position:absolute;top:0px;left:100px;">log</button>
+
+    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
+        <a class="item" data-tab="base">
+            <span>Azioni</span>
+        </a>
+        <a class="item" data-tab="description">
+            <span>Descrizione</span>
+        </a>
+        <a class="item" data-tab="options">
+            <span>Opzioni</span>
+        </a>
+    </nav>
+
     <section class="sheet-body">
         <div class="tab">
             <div class="header">
@@ -155,166 +170,183 @@
                         Difesa Magica: {{system.resources.params.mdef.bonus}}
                     </label>
                 </div>
-            </div>
 
-            <div class="content-collapse attack">
-                <div class="title">
-                    Attacchi base
-                    <button type="button" class="js_addAction" data-type="attack">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                    <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                        <i class="fa fa-angle-down"></i>
-                    </button>
-                </div>
-                <div class="collapse">
-                    <ul class="list-attacks">
-                        {{#each system.actions as |action indexAction|}}
-                            {{#if (eq action.type 'attack')}}
-                            <li>
-                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="attack">
-                                    <div class="fa fa-remove"></div>
-                                </button>
-                                <div class="flexrow">
-                                    <select name="system.actions.{{indexAction}}.range">
-                                        {{selectOptions ../WeaponRanges selected=action.range localize=true}}
-                                    </select>
-                                    <input type="text" name="system.actions.{{indexAction}}.name" value="{{action.name}}">
-                                </div>
-
-                                <div class="flexrow">
-                                    <select name="system.actions.{{indexAction}}.precisionAttr.primary.value">
-                                        {{selectOptions ../attributes selected=action.precisionAttr.primary.value localize=true}}
-                                    </select>
-                                    +
-                                    <select name="system.actions.{{indexAction}}.precisionAttr.secondary.value">
-                                        {{selectOptions ../attributes selected=action.precisionAttr.secondary.value localize=true}}
-                                    </select>
-                                    <input type="number" name="system.actions.{{indexAction}}.precisionBonus" value="{{action.precisionBonus}}">
-                                </div>
-
-                                <div class="flexrow">
-                                    TM +
-                                    <input type="number" name="system.actions.{{indexAction}}.damage.value" value="{{action.damage.value}}">
-                                    <select name="system.actions.{{indexAction}}.damage.type.value">
-                                        {{selectOptions ../DamageTypes selected=action.damage.type.value localize=true}}
-                                    </select>
-                                </div>
-
-                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.actions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-                            </li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
+                <div class="attr">
+                    <label>
+                        Abilità: {{system.skills.current}} / {{system.skills.max}}
+                    </label>
                 </div>
             </div>
-
-            <div class="content-collapse spell">
-                <div class="title">
-                    Incantesimi
-                    <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                        <i class="fa fa-angle-down"></i>
-                    </button>
-                </div>
-                <div class="collapse">
-                    <ul class="list-spells">
-                        {{#each spells}}
-                            <li>
-                                <strong>Nome:</strong> {{this.name}} 
-                                {{#if this.isOffensive.value}}v{{/if}} <br>
-
-                                <strong>PM:</strong> 
-                                {{#if this.system.MPCost.upTo}}
-                                Fino a
-                                {{/if}}
-                                {{this.system.MPCost.value}}
-                                {{#gt this.system.target.number 1}}
-                                x B
-                                {{/gt}}
-                                <br>
-
-                                <strong>Test di Magia:</strong> 
-                                【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
-
-                                {{#if this.system.damage.hasDamage}}
-                                <strong>Danno:</strong> {{this.system.damage.value}} {{localize (concat 'FU.DamageTypes.' this.system.damage.type)}} <br>
-                                {{/if}}
-
-                                <strong>Bersaglio:</strong> {{this.system.target.value}} <br>
-
-                                <strong>Durata:</strong> {{localize (concat 'FU.SpellDurations.' this.system.duration.value)}} <br>
-
-                                {{{this.system.description}}}
-                                
-                                {{#if this.system.opportunity.value}}
-                                    <strong>Opportunità:</strong>
-                                    {{{this.system.opportunityEffect}}}
-                                {{/if}}
-                            </li>
-                        {{/each}}
-                    </ul>
-                </div>
-            </div>
-
-            <div class="content-collapse other">
-                <div class="title">
-                    Altre azioni
-                    <button type="button" class="js_addAction" data-type="other">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                    <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                        <i class="fa fa-angle-down"></i>
-                    </button>
-                </div>
-                <div class="collapse">
-                    <ul class="list-other-actions">
-                        {{#each system.actions as |action indexAction|}}
-                            {{#if (eq action.type 'other')}}
-                            <li>
-                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="actions">
-                                    <div class="fa fa-remove"></div>
-                                </button>
-                                <input type="text" name="system.actions.{{indexAction}}.name" value="{{action.name}}">
-
-                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.actions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-                            </li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
-                </div>
-            </div>
-
-            <div class="content-collapse rule">
-                <div class="title">
-                    Regole speciali
-                    <button type="button" class="js_addAction" data-type="rule">
-                        <i class="fa fa-plus"></i>
-                    </button>
-                    <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                        <i class="fa fa-angle-down"></i>
-                    </button>
-                </div>
-                <div class="collapse">
-                    <ul class="list-special-rules">
-                        {{#each system.actions as |action indexAction|}}
-                            {{#if (eq action.type 'rule')}}
-                            <li>
-                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="actions">
-                                    <div class="fa fa-remove"></div>
-                                </button>
-                                <input type="text" name="system.actions.{{indexAction}}.name" value="{{action.name}}">
-
-                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.actions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-                            </li>
-                            {{/if}}
-                        {{/each}}
-                    </ul>
-                </div>
-            </div>
-
-            {{!-- {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }} --}}
             
-            <button type="button" class="getActor">log</button>
+            <div class="tab base" data-group="primary" data-tab="base">
+                <div class="content-collapse attack">
+                    <div class="title">
+                        Attacchi base
+                        <button type="button" class="js_addElementToList" data-target="system.baseAttacks">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse">
+                        <ul class="list list-attacks">
+                            {{#each system.baseAttacks as |attack indexAttack|}}
+                                <li>
+                                    <button type="button" class="btn-del js_removeElementToList" data-id="{{indexAttack}}" data-target="system.baseAttacks">
+                                        <div class="fa fa-remove"></div>
+                                    </button>
+
+                                    <div class="flexrow flex-head">
+                                        <input type="text" name="system.baseAttacks.{{indexAttack}}.name" value="{{attack.name}}">
+                                        <select name="system.baseAttacks.{{indexAttack}}.range">
+                                            {{selectOptions ../WeaponRanges selected=attack.range localize=true}}
+                                        </select>
+                                    </div>
+
+                                    <div class="flexrow flex-precision">
+                                        <label>【Test di Precisione】</label>
+                                        <select name="system.baseAttacks.{{indexAttack}}.precisionAttr.primary.value">
+                                            {{selectOptions ../attributes selected=attack.precisionAttr.primary.value localize=true}}
+                                        </select>
+                                        <span>+</span>
+                                        <select name="system.baseAttacks.{{indexAttack}}.precisionAttr.secondary.value">
+                                            {{selectOptions ../attributes selected=attack.precisionAttr.secondary.value localize=true}}
+                                        </select>
+                                        <label>Modificatore:</label>
+                                        <input type="number" name="system.baseAttacks.{{indexAttack}}.precisionBonus" value="{{attack.precisionBonus}}">
+                                    </div>
+
+                                    <div class="flexrow flex-damage">
+                                        <label>【Calcolo dei Danni】</label>
+                                        <span>TM +</span>
+                                        <input type="number" name="system.baseAttacks.{{indexAttack}}.damage.value" value="{{attack.damage.value}}">
+                                        <label>Tipo:</label>
+                                        <select name="system.baseAttacks.{{indexAttack}}.damage.type.value">
+                                            {{selectOptions ../DamageTypes selected=attack.damage.type.value localize=true}}
+                                        </select>
+                                    </div>
+
+                                    {{editor (concatPath '../enrichedHtml.actionDescription.' indexAttack) target=(concatPath 'system.baseAttacks.' indexAttack '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-collapse spell">
+                    <div class="title">
+                        Incantesimi
+                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse">
+                        <ul class="list list-spells">
+                            {{#each spells}}
+                                <li>
+                                    <strong>Nome:</strong> {{this.name}} 
+                                    {{#if this.isOffensive.value}}v{{/if}} <br>
+
+                                    <strong>PM:</strong> 
+                                    {{#if this.system.MPCost.upTo}}
+                                    Fino a
+                                    {{/if}}
+                                    {{this.system.MPCost.value}}
+                                    {{#gt this.system.target.number 1}}
+                                    x B
+                                    {{/gt}}
+                                    <br>
+
+                                    <strong>Test di Magia:</strong> 
+                                    【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
+
+                                    {{#if this.system.damage.hasDamage}}
+                                    <strong>Danno:</strong> {{this.system.damage.value}} {{localize (concat 'FU.DamageTypes.' this.system.damage.type)}} <br>
+                                    {{/if}}
+
+                                    <strong>Bersaglio:</strong> {{this.system.target.value}} <br>
+
+                                    <strong>Durata:</strong> {{localize (concat 'FU.SpellDurations.' this.system.duration.value)}} <br>
+
+                                    {{{this.system.description}}}
+                                    
+                                    {{#if this.system.opportunity.value}}
+                                        <strong>Opportunità:</strong>
+                                        {{{this.system.opportunityEffect}}}
+                                    {{/if}}
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-collapse other">
+                    <div class="title">
+                        Altre azioni
+                        <button type="button" class="js_addElementToList" data-target="system.otherActions">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse">
+                        <ul class="list list-other-actions">
+                            {{#each system.otherActions as |action indexAction|}}
+                                <li>
+                                    <button type="button" class="btn-del js_removeElementToList" data-id="{{indexAction}}" data-target="system.otherActions">
+                                        <div class="fa fa-remove"></div>
+                                    </button>
+                                    
+                                    <div class="flexrow flex-head">
+                                        <input type="text" name="system.otherActions.{{indexAction}}.name" value="{{action.name}}">
+                                    </div>
+
+                                    {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.otherActions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="content-collapse rule">
+                    <div class="title">
+                        Regole speciali
+                        <button type="button" class="js_addElementToList" data-target="system.specialRules">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
+                    <div class="collapse">
+                        <ul class="list list-special-rules">
+                            {{#each system.specialRules as |rule indexRule|}}
+                                <li>
+                                    <button type="button" class="btn-del js_removeElementToList" data-id="{{indexRule}}" data-target="system.specialRules">
+                                        <div class="fa fa-remove"></div>
+                                    </button>
+                                    
+                                    <div class="flexrow flex-head">
+                                        <input type="text" name="system.specialRules.{{indexRule}}.name" value="{{rule.name}}">
+                                    </div>
+
+                                    {{editor (concatPath '../enrichedHtml.actionDescription.' indexRule) target=(concatPath 'system.specialRules.' indexRule '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab desc" data-group="primary" data-tab="description">
+                <div class="title">Descrizione</div>
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+            </div>
+
+            <div class="tab opt" data-group="primary" data-tab="options">
+            </div>
         </div>
     </section>
 </form>

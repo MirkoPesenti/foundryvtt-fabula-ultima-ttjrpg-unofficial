@@ -10,7 +10,7 @@ import { FU } from '../../helpers/config.mjs';
  */
 export class NpcDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, StringField, EmbeddedDataField, ArrayField, HTMLField, BooleanField, NumberField } = foundry.data.fields;
+		const { SchemaField, StringField, EmbeddedDataField, ArrayField, HTMLField, NumberField } = foundry.data.fields;
 		return {
 			description: new HTMLField(),
 			traits: new StringField(),
@@ -29,14 +29,21 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 				params: new EmbeddedDataField(DefencesDataModel, {}),
 			}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
-			actions: new ArrayField(new SchemaField({
+			baseAttacks: new ArrayField(new SchemaField({
 				name: new StringField(),
 				description: new HTMLField(),
-				type: new StringField({ initial: 'attack', choices: Object.keys(FU.NPCactionTypes) }),
 				range: new StringField({ initial: 'melee', choices: Object.keys(FU.WeaponRanges) }),
 				precisionAttr: new EmbeddedDataField(PrecisionDataModel, {}),
 				precisionBonus: new NumberField({ initial: 0, nullable: true }),
 				damage: new EmbeddedDataField(DamageDataModel, {}),
+			})),
+			otherActions: new ArrayField(new SchemaField({
+				name: new StringField(),
+				description: new HTMLField(),
+			})),
+			specialRules: new ArrayField(new SchemaField({
+				name: new StringField(),
+				description: new HTMLField(),
 			})),
 		};
 	}
@@ -55,6 +62,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		this.resources.mp.attribute = 'wlp';
 
 		(this.combat ??= {}).turns = 1;
+		(this.skills ??= {}).current = 0;
 		
 		if ( this.rank.value == 'elite' )
 			this.rank.replacedSoldiers = 1;
@@ -81,52 +89,52 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 
 		// Max Skills
 		if ( this.species == 'beast' )
-			this.maxSkills = 4;
+			this.skills.max = 4;
 		else if ( this.species == 'construct' )
-			this.maxSkills = 2;
+			this.skills.max = 2;
 		else if ( this.species == 'demon' )
-			this.maxSkills = 3;
+			this.skills.max = 3;
 		else if ( this.species == 'elemental' )
-			this.maxSkills = 2;
+			this.skills.max = 2;
 		else if ( this.species == 'monster' )
-			this.maxSkills = 4;
+			this.skills.max = 4;
 		else if ( this.species == 'plant' )
-			this.maxSkills = 3;
+			this.skills.max = 3;
 		else if ( this.species == 'undead' )
-			this.maxSkills = 2;
+			this.skills.max = 2;
 		else if ( this.species == 'humanoid' )
-			this.maxSkills = 3;
+			this.skills.max = 3;
 		else
-			this.maxSkills = 0;
+			this.skills.max = 0;
 
-		this.maxSkills += Math.floor( this.level.value / 10 );
+		this.skills.max += Math.floor( this.level.value / 10 );
 
 		if ( this.affinity.physical == 'vulnerability' )
-			this.maxSkills += 2;
+			this.skills.max += 2;
 		if ( this.affinity.air == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 		if ( this.affinity.bolt == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 		if ( this.affinity.dark == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 		if ( this.affinity.earth == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 		if ( this.affinity.fire == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 		if ( this.affinity.ice == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 		if ( this.affinity.light == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 		if ( this.affinity.poison == 'vulnerability' )
-			this.maxSkills += 1;
+			this.skills.max += 1;
 
 		// Bonus by Rank
 		if ( this.rank.value == 'elite' ) {
-			this.maxSkills += 1;
+			this.skills.max += 1;
 			this.combat.turns = 2;
 			this.resources.params.init.bonus += 1;
 		} else if ( this.rank.value == 'champion' ) {
-			this.maxSkills += this.rank.replacedSoldiers;
+			this.skills.max += this.rank.replacedSoldiers;
 			this.combat.turns = this.rank.replacedSoldiers;
 			this.resources.params.init.bonus += this.rank.replacedSoldiers;
 		}
