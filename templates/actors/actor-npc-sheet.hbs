@@ -176,32 +176,32 @@
                                     <div class="fa fa-remove"></div>
                                 </button>
                                 <div class="flexrow">
-                                    <select name="system.attacks.{{indexAction}}.range">
+                                    <select name="system.actions.{{indexAction}}.range">
                                         {{selectOptions ../WeaponRanges selected=action.range localize=true}}
                                     </select>
-                                    <input type="text" name="system.attacks.{{indexAction}}.name" value="{{action.name}}">
+                                    <input type="text" name="system.actions.{{indexAction}}.name" value="{{action.name}}">
                                 </div>
 
                                 <div class="flexrow">
-                                    <select name="system.attacks.{{indexAction}}.precisionAttr.primary.value">
+                                    <select name="system.actions.{{indexAction}}.precisionAttr.primary.value">
                                         {{selectOptions ../attributes selected=action.precisionAttr.primary.value localize=true}}
                                     </select>
                                     +
-                                    <select name="system.attacks.{{indexAction}}.precisionAttr.secondary.value">
+                                    <select name="system.actions.{{indexAction}}.precisionAttr.secondary.value">
                                         {{selectOptions ../attributes selected=action.precisionAttr.secondary.value localize=true}}
                                     </select>
-                                    <input type="number" name="system.attacks.{{indexAction}}.precisionBonus" value="{{action.precisionBonus}}">
+                                    <input type="number" name="system.actions.{{indexAction}}.precisionBonus" value="{{action.precisionBonus}}">
                                 </div>
 
                                 <div class="flexrow">
                                     TM +
-                                    <input type="number" name="system.attacks.{{indexAction}}.damage.value" value="{{action.damage.value}}">
-                                    <select name="system.attacks.{{indexAction}}.damage.type.value">
+                                    <input type="number" name="system.actions.{{indexAction}}.damage.value" value="{{action.damage.value}}">
+                                    <select name="system.actions.{{indexAction}}.damage.type.value">
                                         {{selectOptions ../DamageTypes selected=action.damage.type.value localize=true}}
                                     </select>
                                 </div>
 
-                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.attacks.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.actions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                             </li>
                             {{/if}}
                         {{/each}}
@@ -271,12 +271,12 @@
                         {{#each system.actions as |action indexAction|}}
                             {{#if (eq action.type 'other')}}
                             <li>
-                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="other">
+                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="actions">
                                     <div class="fa fa-remove"></div>
                                 </button>
-                                <input type="text" name="system.attacks.{{indexAction}}.name" value="{{action.name}}">
+                                <input type="text" name="system.actions.{{indexAction}}.name" value="{{action.name}}">
 
-                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.attacks.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.actions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                             </li>
                             {{/if}}
                         {{/each}}
@@ -299,12 +299,12 @@
                         {{#each system.actions as |action indexAction|}}
                             {{#if (eq action.type 'rule')}}
                             <li>
-                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="rule">
+                                <button type="button" class="js_removeAction" data-id="{{indexAction}}" data-type="actions">
                                     <div class="fa fa-remove"></div>
                                 </button>
-                                <input type="text" name="system.attacks.{{indexAction}}.name" value="{{action.name}}">
+                                <input type="text" name="system.actions.{{indexAction}}.name" value="{{action.name}}">
 
-                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.attacks.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                                {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.actions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                             </li>
                             {{/if}}
                         {{/each}}

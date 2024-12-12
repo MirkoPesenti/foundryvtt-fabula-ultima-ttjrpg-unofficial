@@ -133,23 +133,15 @@ export class FabulaActorSheet extends ActorSheet {
 	activateListeners( html ) {
 		super.activateListeners( html );
 
-		$(html).find('.content-collapse').each(() => {
-			const content = this;
-			console.log(NPCaccordions);
+		$(html).find('.content-collapse').each((index, element) => {
 			for ( const key in NPCaccordions ) {
-				console.log( $(content).hasClass(`${key}`), key );
+				const content = element;
 				if ( $(content).hasClass(key) && NPCaccordions[key] == true ) {
 
-					$(content).find('.btn[aria-expanded]').attr('aria-expanded', 'true');
+					$(content).find('button[aria-expanded]').attr('aria-expanded', 'true');
 					const contentChild = $(content).children('.collapse');
 		
 					$(content).addClass('open');
-					contentChild.css('height', contentChild[0].scrollHeight + 'px');
-					
-					contentChild.on('transitionend', function() {
-						if ( $(content).hasClass('open') )
-							$(content).css('height', 'auto');
-					});
 				}
 			}
 		});
