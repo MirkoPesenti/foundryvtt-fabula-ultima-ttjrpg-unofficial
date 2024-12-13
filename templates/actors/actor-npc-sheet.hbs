@@ -9,8 +9,8 @@
         <a class="item" data-tab="description">
             <span>Descrizione</span>
         </a>
-        <a class="item" data-tab="options">
-            <span>Opzioni</span>
+        <a class="item" data-tab="skills">
+            <span>Abilità</span>
         </a>
     </nav>
 
@@ -173,7 +173,7 @@
 
                 <div class="attr">
                     <label>
-                        Abilità: {{system.skills.current}} / {{system.skills.max}}
+                        Punti Ultima: {{system.resources.up}}
                     </label>
                 </div>
             </div>
@@ -345,7 +345,105 @@
                 {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
             </div>
 
-            <div class="tab opt" data-group="primary" data-tab="options">
+            <div class="tab skills" data-group="primary" data-tab="skills">
+                <div class="from-group">
+                    <label>Rango:</label>
+                    <select name="system.rank.value">
+                        {{selectOptions enemyRanks selected=system.rank.value localize=true}}
+                    </select>
+                    {{#unless (eq system.rank.value 'soldier')}}
+                        <input type="number" name="system.rank.replacedSoldiers" value="{{system.rank.replacedSoldiers}}">
+                    {{/unless}}
+                </div>
+                <div class="from-group">
+                    <label>Cattivo:</label>
+                    <select name="system.villain">
+                        {{selectOptions villainTypes selected=system.villain localize=true}}
+                    </select>
+                </div>
+
+                <div class="title">Abilità 【{{system.skills.current}} / {{system.skills.max}}】</div>
+                {{#each flags.fabula.subItems}}
+                    {{#if (eq this.type "classFeature")}}
+                        <div class="feature-box">
+                            <div class="feature-head">
+                                {{#if @root.editable}}
+                                    <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
+                                {{/if}}
+                                
+                                {{this.name}}
+                                {{#gt this.system.level.max 1}}
+                                    <span>
+                                        (<span>l</span>{{this.system.level.max}})
+                                    </span>
+                                {{/gt}}
+                            </div>
+                            <div class="feature-body">
+                                {{{this.system.description}}}
+                            </div>
+                        </div>
+                        {{#each this.flags.fabula.subItems}}
+                            <div class="equip-box">
+                                <div class="equip-head">
+                                    <img src="{{this.img}}" title="{{this.name}}" />
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Arma</th>
+                                                <th>Precisione</th>
+                                                <th>Danno</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{localize (concat 'FU.weaponCategories.' this.system.type)}}</td>
+                                                <td>
+                                                    <strong>
+                                                        【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.primary.value)}}
+                                                        + 
+                                                        {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.secondary.value)}}】
+                                                        {{#unless (eq this.system.precisionBonus 0)}}
+                                                            {{#gt this.system.precisionBonus 0}}
+                                                                +{{this.system.precisionBonus}}
+                                                            {{else}}
+                                                                {{this.system.precisionBonus}}
+                                                            {{/gt}}
+                                                        {{/unless}}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <strong>
+                                                        【TM
+                                                        {{#gt_e this.system.damage.value 0}}
+                                                            + {{this.system.damage.value}}】
+                                                        {{else}}
+                                                            - {{multiply this.system.damage.value -1}}】
+                                                        {{/gt_e}}
+                                                        {{localize (concat 'FU.DamageTypes.' this.system.damage.type.value)}}
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="equip-body">
+                                    <div class="desc-container">
+                                        {{#if this.system.needTwoHands}}
+                                            Due mani
+                                        {{else}}
+                                            Una mano
+                                        {{/if}}
+                                        <span class="diamond-char">◆</span>
+                                        {{localize (concat 'FU.WeaponRanges.' this.system.range)}}
+                                    </div>
+                                    <div class="desc-container">
+                                        {{{this.system.description}}}
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                    {{/if}}
+                {{/each}}
             </div>
         </div>
     </section>

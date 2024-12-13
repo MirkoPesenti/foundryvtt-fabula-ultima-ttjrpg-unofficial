@@ -483,7 +483,8 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 /* Sheets > Actors */
 .sheet.actor form {padding:0 50px;background-repeat:no-repeat;background-position:center left, center right;background-size:50px 600px;background-image:var(--sheet-body-bg-left), var(--sheet-body-bg-right);}
 .sheet.actor .sheet-body {padding:0;max-height:unset;background:none;}
-.sheet.actor .sheet-body .tab .tab {padding:0;overflow:auto;min-height:unset;max-height:unset;border:0;outline:0;}
+.sheet.actor .sheet-body .tab:not(.tab .tab) {display:flex;flex-direction:column;}
+.sheet.actor .sheet-body .tab .tab {padding:0;overflow:auto;min-height:unset;max-height:unset;border:0;outline:0;flex-grow:1;}
 
 /* Sheets > Actors > NPC */
 .sheet.actor .npc .sheet-body {height:100%;}
@@ -536,6 +537,8 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .attributes-container .attr.mp label {padding:0 10px;margin:0;}
 .sheet.actor .npc .attributes-container .attr.mp .info {background-color:var(--color-mp);color:var(--color-white);width:45px;}
 .sheet.actor .npc .list select, .sheet.actor .npc .list input {width:auto;font-size:16px;border:1px solid var(--color-primary);border-radius:3px;padding:1px 4px;background-color:var(--color-white);}
+.sheet.actor .npc .tab.desc.active {display:flex;flex-direction:column;}
+.sheet.actor .npc .tab.desc .editor {flex-grow:1;}
 .sheet.actor .npc .list {margin-bottom:0;list-style:none;padding:0;}
 .sheet.actor .npc .list > li {position:relative;padding-left:30px;}
 .sheet.actor .npc .list > li + li {margin-top:10px;padding-top:10px;border-top:1px solid transparent;}
