@@ -3,6 +3,7 @@ export const SYSTEM = 'Fabula Ultima';
 export const FU = {};
 
 FU.ItemTypes = {
+	"": "FU.selectOption",
 	accessory: 'TYPES.Item.accessory',
 	arcanum: 'TYPES.Item.arcanum',
 	armor: 'TYPES.Item.armor',
@@ -174,21 +175,25 @@ FU.martialItems = {
 };
 
 FU.bondType1 = {
+	"": "FU.selectOption",
 	admiration: 'FU.bond.admiration',
 	inferiority: 'FU.bond.inferiority',
 };
 
 FU.bondType2 = {
+	"": "FU.selectOption",
 	loyalty: 'FU.bond.loyalty',
 	mistrust: 'FU.bond.mistrust',
 };
 
 FU.bondType3 = {
+	"": "FU.selectOption",
 	affection: 'FU.bond.affection',
 	hatred: 'FU.bond.hatred',
 };
 
 FU.affinity = {
+	"": "FU.selectOption",
 	vulnerability: 'FU.affinity.vulnerability',
 	resistance: 'FU.affinity.resistance',
 	immunity: 'FU.affinity.immunity',
@@ -201,6 +206,7 @@ FU.consumableType = {
 };
 
 FU.villainTypes = {
+	"": "FU.selectOption",
 	minor: 'FU.villain.minor',
 	major: 'FU.villain.major',
 	supreme: 'FU.villain.supreme',

@@ -340,6 +340,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .feature-box .feature-head > span span {font-family:"FnT_BasicShapes1",sans-serif;}
 .sheet .feature-box .feature-head input {height:auto;width:50%;border-radius:10px;border:1px solid var(--color-white);box-shadow:none;padding:1px 10px;text-align:left;color:var(--color-white);}
 .sheet .feature-box .feature-head span input {width:50px;margin:0 5px;padding:1px 3px;text-align:center;}
+.sheet .feature-box .feature-head button {position:relative;bottom:2px;margin-right:15px !important;}
 .sheet .feature-box .feature-sub {padding:5px 15px 7px;background:linear-gradient(to left, rgba(var(--color-gradient-bg-rgb),0) 0%, rgba(var(--color-gradient-bg-rgb),1) 100%);}
 .sheet .feature-box .feature-sub p {margin:0;}
 .sheet .editable .feature-box .feature-sub button {margin-bottom:5px;}
@@ -420,7 +421,6 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .class .list-questions > li {padding-left:5px;}
 .sheet .class .list-questions > li::marker {font-size:12px;color:var(--color-primary);}
 .sheet .class .list-questions input {border:0;width:100%;margin:0;background:none;line-height:1.2;height:auto;padding:0;padding-left:5px;color:var(--text-color);}
-.sheet .class .feature-box .feature-head button {position:relative;bottom:2px;margin-right:15px;}
 .sheet .class .equip-box {transform:translateX(-15px);margin-bottom:15px;}
 .sheet .class .equip-box .equip-head img {height:60px;width:60px;}
 
@@ -493,6 +493,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .title button:not([aria-expanded]) {right:50px;pointer-events:none;opacity:0;}
 .sheet.actor .npc .title button .fa {margin:0;}
 .sheet.actor .npc .title + .editor {margin-top:10px;}
+.sheet.actor .npc .title .is-on-right {position:absolute;top:50%;right:15px;transform:translate(0,-50%);color:var(--text-color);}
 .sheet.actor .npc .content-collapse .collapse {overflow:hidden;overflow-y:auto;height:0;}
 .sheet.actor .npc .content-collapse.open button:not([aria-expanded]) {pointer-events:all;opacity:1;}
 .sheet.actor .npc .content-collapse.open .title button[aria-expanded="true"] .fa {transform:rotate(180deg);}
@@ -561,3 +562,9 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .list-attacks .flex-damage select {flex:0 0 auto;}
 .sheet.actor .npc .list-attacks .flex-damage input {text-align:center;}
 .sheet.actor .npc .list-attacks .flex-damage span {position:relative;top:2px;flex:0 0 auto;margin-right:5px;font-weight:700;}
+.sheet.actor .npc .tab.skills {margin:0 -15px;padding:0 15px;}
+.sheet.actor .npc .tab.skills .title {margin-bottom:10px;}
+.sheet.actor .npc .tab.skills .form-group {margin-top:10px;}
+.sheet.actor .npc .tab.skills .form-group label {font-weight:700;}
+.sheet.actor .npc .tab.skills .form-group select {margin-left:auto;flex:0 0 auto;font-size:16px;border:1px solid var(--color-primary);border-radius:3px;padding:1px 4px;background-color:var(--color-white);}
+.sheet.actor .npc .tab.skills .form-group input {flex:0 0 auto;margin-left:10px;width:80px;text-align:center;font-size:16px;border:1px solid var(--color-primary);border-radius:3px;padding:1px 4px;background-color:var(--color-white);}

@@ -68,6 +68,7 @@
 		"requiredHands": "Mani richieste",
 		"oneHand": "Una mano",
 		"twoHands": "Due mani",
+		"selectOption": "Seleziona un'opzione",
 		"DamageTypes": {
 			"physical": "Fisico",
 			"air": "Aria",
@@ -205,12 +206,12 @@
 			"potion": "Pozione",
 			"utility": "Utilità"
 		},
-		"villainTypes": {
-			"minor": "minore",
-			"major": "maggiore",
-			"supreme": "supremo"
+		"villain": {
+			"minor": "Minore",
+			"major": "Maggiore",
+			"supreme": "Supremo"
 		},
-		"enemyRanks": {
+		"enemy": {
 			"soldier": "Soldato",
 			"elite": "Élite",
 			"champion": "Campione"

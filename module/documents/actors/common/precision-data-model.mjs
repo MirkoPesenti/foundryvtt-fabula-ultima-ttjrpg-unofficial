@@ -9,8 +9,8 @@ export class PrecisionDataModel extends foundry.abstract.DataModel {
 	static defineSchema() {
 		const { SchemaField, StringField } = foundry.data.fields;
 		return {
-			primary: new SchemaField({ value: new StringField({ initial: 'dex', blank: true, choices: Object.keys(FU.attributes) }) }),
-			secondary: new SchemaField({ value: new StringField({ initial: 'dex', blank: true, choices: Object.keys(FU.attributes) }) }),
+			primary: new SchemaField({ value: new StringField({ initial: 'dex', choices: Object.keys(FU.attributes) }) }),
+			secondary: new SchemaField({ value: new StringField({ initial: 'dex', choices: Object.keys(FU.attributes) }) }),
 		};
 	}
 }

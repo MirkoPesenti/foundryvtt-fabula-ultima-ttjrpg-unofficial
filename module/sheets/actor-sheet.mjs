@@ -96,11 +96,29 @@ export class FabulaActorSheet extends ActorSheet {
 		if ( data.type == 'Item' ) {
 			const sourceItem = await fromUuid(data.uuid);
 
-			if ( sourceItem.type == 'consumable' ) return;
-
 			if ( !sourceItem ) {
 				ui.notifications.error('Impossibile trovare l\'Item');
 				return false;
+			}
+
+			if ( sourceItem.type != 'accessory' || sourceItem.type != 'armor' || sourceItem.type != 'shield' || sourceItem.type != 'weapon' ) {
+				if ( sourceItem.type != 'classFeatures' ) {
+
+					const skillCount = actor.system.skills.current + 1;
+
+					console.log(actor.system);
+					if ( skillCount <= actor.system.skills.max ) {
+						await actor.update({ 'system.skills.current': skillCount });
+						console.log(actor.system.skills.current, skillCount);
+						const newItemData = sourceItem.toObject();
+						const flags = actor.getFlag('fabula', 'classFeatures') || [];
+						flags.push(newItemData);
+						await actor.setFlag('fabula', 'classFeatures', flags);
+					} else {
+						ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+					}
+				}
+				return;
 			}
 
 			new Dialog({
@@ -155,6 +173,8 @@ export class FabulaActorSheet extends ActorSheet {
 				}
 			}
 		});
+
+		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
 
 		// Show Actor's Item in chat
 		html.on('click', '.js_showInChat', (e) => {
@@ -498,6 +518,33 @@ export class FabulaActorSheet extends ActorSheet {
 				items: {},
 			});
 			featureType.items[item.id] = { item, additionalData: await featureType.feature?.getAdditionalData(item.system.data) };
+		}
+	}
+
+	async _removeClassFeature(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		if ( actor.type == 'character' ) return;
+
+		const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
+		const itemToBeRemoved = event.currentTarget.getAttribute('data-id');
+		let removed = false;
+		for (let i = 0; i < classFeatures.length; i++) {
+			if ( classFeatures[i]._id == itemToBeRemoved ) {
+				classFeatures.splice(i, 1);
+				removed = true;
+				break;
+			}
+		}
+		
+		await actor.setFlag('fabula', 'classFeatures', classFeatures);
+
+		if ( removed ) {
+			const skillCount = actor.system.skills.current - 1;
+			await actor.update({ 'system.skills.current': skillCount });
+			ui.notifications.info(`L'elemento è stato eliminato.`);
+		} else {
+			ui.notifications.error(`Non è stato possibili completare l'azione.`);
 		}
 	}
 

@@ -138,6 +138,8 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.combat.turns = this.rank.replacedSoldiers;
 			this.resources.params.init.bonus += this.rank.replacedSoldiers;
 		}
+
+		console.log(this.skills);
 	}
 
 	async prepareEmbeddedData() {
