@@ -20,6 +20,7 @@ export class FabulaActor extends Actor {
 	}
 
 	prepareDerivedData() {
+		super.prepareDerivedData();
 		const actorData = this;
 		const systemData = actorData.system;
 		const flags = actorData.flags.boilerplate || {};
@@ -32,17 +33,13 @@ export class FabulaActor extends Actor {
 		if (actorData.type !== 'character') return;
 	  
 		const systemData = actorData.system;
-	  
-		// for (let [key, ability] of Object.entries(systemData.abilities)) {
-		//   ability.mod = Math.floor((ability.value - 10) / 2);
-		// }
 	}
 
 	_prepareNpcData(actorData) {
 		if (actorData.type !== 'npc') return;
 	  
 		const systemData = actorData.system;
-		// systemData.xp = (systemData.cr * systemData.cr) * 100;
+		systemData.specialRules = systemData.specialRules || [];
 	}
 
 	applyActiveEffects() {

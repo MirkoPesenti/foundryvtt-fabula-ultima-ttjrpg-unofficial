@@ -58,7 +58,8 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'classFeature' || 
 			this.object.type == 'arcanum' || 
 			this.object.type == 'heroicSkill' || 
-			this.object.type == 'spell'
+			this.object.type == 'spell' ||
+			this.object.type == 'baseItem'
 		)
 			options.height = 500;
 		else if ( 
@@ -378,6 +379,8 @@ export class FabulaItemSheet extends ItemSheet {
 				spiritism: 'systems/fabula/assets/icons/classes/spiritist.png'
 			};
 			data['img'] = typeImages[data['system.type.value']];
+		} else {
+			data['img'] = `systems/fabula/assets/icons/default-${this.item.type}.svg`;
 		}
 		const overrides = foundry.utils.flattenObject( this.item.overrides );
 

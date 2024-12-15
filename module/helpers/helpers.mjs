@@ -26,52 +26,6 @@ export function checkParams( params ) {
 	});
 }
 
-export function showItemInChat( data, actor ) {
-	if ( data.id ) {
-		const item = actor.items.get( data.id );
-		if ( item ) {
-			let name = item.name;
-			name += item.system.isOffensive.value ? '<div class="icon icon-offensive"></div>' : '';
-
-			let MPcol = item.system.MPCost.upTo ? 'Fino a ' : '';
-			MPcol += item.system.MPCost.value;
-			MPcol += item.system.target.number > 1 ? ' x B' : '';
-
-			let desc = item.system.description;
-			desc += item.system.opportunity.value ? `<p><strong>Opportunità:</strong></p>${item.system.opportunityEffect}` : '';
-
-			ChatMessage.create({
-				content: `
-					<div class="title">${name}</div>
-					<div>${game.i18n.localize(FU.SpellDisciplines[item.system.type.value])}</div>
-					<table>
-						<thead>
-							<tr>
-								<th>PM</th>
-								<th>Bersaglio</th>
-								<th>Durata</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>${MPcol}</td>
-								<td>${item.system.target.value}</td>
-								<td>${game.i18n.localize(FU.SpellDurations[item.system.duration.value])}</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="desc">
-						${desc}
-					</div>
-				`,
-				speaker: ChatMessage.getSpeaker({ actor: actor }),
-			});
-		} else {
-			ui.notifications.error(`L'item con id: ${data.id} non è stato trovato!`);
-		}
-	}
-}
-
 function openFreeBenefirsChildDialog( radios, actorClasses, clonedDocument ) {
 	return new Promise((resolve) => {
 		new Dialog({

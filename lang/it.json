@@ -9,6 +9,8 @@
 			"arcanum": "Arcanum",
 			"armor": "Armatura",
 			"artifact": "Artefatto",
+			"attack": "Attacco",
+			"baseItem": "Base",
 			"class": "Classe",
 			"classFeature": "Abilità di classe",
 			"consumable": "Consumabile",
@@ -69,6 +71,7 @@
 		"oneHand": "Una mano",
 		"twoHands": "Due mani",
 		"selectOption": "Seleziona un'opzione",
+		"selectType": "Scegli il tipo",
 		"DamageTypes": {
 			"physical": "Fisico",
 			"air": "Aria",

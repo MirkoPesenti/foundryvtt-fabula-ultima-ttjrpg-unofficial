@@ -23,7 +23,7 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 		const { SchemaField, StringField, HTMLField, BooleanField, NumberField, EmbeddedDataField } = foundry.data.fields;
 		return {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
-			type: new SchemaField({ value: new StringField({ initial: 'chimerism', choices: Object.keys(FU.SpellDisciplines) }) }),
+			type: new SchemaField({ value: new StringField({ initial: '', blank: true, choices: Object.keys(FU.SpellDisciplines) }) }),
 			description: new HTMLField(),
 			isOffensive: new SchemaField({ value: new BooleanField({ initial: false }) }),
 			attributes: new EmbeddedDataField(AttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
@@ -50,8 +50,10 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 			spiritism: [ 'ins', 'wlp' ]
 		};
 
-		const attributes = typeAttributes[this.type.value];
-		(this.attributes ??= {}).primary.value = attributes[0];
-		(this.attributes ??= {}).secondary.value = attributes[1];
+		if ( this.type.value != '' ) {
+			const attributes = typeAttributes[this.type.value];
+			(this.attributes ??= {}).primary.value = attributes[0];
+			(this.attributes ??= {}).secondary.value = attributes[1];
+		}
 	}
 }

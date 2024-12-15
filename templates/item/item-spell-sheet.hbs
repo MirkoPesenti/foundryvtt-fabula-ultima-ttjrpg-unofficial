@@ -77,11 +77,21 @@
                     <div class="title">Tipologia</div>
                     <div class="form-group form-type">
                         <select name="system.type.value">
-                            {{selectOptions SpellDisciplines selected=system.type.value sort=true localize=true}}
+                            {{selectOptions SpellDisciplines selected=system.type.value localize=true}}
                         </select>
-                        <p>
-                            Test di Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' system.attributes.secondary.value)}}】</strong>
-                        </p>
+                        {{#unless (eq system.type.value '')}}
+                            <p>
+                                Test di Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' system.attributes.secondary.value)}}】</strong>
+                            </p>
+                        {{else}}
+                            <p class="text-center"><strong>oppure</strong></p>
+                            <select name="system.attributes.primary.value">
+                                {{selectOptions attributesAbbr selected=system.attributes.primary.value localize=true}}
+                            </select>
+                            <select name="system.attributes.secondary.value" class="m-0">
+                                {{selectOptions attributesAbbr selected=system.attributes.secondary.value localize=true}}
+                            </select>
+                        {{/unless}}
                     </div>
                 {{/if}}
                 {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
@@ -116,7 +126,7 @@
                                 <p><strong>】</strong> danni da</p>
 
                                 <select name="system.damage.type.value">
-                                    {{selectOptions DamageTypes selected=system.damage.type.value sort=true localize=true}}
+                                    {{selectOptions DamageTypes selected=system.damage.type.value localize=true}}
                                 </select>
                             </div>
                         {{/if}}

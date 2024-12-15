@@ -8,6 +8,8 @@ FU.ItemTypes = {
 	arcanum: 'TYPES.Item.arcanum',
 	armor: 'TYPES.Item.armor',
 	artifact: 'TYPES.Item.artifact',
+	attack: 'TYPES.Item.attack',
+	baseItem: 'TYPES.Item.baseItem',
 	class: 'TYPES.Item.class',
 	classFeature: 'TYPES.Item.classFeature',
 	consumable: 'TYPES.Item.consumable',
@@ -67,6 +69,7 @@ FU.rarityList = {
  */
 
 FU.DamageTypes = {
+	"": "FU.selectType",
 	physical: 'FU.DamageTypes.physical',
 	air: 'FU.DamageTypes.air',
 	bolt: 'FU.DamageTypes.bolt',
@@ -98,6 +101,7 @@ FU.MagicDisciplines = {
  */
 
 FU.SpellDisciplines = {
+	"": "FU.selectOption",
 	chimerism: 'FU.MagicDisciplines.chimerism',
 	elementalism: 'FU.MagicDisciplines.elementalism',
 	entropism: 'FU.MagicDisciplines.entropism',

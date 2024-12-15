@@ -1,0 +1,20 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
+    </header>
+
+    <section class="sheet-body">
+        <div class="tab">
+            <div class="editor-full">
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+            </div>
+        </div>
+    </section>
+</form>

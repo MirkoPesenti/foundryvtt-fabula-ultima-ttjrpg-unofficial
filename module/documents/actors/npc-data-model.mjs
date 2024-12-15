@@ -1,8 +1,6 @@
 import { AttributesDataModel } from "./common/attributes-data-model.mjs";
 import { DefencesDataModel } from "./common/defences-data-model.mjs";
 import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
-import { PrecisionDataModel } from "./common/precision-data-model.mjs";
-import { DamageDataModel } from "../items/common/damage-data-model.mjs";
 import { FU } from '../../helpers/config.mjs';
 
 /**
@@ -10,12 +8,12 @@ import { FU } from '../../helpers/config.mjs';
  */
 export class NpcDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, StringField, EmbeddedDataField, ArrayField, HTMLField, NumberField } = foundry.data.fields;
+		const { SchemaField, StringField, EmbeddedDataField, ArrayField, HTMLField, NumberField, BooleanField } = foundry.data.fields;
 		return {
 			description: new HTMLField(),
 			traits: new StringField(),
 			level: new SchemaField({ value: new NumberField({ initial: 5, min: 5, max: 60, integer: true, nullable: false }) }),
-			species: new StringField({ initial: 'humanoid', choices: Object.keys(FU.species) }),
+			species: new SchemaField({ value: new StringField({ initial: 'humanoid', choices: Object.keys(FU.species) }) }),
 			villain: new StringField({ initial: '', blank: true, choices: Object.keys(FU.villainTypes) }),
 			rank: new SchemaField({
 				value: new StringField({ initial: 'soldier', choices: Object.keys(FU.enemyRanks) }),
@@ -25,26 +23,11 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 				hp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
 				mp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
 				attributes: new EmbeddedDataField(AttributesDataModel, {}),
-				up: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				up: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
 				params: new EmbeddedDataField(DefencesDataModel, {}),
 			}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
-			baseAttacks: new ArrayField(new SchemaField({
-				name: new StringField(),
-				description: new HTMLField(),
-				range: new StringField({ initial: 'melee', choices: Object.keys(FU.WeaponRanges) }),
-				precisionAttr: new EmbeddedDataField(PrecisionDataModel, {}),
-				precisionBonus: new NumberField({ initial: 0, nullable: true }),
-				damage: new EmbeddedDataField(DamageDataModel, {}),
-			})),
-			otherActions: new ArrayField(new SchemaField({
-				name: new StringField(),
-				description: new HTMLField(),
-			})),
-			specialRules: new ArrayField(new SchemaField({
-				name: new StringField(),
-				description: new HTMLField(),
-			})),
+			skills: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
 		};
 	}
 
@@ -62,7 +45,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		this.resources.mp.attribute = 'wlp';
 
 		(this.combat ??= {}).turns = 1;
-		(this.skills ??= {}).current = 0;
 		
 		if ( this.rank.value == 'elite' )
 			this.rank.replacedSoldiers = 1;
@@ -139,16 +121,72 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.resources.params.init.bonus += this.rank.replacedSoldiers;
 		}
 
-		console.log(this.skills);
+		// Set Species Rules
+		const speciesRules = [];
+		if ( this.species.value == 'beast' ) {
+			speciesRules.push({
+				name: 'Bestia',
+				description: `
+					<p>Le <strong>bestie</strong> non possono acquisire l'Abilità <strong>Equipaggiabile</stron>.</p>
+				`,
+			});
+		} else if ( this.species.value == 'construct' ) {
+			speciesRules.push({
+				name: 'Costrutto',
+				description: `
+					<p>I <strong>costrutti</strong> sono Immuni al danno da <strong>veleno</strong> e Resistenti al danno da <strong>terra</strong>.</p>
+					<p>Sono inoltre immuni allo status <strong>avvelenato</strong>.</p>
+				`,
+			});
+		} else if ( this.species.value == 'demon' ) {
+			speciesRules.push({
+				name: 'Demone',
+				description: `
+					<p>I <strong>demoni</strong> sono Resistenti a due tipi di danno a tua scelta.</p>
+				`,
+			});
+		} else if ( this.species.value == 'elemental' ) {
+			speciesRules.push({
+				name: 'Elementale',
+				description: `
+					<p>Gli <strong>elementali</strong> sono Immuni al danno da <strong>veleno</strong> e a un altro tipo di danno a tua scelta. Sono inoltre immuni allo status <strong>avvelenato</strong>.</p>
+				`,
+			});
+		} else if ( this.species.value == 'monster' ) {
+			speciesRules.push({
+				name: 'Mostro',
+				description: `
+					<p>I <strong>mostri</strong> non seguono regole speciali.</p>
+				`,
+			});
+		} else if ( this.species.value == 'plant' ) {
+			speciesRules.push({
+				name: 'Pianta',
+				description: `
+					<p>Le <strong>piante</strong> sono Vulnerabili al danno da (scegliere uno tra: <strong>aria, fulmine, fuoco, ghiaccio</strong>). Sono inoltre immuni agli status <strong>confuso, furente</strong> e <strong>scosso</strong></p>
+				`,
+			});
+		} else if ( this.species.value == 'undead' ) {
+			speciesRules.push({
+				name: 'Non morto',
+				description: `
+					<p>I <strong>non morti</strong> sono Immuni al danno da <strong>ombra</strong> e da <strong>veleno</strong> e Vulnerabili al danno da <strong>luce</strong>. Inoltre, sono immuni allo status <strong>avvelenato</strong>.</p>
+					<p>In aggiunta, quando un effetto (come quello di un Arcanum, una pozione o un incantesimo) permetterebbe a un <strong>non morto</strong> di recuperare PV, chi controlla l'effetto può invece decidere di far perdere al <strong>non morto</strong> un ammontare di Punti Vita pari a metà dell'ammontare che avrebbe dovuto recuperare.</p>
+				`,
+			});
+		} else if ( this.species.value == 'humanoid' ) {
+			speciesRules.push({
+				name: 'Umanoide',
+				description: `
+					<p>Gli <strong>umanoidi</strong> acquisiscono sempre gratuitamente l'Abilità <strong>Equipaggiabile</strong>.</p>
+				`,
+			});
+		}
+		this.species.rules = speciesRules;
 	}
 
 	async prepareEmbeddedData() {
 		const data = this;
-
-		if (!this.resources || !this.resources.hp || typeof this.resources.hp !== 'object') {
-			console.error("this.resources.hp non è definito o non è un oggetto valido.");
-			return;
-		}
 
 		// Max HP
 		const baseHP = Object.keys(FU.attributes).includes(this.resources.hp.attribute)
@@ -176,13 +214,13 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.resources.mp.max *= 2;
 
 		// Set Ultima Points
-		let baseUP = 0;
+		let maxUp = 0;
 		if ( data.villain == 'minor' )
-			baseUP = 5;
+			maxUp = 5;
 		else if ( data.villain == 'major' )
-			baseUP = 10;
+			maxUp = 10;
 		else if ( data.villain == 'supreme' )
-			baseUP = 15;
-		this.resources.up = baseUP;
+			maxUp = 15;
+		this.resources.up.max = maxUp;
 	}
 }

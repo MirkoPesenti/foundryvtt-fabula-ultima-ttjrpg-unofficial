@@ -1,5 +1,4 @@
 import { FU } from "../helpers/config.mjs";
-import { showItemInChat } from "../helpers/helpers.mjs";
 
 const NPCaccordions = {
 	attack: false,
@@ -19,9 +18,17 @@ export class FabulaActorSheet extends ActorSheet {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ['fabula', 'sheet', 'actor', 'backgroundstyle'],
 			width: 700,
-			height: 600,
 			tabs: [{ navSelector: '.sheet-tabs', contentSelector: '.sheet-body', initial: 'base', }],
 		});
+	}
+
+	render( force = false, options = {} ) {
+		if (  this.object.type == 'character' )
+			options.height = 700;
+		else if ( this.object.type == 'npc' )
+			options.height = 700;
+
+		super.render(force, options);
 	}
 
 	get template() {
@@ -60,26 +67,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.enrichedHtml = {
 			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
 			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
-			attacksDesc: [],
-			actionsDesc: [],
-			rulesDesc: [],
 		};
-
-		context.system.baseAttacks.forEach(async (el) => {
-			context.enrichedHtml.attacksDesc.push(
-				await TextEditor.enrichHTML( el.description ?? '' ),
-			);
-		});
-		context.system.otherActions.forEach(async (el) => {
-			context.enrichedHtml.actionsDesc.push(
-				await TextEditor.enrichHTML( el.description ?? '' ),
-			);
-		});
-		context.system.specialRules.forEach(async (el) => {
-			context.enrichedHtml.rulesDesc.push(
-				await TextEditor.enrichHTML( el.description ?? '' ),
-			);
-		});
 		
 		context.rollData = context.actor.getRollData();
 
@@ -101,58 +89,103 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
-			if ( sourceItem.type != 'accessory' || sourceItem.type != 'armor' || sourceItem.type != 'shield' || sourceItem.type != 'weapon' ) {
-				if ( sourceItem.type != 'classFeatures' ) {
+			if ( sourceItem.type == 'classFeature' ) {
+				let alreadyExist = false;
+				const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
 
+				for (let i = 0; i < classFeatures.length; i++) {
+					if ( classFeatures[i]._id == sourceItem._id ) {
+						alreadyExist = true;
+						break;
+					}
+				}
+				if ( alreadyExist ) {
+					ui.notifications.error(`L'item ${sourceItem.name} è già allegato a ${actor.name}!`);
+					return false;
+				}
+
+				if ( sourceItem.system.isLimited ) {
+					new Dialog({
+						title: `Stai aggiungendo l'abilità ${sourceItem.name}`,
+						content: `
+							<p>L'abilità <strong>${sourceItem.name}</strong> è limitiata! Sei sicuro di volerla aggiungere?</p>
+						`,
+						buttons: {
+							no: {
+								label: 'No',
+							},
+							yes: {
+								label: 'Si',
+								callback: async () => {
+									const skillCount = actor.system.skills.current + 1;
+
+									if ( skillCount <= actor.system.skills.max ) {
+										await actor.update({ 'system.skills.current': skillCount });
+										const newItemData = sourceItem.toObject();
+										const flags = actor.getFlag('fabula', 'classFeatures') || [];
+										flags.push(newItemData);
+										await actor.setFlag('fabula', 'classFeatures', flags);
+										return true;
+									} else {
+										ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+										return false;
+									}
+								},
+							},
+						}
+					}).render(true);
+				} else {
 					const skillCount = actor.system.skills.current + 1;
 
-					console.log(actor.system);
 					if ( skillCount <= actor.system.skills.max ) {
 						await actor.update({ 'system.skills.current': skillCount });
-						console.log(actor.system.skills.current, skillCount);
 						const newItemData = sourceItem.toObject();
 						const flags = actor.getFlag('fabula', 'classFeatures') || [];
 						flags.push(newItemData);
 						await actor.setFlag('fabula', 'classFeatures', flags);
+						return true;
 					} else {
 						ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+						return false;
 					}
 				}
-				return;
 			}
 
-			new Dialog({
-				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
-				content: `
-					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
-				`,
-				buttons: {
-					no: {
-						label: 'No',
-						callback: async () => {
-							const newItemData = sourceItem.toObject();
-							await actor.createEmbeddedDocuments("Item", [newItemData]);
-							ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto all'equipaggiamento!`);
-						},
-					},
-					yes: {
-						label: 'Si',
-						callback: async () => {
-							const actorZenits = actor.system.resources.zenit;
-							if ( actorZenits < sourceItem.system.cost ) {
-								ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
-							} else {
-								actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
+			if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
+
+				new Dialog({
+					title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
+					content: `
+						<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
+					`,
+					buttons: {
+						no: {
+							label: 'No',
+							callback: async () => {
 								const newItemData = sourceItem.toObject();
 								await actor.createEmbeddedDocuments("Item", [newItemData]);
-								ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
-							}
+								ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto all'equipaggiamento!`);
+							},
 						},
-					},
-				}
-			}).render(true);
+						yes: {
+							label: 'Si',
+							callback: async () => {
+								const actorZenits = actor.system.resources.zenit;
+								if ( actorZenits < sourceItem.system.cost ) {
+									ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
+								} else {
+									actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
+									const newItemData = sourceItem.toObject();
+									await actor.createEmbeddedDocuments("Item", [newItemData]);
+									ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
+								}
+							},
+						},
+					}
+				}).render(true);
 			
-			return true;
+				return true;
+			}
 		}
 
 		return super._onDrop(e);
@@ -175,56 +208,7 @@ export class FabulaActorSheet extends ActorSheet {
 		});
 
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
-
-		// Show Actor's Item in chat
-		html.on('click', '.js_showInChat', (e) => {
-			e.preventDefault();
-			const data = e.currentTarget.dataset;
-			showItemInChat( data, this.actor );
-		});
-
-		// Roll Spell magic test
-		html.on('click','.js_rollSpellTest', async (e) => {
-			e.preventDefault();
-			const actor = this.actor;
-			const data = e.currentTarget.dataset;
-			const spell = actor.items.get( data.id );
-			const roll = new Roll( data.roll, actor.getRollData() );
-			const template = 'systems/fabula/templates/chat/chat-check.hbs';
-
-			await roll.evaluate();
-			const checkData = {
-				spell: spell,
-				spellTest: `【${game.i18n.localize(FU.attributesAbbr[spell.system.attributes.primary.value])} + ${game.i18n.localize(FU.attributesAbbr[spell.system.attributes.secondary.value])}】`,
-				roll: roll,
-			};
-
-			renderTemplate( template, checkData ).then(content => {
-				roll.toMessage({
-					flavor: null,
-					content: content,
-					speaker: ChatMessage.getSpeaker({ actor: actor }),
-					rollMode: game.settings.get( 'core', 'rollMode' ),
-				}).then(chatMessage => {
-					setTimeout(() => {
-						const message = document.querySelector(`.message[data-message-id="${chatMessage.id}"]`);
-						const buttons = message.querySelectorAll(".js_rerollDice");
-
-						buttons.forEach(btn => {
-							btn.addEventListener('click', (ev) => {
-								const reRoll = ev.currentTarget.dataset.roll;
-								new Roll( reRoll, actor.getRollData() ).toMessage({
-									flavor: 'Hai ritirato il dado',
-									speaker: ChatMessage.getSpeaker({ actor: actor }),
-									rollMode: game.settings.get( 'core', 'rollMode' ),
-								});
-								$(ev.currentTarget).addClass('disabled');
-							});
-						});
-					}, 100);
-				});
-			});
-		});
+		html.on('click', '.freeFreature', this._freeClassFeature.bind(this));
 
 		// Equip Item
 		html.on('click','.js_equipItem', async (e) => {
@@ -291,30 +275,6 @@ export class FabulaActorSheet extends ActorSheet {
 			await this.actor.deleteEmbeddedDocuments('Item', [itemID]);
 		});
 
-		// Set affinities
-		html.on('click','.js_btnAffinity', async (e) => {
-			e.preventDefault();
-			const actor = this.actor; 
-			const affinity = e.currentTarget.dataset.affinity;
-			if ( affinity ) {
-
-				const property = 'system.affinity.' + affinity;
-				let affinityVal = '';
-
-				if ( actor.system.affinity[affinity] == '' )
-					affinityVal = 'vulnerability';
-				else if ( actor.system.affinity[affinity] == 'vulnerability' )
-					affinityVal = 'resistance';
-				else if ( actor.system.affinity[affinity] == 'resistance' )
-					affinityVal = 'immunity';
-				else if ( actor.system.affinity[affinity] == 'immunity' )
-					affinityVal = 'absorption';
-
-				await actor.update({ [property]: affinityVal });
-
-			}
-		});
-
 		// Toggle collapse elements
 		html.on('click','.js_toggleCollapse', (e) => {
 			e.preventDefault();
@@ -352,32 +312,44 @@ export class FabulaActorSheet extends ActorSheet {
 			
 		});
 
-		// Add element to list
-		html.on('click','.js_addElementToList', async (e) => {
+		// Set affinities
+		html.on('click','.js_btnAffinity', async (e) => {
 			e.preventDefault();
-			const target = e.currentTarget.dataset.target;
-			if ( target ) {
-				const array = target.split('.').reduce((obj, key) => obj?.[key], this.actor);
-				const list = [...array];
-				list.push({});
-				await this.actor.update({ [target]: list });
+			const actor = this.actor; 
+			const affinity = e.currentTarget.dataset.affinity;
+			if ( affinity ) {
+
+				const property = 'system.affinity.' + affinity;
+				let affinityVal = '';
+
+				if ( actor.system.affinity[affinity] == '' )
+					affinityVal = 'vulnerability';
+				else if ( actor.system.affinity[affinity] == 'vulnerability' )
+					affinityVal = 'resistance';
+				else if ( actor.system.affinity[affinity] == 'resistance' )
+					affinityVal = 'immunity';
+				else if ( actor.system.affinity[affinity] == 'immunity' )
+					affinityVal = 'absorption';
+
+				await actor.update({ [property]: affinityVal });
+
 			}
 		});
 
-		// Remove element to list
-		html.on('click','.js_removeElementToList', async (e) => {
-			e.preventDefault();
-			const target = e.currentTarget.dataset.target;
-			const id = e.currentTarget.dataset.id;
-			if ( target ) {
-				const array = target.split('.').reduce((obj, key) => obj?.[key], this.actor);
-				const list = [...array];
-				if ( id <= list.length - 1 ) {
-					list.splice( id, 1 );
-					await this.actor.update({ [target]: list });
-				}
-			}
-		});
+		// Create Item
+		html.on('click','.js_createItem', this._createItem.bind(this));
+
+		// Edit Item
+		html.on('click','.js_editItem', this._editItem.bind(this));
+
+		// Delete Item
+		html.on('click','.js_deleteItem', this._deleteItem.bind(this));
+		
+		// Show Item in Chat
+		html.on('click','.js_showItemInChat', this._showItemInChat.bind(this));
+
+		// Roll spell test
+		html.on('click','.js_rollSpell', this._rollSpell.bind(this));
 
 		html.on('click','.roll', this._onRoll.bind(this));
 		html.on('click','.getActor', () => console.log(this.actor));
@@ -476,6 +448,7 @@ export class FabulaActorSheet extends ActorSheet {
 		const consumables = [];
 		const projects = [];
 		const rituals = [];
+		const baseItems = [];
 
 		for (let i of context.items) {
 			i.img = i.img || CONST.DEFAULT_TOKEN;
@@ -498,6 +471,8 @@ export class FabulaActorSheet extends ActorSheet {
 				projects.push(i);
 			} else if (i.type === 'ritual') {
 				rituals.push(i);
+			} else if (i.type === 'baseItem') {
+				baseItems.push(i);
 			}
 		}
 
@@ -510,6 +485,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.consumables = consumables;
 		context.projects = projects;
 		context.rituals = rituals;
+		context.baseItems = baseItems;
 		context.classFeature = {};
 
 		for (const item of this.actor.itemTypes.classFeature) {
@@ -546,6 +522,206 @@ export class FabulaActorSheet extends ActorSheet {
 		} else {
 			ui.notifications.error(`Non è stato possibili completare l'azione.`);
 		}
+	}
+
+	async _freeClassFeature(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		if ( actor.type == 'character' ) return;
+
+		let skillCount = actor.system.skills.current;
+		const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
+		const itemSelected = event.currentTarget.getAttribute('data-id');
+		for (let i = 0; i < classFeatures.length; i++) {
+			if ( classFeatures[i]._id == itemSelected ) {
+				classFeatures[i].system.isFree = !classFeatures[i].system.isFree;
+				break;
+			}
+		}
+
+		if ( $(event.currentTarget).hasClass('active') ) {
+			skillCount++;
+			$(event.currentTarget).removeClass('active');
+		} else {
+			skillCount--;
+			$(event.currentTarget).addClass('active');
+		}
+		
+		await actor.setFlag('fabula', 'classFeatures', classFeatures);
+		await actor.update({ 'system.skills.current': skillCount });
+	}
+
+	async _createItem(event) {
+		event.preventDefault();
+		const element = event.currentTarget;
+		const type = element.dataset.type;
+
+		const data = foundry.utils.duplicate(element.dataset);
+		const localizedKey = CONFIG.FU.ItemTypes[type] || `TYPES.Item.${type}`;
+		const name = game.i18n.localize(localizedKey);
+		const itemData = {
+			name: name,
+			type: type,
+			system: data,
+		};
+		delete itemData.system['type'];
+
+		return await Item.create(itemData, { parent: this.actor });
+	}
+
+	async _editItem(event) {
+		const element = event.currentTarget;
+		const itemID = element.dataset.itemid;
+
+		const item = this.actor.items.get( itemID );
+		if ( item ) item.sheet.render(true);
+	}
+
+	async _deleteItem(event) {
+		const element = event.currentTarget;
+		const itemID = element.dataset.itemid;
+
+		const item = this.actor.items.get( itemID );
+		if (
+			await Dialog.confirm({
+				title: `Stai eliminando ${item.name}`,
+				content: `Sei sicuro di volere eliminare ${item.name}?`,
+				rejectClose: false,
+			})
+		) {
+			await item.delete();
+		}
+	}
+
+	_showItemInChat(event) {
+		event.preventDefault();
+		const element = event.currentTarget;
+		const messageClass = element.dataset.class || 'item-description';
+		const itemID = element.dataset.itemid;
+		const item = this.actor.items.get( itemID );
+
+		let messageTitle = item.name;
+		let messageContent = item.system.description;
+
+		if ( item.type == 'spell' ) {
+			if ( item.system.isOffensive.value )
+				messageTitle += '<div class="icon icon-offensive"></div>';
+
+			let MPCost = '';
+			if ( item.system.MPCost.upTo ) MPCost += 'Fino a ';
+			MPCost += `${item.system.MPCost.value}`;
+			if ( item.system.target.number > 1 ) MPCost += ' x B';
+
+			messageContent = `
+				<table>
+					<thead>
+						<tr>
+							<th>PM</th>
+							<th>Bersaglio</th>
+							<th>Durata</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>${MPCost}</td>
+							<td>${item.system.target.value}</td>
+							<td>${game.i18n.localize( FU.SpellDurations[item.system.duration.value] )}</td>
+						</tr>
+					</tbody>
+				</table>
+				${messageContent}
+			`;
+		}
+		
+		const chatData = {
+			user: game.user.id,
+			speaker: ChatMessage.getSpeaker({ actor: this.name }),
+			flavor: messageTitle,
+			content: messageContent,
+			flags: {
+				customClass: messageClass,
+			},
+		};
+		ChatMessage.create(chatData);
+	}
+
+	async _rollSpell(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const element = event.currentTarget;
+		const itemID = element.dataset.itemid;
+		const item = actor.items.get( itemID );
+		const template = `systems/fabula/templates/chat/check-${item.type}.hbs`;
+
+		let rollString = `d${actor.system.resources.attributes[item.system.attributes.primary.value].value}+d${actor.system.resources.attributes[item.system.attributes.secondary.value].value}`;
+
+		if ( actor.system.level.checkBonus > 0 ) {
+			rollString += `+${actor.system.level.checkBonus}`;
+		}
+
+		const roll = new Roll( rollString, actor.getRollData() );
+		await roll.evaluate();
+
+		const results = [];
+		for ( let i = 0; i < roll.dice.length; i++ ) {
+			for ( let x = 0; x < roll.dice[i].results.length; x++ ) {
+				results.push( roll.dice[i].results[x].result );
+			}
+		}
+		
+		// Check High Roll
+		let highRoll = Math.max(...results);
+
+		// Check Critical Success
+		let critSuccess = results.every( val => val === results[0] && val >= 6 && val <= 12 );
+		
+		// Check Critical Failure
+		let critFailure = results.every( val => val === 1 );
+		
+		const checkData = {
+			item: item,
+			roll: roll,
+			highRoll: highRoll,
+			crit: {
+				success: critSuccess,
+				failure: critFailure,
+			},
+
+		};
+
+		renderTemplate( template, checkData ).then(content => {
+			roll.toMessage({
+				user: game.user.id,
+				speaker: ChatMessage.getSpeaker({ actor: actor }),
+				flavor: 'Test di Magia',
+				content: content,
+				flags: {
+					customClass: `${item.type}-check`,
+				},
+				rollMode: game.settings.get( 'core', 'rollMode' ),
+			}).then(chatMessage => {
+				setTimeout(() => {
+					const message = document.querySelector(`.message[data-message-id="${chatMessage.id}"]`);
+					const buttons = message.querySelectorAll(".js_rerollDice");
+
+					buttons.forEach(btn => {
+						btn.addEventListener('click', (ev) => {
+							const reRoll = ev.currentTarget.dataset.roll;
+							new Roll( reRoll, actor.getRollData() ).toMessage({
+								user: game.user.id,
+								speaker: ChatMessage.getSpeaker({ actor: actor }),
+								flavor: 'Hai ritirato il dado',
+								flags: {
+									customClass: `${item.type}-check`,
+								},
+								rollMode: game.settings.get( 'core', 'rollMode' ),
+							});
+							$(ev.currentTarget).attr('disabled','true');
+						});
+					});
+				}, 100);
+			});
+		});
 	}
 
 	_onRoll(e) {

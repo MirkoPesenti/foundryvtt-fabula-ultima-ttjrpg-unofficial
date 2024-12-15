@@ -18,13 +18,18 @@
                 <div class="feature-head">
                     {{#if @root.editable}}
                         <input name="name" type="text" value="{{item.name}}" />
+                        <input type="checkbox" name="system.isLimited" data-tooltip="Abilità limitata" {{checked system.isLimited}}>
                         <span>
                             (<span>l</span><input name="system.level.max" type="number" value="{{system.level.max}}">)
                         </span>
                     {{else}}
                         {{item.name}}
                         <span>
-                            (<span>l</span>{{this.system.level.max}})
+                            {{#if system.isLimited}}
+                                (<span class="font-yanone">LIMITATA</span>)
+                            {{else}}
+                                (<span>l</span>{{this.system.level.max}})
+                            {{/if}}
                         </span>
                     {{/if}}
                 </div>

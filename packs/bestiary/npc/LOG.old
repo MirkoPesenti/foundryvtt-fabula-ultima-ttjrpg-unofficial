@@ -1,4 +1,7 @@
-2024/12/14-10:59:29.111 24ec Log #16: 0 ops saved to Table #17 OK
-2024/12/14-10:59:29.113 24ec Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npc/000016.log: OK
-2024/12/14-10:59:29.116 24ec Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npc/MANIFEST-000015: OK
-2024/12/14-10:59:29.118 24ec **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npc; recovered 0 files; 0 bytes. Some data may have been lost. ****
+2024/12/15-15:53:54.815 6d54 Recovering log #39
+2024/12/15-15:53:54.822 6d54 Delete type=0 #39
+2024/12/15-15:53:54.822 6d54 Delete type=3 #37
+2024/12/15-15:54:45.237 3a90 Level-0 table #44: started
+2024/12/15-15:54:45.237 3a90 Level-0 table #44: 0 bytes OK
+2024/12/15-15:54:45.239 3a90 Delete type=0 #42
+2024/12/15-15:54:45.242 3a90 Manual compaction at level-0 from 'undefined' @ 72057594037927935 : 1 .. 'undefined' @ 0 : 0; will stop at (end)

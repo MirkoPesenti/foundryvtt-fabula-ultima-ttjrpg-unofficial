@@ -27,8 +27,8 @@
                                 <label>Liv</label>
                                 <input type="number" name="system.level.value" value="{{system.level.value}}"/>
                             </div>
-                            <select name="system.species">
-                                {{selectOptions species selected=system.species localize=true}}
+                            <select name="system.species.value">
+                                {{selectOptions species selected=system.species.value localize=true}}
                             </select>
                         </div>
                     </div>
@@ -135,6 +135,18 @@
                     </select>
                 </div>
 
+                {{#unless (eq system.resources.up.max 0)}}
+                    <div class="attr">
+                        <label>PU</label>
+                        <input type="number" min="0" max="{{system.resources.up.max}}" name="system.resources.up.current" value="{{system.resources.up.current}}">
+                        {{#unless (eq system.resources.up.max 0)}}
+                            <label>/ {{system.resources.up.max}}</label>
+                        {{/unless}}
+                    </div>
+                {{/unless}}
+            </div>
+
+            <div class="attributes-container">
                 <div class="attr hp">
                     <label>PV</label>
                     <div class="info">
@@ -170,31 +182,25 @@
                         Difesa Magica: {{system.resources.params.mdef.bonus}}
                     </label>
                 </div>
-
-                <div class="attr">
-                    <label>
-                        Punti Ultima: {{system.resources.up}}
-                    </label>
-                </div>
             </div>
             
             <div class="tab base" data-group="primary" data-tab="base">
-                <div class="content-collapse attack">
+                <div class="content-collapse open attack">
                     <div class="title">
                         Attacchi base
                         <button type="button" class="js_addElementToList" data-target="system.baseAttacks">
                             <i class="fa fa-plus"></i>
                         </button>
-                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
                             <i class="fa fa-angle-down"></i>
-                        </button>
+                        </button> --}}
                     </div>
                     <div class="collapse">
                         <ul class="list list-attacks">
                             {{#each system.baseAttacks as |attack indexAttack|}}
                                 <li>
                                     <button type="button" class="btn-del js_removeElementToList" data-id="{{indexAttack}}" data-target="system.baseAttacks">
-                                        <div class="fa fa-remove"></div>
+                                        <i class="fa fa-remove"></i>
                                     </button>
 
                                     <div class="flexrow flex-head">
@@ -227,117 +233,199 @@
                                         </select>
                                     </div>
 
-                                    {{editor (concatPath '../enrichedHtml.actionDescription.' indexAttack) target=(concatPath 'system.baseAttacks.' indexAttack '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                                    {{editor (concatPath '../enrichedHtml.attacksDesc.' indexAttack) target=(concatPath 'system.baseAttacks.' indexAttack '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                                 </li>
                             {{/each}}
                         </ul>
                     </div>
                 </div>
 
-                <div class="content-collapse spell">
+                <div class="content-collapse open spell">
                     <div class="title">
                         Incantesimi
-                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                        {{#if @root.editable}}
+                            <button type="button" class="js_createItem" data-type="spell">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        {{/if}}
+                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
                             <i class="fa fa-angle-down"></i>
-                        </button>
+                        </button> --}}
                     </div>
                     <div class="collapse">
                         <ul class="list list-spells">
                             {{#each spells}}
                                 <li>
-                                    <strong>Nome:</strong> {{this.name}} 
-                                    {{#if this.isOffensive.value}}v{{/if}} <br>
+                                    <div class="btn-container">
+                                        {{#if @root.editable}}
+                                            <button type="button" class="js_deleteItem" data-itemid="{{this._id}}">
+                                                <i class="fa fa-trash m-0"></i>
+                                            </button>
 
-                                    <strong>PM:</strong> 
-                                    {{#if this.system.MPCost.upTo}}
-                                    Fino a
-                                    {{/if}}
-                                    {{this.system.MPCost.value}}
-                                    {{#gt this.system.target.number 1}}
-                                    x B
-                                    {{/gt}}
-                                    <br>
+                                            <button type="button" class="js_editItem" data-itemid="{{this._id}}">
+                                                <i class="fa fa-pencil m-0"></i>
+                                            </button>
+                                        {{/if}}
+                                    </div>
+                                    <div class="item-box">
+                                        {{#if @root.editable}}
+                                            <button type="button" class="js_showItemInChat" data-itemid="{{this._id}}">
+                                                <i class="fa fa-comment m-0"></i>
+                                            </button>
+                                            <button type="button" class="name js_rollSpell" data-itemid="{{this._id}}">
+                                                {{this.name}}
+                                                {{#if this.system.isOffensive.value}}
+                                                    <div class="icon icon-offensive"></div>
+                                                {{/if}}
+                                            </button>
+                                        {{else}}
+                                            <label>
+                                                {{this.name}}
+                                                {{#if this.system.isOffensive.value}}
+                                                    <div class="icon icon-offensive"></div>
+                                                {{/if}}
+                                            </label>
+                                        {{/if}}
+                                        <p>
+                                            <strong>
+                                                【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
+                                            </strong>
+                                            <small class="ml-0">◆</small>
+                                            <strong>
+                                                {{#if this.system.MPCost.upTo}}
+                                                    Fino a
+                                                {{/if}}
+                                                {{this.system.MPCost.value}} PM
+                                                {{#gt this.system.target.number 1}}
+                                                    x B
+                                                {{/gt}}
+                                            </strong>
+                                            <small>◆</small>
+                                            <strong>{{this.system.target.value}}</strong>
+                                            <small>◆</small>
+                                            <strong>{{localize (concat 'FU.SpellDurations.' this.system.duration.value)}}.</strong>
+                                        </p>
 
-                                    <strong>Test di Magia:</strong> 
-                                    【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
-
-                                    {{#if this.system.damage.hasDamage}}
-                                    <strong>Danno:</strong> {{this.system.damage.value}} {{localize (concat 'FU.DamageTypes.' this.system.damage.type)}} <br>
-                                    {{/if}}
-
-                                    <strong>Bersaglio:</strong> {{this.system.target.value}} <br>
-
-                                    <strong>Durata:</strong> {{localize (concat 'FU.SpellDurations.' this.system.duration.value)}} <br>
-
-                                    {{{this.system.description}}}
-                                    
-                                    {{#if this.system.opportunity.value}}
-                                        <strong>Opportunità:</strong>
-                                        {{{this.system.opportunityEffect}}}
-                                    {{/if}}
+                                        <div class="description">
+                                            {{{this.system.description}}}
+                                        </div>
+                                        
+                                        {{#if this.system.opportunity.value}}
+                                            <div class="opportunity">
+                                                <strong>Opportunità:</strong>
+                                                {{{this.system.opportunityEffect}}}
+                                            </div>
+                                        {{/if}}
+                                    </div>
                                 </li>
                             {{/each}}
                         </ul>
                     </div>
                 </div>
 
-                <div class="content-collapse other">
+                <div class="content-collapse open other">
                     <div class="title">
                         Altre azioni
-                        <button type="button" class="js_addElementToList" data-target="system.otherActions">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                        {{#if @root.editable}}
+                            <button type="button" class="js_createItem" data-type="baseItem">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        {{/if}}
+                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
                             <i class="fa fa-angle-down"></i>
-                        </button>
+                        </button> --}}
                     </div>
                     <div class="collapse">
                         <ul class="list list-other-actions">
-                            {{#each system.otherActions as |action indexAction|}}
-                                <li>
-                                    <button type="button" class="btn-del js_removeElementToList" data-id="{{indexAction}}" data-target="system.otherActions">
-                                        <div class="fa fa-remove"></div>
-                                    </button>
-                                    
-                                    <div class="flexrow flex-head">
-                                        <input type="text" name="system.otherActions.{{indexAction}}.name" value="{{action.name}}">
-                                    </div>
+                            {{#each baseItems as |action indexAction|}}
+                                {{#if (not action.system.rule)}}
+                                    <li>
+                                        <div class="btn-container">
+                                            {{#if @root.editable}}
+                                                <button type="button" class="js_deleteItem" data-itemid="{{action._id}}">
+                                                    <i class="fa fa-trash m-0"></i>
+                                                </button>
 
-                                    {{editor (concatPath '../enrichedHtml.actionDescription.' indexAction) target=(concatPath 'system.otherActions.' indexAction '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-                                </li>
+                                                <button type="button" class="js_editItem" data-itemid="{{action._id}}">
+                                                    <i class="fa fa-pencil m-0"></i>
+                                                </button>
+                                            {{/if}}
+                                        </div>
+                                        <div class="item-box">
+                                            {{#if @root.editable}}
+                                                <button type="button" class="name js_showItemInChat" data-tooltip="Mostra in chat" data-itemid="{{action._id}}">
+                                                    {{action.name}}
+                                                </button>
+                                            {{else}}
+                                                <label>{{action.name}}</label>
+                                            {{/if}}
+                                            {{{action.system.description}}}
+                                        </div>
+                                    </li>
+                                {{/if}}
                             {{/each}}
                         </ul>
                     </div>
                 </div>
 
-                <div class="content-collapse rule">
+                <div class="content-collapse open rule">
                     <div class="title">
                         Regole speciali
-                        <button type="button" class="js_addElementToList" data-target="system.specialRules">
-                            <i class="fa fa-plus"></i>
-                        </button>
-                        <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                        {{#if @root.editable}}
+                            <button type="button" class="js_createItem" data-type="baseItem" data-rule="true">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        {{/if}}
+                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
                             <i class="fa fa-angle-down"></i>
-                        </button>
+                        </button> --}}
                     </div>
                     <div class="collapse">
                         <ul class="list list-special-rules">
-                            {{#each system.specialRules as |rule indexRule|}}
-                                <li>
-                                    <button type="button" class="btn-del js_removeElementToList" data-id="{{indexRule}}" data-target="system.specialRules">
-                                        <div class="fa fa-remove"></div>
-                                    </button>
-                                    
-                                    <div class="flexrow flex-head">
-                                        <input type="text" name="system.specialRules.{{indexRule}}.name" value="{{rule.name}}">
-                                    </div>
+                            {{#each baseItems as |rule indexRule|}}
+                                {{#if rule.system.rule}}
+                                    <li>
+                                        <div class="btn-container">
+                                            {{#if @root.editable}}
+                                                <button type="button" class="js_deleteItem" data-itemid="{{rule._id}}">
+                                                    <i class="fa fa-trash m-0"></i>
+                                                </button>
 
-                                    {{editor (concatPath '../enrichedHtml.actionDescription.' indexRule) target=(concatPath 'system.specialRules.' indexRule '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-                                </li>
+                                                <button type="button" class="js_editItem" data-itemid="{{rule._id}}">
+                                                    <i class="fa fa-pencil m-0"></i>
+                                                </button>
+                                            {{/if}}
+                                        </div>
+                                        <div class="item-box">
+                                            {{#if @root.editable}}
+                                                <button type="button" class="name js_showItemInChat" data-tooltip="Mostra in chat" data-itemid="{{rule._id}}">
+                                                    {{rule.name}}
+                                                </button>
+                                            {{else}}
+                                                <label>{{rule.name}}</label>
+                                            {{/if}}
+                                            {{{rule.system.description}}}
+                                        </div>
+                                    </li>
+                                {{/if}}
                             {{/each}}
                         </ul>
                     </div>
                 </div>
+
+                {{#if (arrayLengthGt system.species.rules 0)}}
+                    {{#each system.species.rules}}
+                        <div class="title">{{this.name}}</div>
+                        <ul class="list">
+                            <li>
+                                <div class="btn-container"></div>
+                                <div class="item-box">
+                                    {{{this.description}}}
+                                </div>
+                            </li>
+                        </ul>
+                    {{/each}}
+                {{/if}}
             </div>
             
             <div class="tab desc" data-group="primary" data-tab="description">
@@ -374,11 +462,22 @@
                             {{/if}}
                             
                             {{this.name}}
+
+                            {{#if @root.editable}}
+                                <button type="button" class="ml-auto freeFreature {{#if this.system.isFree}}active{{/if}}" data-id="{{this._id}}">Gratuita</button>
+                            {{/if}}
+                            
                             {{#gt this.system.level.max 1}}
                                 <span>
                                     (<span>l</span>{{this.system.level.max}})
                                 </span>
                             {{/gt}}
+
+                            {{#if this.system.isLimited}}
+                                <span>
+                                    (<span class="font-yanone">LIMITATA</span>)
+                                </span>
+                            {{/if}}
                         </div>
                         <div class="feature-body">
                             {{{this.system.description}}}

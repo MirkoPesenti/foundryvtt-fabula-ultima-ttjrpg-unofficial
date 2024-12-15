@@ -1,5 +1,7 @@
-2024/12/14-10:59:28.930 624 Log #34: 0 ops saved to Table #35 OK
-2024/12/14-10:59:28.930 624 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/000034.log: OK
-2024/12/14-10:59:28.943 624 Table #23: 5 entries OK
-2024/12/14-10:59:28.945 624 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/MANIFEST-000033: OK
-2024/12/14-10:59:28.949 624 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable; recovered 1 files; 1197 bytes. Some data may have been lost. ****
+2024/12/15-15:53:54.764 1f88 Recovering log #58
+2024/12/15-15:53:54.771 1f88 Delete type=0 #58
+2024/12/15-15:53:54.771 1f88 Delete type=3 #56
+2024/12/15-15:54:45.225 3a90 Level-0 table #63: started
+2024/12/15-15:54:45.225 3a90 Level-0 table #63: 0 bytes OK
+2024/12/15-15:54:45.226 3a90 Delete type=0 #61
+2024/12/15-15:54:45.229 3a90 Manual compaction at level-0 from '!items!E5NfTvdBNyqnElmH' @ 72057594037927935 : 1 .. '!items!uIZiWjeRmQTlGZce' @ 0 : 0; will stop at (end)

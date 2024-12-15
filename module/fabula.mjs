@@ -19,6 +19,8 @@ import { NpcDataModel } from './documents/actors/npc-data-model.mjs';
 import { AccessoryDataModel } from './documents/items/accessory-data-model.mjs';
 import { ArcanumDataModel } from './documents/items/arcanum-data-model.mjs';
 import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
+import { AttackDataModel } from './documents/items/attack-data-model.mjs';
+import { BaseDataModel } from './documents/items/base-data-model.mjs';
 import { CLassDataModel } from './documents/items/class-data-model .mjs';
 import { CLassFeatureDataModel } from './documents/items/class-feature-model.mjs';
 import { ConsumableDataModel } from './documents/items/consumable-data-model.mjs';
@@ -58,6 +60,8 @@ Hooks.once('init', async () => {
 		accessory: AccessoryDataModel,
 		arcanum: ArcanumDataModel,
 		armor: ArmorDataModel,
+		attack: AttackDataModel,
+		base: BaseDataModel,
 		class: CLassDataModel,
 		classFeature: CLassFeatureDataModel,
 		consumable: ConsumableDataModel,
@@ -487,6 +491,13 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 	updateDialog();
 });
 
+Hooks.on('renderChatMessage', (message, html, data) => {
+	const customClass = message.flags.customClass;
+	if ( customClass ) {
+		html[0].classList.add(customClass);
+	}
+});
+
 /* ============================= */
 /* 		Handlebars Helpers		 */
 /* ============================= */
@@ -531,6 +542,10 @@ Handlebars.registerHelper('multiply', function( a, b ){
 
 Handlebars.registerHelper('divide', function( a, b ){
 	return ( a / b );
+});
+
+Handlebars.registerHelper('add', function(a, b) {
+    return Number(a) + Number(b);
 });
 
 Handlebars.registerHelper("arrayLengthGt", function(array, length, options) {
