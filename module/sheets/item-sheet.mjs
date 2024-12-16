@@ -59,7 +59,8 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'arcanum' || 
 			this.object.type == 'heroicSkill' || 
 			this.object.type == 'spell' ||
-			this.object.type == 'baseItem'
+			this.object.type == 'baseItem' ||
+			this.object.type == 'attack'
 		)
 			options.height = 500;
 		else if ( 

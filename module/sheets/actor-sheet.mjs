@@ -149,9 +149,7 @@ export class FabulaActorSheet extends ActorSheet {
 						return false;
 					}
 				}
-			}
-
-			if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
+			} else if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
 
 				new Dialog({
 					title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
@@ -185,6 +183,8 @@ export class FabulaActorSheet extends ActorSheet {
 				}).render(true);
 			
 				return true;
+			} else {
+				actor.createEmbeddedDocuments( 'Item', [sourceItem] );
 			}
 		}
 
@@ -349,7 +349,7 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click','.js_showItemInChat', this._showItemInChat.bind(this));
 
 		// Roll spell test
-		html.on('click','.js_rollSpell', this._rollSpell.bind(this));
+		html.on('click','.js_rollActorItem', this._rollActorItem.bind(this));
 
 		html.on('click','.roll', this._onRoll.bind(this));
 		html.on('click','.getActor', () => console.log(this.actor));
@@ -449,6 +449,7 @@ export class FabulaActorSheet extends ActorSheet {
 		const projects = [];
 		const rituals = [];
 		const baseItems = [];
+		const attacks = [];
 
 		for (let i of context.items) {
 			i.img = i.img || CONST.DEFAULT_TOKEN;
@@ -473,6 +474,8 @@ export class FabulaActorSheet extends ActorSheet {
 				rituals.push(i);
 			} else if (i.type === 'baseItem') {
 				baseItems.push(i);
+			} else if (i.type === 'attack') {
+				attacks.push(i);
 			}
 		}
 
@@ -486,6 +489,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.projects = projects;
 		context.rituals = rituals;
 		context.baseItems = baseItems;
+		context.attacks = attacks;
 		context.classFeature = {};
 
 		for (const item of this.actor.itemTypes.classFeature) {
@@ -645,16 +649,28 @@ export class FabulaActorSheet extends ActorSheet {
 		ChatMessage.create(chatData);
 	}
 
-	async _rollSpell(event) {
+	async _rollActorItem(event) {
 		event.preventDefault();
 		const actor = this.actor;
 		const element = event.currentTarget;
 		const itemID = element.dataset.itemid;
+		const attrPrimary = element.dataset.primary;
+		const attrSecondary = element.dataset.secondary;
+
 		const item = actor.items.get( itemID );
 		const template = `systems/fabula/templates/chat/check-${item.type}.hbs`;
 
-		let rollString = `d${actor.system.resources.attributes[item.system.attributes.primary.value].value}+d${actor.system.resources.attributes[item.system.attributes.secondary.value].value}`;
-
+		let rollString = '';
+		if ( attrPrimary ) {
+			rollString += `d${actor.system.resources.attributes[attrPrimary].value}`;
+		}
+		if ( attrPrimary && attrSecondary ) rollString += '+';
+		if ( attrSecondary ) {
+			rollString += `d${actor.system.resources.attributes[attrSecondary].value}`;
+		}
+		if ( item.type == 'attack' && item.system.precisionBonus != 0 ) {
+			rollString += `+${item.system.precisionBonus}`;
+		}
 		if ( actor.system.level.checkBonus > 0 ) {
 			rollString += `+${actor.system.level.checkBonus}`;
 		}
@@ -693,7 +709,7 @@ export class FabulaActorSheet extends ActorSheet {
 			roll.toMessage({
 				user: game.user.id,
 				speaker: ChatMessage.getSpeaker({ actor: actor }),
-				flavor: 'Test di Magia',
+				flavor: game.i18n.localize( FU.ItemTypes[item.type] ),
 				content: content,
 				flags: {
 					customClass: `${item.type}-check`,

@@ -1,0 +1,13 @@
+<div class="dice-damage">
+	<div class="damage-type">
+		danni da 
+		<strong>
+			{{#unless (eq item.system.damage.type.value '')}}
+				{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}
+			{{else}}
+				(a scelta)
+			{{/unless}}
+		</strong>
+	</div>
+	<div class="dice-total">{{add highRoll item.system.damage.value}}</div>
+</div>

@@ -10,9 +10,18 @@ export class DefencesDataModel extends foundry.abstract.DataModel {
 	static defineSchema() {
 		const { SchemaField, NumberField } = foundry.data.fields;
 		return ({
-			def: new SchemaField({ bonus: new NumberField({ initial: 0, integer: true, nullable: false }), }),
-			mdef: new SchemaField({ bonus: new NumberField({ initial: 0, integer: true, nullable: false }), }),
-			init: new SchemaField({ bonus: new NumberField({ initial: 0, integer: true, nullable: false }), }),
+			def: new SchemaField({
+				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
+			}),
+			mdef: new SchemaField({
+				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
+			}),
+			init: new SchemaField({
+				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
+			}),
 		});
 	}
 }

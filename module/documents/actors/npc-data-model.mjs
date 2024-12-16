@@ -54,9 +54,9 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.rank.replacedSoldiers = 0;
 			
 		// Defence, Magic Defence and Initiative
-		this.resources.params.def.bonus = this.resources.attributes.dex.value;
-		this.resources.params.mdef.bonus = this.resources.attributes.ins.value;
-		this.resources.params.init.bonus = Math.floor( ( this.resources.attributes.dex.value + this.resources.attributes.ins.value ) / 2 );
+		this.resources.params.def.current = this.resources.attributes.dex.value + this.resources.params.def.bonus;
+		this.resources.params.mdef.current = this.resources.attributes.ins.value + this.resources.params.mdef.bonus;
+		this.resources.params.init.current = Math.floor( ( this.resources.attributes.dex.value + this.resources.attributes.ins.value ) / 2 ) + this.resources.params.init.bonus;
 
 		// Checks and Damage Bonus
 		this.level.checkBonus = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0;
@@ -70,21 +70,21 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.level.damageBonus = 0;
 
 		// Max Skills
-		if ( this.species == 'beast' )
+		if ( this.species.value == 'beast' )
 			this.skills.max = 4;
-		else if ( this.species == 'construct' )
+		else if ( this.species.value == 'construct' )
 			this.skills.max = 2;
-		else if ( this.species == 'demon' )
+		else if ( this.species.value == 'demon' )
 			this.skills.max = 3;
-		else if ( this.species == 'elemental' )
+		else if ( this.species.value == 'elemental' )
 			this.skills.max = 2;
-		else if ( this.species == 'monster' )
+		else if ( this.species.value == 'monster' )
 			this.skills.max = 4;
-		else if ( this.species == 'plant' )
+		else if ( this.species.value == 'plant' )
 			this.skills.max = 3;
-		else if ( this.species == 'undead' )
+		else if ( this.species.value == 'undead' )
 			this.skills.max = 2;
-		else if ( this.species == 'humanoid' )
+		else if ( this.species.value == 'humanoid' )
 			this.skills.max = 3;
 		else
 			this.skills.max = 0;
@@ -114,11 +114,11 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		if ( this.rank.value == 'elite' ) {
 			this.skills.max += 1;
 			this.combat.turns = 2;
-			this.resources.params.init.bonus += 1;
+			this.resources.params.init.current += 1;
 		} else if ( this.rank.value == 'champion' ) {
 			this.skills.max += this.rank.replacedSoldiers;
 			this.combat.turns = this.rank.replacedSoldiers;
-			this.resources.params.init.bonus += this.rank.replacedSoldiers;
+			this.resources.params.init.current += this.rank.replacedSoldiers;
 		}
 
 		// Set Species Rules

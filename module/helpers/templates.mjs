@@ -6,5 +6,9 @@
 export const preloadPartialTemplates = async function() {
     return loadTemplates([
 
+        // Chat Messages
+        'systems/fabula/templates/chat/common/dice-result.hbs',
+        'systems/fabula/templates/chat/common/dice-damage.hbs',
+
     ]);
 }

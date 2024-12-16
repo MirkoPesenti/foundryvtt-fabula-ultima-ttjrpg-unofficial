@@ -6,11 +6,11 @@
         <a class="item" data-tab="base">
             <span>Azioni</span>
         </a>
-        <a class="item" data-tab="description">
-            <span>Descrizione</span>
-        </a>
         <a class="item" data-tab="skills">
             <span>Abilità</span>
+        </a>
+        <a class="item" data-tab="description">
+            <span>Descrizione</span>
         </a>
     </nav>
 
@@ -167,19 +167,19 @@
             <div class="attributes-container params">
                 <div class="attr">
                     <label>
-                        Iniziativa: {{system.resources.params.init.bonus}}
+                        Iniziativa: {{system.resources.params.init.current}}
                     </label>
                 </div>
 
                 <div class="attr">
                     <label>
-                        Difesa: {{system.resources.params.def.bonus}}
+                        Difesa: {{system.resources.params.def.current}}
                     </label>
                 </div>
 
                 <div class="attr">
                     <label>
-                        Difesa Magica: {{system.resources.params.mdef.bonus}}
+                        Difesa Magica: {{system.resources.params.mdef.current}}
                     </label>
                 </div>
             </div>
@@ -188,52 +188,57 @@
                 <div class="content-collapse open attack">
                     <div class="title">
                         Attacchi base
-                        <button type="button" class="js_addElementToList" data-target="system.baseAttacks">
-                            <i class="fa fa-plus"></i>
-                        </button>
+                        {{#if @root.editable}}
+                            <button type="button" class="js_createItem" data-type="attack">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        {{/if}}
                         {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
                             <i class="fa fa-angle-down"></i>
                         </button> --}}
                     </div>
                     <div class="collapse">
                         <ul class="list list-attacks">
-                            {{#each system.baseAttacks as |attack indexAttack|}}
+                            {{#each attacks}}
                                 <li>
-                                    <button type="button" class="btn-del js_removeElementToList" data-id="{{indexAttack}}" data-target="system.baseAttacks">
-                                        <i class="fa fa-remove"></i>
-                                    </button>
+                                    <div class="btn-container">
+                                        {{#if @root.editable}}
+                                            <button type="button" class="js_deleteItem" data-itemid="{{this._id}}">
+                                                <i class="fa fa-trash m-0"></i>
+                                            </button>
 
-                                    <div class="flexrow flex-head">
-                                        <input type="text" name="system.baseAttacks.{{indexAttack}}.name" value="{{attack.name}}">
-                                        <select name="system.baseAttacks.{{indexAttack}}.range">
-                                            {{selectOptions ../WeaponRanges selected=attack.range localize=true}}
-                                        </select>
+                                            <button type="button" class="js_editItem" data-itemid="{{this._id}}">
+                                                <i class="fa fa-pencil m-0"></i>
+                                            </button>
+                                        {{/if}}
                                     </div>
+                                    <div class="item-box">
+                                        {{#if @root.editable}}
+                                            <button type="button" class="js_showItemInChat" data-itemid="{{this._id}}">
+                                                <i class="fa fa-comment m-0"></i>
+                                            </button>
+                                            <button type="button" class="name js_rollActorItem" data-itemid="{{this._id}}" data-primary="{{this.system.precisionAttr.primary.value}}" data-secondary="{{this.system.precisionAttr.secondary.value}}">
+                                                {{this.name}}
+                                                <div class="icon icon-{{this.system.range}}" data-tooltip="{{localize (concat 'FU.WeaponRanges.' this.system.range)}}"></div>
+                                            </button>
+                                        {{else}}
+                                            <label>
+                                                {{this.name}}
+                                                <div class="icon icon-{{this.system.range}}" data-tooltip="{{localize (concat 'FU.WeaponRanges.' this.system.range)}}"></div>
+                                            </label>
+                                        {{/if}}
+                                        <p>
+                                            <strong class="ml-0">
+                                                【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttr.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttr.secondary.value)}}】{{#gt this.system.precisionBonus 0}}+ {{this.system.precisionBonus}}{{/gt}}
+                                            </strong>
+                                            <small class="{{#gt this.system.precisionBonus 0}}{{else}}ml-0{{/gt}}">◆</small>
+                                            <strong>【TM{{#gt this.system.damage.value 0}} + {{this.system.damage.value}}{{/gt}}】</strong>danni da <strong>{{localize (concat 'FU.DamageTypes.' this.system.damage.type.value)}}</strong>
+                                        </p>
 
-                                    <div class="flexrow flex-precision">
-                                        <label>【Test di Precisione】</label>
-                                        <select name="system.baseAttacks.{{indexAttack}}.precisionAttr.primary.value">
-                                            {{selectOptions ../attributes selected=attack.precisionAttr.primary.value localize=true}}
-                                        </select>
-                                        <span>+</span>
-                                        <select name="system.baseAttacks.{{indexAttack}}.precisionAttr.secondary.value">
-                                            {{selectOptions ../attributes selected=attack.precisionAttr.secondary.value localize=true}}
-                                        </select>
-                                        <label>Modificatore:</label>
-                                        <input type="number" name="system.baseAttacks.{{indexAttack}}.precisionBonus" value="{{attack.precisionBonus}}">
+                                        <div class="description">
+                                            {{{this.system.description}}}
+                                        </div>
                                     </div>
-
-                                    <div class="flexrow flex-damage">
-                                        <label>【Calcolo dei Danni】</label>
-                                        <span>TM +</span>
-                                        <input type="number" name="system.baseAttacks.{{indexAttack}}.damage.value" value="{{attack.damage.value}}">
-                                        <label>Tipo:</label>
-                                        <select name="system.baseAttacks.{{indexAttack}}.damage.type.value">
-                                            {{selectOptions ../DamageTypes selected=attack.damage.type.value localize=true}}
-                                        </select>
-                                    </div>
-
-                                    {{editor (concatPath '../enrichedHtml.attacksDesc.' indexAttack) target=(concatPath 'system.baseAttacks.' indexAttack '.description') engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                                 </li>
                             {{/each}}
                         </ul>
@@ -272,7 +277,7 @@
                                             <button type="button" class="js_showItemInChat" data-itemid="{{this._id}}">
                                                 <i class="fa fa-comment m-0"></i>
                                             </button>
-                                            <button type="button" class="name js_rollSpell" data-itemid="{{this._id}}">
+                                            <button type="button" class="name js_rollActorItem" data-itemid="{{this._id}}" data-primary="{{this.system.attributes.primary.value}}" data-secondary="{{this.system.attributes.secondary.value}}">
                                                 {{this.name}}
                                                 {{#if this.system.isOffensive.value}}
                                                     <div class="icon icon-offensive"></div>
@@ -287,10 +292,12 @@
                                             </label>
                                         {{/if}}
                                         <p>
-                                            <strong>
-                                                【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
-                                            </strong>
-                                            <small class="ml-0">◆</small>
+                                            {{#if this.system.isOffensive.value}}
+                                                <strong class="ml-0">
+                                                    【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
+                                                </strong>
+                                                <small class="ml-0">◆</small>
+                                            {{/if}}
                                             <strong>
                                                 {{#if this.system.MPCost.upTo}}
                                                     Fino a
@@ -427,27 +434,28 @@
                     {{/each}}
                 {{/if}}
             </div>
-            
-            <div class="tab desc" data-group="primary" data-tab="description">
-                <div class="title">Descrizione</div>
-                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-            </div>
 
             <div class="tab skills" data-group="primary" data-tab="skills">
-                <div class="form-group">
-                    <label>Rango:</label>
-                    <select name="system.rank.value">
-                        {{selectOptions enemyRanks selected=system.rank.value localize=true}}
-                    </select>
-                    {{#unless (eq system.rank.value 'soldier')}}
-                        <input type="number" name="system.rank.replacedSoldiers" value="{{system.rank.replacedSoldiers}}">
-                    {{/unless}}
-                </div>
-                <div class="form-group">
-                    <label>Cattivo:</label>
-                    <select name="system.villain">
-                        {{selectOptions villainTypes selected=system.villain localize=true}}
-                    </select>
+                <div class="flexrow">
+                    <div class="form-group">
+                        <label>Rango:</label>
+                        <select name="system.rank.value">
+                            {{selectOptions enemyRanks selected=system.rank.value localize=true}}
+                        </select>
+                        {{#unless (eq system.rank.value 'soldier')}}
+                            <input type="number" name="system.rank.replacedSoldiers" value="{{system.rank.replacedSoldiers}}">
+                        {{/unless}}
+                    </div>
+                    <div class="form-group">
+                        <label>Cattivo:</label>
+                        <select name="system.villain">
+                            {{selectOptions villainTypes selected=system.villain localize=true}}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>DEF</label>
+                        <input type="number">
+                    </div>
                 </div>
 
                 <div class="title">
@@ -544,6 +552,11 @@
                         </div>
                     {{/each}}
                 {{/each}}
+            </div>
+
+            <div class="tab desc" data-group="primary" data-tab="description">
+                <div class="title">Descrizione</div>
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
             </div>
         </div>
     </section>

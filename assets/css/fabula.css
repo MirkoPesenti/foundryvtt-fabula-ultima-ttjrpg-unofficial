@@ -143,7 +143,8 @@ select {height:var(--form-field-height);}
 .icon {width:16px;height:16px;flex-shrink:0;background-repeat:no-repeat;background-position:center center;background-size:contain;}
 
 .icon-offensive {background-image:url(../icons/icon-offensive.svg);}
-.icon-offensive.disabled {background-image:url(../icons/icon-offensive-disabled.svg);}
+.icon-melee {background-image:url(../icons/icon-melee.svg);}
+.icon-ranged {background-image:url(../icons/icon-ranged.svg);}
 .icon-physical {background-image:url(../icons/icon-physical.svg);}
 .icon-physical.disabled {background-image:url(../icons/icon-physical-disabled.svg);}
 .icon-air {background-image:url(../icons/icon-air.svg);}
@@ -173,15 +174,14 @@ select {height:var(--form-field-height);}
 .dice-roll .dice-description .title {font-family:"Yanone Kaffeesatz", sans-serif;font-size:20px;font-weight:500;display:flex;align-items:center;flex:1;}
 .dice-roll .dice-description .title .icon {margin-left:5px;}
 .dice-roll .dice-description .attributes {flex:1;font-weight:700;text-align:right;}
+.dice-roll .dice-description .description {width:100%;}
 .dice-roll .dice-damage {order:3;margin-top:5px;}
 .dice-roll .dice-damage .damage-type {text-align:center;margin-bottom:5px;}
 .dice-roll .dice-opportunity {order:4;margin-top:5px;}
 .dice-roll .dice-opportunity > span {font-weight:700;float:left;margin-right:5px;}
 .dice-roll .dice-formula, .dice-roll .dice-total {font-weight:700;}
+.dice-roll .dice-tooltip {display:block !important;height:auto !important;}
 .dice-tooltip .part-header button.part-total {width:auto;}
-
-/* Messages > Spell checks */
-.spell-check .dice-roll .dice-tooltip {display:block !important;height:auto !important;}
 
 /* Dialog */
 .dialog-content {
@@ -487,6 +487,15 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet .baseItem .editor-full .editor {height:100%;}
 .sheet .baseItem .editor-full .editor-container {margin-bottom:0;}
 
+/* Sheets > Attacks */
+.sheet .attack table {margin:0;}
+.sheet .attack table thead tr th {width:40%;}
+.sheet .attack table thead tr th:first-child {width:20%;}
+.sheet .attack table tr td {border:0;padding-left:5px;padding-right:5px;}
+.sheet .attack table .form-group span {margin:0 5px;flex:0 1 auto;}
+.sheet .attack table input {width:80px;}
+.sheet .attack table select {width:auto;}
+
 /* Sheets > Speel */
 .sheet .spell .tab.desc {padding:0;}
 .sheet .spell .tab.desc.active {display:flex;flex-direction:column;}
@@ -587,6 +596,7 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .list > li .item-box label::after {content:"◆";font-size:12px;font-weight:400;margin:0 5px;color:var(--color-primary);}
 .sheet.actor .npc .list > li .item-box p {margin-bottom:0;}
 .sheet.actor .npc .list > li .item-box p:not(p + p) {margin-top:0;}
+.sheet.actor .npc .list > li .item-box p > strong:first-child {margin-left:5px;}
 .sheet.actor .npc .list .flex-head {margin-bottom:10px;}
 .sheet.actor .npc .list .editor {border:1px solid var(--color-primary);border-radius:3px;overflow:hidden;}
 .sheet.actor .npc .list .editor .editor-menu {border-radius:0;}
@@ -608,14 +618,14 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .list-attacks .flex-damage input {text-align:center;}
 .sheet.actor .npc .list-attacks .flex-damage span {position:relative;top:2px;flex:0 0 auto;margin-right:5px;font-weight:700;}
 
-.sheet.actor .npc .list-spells .item-box button {margin-bottom:0 !important;float:left;}
-.sheet.actor .npc .list-spells .item-box button.name {display:inline-flex;align-items:center;}
-.sheet.actor .npc .list-spells .item-box button + button {margin-left:5px;}
-.sheet.actor .npc .list-spells .item-box button .icon {margin-left:5px;}
-.sheet.actor .npc .list-spells .description {margin-top:5px;}
+.sheet.actor .npc .list-spells .item-box button, .sheet.actor .npc .list-attacks .item-box button {margin-bottom:0 !important;float:left;}
+.sheet.actor .npc .list-spells .item-box button.name, .sheet.actor .npc .list-attacks .item-box button.name {display:inline-flex;align-items:center;}
+.sheet.actor .npc .list-spells .item-box button + button, .sheet.actor .npc .list-attacks .item-box button + button {margin-left:5px;}
+.sheet.actor .npc .list-spells .item-box button .icon, .sheet.actor .npc .list-attacks .item-box button .icon {margin-left:5px;}
+.sheet.actor .npc .list-spells .description, .sheet.actor .npc .list-attacks .description {margin-top:5px;}
 
 .sheet.actor .npc .tab.skills .title {margin-bottom:10px;}
 .sheet.actor .npc .tab.skills .form-group {margin-top:10px;}
-.sheet.actor .npc .tab.skills .form-group label {font-weight:700;}
-.sheet.actor .npc .tab.skills .form-group select {margin-left:auto;flex:0 0 auto;font-size:16px;border:1px solid var(--color-primary);border-radius:3px;padding:1px 4px;background-color:var(--color-white);}
+.sheet.actor .npc .tab.skills .form-group label {font-weight:700;flex:0 1 auto;}
+.sheet.actor .npc .tab.skills .form-group select {margin-left:15px;flex:0 0 auto;font-size:16px;border:1px solid var(--color-primary);border-radius:3px;padding:1px 4px;background-color:var(--color-white);}
 .sheet.actor .npc .tab.skills .form-group input {flex:0 0 auto;margin-left:10px;width:80px;text-align:center;font-size:16px;border:1px solid var(--color-primary);border-radius:3px;padding:1px 4px;background-color:var(--color-white);}

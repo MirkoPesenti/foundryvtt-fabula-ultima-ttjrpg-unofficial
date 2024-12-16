@@ -1,0 +1,93 @@
+<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
+    </header>
+
+    <section class="sheet-body">
+        <div class="tab">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Gittata</th>
+                        <th>Precisione</th>
+                        <th>Danno</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {{#if @root.editable}}
+                                <select name="system.range">
+                                    {{selectOptions WeaponRanges selected=system.range sort=true localize=true}}
+                                </select>
+                            {{else}}
+                                <div class="form-group">
+                                    <div class="icon icon-{{system.range}}"></div>
+                                    <label>{{localize (concat 'FU.WeaponRanges' system.range)}}</label>
+                                </div>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if @root.editable}}
+                                <div class="form-group">
+                                    <select name="system.precisionAttr.primary.value">
+                                        {{selectOptions attributesAbbr selected=system.precisionAttr.primary.value localize=true}}
+                                    </select>
+                                    <select name="system.precisionAttr.secondary.value">
+                                        {{selectOptions attributesAbbr selected=system.precisionAttr.secondary.value localize=true}}
+                                    </select>
+                                    <span>+</span>
+                                    <input type="number" name="system.precisionBonus" value="{{system.precisionBonus}}">
+                                </div>
+                            {{else}}
+                                <strong>
+                                    【{{localize (concat 'FU.attributesAbbr.' system.precisionAttr.primary.value)}}
+                                    + 
+                                    {{localize (concat 'FU.attributesAbbr.' system.precisionAttr.secondary.value)}}】
+                                    {{#unless (eq system.precisionBonus 0)}}
+                                        {{#gt system.precisionBonus 0}}
+                                            +{{system.precisionBonus}}
+                                        {{else}}
+                                            {{system.precisionBonus}}
+                                        {{/gt}}
+                                    {{/unless}}
+                                </strong>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{#if @root.editable}}
+                                <div class="form-group">
+                                    <input type="number" name="system.damage.value" value="{{system.damage.value}}">
+                                    <span>danno</span>
+                                    <select name="system.damage.type.value">
+                                        {{selectOptions DamageTypes selected=system.damage.type.value localize=true}}
+                                    </select>
+                                </div>
+                            {{else}}
+                                <strong>
+                                    【TM
+                                    {{#gt_e system.damage.value 0}}
+                                        + {{system.damage.value}}】
+                                    {{else}}
+                                        - {{multiply system.damage.value -1}}】
+                                    {{/gt_e}}
+                                    {{localize (concat 'FU.DamageTypes.' system.damage.type.value)}}
+                                </strong>
+                            {{/if}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="editor-full">
+                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+            </div>
+        </div>
+    </section>
+</form>

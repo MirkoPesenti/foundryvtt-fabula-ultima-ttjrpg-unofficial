@@ -1,0 +1,25 @@
+<div class="dice-result">
+	<div class="dice-formula">{{roll.formula}}</div>
+	<div class="dice-tooltip">
+		{{#each roll.dice as |dice diceIndex|}}
+			<section class="tooltip-part">
+				<div class="dice">
+					<header class="part-header flexrow">
+						<span class="part-formula">{{dice.number}}d{{dice.faces}}</span>
+						<button type="button" class="part-total js_rerollDice" data-roll="{{dice.number}}d{{dice.faces}}" data-tooltip="Invoca un tratto per ritirare il dado">
+							<i class="fa fa-rotate m-0"></i>
+						</button>
+					</header>
+					<ol class="dice-rolls">
+						{{#each dice.results}}
+							<li class="roll die d{{dice.faces}}{{#if ../../crit.failure}} min{{/if}}{{#if ../../crit.success}} max{{/if}}">
+								{{this.result}}
+							</li>
+						{{/each}}
+					</ol>
+				</div>
+			</section>
+		{{/each}}
+	</div>
+	<h4 class="dice-total{{#if crit.success}} success{{/if}}{{#if crit.failure}} failure{{/if}}">{{roll.total}}</h4>
+</div>
