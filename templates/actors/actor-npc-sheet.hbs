@@ -17,7 +17,7 @@
     <section class="sheet-body">
         <div class="tab">
             <div class="header">
-                <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+                <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" class="{{#sm_e system.resources.hp.current system.resources.hp.crisis}}is-crisis{{/sm_e}}" />
                 <div class="header-body">
                     <div class="head">
                         <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'FU.Sheet.Name'}}" class="name"/>
@@ -39,55 +39,55 @@
                     </div>
 
                     <div class="affinities">
-                        <button type="button" class="js_btnAffinity" data-affinity="physical">
+                        <button type="button" class="js_setAffinity" data-affinity="physical" data-tooltip="Fisico: {{#if system.affinity.physical}}{{localize (concat 'FU.affinity.' system.affinity.physical)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-physical {{#unless system.affinity.physical}}disabled{{/unless}}"></div>
                             {{#if system.affinity.physical}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.physical)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="air">
+                        <button type="button" class="js_setAffinity" data-affinity="air" data-tooltip="Aria: {{#if system.affinity.air}}{{localize (concat 'FU.affinity.' system.affinity.air)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-air {{#unless system.affinity.air}}disabled{{/unless}}"></div>
                             {{#if system.affinity.air}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.air)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="bolt">
+                        <button type="button" class="js_setAffinity" data-affinity="bolt" data-tooltip="Fulmine: {{#if system.affinity.bolt}}{{localize (concat 'FU.affinity.' system.affinity.bolt)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-bolt {{#unless system.affinity.bolt}}disabled{{/unless}}"></div>
                             {{#if system.affinity.bolt}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.bolt)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="dark">
+                        <button type="button" class="js_setAffinity" data-affinity="dark" data-tooltip="Ombra: {{#if system.affinity.dark}}{{localize (concat 'FU.affinity.' system.affinity.dark)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-dark {{#unless system.affinity.dark}}disabled{{/unless}}"></div>
                             {{#if system.affinity.dark}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.dark)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="earth">
+                        <button type="button" class="js_setAffinity" data-affinity="earth" data-tooltip="Terra: {{#if system.affinity.earth}}{{localize (concat 'FU.affinity.' system.affinity.earth)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-earth {{#unless system.affinity.earth}}disabled{{/unless}}"></div>
                             {{#if system.affinity.earth}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.earth)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="fire">
+                        <button type="button" class="js_setAffinity" data-affinity="fire" data-tooltip="Fuoco: {{#if system.affinity.fire}}{{localize (concat 'FU.affinity.' system.affinity.fire)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-fire {{#unless system.affinity.fire}}disabled{{/unless}}"></div>
                             {{#if system.affinity.fire}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.fire)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="ice">
+                        <button type="button" class="js_setAffinity" data-affinity="ice" data-tooltip="Ghiaccio: {{#if system.affinity.ice}}{{localize (concat 'FU.affinity.' system.affinity.ice)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-ice {{#unless system.affinity.ice}}disabled{{/unless}}"></div>
                             {{#if system.affinity.ice}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.ice)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="light">
+                        <button type="button" class="js_setAffinity" data-affinity="light" data-tooltip="Luce: {{#if system.affinity.light}}{{localize (concat 'FU.affinity.' system.affinity.light)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-light {{#unless system.affinity.light}}disabled{{/unless}}"></div>
                             {{#if system.affinity.light}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.light)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_btnAffinity" data-affinity="poison">
+                        <button type="button" class="js_setAffinity" data-affinity="poison" data-tooltip="Veleno: {{#if system.affinity.poison}}{{localize (concat 'FU.affinity.' system.affinity.poison)}}{{else}}Neutro{{/if}}">
                             <div class="icon icon-poison {{#unless system.affinity.poison}}disabled{{/unless}}"></div>
                             {{#if system.affinity.poison}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.poison)}}</span>
@@ -144,23 +144,71 @@
                         {{/unless}}
                     </div>
                 {{/unless}}
-            </div>
 
-            <div class="attributes-container">
-                <div class="attr hp">
+                {{!-- <div class="attr hp">
                     <label>PV</label>
                     <div class="info">
                         {{system.resources.hp.max}}
                         <span>◆</span>
                         {{system.resources.hp.crisis}}
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="attr mp">
+                {{!-- <div class="attr mp">
                     <label>PM</label>
                     <div class="info">
                         {{system.resources.mp.max}}
+                        <span>◆</span>
+                        {{system.resources.mp.crisis}}
                     </div>
+                </div> --}}
+            </div>
+
+            <div class="attributes-container">
+                <div class="attr hp" data-tooltip="Punti Vita: {{system.resources.hp.current}}<br>Crisi: {{system.resources.hp.crisis}}<br>PV Massimi: {{system.resources.hp.max}}">
+                    <div class="progress-container">
+                        <div class="pregress-bar">
+                            <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
+                        </div>
+                        <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
+                        <button type="button" class="crisis js_setAttrValue" data-attr="hp" data-value="{{system.resources.hp.crisis}}">
+                            {{system.resources.hp.crisis}}
+                        </button>
+                        <button type="button" class="max js_setAttrValue" data-attr="hp">{{system.resources.hp.max}}</button>
+                    </div>
+                </div>
+
+                <div class="attr mp" data-tooltip="Punti Menti: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
+                    <div class="progress-container">
+                        <div class="pregress-bar">
+                            <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
+                        </div>
+                        <input type="number" min="0" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
+                        <div class="crisis"></div>
+                        <button type="button" class="max js_setAttrValue" data-attr="mp">{{system.resources.mp.max}}</button>
+                    </div>
+                </div>
+
+                <div class="attr status">
+                    <button type="button" class="js_setStatus" data-status="slow" data-tooltip="{{localize 'FU.Status.slow'}}">
+                        <div class="icon icon-slow {{#unless system.staus.slow.active}}disabled{{/unless}}"></div>
+                    </button>
+                    <button type="button" class="js_setStatus" data-status="dazed" data-tooltip="{{localize 'FU.Status.dazed'}}">
+                        <div class="icon icon-dazed {{#unless system.staus.dazed.active}}disabled{{/unless}}"></div>
+                    </button>
+                    <button type="button" class="js_setStatus" data-status="weak" data-tooltip="{{localize 'FU.Status.weak'}}">
+                        <div class="icon icon-weak {{#unless system.staus.weak.active}}disabled{{/unless}}"></div>
+                    </button>
+                    <button type="button" class="js_setStatus" data-status="shaken" data-tooltip="{{localize 'FU.Status.shaken'}}">
+                        <div class="icon icon-shaken {{#unless system.staus.shaken.active}}disabled{{/unless}}"></div>
+                    </button>
+
+                    <button type="button" class="js_setStatus" data-status="enraged" data-tooltip="{{localize 'FU.Status.enraged'}}">
+                        <div class="icon icon-enraged {{#unless system.staus.enraged.active}}disabled{{/unless}}"></div>
+                    </button>
+                    <button type="button" class="js_setStatus" data-status="poisoned" data-tooltip="{{localize 'FU.Status.poisoned'}}">
+                        <div class="icon icon-poisoned {{#unless system.staus.poisoned.active}}disabled{{/unless}}"></div>
+                    </button>
                 </div>
             </div>
             
@@ -228,7 +276,7 @@
                                             </label>
                                         {{/if}}
                                         <p>
-                                            <strong class="ml-0">
+                                            <strong class="m-0">
                                                 【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttr.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttr.secondary.value)}}】{{#gt this.system.precisionBonus 0}}+ {{this.system.precisionBonus}}{{/gt}}
                                             </strong>
                                             <small class="{{#gt this.system.precisionBonus 0}}{{else}}ml-0{{/gt}}">◆</small>
@@ -446,15 +494,43 @@
                             <input type="number" name="system.rank.replacedSoldiers" value="{{system.rank.replacedSoldiers}}">
                         {{/unless}}
                     </div>
+
                     <div class="form-group">
                         <label>Cattivo:</label>
                         <select name="system.villain">
                             {{selectOptions villainTypes selected=system.villain localize=true}}
                         </select>
                     </div>
+                    
                     <div class="form-group">
-                        <label>DEF</label>
-                        <input type="number">
+                        <label>PV:</label>
+                        <input type="number" name="system.resources.hp.bonus" value="{{system.resources.hp.bonus}}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>PM:</label>
+                        <input type="number" name="system.resources.mp.bonus" value="{{system.resources.mp.bonus}}">
+                    </div>
+                </div>
+                <div class="flexrow">
+                    <div class="form-group">
+                        <label>Bonus Difesa:</label>
+                        <input type="number" name="system.resources.params.def.bonus" value="{{system.resources.params.def.bonus}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bonus D. Magica:</label>
+                        <input type="number" name="system.resources.params.mdef.bonus" value="{{system.resources.params.mdef.bonus}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bonus Iniz.:</label>
+                        <input type="number" name="system.resources.params.init.bonus" value="{{system.resources.params.init.bonus}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bonus tiri:</label>
+                        <input type="number" name="system.testBonus" value="{{system.testBonus}}">
                     </div>
                 </div>
 

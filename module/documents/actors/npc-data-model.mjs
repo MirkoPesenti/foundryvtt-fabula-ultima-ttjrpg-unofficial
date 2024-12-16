@@ -1,6 +1,7 @@
 import { AttributesDataModel } from "./common/attributes-data-model.mjs";
 import { DefencesDataModel } from "./common/defences-data-model.mjs";
 import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
+import { StatusesDataModel } from "./common/statuses-data-model.mjs";
 import { FU } from '../../helpers/config.mjs';
 
 /**
@@ -20,14 +21,22 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 				replacedSoldiers: new NumberField({ initial: 0, min: 0, max: 6 }),
 			}),
 			resources: new SchemaField({
-				hp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
-				mp: new SchemaField({ current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }) }),
+				hp: new SchemaField({
+					current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }),
+					bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
+				}),
+				mp: new SchemaField({
+					current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }),
+					bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
+				}),
 				attributes: new EmbeddedDataField(AttributesDataModel, {}),
 				up: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
 				params: new EmbeddedDataField(DefencesDataModel, {}),
 			}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
 			skills: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
+			testBonus: new NumberField({ initial: 0, integer: true, nullable: false }),
+			status: new EmbeddedDataField(StatusesDataModel, {}),
 		};
 	}
 
@@ -60,6 +69,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 
 		// Checks and Damage Bonus
 		this.level.checkBonus = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0;
+		this.level.checkBonus += this.testBonus;
 		if ( this.level.value == 60 )
 			this.level.damageBonus = 15;
 		else if ( this.level.value >= 40 )
@@ -192,7 +202,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		const baseHP = Object.keys(FU.attributes).includes(this.resources.hp.attribute)
 			? data.resources.attributes[this.resources.hp.attribute].value
 			: data.resources.attributes.mig.value;
-		const maxHP = ( baseHP * 5 ) + ( data.level.value * 2 );
+		const maxHP = ( baseHP * 5 ) + ( data.level.value * 2 ) + data.resources.hp.bonus;
 		this.resources.hp.max = maxHP;
 		
 		if ( this.rank.value == 'elite' )
@@ -207,7 +217,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		const baseMP = Object.keys(FU.attributes).includes(this.resources.mp.attribute)
 			? data.resources.attributes[this.resources.mp.attribute].value
 			: data.resources.attributes.mig.value;
-		const maxMP = ( baseMP * 5 ) + ( data.level.value * 2 );
+		const maxMP = ( baseMP * 5 ) + ( data.level.value * 2 ) + data.resources.mp.bonus;
 		this.resources.mp.max = maxMP;
 		
 		if ( this.rank.value == 'champion' )

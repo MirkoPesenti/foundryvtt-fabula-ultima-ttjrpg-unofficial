@@ -210,6 +210,9 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
 		html.on('click', '.freeFreature', this._freeClassFeature.bind(this));
 
+		// Set Attributes values
+		html.on('click', '.js_setAttrValue', this._setAttrValue.bind(this));
+
 		// Equip Item
 		html.on('click','.js_equipItem', async (e) => {
 			e.preventDefault();
@@ -313,7 +316,7 @@ export class FabulaActorSheet extends ActorSheet {
 		});
 
 		// Set affinities
-		html.on('click','.js_btnAffinity', async (e) => {
+		html.on('click','.js_setAffinity', async (e) => {
 			e.preventDefault();
 			const actor = this.actor; 
 			const affinity = e.currentTarget.dataset.affinity;
@@ -498,6 +501,21 @@ export class FabulaActorSheet extends ActorSheet {
 				items: {},
 			});
 			featureType.items[item.id] = { item, additionalData: await featureType.feature?.getAdditionalData(item.system.data) };
+		}
+	}
+
+	async _setAttrValue(event) {
+		event.preventDefault();
+		const element = event.currentTarget;
+		const actor = this.actor;
+		const attribute = element.dataset.attr;
+		const value = element.dataset.value;
+
+		if ( attribute ) {
+			const updateObj = `system.resources.${attribute}.current`;
+			const newVal = value ? Number(value) : actor.system.resources[attribute].max;
+			
+			await actor.update({ [updateObj]: newVal });
 		}
 	}
 
