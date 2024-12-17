@@ -20,6 +20,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 				value: new StringField({ initial: 'soldier', choices: Object.keys(FU.enemyRanks) }),
 				replacedSoldiers: new NumberField({ initial: 0, min: 0, max: 6 }),
 			}),
+			attributes: new EmbeddedDataField(AttributesDataModel, {}),
 			resources: new SchemaField({
 				hp: new SchemaField({
 					current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }),
@@ -29,7 +30,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 					current: new NumberField({ initial: 1, min: 0, integer: true, nullable: false }),
 					bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
 				}),
-				attributes: new EmbeddedDataField(AttributesDataModel, {}),
 				up: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
 				params: new EmbeddedDataField(DefencesDataModel, {}),
 			}),
@@ -63,9 +63,9 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.rank.replacedSoldiers = 0;
 			
 		// Defence, Magic Defence and Initiative
-		this.resources.params.def.current = this.resources.attributes.dex.value + this.resources.params.def.bonus;
-		this.resources.params.mdef.current = this.resources.attributes.ins.value + this.resources.params.mdef.bonus;
-		this.resources.params.init.current = Math.floor( ( this.resources.attributes.dex.value + this.resources.attributes.ins.value ) / 2 ) + this.resources.params.init.bonus;
+		this.resources.params.def.current = this.attributes.dex.value + this.resources.params.def.bonus;
+		this.resources.params.mdef.current = this.attributes.ins.value + this.resources.params.mdef.bonus;
+		this.resources.params.init.current = Math.floor( ( this.attributes.dex.value + this.attributes.ins.value ) / 2 ) + this.resources.params.init.bonus;
 
 		// Checks and Damage Bonus
 		this.level.checkBonus = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0;
@@ -196,32 +196,45 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 	}
 
 	prepareEmbeddedData() {
+
+		this.#prepareBasicData();
+		this.status.prepareData();
+
+	}
+	
+	#prepareBasicData() {
 		const data = this;
 
 		// Max HP
 		const baseHP = Object.keys(FU.attributes).includes(this.resources.hp.attribute)
-			? data.resources.attributes[this.resources.hp.attribute].value
-			: data.resources.attributes.mig.value;
+			? data.attributes[this.resources.hp.attribute].value
+			: data.attributes.mig.value;
 		const maxHP = ( baseHP * 5 ) + ( data.level.value * 2 ) + data.resources.hp.bonus;
-		this.resources.hp.max = maxHP;
+		data.resources.hp.max = maxHP;
 		
-		if ( this.rank.value == 'elite' )
-			this.resources.hp.max *= 2;
-		else if ( this.rank.value == 'champion' )
-			this.resources.hp.max *= this.rank.replacedSoldiers;
+		if ( data.rank.value == 'elite' )
+			data.resources.hp.max *= 2;
+		else if ( data.rank.value == 'champion' )
+			data.resources.hp.max *= data.rank.replacedSoldiers;
+
+		if ( data.resources.hp.current > data.resources.hp.max )
+			data.resources.hp.current = data.resources.hp.max;
 
 		// HP Crisis
-		this.resources.hp.crisis = Math.floor( this.resources.hp.max / 2 );
+		data.resources.hp.crisis = Math.floor( data.resources.hp.max / 2 );
 
 		// Max MP
 		const baseMP = Object.keys(FU.attributes).includes(this.resources.mp.attribute)
-			? data.resources.attributes[this.resources.mp.attribute].value
-			: data.resources.attributes.mig.value;
+			? data.attributes[this.resources.mp.attribute].value
+			: data.attributes.mig.value;
 		const maxMP = ( baseMP * 5 ) + ( data.level.value * 2 ) + data.resources.mp.bonus;
-		this.resources.mp.max = maxMP;
+		data.resources.mp.max = maxMP;
 		
-		if ( this.rank.value == 'champion' )
-			this.resources.mp.max *= 2;
+		if ( data.rank.value == 'champion' )
+			data.resources.mp.max *= 2;
+
+		if ( data.resources.mp.current > data.resources.mp.max )
+			data.resources.mp.current = data.resources.mp.max;
 
 		// Set Ultima Points
 		let maxUp = 0;
@@ -231,8 +244,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			maxUp = 10;
 		else if ( data.villain == 'supreme' )
 			maxUp = 15;
-		this.resources.up.max = maxUp;
-
-		this.status.prepareData();
+		data.resources.up.max = maxUp;
 	}
 }

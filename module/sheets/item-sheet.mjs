@@ -65,15 +65,14 @@ export class FabulaItemSheet extends ItemSheet {
 			options.height = 500;
 		else if ( 
 			this.object.type == 'weapon' ||
-			this.object.type == 'artifact'
-		)
-			options.height = 375;
-		else if ( 
+			this.object.type == 'artifact' ||
 			this.object.type == 'shield' ||
 			this.object.type == 'armor' ||
 			this.object.type == 'accessory' ||
 			this.object.type == 'consumable'
 		)
+			options.height = 375;
+		else
 			options.height = 300;
 
 		super.render(force, options);
@@ -380,7 +379,7 @@ export class FabulaItemSheet extends ItemSheet {
 				spiritism: 'systems/fabula/assets/icons/classes/spiritist.png'
 			};
 			data['img'] = typeImages[data['system.type.value']];
-		} else {
+		} else if ( data['img'] == 'icons/svg/item-bag.svg' ) {
 			data['img'] = `systems/fabula/assets/icons/default-${this.item.type}.svg`;
 		}
 		const overrides = foundry.utils.flattenObject( this.item.overrides );

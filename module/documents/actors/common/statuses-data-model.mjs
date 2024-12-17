@@ -27,61 +27,44 @@ export class StatusesDataModel extends foundry.abstract.DataModel {
 	}
 
 	#prepareStatus(actor) {
-		
-		const dex = actor.system.resources.attributes.dex.value;
-		const ins = actor.system.resources.attributes.ins.value;
-		const mig = actor.system.resources.attributes.mig.value;
-		const wlp = actor.system.resources.attributes.wlp.value;
-
-		console.log( dex, ins, mig, wlp );
-		console.log( this );
 
 		// Status slow
-		if ( this.slow.active && dex > 6 ) {
-			actor.system.resources.attributes.dex.value -= 2;
-		} else {
-			this.slow.active = false;
+		if ( this.slow.active && actor.system.attributes.dex.value > 6 ) {
+			actor.system.attributes.dex.value -= 2;
 		}
 
 		// Status dazed
-		if ( this.dazed.active && ins > 6 ) {
-			actor.system.resources.attributes.ins.value -= 2;
-		} else {
-			this.dazed.active = false;
+		if ( this.dazed.active && actor.system.attributes.ins.value > 6 ) {
+			actor.system.attributes.ins.value -= 2;
 		}
 
 		// Status weak
-		if ( this.weak.active && mig > 6 ) {
-			actor.system.resources.attributes.mig.value -= 2;
-		} else {
-			this.weak.active = false;
+		if ( this.weak.active && actor.system.attributes.mig.value > 6 ) {
+			actor.system.attributes.mig.value -= 2;
 		}
 
 		// Status shaken
-		if ( this.shaken.active && wlp > 6 ) {
-			actor.system.resources.attributes.wlp.value -= 2;
-		} else {
-			this.shaken.active = false;
+		if ( this.shaken.active && actor.system.attributes.wlp.value > 6 ) {
+			actor.system.attributes.wlp.value -= 2;
 		}
 
 		// Status enraged
-		if ( this.enraged.active && dex > 6 && ins > 6 ) {
-			actor.system.resources.attributes.dex.value -= 2;
-			actor.system.resources.attributes.ins.value -= 2;
-		} else {
-			this.enraged.active = false;
+		if ( this.enraged.active ) {
+			if ( actor.system.attributes.dex.value > 6 )
+				actor.system.attributes.dex.value -= 2;
+
+			if ( actor.system.attributes.ins.value > 6 )
+			actor.system.attributes.ins.value -= 2;
 		}
 
 		// Status poisoned
-		if ( this.poisoned.active && wlp > 6 && mig > 6 ) {
-			actor.system.resources.attributes.wlp.value -= 2;
-			actor.system.resources.attributes.mig.value -= 2;
-		} else {
-			this.poisoned.active = false;
-		}
+		if ( this.poisoned.active ) {
+			if ( actor.system.attributes.wlp.value > 6 )
+				actor.system.attributes.wlp.value -= 2;
 
-		console.log( dex, ins, mig, wlp );
-		console.log( this );
+			if ( actor.system.attributes.mig.value > 6 )
+				actor.system.attributes.mig.value -= 2;
+		}
 
 	}
 }

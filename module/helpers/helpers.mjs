@@ -57,7 +57,7 @@ function openFreeBenefirsChildDialog( radios, actorClasses, clonedDocument ) {
 }
 
 function openAttributesIncreaseChildDialog( actor ) {
-	const attributes = actor.system.resources.attributes;
+	const attributes = actor.system.attributes;
 	const newAttributes = {
 		dex: attributes.dex.value == 12 ? 12 : attributes.dex.value + 2,
 		ins: attributes.ins.value == 12 ? 12 : attributes.ins.value + 2,
@@ -97,10 +97,10 @@ function openAttributesIncreaseChildDialog( actor ) {
 						newAttributes.wlp = newAttributes.wlp == 12 ? 12 : newAttributes.wlp - 2;
 						newAttributes[increase] += 2;
 						
-						await actor.update({ 'system.resources.attributes.dex.value': newAttributes.dex });
-						await actor.update({ 'system.resources.attributes.ins.value': newAttributes.ins });
-						await actor.update({ 'system.resources.attributes.mig.value': newAttributes.mig });
-						await actor.update({ 'system.resources.attributes.wlp.value': newAttributes.wlp });
+						await actor.update({ 'system.attributes.dex.value': newAttributes.dex });
+						await actor.update({ 'system.attributes.ins.value': newAttributes.ins });
+						await actor.update({ 'system.attributes.mig.value': newAttributes.mig });
+						await actor.update({ 'system.attributes.wlp.value': newAttributes.wlp });
 						resolve(true);
 					}
 				},

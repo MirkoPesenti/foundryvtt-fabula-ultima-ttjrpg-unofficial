@@ -392,33 +392,33 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 				<div class="form-group">
 					<label>Destrezza (DES)</label>
 					<select id="dex">
-						<option value="6" ${actor.system.resources.attributes.dex.value == 6 ? 'selected' : ''}>D6</option>
-						<option value="8" ${actor.system.resources.attributes.dex.value == 8 ? 'selected' : ''}>D8</option>
-						<option value="10" ${actor.system.resources.attributes.dex.value == 10 ? 'selected' : ''}>D10</option>
+						<option value="6" ${actor.system.attributes.dex.value == 6 ? 'selected' : ''}>D6</option>
+						<option value="8" ${actor.system.attributes.dex.value == 8 ? 'selected' : ''}>D8</option>
+						<option value="10" ${actor.system.attributes.dex.value == 10 ? 'selected' : ''}>D10</option>
 					</select>
 				</div>
 				<div class="form-group">
 					<label>Intuito (INT)</label>
 					<select id="ins">
-						<option value="6" ${actor.system.resources.attributes.ins.value == 6 ? 'selected' : ''}>D6</option>
-						<option value="8" ${actor.system.resources.attributes.ins.value == 8 ? 'selected' : ''}>D8</option>
-						<option value="10" ${actor.system.resources.attributes.ins.value == 10 ? 'selected' : ''}>D10</option>
+						<option value="6" ${actor.system.attributes.ins.value == 6 ? 'selected' : ''}>D6</option>
+						<option value="8" ${actor.system.attributes.ins.value == 8 ? 'selected' : ''}>D8</option>
+						<option value="10" ${actor.system.attributes.ins.value == 10 ? 'selected' : ''}>D10</option>
 					</select>
 				</div>
 				<div class="form-group">
 					<label>Vigore (VIG)</label>
 					<select id="mig">
-						<option value="6" ${actor.system.resources.attributes.mig.value == 6 ? 'selected' : ''}>D6</option>
-						<option value="8" ${actor.system.resources.attributes.mig.value == 8 ? 'selected' : ''}>D8</option>
-						<option value="10" ${actor.system.resources.attributes.mig.value == 10 ? 'selected' : ''}>D10</option>
+						<option value="6" ${actor.system.attributes.mig.value == 6 ? 'selected' : ''}>D6</option>
+						<option value="8" ${actor.system.attributes.mig.value == 8 ? 'selected' : ''}>D8</option>
+						<option value="10" ${actor.system.attributes.mig.value == 10 ? 'selected' : ''}>D10</option>
 					</select>
 				</div>
 				<div class="form-group">
 					<label>Volontà (VOL)</label>
 					<select id="wlp">
-						<option value="6" ${actor.system.resources.attributes.wlp.value == 6 ? 'selected' : ''}>D6</option>
-						<option value="8" ${actor.system.resources.attributes.wlp.value == 8 ? 'selected' : ''}>D8</option>
-						<option value="10" ${actor.system.resources.attributes.wlp.value == 10 ? 'selected' : ''}>D10</option>
+						<option value="6" ${actor.system.attributes.wlp.value == 6 ? 'selected' : ''}>D6</option>
+						<option value="8" ${actor.system.attributes.wlp.value == 8 ? 'selected' : ''}>D8</option>
+						<option value="10" ${actor.system.attributes.wlp.value == 10 ? 'selected' : ''}>D10</option>
 					</select>
 				</div>
 			`,
@@ -430,10 +430,10 @@ Hooks.on('renderActorSheet', (sheet, html, data)  => {
 					wlp: html.find('#wlp').val(),
 				};
 				if ( checkParams( params ) ) {
-					await actor.update({ 'system.resources.attributes.dex.value': params.dex });
-					await actor.update({ 'system.resources.attributes.ins.value': params.ins });
-					await actor.update({ 'system.resources.attributes.mig.value': params.mig });
-					await actor.update({ 'system.resources.attributes.wlp.value': params.wlp });
+					await actor.update({ 'system.attributes.dex.value': params.dex });
+					await actor.update({ 'system.attributes.ins.value': params.ins });
+					await actor.update({ 'system.attributes.mig.value': params.mig });
+					await actor.update({ 'system.attributes.wlp.value': params.wlp });
 					return true;
 				} else {
 					ui.notifications.warn('Devi selezionare una combinazione di attrivuti accettabili');

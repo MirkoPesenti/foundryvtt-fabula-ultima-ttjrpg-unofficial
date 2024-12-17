@@ -1,3 +1,5 @@
-2024/12/16-23:14:46.971 cd0 Recovering log #59
-2024/12/16-23:14:46.971 cd0 Delete type=0 #59
-2024/12/16-23:14:46.971 cd0 Delete type=3 #58
+2024/12/17-20:18:47.258 14ec Log #63: 0 ops saved to Table #64 OK
+2024/12/17-20:18:47.260 14ec Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/000063.log: OK
+2024/12/17-20:18:47.271 14ec Table #57: 2 entries OK
+2024/12/17-20:18:47.274 14ec Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/MANIFEST-000062: OK
+2024/12/17-20:18:47.278 14ec **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains; recovered 1 files; 1734 bytes. Some data may have been lost. ****

@@ -28,10 +28,10 @@
                             Punti Mente: {{system.resources.mp.current}} / {{system.resources.mp.max}} <br>
                             Punti Inventario: {{system.resources.ip.current}} / {{system.resources.ip.max}} <br>
                             <ul>
-                                <li>Destrezza (DES): D{{system.resources.attributes.dex.value}}</li>
-                                <li>Intuito (INT): D{{system.resources.attributes.ins.value}}</li>
-                                <li>Vigore (VIG): D{{system.resources.attributes.mig.value}}</li>
-                                <li>Volontà (VOL): D{{system.resources.attributes.wlp.value}}</li>
+                                <li>Destrezza (DES): D{{system.attributes.dex.value}}</li>
+                                <li>Intuito (INT): D{{system.attributes.ins.value}}</li>
+                                <li>Vigore (VIG): D{{system.attributes.mig.value}}</li>
+                                <li>Volontà (VOL): D{{system.attributes.wlp.value}}</li>
                             </ul>
                             Punti Fabula: {{system.resources.fp}} <br>
                             Zenit: {{system.resources.zenit}}z <br>
@@ -256,7 +256,7 @@
                             <span style="width:50%;">
                                 {{subItem.name}}
                                 <br>
-                                <button type="button" class="roll" data-roll="d{{getAttributeValue ../system.resources.attributes subItem.system.precisionAttributes.primary.value}}+d{{getAttributeValue ../system.resources.attributes subItem.system.precisionAttributes.secondary.value}}{{#unless (eq subItem.system.precisionBonus 0)}}{{#gt subItem.system.precisionBonus 0}}+{{subItem.system.precisionBonus}}{{else}}{{subItem.system.precisionBonus}}{{/gt}}{{/unless}}">
+                                <button type="button" class="roll" data-roll="d{{getAttributeValue ../system.attributes subItem.system.precisionAttributes.primary.value}}+d{{getAttributeValue ../system.attributes subItem.system.precisionAttributes.secondary.value}}{{#unless (eq subItem.system.precisionBonus 0)}}{{#gt subItem.system.precisionBonus 0}}+{{subItem.system.precisionBonus}}{{else}}{{subItem.system.precisionBonus}}{{/gt}}{{/unless}}">
                                     【{{localize (concat 'FU.attributesAbbr.' subItem.system.precisionAttributes.primary.value)}}
                                     + 
                                     {{localize (concat 'FU.attributesAbbr.' subItem.system.precisionAttributes.secondary.value)}}】
@@ -322,7 +322,7 @@
                     {{#unless (eq this.type "class")}}
                         <li>
                             {{#if subItem.system.isOffensive.value}}
-                                <button type="button" class="js_rollSpellTest" data-roll="d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.primary.value}}+d{{getAttributeValue ../system.resources.attributes subItem.system.attributes.secondary.value}}" data-id="{{subItem._id}}">
+                                <button type="button" class="js_rollSpellTest" data-roll="d{{getAttributeValue ../system.attributes subItem.system.attributes.primary.value}}+d{{getAttributeValue ../system.attributes subItem.system.attributes.secondary.value}}" data-id="{{subItem._id}}">
                                     Test Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.secondary.value)}}】</strong>
                                 </button>
                             {{/if}}
@@ -376,8 +376,8 @@
             </ul>
         </div>
 
-        <button type="button" class="roll" data-roll="d{{system.resources.attributes.dex.value}}+@level.value">
-            roll dex: D{{system.resources.attributes.dex.value}} + Level: {{system.level.value}}
+        <button type="button" class="roll" data-roll="d{{system.attributes.dex.value}}+@level.value">
+            roll dex: D{{system.attributes.dex.value}} + Level: {{system.level.value}}
         </button>
 
         <button type="button" class="getActor">log</button>

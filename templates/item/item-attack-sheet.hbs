@@ -37,20 +37,20 @@
                         <td>
                             {{#if @root.editable}}
                                 <div class="form-group">
-                                    <select name="system.precisionAttr.primary.value">
-                                        {{selectOptions attributesAbbr selected=system.precisionAttr.primary.value localize=true}}
+                                    <select name="system.precisionAttributes.primary.value">
+                                        {{selectOptions attributesAbbr selected=system.precisionAttributes.primary.value localize=true}}
                                     </select>
-                                    <select name="system.precisionAttr.secondary.value">
-                                        {{selectOptions attributesAbbr selected=system.precisionAttr.secondary.value localize=true}}
+                                    <select name="system.precisionAttributes.secondary.value">
+                                        {{selectOptions attributesAbbr selected=system.precisionAttributes.secondary.value localize=true}}
                                     </select>
                                     <span>+</span>
                                     <input type="number" name="system.precisionBonus" value="{{system.precisionBonus}}">
                                 </div>
                             {{else}}
                                 <strong>
-                                    【{{localize (concat 'FU.attributesAbbr.' system.precisionAttr.primary.value)}}
+                                    【{{localize (concat 'FU.attributesAbbr.' system.precisionAttributes.primary.value)}}
                                     + 
-                                    {{localize (concat 'FU.attributesAbbr.' system.precisionAttr.secondary.value)}}】
+                                    {{localize (concat 'FU.attributesAbbr.' system.precisionAttributes.secondary.value)}}】
                                     {{#unless (eq system.precisionBonus 0)}}
                                         {{#gt system.precisionBonus 0}}
                                             +{{system.precisionBonus}}

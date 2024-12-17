@@ -14,6 +14,15 @@
         </a>
     </nav>
 
+    <div class="btn-roll-group">
+        <button type="button" class="js_rollActorTest" data-tooltip="Effettua un Test">
+            <div class="icon icon-test"></div>
+        </button>
+        {{!-- <button type="button" class="init js_rollInitiative" data-tooltip="Tira per l'Iniziativa">
+            <div class="icon icon-initiative"></div>
+        </button> --}}
+    </div>
+
     <section class="sheet-body">
         <div class="tab">
             <div class="header">
@@ -100,38 +109,38 @@
             <div class="attributes-container">
                 <div class="attr">
                     <label>DES</label>
-                    <select name="system.resources.attributes.dex.value">
-                        <option value="6" {{#if (eq system.resources.attributes.dex.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.resources.attributes.dex.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.resources.attributes.dex.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.resources.attributes.dex.value 12)}}selected{{/if}}>d12</option>
+                    <select name="system.attributes.dex.value">
+                        <option value="6" {{#if (eq system.attributes.dex.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.attributes.dex.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.attributes.dex.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.attributes.dex.value 12)}}selected{{/if}}>d12</option>
                     </select>
                 </div>
                 <div class="attr">
                     <label>INT</label>
-                    <select name="system.resources.attributes.ins.value">
-                        <option value="6" {{#if (eq system.resources.attributes.ins.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.resources.attributes.ins.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.resources.attributes.ins.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.resources.attributes.ins.value 12)}}selected{{/if}}>d12</option>
+                    <select name="system.attributes.ins.value">
+                        <option value="6" {{#if (eq system.attributes.ins.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.attributes.ins.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.attributes.ins.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.attributes.ins.value 12)}}selected{{/if}}>d12</option>
                     </select>
                 </div>
                 <div class="attr">
                     <label>VIG</label>
-                    <select name="system.resources.attributes.mig.value">
-                        <option value="6" {{#if (eq system.resources.attributes.mig.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.resources.attributes.mig.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.resources.attributes.mig.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.resources.attributes.mig.value 12)}}selected{{/if}}>d12</option>
+                    <select name="system.attributes.mig.value">
+                        <option value="6" {{#if (eq system.attributes.mig.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.attributes.mig.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.attributes.mig.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.attributes.mig.value 12)}}selected{{/if}}>d12</option>
                     </select>
                 </div>
                 <div class="attr">
                     <label>VOL</label>
-                    <select name="system.resources.attributes.wlp.value">
-                        <option value="6" {{#if (eq system.resources.attributes.wlp.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.resources.attributes.wlp.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.resources.attributes.wlp.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.resources.attributes.wlp.value 12)}}selected{{/if}}>d12</option>
+                    <select name="system.attributes.wlp.value">
+                        <option value="6" {{#if (eq system.attributes.wlp.value 6)}}selected{{/if}}>d6</option>
+                        <option value="8" {{#if (eq system.attributes.wlp.value 8)}}selected{{/if}}>d8</option>
+                        <option value="10" {{#if (eq system.attributes.wlp.value 10)}}selected{{/if}}>d10</option>
+                        <option value="12" {{#if (eq system.attributes.wlp.value 12)}}selected{{/if}}>d12</option>
                     </select>
                 </div>
 
@@ -239,254 +248,160 @@
             </div>
             
             <div class="tab base" data-group="primary" data-tab="base">
-                <div class="content-collapse open attack">
-                    <div class="title">
-                        Attacchi base
-                        {{#if @root.editable}}
-                            <button type="button" class="js_createItem" data-type="attack">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        {{/if}}
-                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                            <i class="fa fa-angle-down"></i>
-                        </button> --}}
+                <nav class="tabs inner-tabs" data-group="secondary">
+                    <a class="item active" data-tab="attacks">
+                        <span>Attacchi</span>
+                    </a>
+                    <a class="item" data-tab="spells">
+                        <span>Incantesimi</span>
+                    </a>
+                    <a class="item" data-tab="actions">
+                        <span>Altre azioni</span>
+                    </a>
+                    <a class="item" data-tab="rules">
+                        <span>Regole speciali</span>
+                    </a>
+                </nav>
+
+                <div class="tab inner-tab active" data-group="secondary" data-tab="attacks">
+                    <div class="content-collapse open attack">
+                        <div class="title">
+                            Attacchi base
+                            {{#if @root.editable}}
+                                <button type="button" class="js_createItem" data-type="attack">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            {{/if}}
+                            {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button> --}}
+                        </div>
+                        <div class="collapse">
+                            <ul class="list list-attacks">
+                                {{#each weapons}}
+                                    {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
+                                {{/each}}
+                                {{#each attacks}}
+                                    {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
+                                {{/each}}
+                            </ul>
+                        </div>
                     </div>
-                    <div class="collapse">
-                        <ul class="list list-attacks">
-                            {{#each attacks}}
+
+                    {{#if (or (arrayLengthGt weapons 0) (arrayLengthGt armors 0) (arrayLengthGt shields 0) (arrayLengthGt accessories 0))}}
+                        <div class="content-collapse open equip">
+                            <div class="title">
+                                Equipaggiamento
+                                {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                                    <i class="fa fa-angle-down"></i>
+                                </button> --}}
+                            </div>
+                            <div class="collapse">
+                                <ul class="list list-equip">
+                                    {{#each weapons}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                    {{/each}}
+                                    {{#each armors}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                    {{/each}}
+                                    {{#each shields}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                    {{/each}}
+                                    {{#each accessories}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                    {{/each}}
+                                </ul>
+                            </div>
+                        </div>
+                    {{/if}}
+                </div>
+
+                <div class="tab inner-tab" data-group="secondary" data-tab="spells">
+                    <div class="content-collapse open spell">
+                        <div class="title">
+                            Incantesimi
+                            {{#if @root.editable}}
+                                <button type="button" class="js_createItem" data-type="spell">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            {{/if}}
+                            {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button> --}}
+                        </div>
+                        <div class="collapse">
+                            <ul class="list list-spells">
+                                {{#each spells}}
+                                    {{> 'systems/fabula/templates/actors/common/spell-list-item.hbs' item=this actor=../system}}
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab inner-tab" data-group="secondary" data-tab="actions">
+                    <div class="content-collapse open other">
+                        <div class="title">
+                            Altre azioni
+                            {{#if @root.editable}}
+                                <button type="button" class="js_createItem" data-type="baseItem">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            {{/if}}
+                            {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button> --}}
+                        </div>
+                        <div class="collapse">
+                            <ul class="list list-other-actions">
+                                {{#each baseItems as |action indexAction|}}
+                                    {{#if (not action.system.rule)}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=action}}
+                                    {{/if}}
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab inner-tab" data-group="secondary" data-tab="rules">
+                    <div class="content-collapse open rule">
+                        <div class="title">
+                            Regole speciali
+                            {{#if @root.editable}}
+                                <button type="button" class="js_createItem" data-type="baseItem" data-rule="true">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            {{/if}}
+                            {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button> --}}
+                        </div>
+                        <div class="collapse">
+                            <ul class="list list-special-rules">
+                                {{#each baseItems as |rule indexRule|}}
+                                    {{#if rule.system.rule}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=rule}}
+                                    {{/if}}
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+
+                    {{#if (arrayLengthGt system.species.rules 0)}}
+                        {{#each system.species.rules}}
+                            <div class="title">{{this.name}}</div>
+                            <ul class="list">
                                 <li>
-                                    <div class="btn-container">
-                                        {{#if @root.editable}}
-                                            <button type="button" class="js_deleteItem" data-itemid="{{this._id}}">
-                                                <i class="fa fa-trash m-0"></i>
-                                            </button>
-
-                                            <button type="button" class="js_editItem" data-itemid="{{this._id}}">
-                                                <i class="fa fa-pencil m-0"></i>
-                                            </button>
-                                        {{/if}}
-                                    </div>
+                                    <div class="btn-container"></div>
                                     <div class="item-box">
-                                        {{#if @root.editable}}
-                                            <button type="button" class="js_showItemInChat" data-itemid="{{this._id}}">
-                                                <i class="fa fa-comment m-0"></i>
-                                            </button>
-                                            <button type="button" class="name js_rollActorItem" data-itemid="{{this._id}}" data-primary="{{this.system.precisionAttr.primary.value}}" data-secondary="{{this.system.precisionAttr.secondary.value}}">
-                                                {{this.name}}
-                                                <div class="icon icon-{{this.system.range}}" data-tooltip="{{localize (concat 'FU.WeaponRanges.' this.system.range)}}"></div>
-                                            </button>
-                                        {{else}}
-                                            <label>
-                                                {{this.name}}
-                                                <div class="icon icon-{{this.system.range}}" data-tooltip="{{localize (concat 'FU.WeaponRanges.' this.system.range)}}"></div>
-                                            </label>
-                                        {{/if}}
-                                        <p>
-                                            <strong class="m-0">
-                                                【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttr.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttr.secondary.value)}}】{{#gt this.system.precisionBonus 0}}+ {{this.system.precisionBonus}}{{/gt}}
-                                            </strong>
-                                            <small class="{{#gt this.system.precisionBonus 0}}{{else}}ml-0{{/gt}}">◆</small>
-                                            <strong>【TM{{#gt this.system.damage.value 0}} + {{this.system.damage.value}}{{/gt}}】</strong>danni da <strong>{{localize (concat 'FU.DamageTypes.' this.system.damage.type.value)}}</strong>
-                                        </p>
-
-                                        <div class="description">
-                                            {{{this.system.description}}}
-                                        </div>
+                                        {{{this.description}}}
                                     </div>
                                 </li>
-                            {{/each}}
-                        </ul>
-                    </div>
+                            </ul>
+                        {{/each}}
+                    {{/if}}
                 </div>
-
-                <div class="content-collapse open spell">
-                    <div class="title">
-                        Incantesimi
-                        {{#if @root.editable}}
-                            <button type="button" class="js_createItem" data-type="spell">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        {{/if}}
-                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                            <i class="fa fa-angle-down"></i>
-                        </button> --}}
-                    </div>
-                    <div class="collapse">
-                        <ul class="list list-spells">
-                            {{#each spells}}
-                                <li>
-                                    <div class="btn-container">
-                                        {{#if @root.editable}}
-                                            <button type="button" class="js_deleteItem" data-itemid="{{this._id}}">
-                                                <i class="fa fa-trash m-0"></i>
-                                            </button>
-
-                                            <button type="button" class="js_editItem" data-itemid="{{this._id}}">
-                                                <i class="fa fa-pencil m-0"></i>
-                                            </button>
-                                        {{/if}}
-                                    </div>
-                                    <div class="item-box">
-                                        {{#if @root.editable}}
-                                            <button type="button" class="js_showItemInChat" data-itemid="{{this._id}}">
-                                                <i class="fa fa-comment m-0"></i>
-                                            </button>
-                                            <button type="button" class="name js_rollActorItem" data-itemid="{{this._id}}" data-primary="{{this.system.attributes.primary.value}}" data-secondary="{{this.system.attributes.secondary.value}}">
-                                                {{this.name}}
-                                                {{#if this.system.isOffensive.value}}
-                                                    <div class="icon icon-offensive"></div>
-                                                {{/if}}
-                                            </button>
-                                        {{else}}
-                                            <label>
-                                                {{this.name}}
-                                                {{#if this.system.isOffensive.value}}
-                                                    <div class="icon icon-offensive"></div>
-                                                {{/if}}
-                                            </label>
-                                        {{/if}}
-                                        <p>
-                                            {{#if this.system.isOffensive.value}}
-                                                <strong class="ml-0">
-                                                    【{{localize (concat 'FU.attributesAbbr.' this.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' this.system.attributes.secondary.value)}}】
-                                                </strong>
-                                                <small class="ml-0">◆</small>
-                                            {{/if}}
-                                            <strong>
-                                                {{#if this.system.MPCost.upTo}}
-                                                    Fino a
-                                                {{/if}}
-                                                {{this.system.MPCost.value}} PM
-                                                {{#gt this.system.target.number 1}}
-                                                    x B
-                                                {{/gt}}
-                                            </strong>
-                                            <small>◆</small>
-                                            <strong>{{this.system.target.value}}</strong>
-                                            <small>◆</small>
-                                            <strong>{{localize (concat 'FU.SpellDurations.' this.system.duration.value)}}.</strong>
-                                        </p>
-
-                                        <div class="description">
-                                            {{{this.system.description}}}
-                                        </div>
-                                        
-                                        {{#if this.system.opportunity.value}}
-                                            <div class="opportunity">
-                                                <strong>Opportunità:</strong>
-                                                {{{this.system.opportunityEffect}}}
-                                            </div>
-                                        {{/if}}
-                                    </div>
-                                </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="content-collapse open other">
-                    <div class="title">
-                        Altre azioni
-                        {{#if @root.editable}}
-                            <button type="button" class="js_createItem" data-type="baseItem">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        {{/if}}
-                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                            <i class="fa fa-angle-down"></i>
-                        </button> --}}
-                    </div>
-                    <div class="collapse">
-                        <ul class="list list-other-actions">
-                            {{#each baseItems as |action indexAction|}}
-                                {{#if (not action.system.rule)}}
-                                    <li>
-                                        <div class="btn-container">
-                                            {{#if @root.editable}}
-                                                <button type="button" class="js_deleteItem" data-itemid="{{action._id}}">
-                                                    <i class="fa fa-trash m-0"></i>
-                                                </button>
-
-                                                <button type="button" class="js_editItem" data-itemid="{{action._id}}">
-                                                    <i class="fa fa-pencil m-0"></i>
-                                                </button>
-                                            {{/if}}
-                                        </div>
-                                        <div class="item-box">
-                                            {{#if @root.editable}}
-                                                <button type="button" class="name js_showItemInChat" data-tooltip="Mostra in chat" data-itemid="{{action._id}}">
-                                                    {{action.name}}
-                                                </button>
-                                            {{else}}
-                                                <label>{{action.name}}</label>
-                                            {{/if}}
-                                            {{{action.system.description}}}
-                                        </div>
-                                    </li>
-                                {{/if}}
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="content-collapse open rule">
-                    <div class="title">
-                        Regole speciali
-                        {{#if @root.editable}}
-                            <button type="button" class="js_createItem" data-type="baseItem" data-rule="true">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        {{/if}}
-                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                            <i class="fa fa-angle-down"></i>
-                        </button> --}}
-                    </div>
-                    <div class="collapse">
-                        <ul class="list list-special-rules">
-                            {{#each baseItems as |rule indexRule|}}
-                                {{#if rule.system.rule}}
-                                    <li>
-                                        <div class="btn-container">
-                                            {{#if @root.editable}}
-                                                <button type="button" class="js_deleteItem" data-itemid="{{rule._id}}">
-                                                    <i class="fa fa-trash m-0"></i>
-                                                </button>
-
-                                                <button type="button" class="js_editItem" data-itemid="{{rule._id}}">
-                                                    <i class="fa fa-pencil m-0"></i>
-                                                </button>
-                                            {{/if}}
-                                        </div>
-                                        <div class="item-box">
-                                            {{#if @root.editable}}
-                                                <button type="button" class="name js_showItemInChat" data-tooltip="Mostra in chat" data-itemid="{{rule._id}}">
-                                                    {{rule.name}}
-                                                </button>
-                                            {{else}}
-                                                <label>{{rule.name}}</label>
-                                            {{/if}}
-                                            {{{rule.system.description}}}
-                                        </div>
-                                    </li>
-                                {{/if}}
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
-
-                {{#if (arrayLengthGt system.species.rules 0)}}
-                    {{#each system.species.rules}}
-                        <div class="title">{{this.name}}</div>
-                        <ul class="list">
-                            <li>
-                                <div class="btn-container"></div>
-                                <div class="item-box">
-                                    {{{this.description}}}
-                                </div>
-                            </li>
-                        </ul>
-                    {{/each}}
-                {{/if}}
             </div>
 
             <div class="tab skills" data-group="primary" data-tab="skills">

@@ -7,9 +7,9 @@ import { FU } from '../../helpers/config.mjs';
  * @property {string} description
  * @property {string} rarity
  * @property {number} cost
- * @property {boolean} defBonus.def.isFixes
+ * @property {boolean} defBonus.def.isFixed
  * @property {number} defBonus.def.value
- * @property {boolean} defBonus.mdef.isFixes
+ * @property {boolean} defBonus.mdef.isFixed
  * @property {number} defBonus.mdef.value
  * @property {number} initiativeMalus
  */

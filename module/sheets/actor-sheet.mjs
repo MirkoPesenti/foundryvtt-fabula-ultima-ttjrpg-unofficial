@@ -89,103 +89,9 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
-			if ( sourceItem.type == 'classFeature' ) {
-				let alreadyExist = false;
-				const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
-
-				for (let i = 0; i < classFeatures.length; i++) {
-					if ( classFeatures[i]._id == sourceItem._id ) {
-						alreadyExist = true;
-						break;
-					}
-				}
-				if ( alreadyExist ) {
-					ui.notifications.error(`L'item ${sourceItem.name} è già allegato a ${actor.name}!`);
-					return false;
-				}
-
-				if ( sourceItem.system.isLimited ) {
-					new Dialog({
-						title: `Stai aggiungendo l'abilità ${sourceItem.name}`,
-						content: `
-							<p>L'abilità <strong>${sourceItem.name}</strong> è limitiata! Sei sicuro di volerla aggiungere?</p>
-						`,
-						buttons: {
-							no: {
-								label: 'No',
-							},
-							yes: {
-								label: 'Si',
-								callback: async () => {
-									const skillCount = actor.system.skills.current + 1;
-
-									if ( skillCount <= actor.system.skills.max ) {
-										await actor.update({ 'system.skills.current': skillCount });
-										const newItemData = sourceItem.toObject();
-										const flags = actor.getFlag('fabula', 'classFeatures') || [];
-										flags.push(newItemData);
-										await actor.setFlag('fabula', 'classFeatures', flags);
-										return true;
-									} else {
-										ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
-										return false;
-									}
-								},
-							},
-						}
-					}).render(true);
-				} else {
-					const skillCount = actor.system.skills.current + 1;
-
-					if ( skillCount <= actor.system.skills.max ) {
-						await actor.update({ 'system.skills.current': skillCount });
-						const newItemData = sourceItem.toObject();
-						const flags = actor.getFlag('fabula', 'classFeatures') || [];
-						flags.push(newItemData);
-						await actor.setFlag('fabula', 'classFeatures', flags);
-						return true;
-					} else {
-						ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
-						return false;
-					}
-				}
-			} else if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
-
-				new Dialog({
-					title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
-					content: `
-						<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
-					`,
-					buttons: {
-						no: {
-							label: 'No',
-							callback: async () => {
-								const newItemData = sourceItem.toObject();
-								await actor.createEmbeddedDocuments("Item", [newItemData]);
-								ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto all'equipaggiamento!`);
-							},
-						},
-						yes: {
-							label: 'Si',
-							callback: async () => {
-								const actorZenits = actor.system.resources.zenit;
-								if ( actorZenits < sourceItem.system.cost ) {
-									ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
-								} else {
-									actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
-									const newItemData = sourceItem.toObject();
-									await actor.createEmbeddedDocuments("Item", [newItemData]);
-									ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
-								}
-							},
-						},
-					}
-				}).render(true);
+			this._onDropNpc( actor, sourceItem );
+			this._onDropCharacter( actor, sourceItem );
 			
-				return true;
-			} else {
-				actor.createEmbeddedDocuments( 'Item', [sourceItem] );
-			}
 		}
 
 		return super._onDrop(e);
@@ -207,8 +113,40 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 		});
 
+		// Inner tabs
+		html.on('click', '.tabs.inner-tabs > .item', (e) => {
+			e.preventDefault();
+			const element = e.currentTarget;
+			const tabGroup = $(element).parent('.tabs').data('group');
+			const tab = $(element).data('tab');
+
+			if ( tab && tabGroup ) {
+
+				$(element).siblings().each((index, el) => {
+					$(el).removeClass('active');
+				});
+				$(element).addClass('active');
+
+				const innerTabs = html.find(`.tab[data-group="${tabGroup}"]`);
+				$(innerTabs).each((index, el) => {
+					if ( $(el).is(`[data-tab="${tab}"]`) ) {
+						$(el).addClass('active');
+					} else {
+						$(el).removeClass('active');
+					}
+				});
+
+			}
+		});
+
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
 		html.on('click', '.freeFreature', this._freeClassFeature.bind(this));
+
+		// Roll a Test
+		html.on('click', '.js_rollActorTest', this._rollActorTest.bind(this));
+
+		// Roll for initiative
+		html.on('click', '.js_rollInitiative', this._rollInitiative.bind(this));
 
 		// Set Attributes values
 		html.on('click', '.js_setAttrValue', this._setAttrValue.bind(this));
@@ -424,7 +362,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 	async _prepareItems(context) {
 		const weapons = [];
-		const armor = [];
+		const armors = [];
 		const shields = [];
 		const accessories = [];
 		const classes = [];
@@ -441,7 +379,7 @@ export class FabulaActorSheet extends ActorSheet {
 			if (i.type === 'weapon') {
 				weapons.push(i);
 			} else if (i.type === 'armor') {
-				armor.push(i);
+				armors.push(i);
 			} else if (i.type === 'shield') {
 				shields.push(i);
 			} else if (i.type === 'accessory') {
@@ -464,7 +402,7 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 
 		context.weapons = weapons;
-		context.armor = armor;
+		context.armors = armors;
 		context.shields = shields;
 		context.accessories = accessories;
 		context.classes = classes;
@@ -552,6 +490,38 @@ export class FabulaActorSheet extends ActorSheet {
 		
 		await actor.setFlag('fabula', 'classFeatures', classFeatures);
 		await actor.update({ 'system.skills.current': skillCount });
+	}
+
+	async _rollActorTest(event) {
+		event.preventDefault();
+		const actor = this.actor;
+
+		new Dialog({
+			title: 'Effettua un test',
+			content: `<div></div>`,
+			buttons: {
+				confirm: {
+					label: 'Conferma',
+					callback: async (html) => {
+						
+					}
+				},
+				cancel: {
+					label: 'Annulla',
+				},
+			},
+		}).render(true);
+	}
+
+	async _rollInitiative(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		let rollString = `d${actor.system.attributes.dex.value}+d${actor.system.attributes.ins.value}`;
+		if ( actor.resources.params.init.current != 0 )
+			rollString += `+${actor.resources.params.init.current}`;
+
+		const roll = new Roll( rollString, actor.getRollData() );
+		await roll.evaluate();
 	}
 
 	async _createItem(event) {
@@ -657,17 +627,19 @@ export class FabulaActorSheet extends ActorSheet {
 		const attrSecondary = element.dataset.secondary;
 
 		const item = actor.items.get( itemID );
-		const template = `systems/fabula/templates/chat/check-${item.type}.hbs`;
+		let templateType = item.type;
+		if ( item.type == 'weapon' ) templateType = 'attack';
+		const template = `systems/fabula/templates/chat/check-${templateType}.hbs`;
 
 		let rollString = '';
 		if ( attrPrimary ) {
-			rollString += `d${actor.system.resources.attributes[attrPrimary].value}`;
+			rollString += `d${actor.system.attributes[attrPrimary].value}`;
 		}
 		if ( attrPrimary && attrSecondary ) rollString += '+';
 		if ( attrSecondary ) {
-			rollString += `d${actor.system.resources.attributes[attrSecondary].value}`;
+			rollString += `d${actor.system.attributes[attrSecondary].value}`;
 		}
-		if ( item.type == 'attack' && item.system.precisionBonus != 0 ) {
+		if ( (item.type == 'attack' || item.type == 'weapon') && item.system.precisionBonus != 0 ) {
 			rollString += `+${item.system.precisionBonus}`;
 		}
 		if ( actor.system.level.checkBonus > 0 ) {
@@ -731,7 +703,7 @@ export class FabulaActorSheet extends ActorSheet {
 								},
 								rollMode: game.settings.get( 'core', 'rollMode' ),
 							});
-							$(ev.currentTarget).attr('disabled','true');
+							// $(ev.currentTarget).attr('disabled','true');
 						});
 					});
 				}, 100);
@@ -772,27 +744,8 @@ export class FabulaActorSheet extends ActorSheet {
 
 			const property = `system.status.${status}.active`;
 			const currentStatus = actor.system.status[status].active;
-			const attributes = [];
-			if ( status == 'slow' ) {
-				attributes.push('dex');
-			} else if ( status == 'dazed' ) {
-				attributes.push('ins');
-			} else if ( status == 'weak' ) {
-				attributes.push('mig');
-			} else if ( status == 'shaken' ) {
-				attributes.push('wlp');
-			} else if ( status == 'enraged' ) {
-				attributes.push('dex');
-				attributes.push('ins');
-			} else if ( status == 'poisoned' ) {
-				attributes.push('mig');
-				attributes.push('wlp');
-			}
 
 			if ( currentStatus !== true ) {
-
-				// Check attributes
-				attributes.forEach(val => {});
 
 				// Check immunity
 				if ( actor.system.status[status].immunity === true ) {
@@ -810,6 +763,122 @@ export class FabulaActorSheet extends ActorSheet {
 
 			await actor.update({ [property]: !currentStatus });
 		}
+	}
+
+	async _onDropNpc( actor, sourceItem ) {
+
+		if ( actor.type != 'npc' ) return;
+		
+		if ( sourceItem.type == 'classFeature' ) {
+		} else {
+			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
+		}
+
+	}
+
+	async _onDropCharacter( actor, sourceItem ) {
+
+		if ( actor.type != 'character' ) return;
+
+		if ( sourceItem.type == 'classFeature' ) {
+			let alreadyExist = false;
+			const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
+
+			for (let i = 0; i < classFeatures.length; i++) {
+				if ( classFeatures[i]._id == sourceItem._id ) {
+					alreadyExist = true;
+					break;
+				}
+			}
+			if ( alreadyExist ) {
+				ui.notifications.error(`L'item ${sourceItem.name} è già allegato a ${actor.name}!`);
+				return false;
+			}
+
+			if ( sourceItem.system.isLimited ) {
+				new Dialog({
+					title: `Stai aggiungendo l'abilità ${sourceItem.name}`,
+					content: `
+						<p>L'abilità <strong>${sourceItem.name}</strong> è limitiata! Sei sicuro di volerla aggiungere?</p>
+					`,
+					buttons: {
+						no: {
+							label: 'No',
+						},
+						yes: {
+							label: 'Si',
+							callback: async () => {
+								const skillCount = actor.system.skills.current + 1;
+
+								if ( skillCount <= actor.system.skills.max ) {
+									await actor.update({ 'system.skills.current': skillCount });
+									const newItemData = sourceItem.toObject();
+									const flags = actor.getFlag('fabula', 'classFeatures') || [];
+									flags.push(newItemData);
+									await actor.setFlag('fabula', 'classFeatures', flags);
+									return true;
+								} else {
+									ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+									return false;
+								}
+							},
+						},
+					}
+				}).render(true);
+			} else {
+				const skillCount = actor.system.skills.current + 1;
+
+				if ( skillCount <= actor.system.skills.max ) {
+					await actor.update({ 'system.skills.current': skillCount });
+					const newItemData = sourceItem.toObject();
+					const flags = actor.getFlag('fabula', 'classFeatures') || [];
+					flags.push(newItemData);
+					await actor.setFlag('fabula', 'classFeatures', flags);
+					return true;
+				} else {
+					ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+					return false;
+				}
+			}
+		} else if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
+
+			new Dialog({
+				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
+				content: `
+					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
+				`,
+				buttons: {
+					no: {
+						label: 'No',
+						callback: async () => {
+							const newItemData = sourceItem.toObject();
+							await actor.createEmbeddedDocuments("Item", [newItemData]);
+							ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto all'equipaggiamento!`);
+						},
+					},
+					yes: {
+						label: 'Si',
+						callback: async () => {
+							const actorZenits = actor.system.resources.zenit;
+							if ( actorZenits < sourceItem.system.cost ) {
+								ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
+							} else {
+								actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
+								const newItemData = sourceItem.toObject();
+								await actor.createEmbeddedDocuments("Item", [newItemData]);
+								ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
+							}
+						},
+					},
+				}
+			}).render(true);
+		
+			return true;
+		} else {
+			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+		}
+
 	}
 
 	async _addClass( classItem ) {

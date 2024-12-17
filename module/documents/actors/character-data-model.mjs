@@ -11,7 +11,7 @@ import { FU } from "../../helpers/config.mjs";
  * @property {number} resources.hp.value
  * @property {number} resources.mp.value
  * @property {number} resources.ip.value
- * @property {AttributesDataModel} resources.attributes
+ * @property {AttributesDataModel} attributes
  * @property {number} resources.fp
  * @property {number} resources.exp
  * @property {DefencesDataModel} resources.params
@@ -102,7 +102,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			configurable: true,
 			enumerable: true,
 			get() {
-				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.resources.attributes[this.attribute].value : data.resources.attributes.mig.value;
+				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].value : data.attributes.mig.value;
 				return baseAttr * 5  + data.level.value + freeBenefits.hp;
 			},
 			set( newVal ) {
@@ -115,7 +115,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			configurable: true,
 			enumerable: true,
 			get() {
-				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.resources.attributes[this.attribute].value : data.resources.attributes.wlp.value;
+				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].value : data.attributes.wlp.value;
 				return baseAttr * 5  + data.level.value + freeBenefits.mp;
 			},
 			set( newVal ) {
@@ -146,13 +146,13 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				if ( armorItem.system.defBonus.def.isFixed )
 					defBonus = armorItem.system.defBonus.def.value;
 				else
-					defBonus = this.parent.system.resources.attributes.dex.value + armorItem.system.defBonus.def.value;
+					defBonus = this.parent.system.attributes.dex.value + armorItem.system.defBonus.def.value;
 				
 				// M. Def
 				if ( armorItem.system.defBonus.mdef.isFixed )
 					mdefBonus = armorItem.system.defBonus.mdef.value;
 				else
-					mdefBonus = this.parent.system.resources.attributes.ins.value + armorItem.system.defBonus.mdef.value;
+					mdefBonus = this.parent.system.attributes.ins.value + armorItem.system.defBonus.mdef.value;
 
 				// Init
 				this.parent.system.resources.params.init.bonus += armorItem.system.initiativeMalus;
@@ -161,8 +161,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				this.parent.system.resources.params.mdef.bonus = mdefBonus;
 			}
 		} else {
-			this.parent.system.resources.params.def.bonus = this.parent.system.resources.attributes.dex.value;
-			this.parent.system.resources.params.mdef.bonus = this.parent.system.resources.attributes.ins.value;
+			this.parent.system.resources.params.def.bonus = this.parent.system.attributes.dex.value;
+			this.parent.system.resources.params.mdef.bonus = this.parent.system.attributes.ins.value;
 		}
 
 		// OffHand

@@ -1,3 +1,5 @@
-2024/12/16-23:14:46.941 3a30 Recovering log #61
-2024/12/16-23:14:46.947 3a30 Delete type=0 #61
-2024/12/16-23:14:46.947 3a30 Delete type=3 #60
+2024/12/17-20:18:47.187 3df0 Log #65: 0 ops saved to Table #66 OK
+2024/12/17-20:18:47.189 3df0 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures/000065.log: OK
+2024/12/17-20:18:47.193 3df0 Table #59: 34 entries OK
+2024/12/17-20:18:47.197 3df0 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures/MANIFEST-000064: OK
+2024/12/17-20:18:47.200 3df0 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures; recovered 1 files; 15094 bytes. Some data may have been lost. ****

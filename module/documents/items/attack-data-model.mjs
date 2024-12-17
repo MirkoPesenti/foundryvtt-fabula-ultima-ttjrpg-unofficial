@@ -16,7 +16,7 @@ export class AttackDataModel extends foundry.abstract.TypeDataModel {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			description: new HTMLField(),
 			range: new StringField({ initial: 'melee', choices: Object.keys(FU.WeaponRanges) }),
-			precisionAttr: new EmbeddedDataField(PrecisionDataModel, {}),
+			precisionAttributes: new EmbeddedDataField(PrecisionDataModel, {}),
 			precisionBonus: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
 			damage: new EmbeddedDataField(DamageDataModel, {}),
 		};
