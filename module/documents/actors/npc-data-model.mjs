@@ -195,7 +195,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		this.species.rules = speciesRules;
 	}
 
-	async prepareEmbeddedData() {
+	prepareEmbeddedData() {
 		const data = this;
 
 		// Max HP
@@ -232,5 +232,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		else if ( data.villain == 'supreme' )
 			maxUp = 15;
 		this.resources.up.max = maxUp;
+
+		this.status.prepareData();
 	}
 }

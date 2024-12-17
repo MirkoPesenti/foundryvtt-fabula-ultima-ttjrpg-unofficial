@@ -315,29 +315,11 @@ export class FabulaActorSheet extends ActorSheet {
 			
 		});
 
-		// Set affinities
-		html.on('click','.js_setAffinity', async (e) => {
-			e.preventDefault();
-			const actor = this.actor; 
-			const affinity = e.currentTarget.dataset.affinity;
-			if ( affinity ) {
-
-				const property = 'system.affinity.' + affinity;
-				let affinityVal = '';
-
-				if ( actor.system.affinity[affinity] == '' )
-					affinityVal = 'vulnerability';
-				else if ( actor.system.affinity[affinity] == 'vulnerability' )
-					affinityVal = 'resistance';
-				else if ( actor.system.affinity[affinity] == 'resistance' )
-					affinityVal = 'immunity';
-				else if ( actor.system.affinity[affinity] == 'immunity' )
-					affinityVal = 'absorption';
-
-				await actor.update({ [property]: affinityVal });
-
-			}
-		});
+		// Set Affinity
+		html.on('click','.js_setAffinity', this._setAffinity.bind(this));
+		
+		// Set Status
+		html.on('click','.js_setStatus', this._setStatus.bind(this));
 
 		// Create Item
 		html.on('click','.js_createItem', this._createItem.bind(this));
@@ -354,7 +336,6 @@ export class FabulaActorSheet extends ActorSheet {
 		// Roll spell test
 		html.on('click','.js_rollActorItem', this._rollActorItem.bind(this));
 
-		html.on('click','.roll', this._onRoll.bind(this));
 		html.on('click','.getActor', () => console.log(this.actor));
 		html.on('click','.addClass', () => {
 			const pack = game.packs.get('fabula.classes');
@@ -607,7 +588,7 @@ export class FabulaActorSheet extends ActorSheet {
 		if (
 			await Dialog.confirm({
 				title: `Stai eliminando ${item.name}`,
-				content: `Sei sicuro di volere eliminare ${item.name}?`,
+				content: `<p>Sei sicuro di volere eliminare ${item.name}?</p>`,
 				rejectClose: false,
 			})
 		) {
@@ -758,28 +739,76 @@ export class FabulaActorSheet extends ActorSheet {
 		});
 	}
 
-	_onRoll(e) {
-		e.preventDefault();
-		const element = e.currentTarget;
-		const data = element.dataset;
+	async _setAffinity(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const element = event.currentTarget;
+		const affinity = element.dataset.affinity;
+		if ( affinity ) {
 
-		if ( data.rollType ) {
-			if ( data.rollType == 'item' ) {
-				const itemId = element.closest('.item').dataset.itemId;
-				const item = this.actor.items.get(itemId);
-				if ( item ) return item.roll();
-			}
+			const property = `system.affinity.${affinity}`;
+			let affinityVal = '';
+
+			if ( actor.system.affinity[affinity] == '' )
+				affinityVal = 'vulnerability';
+			else if ( actor.system.affinity[affinity] == 'vulnerability' )
+				affinityVal = 'resistance';
+			else if ( actor.system.affinity[affinity] == 'resistance' )
+				affinityVal = 'immunity';
+			else if ( actor.system.affinity[affinity] == 'immunity' )
+				affinityVal = 'absorption';
+
+			await actor.update({ [property]: affinityVal });
+
 		}
+	}
 
-		if ( data.roll ) {
-			let label = data.label ? `[ability] ${data.label}` : '';
-			let roll = new Roll( data.roll, this.actor.getRollData() );
-			roll.toMessage({
-				speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-				flavor: label,
-				rollMode: game.settings.get( 'core', 'rollMode' ),
-			});
-			return roll;
+	async _setStatus(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const element = event.currentTarget;
+		const status = element.dataset.status;
+		if ( status ) {
+
+			const property = `system.status.${status}.active`;
+			const currentStatus = actor.system.status[status].active;
+			const attributes = [];
+			if ( status == 'slow' ) {
+				attributes.push('dex');
+			} else if ( status == 'dazed' ) {
+				attributes.push('ins');
+			} else if ( status == 'weak' ) {
+				attributes.push('mig');
+			} else if ( status == 'shaken' ) {
+				attributes.push('wlp');
+			} else if ( status == 'enraged' ) {
+				attributes.push('dex');
+				attributes.push('ins');
+			} else if ( status == 'poisoned' ) {
+				attributes.push('mig');
+				attributes.push('wlp');
+			}
+
+			if ( currentStatus !== true ) {
+
+				// Check attributes
+				attributes.forEach(val => {});
+
+				// Check immunity
+				if ( actor.system.status[status].immunity === true ) {
+					if (
+						!await Dialog.confirm({
+							title: `Sei immune allo status ${game.i18n.localize(`FU.Status.${status}`)}!`,
+							content: `<p>Sei sicuro di volere continuare?</p>`,
+							rejectClose: false,
+						})
+					) {
+						return;
+					}
+				}
+			}
+
+			await actor.update({ [property]: !currentStatus });
 		}
 	}
 

@@ -164,71 +164,77 @@
                 </div> --}}
             </div>
 
-            <div class="attributes-container">
-                <div class="attr hp" data-tooltip="Punti Vita: {{system.resources.hp.current}}<br>Crisi: {{system.resources.hp.crisis}}<br>PV Massimi: {{system.resources.hp.max}}">
-                    <div class="progress-container">
-                        <div class="pregress-bar">
-                            <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
+            <div class="outer-container">
+                <div class="container-left">
+                    <div class="attributes-container">
+                        <div class="attr hp" data-tooltip="Punti Vita: {{system.resources.hp.current}}<br>Crisi: {{system.resources.hp.crisis}}<br>PV Massimi: {{system.resources.hp.max}}">
+                            <div class="progress-container">
+                                <div class="pregress-bar">
+                                    <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
+                                </div>
+                                <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
+                                <button type="button" class="crisis js_setAttrValue" data-attr="hp" data-value="{{system.resources.hp.crisis}}">
+                                    {{system.resources.hp.crisis}}
+                                </button>
+                                <button type="button" class="max js_setAttrValue" data-attr="hp">{{system.resources.hp.max}}</button>
+                            </div>
                         </div>
-                        <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
-                        <button type="button" class="crisis js_setAttrValue" data-attr="hp" data-value="{{system.resources.hp.crisis}}">
-                            {{system.resources.hp.crisis}}
+
+                        <div class="attr mp" data-tooltip="Punti Menti: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
+                            <div class="progress-container">
+                                <div class="pregress-bar">
+                                    <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
+                                </div>
+                                <input type="number" min="0" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
+                                <div class="crisis"></div>
+                                <button type="button" class="max js_setAttrValue" data-attr="mp">{{system.resources.mp.max}}</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attributes-container params">
+                        <div class="attr">
+                            <label>
+                                Iniziativa: {{system.resources.params.init.current}}
+                            </label>
+                        </div>
+
+                        <div class="attr">
+                            <label>
+                                Difesa: {{system.resources.params.def.current}}
+                            </label>
+                        </div>
+
+                        <div class="attr">
+                            <label>
+                                Difesa Magica: {{system.resources.params.mdef.current}}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container-right">
+                    <div class="attr status">
+                        <button type="button" class="js_setStatus" data-status="slow" data-tooltip="{{localize 'FU.Status.slow'}}">
+                            <div class="icon icon-slow {{#unless system.status.slow.active}}disabled{{/unless}}"></div>
                         </button>
-                        <button type="button" class="max js_setAttrValue" data-attr="hp">{{system.resources.hp.max}}</button>
+                        <button type="button" class="js_setStatus" data-status="dazed" data-tooltip="{{localize 'FU.Status.dazed'}}">
+                            <div class="icon icon-dazed {{#unless system.status.dazed.active}}disabled{{/unless}}"></div>
+                        </button>
+                        <button type="button" class="js_setStatus" data-status="weak" data-tooltip="{{localize 'FU.Status.weak'}}">
+                            <div class="icon icon-weak {{#unless system.status.weak.active}}disabled{{/unless}}"></div>
+                        </button>
+                        <button type="button" class="js_setStatus" data-status="shaken" data-tooltip="{{localize 'FU.Status.shaken'}}">
+                            <div class="icon icon-shaken {{#unless system.status.shaken.active}}disabled{{/unless}}"></div>
+                        </button>
+
+                        <button type="button" class="js_setStatus" data-status="enraged" data-tooltip="{{localize 'FU.Status.enraged'}}">
+                            <div class="icon icon-enraged {{#unless system.status.enraged.active}}disabled{{/unless}}"></div>
+                        </button>
+                        <button type="button" class="js_setStatus" data-status="poisoned" data-tooltip="{{localize 'FU.Status.poisoned'}}">
+                            <div class="icon icon-poisoned {{#unless system.status.poisoned.active}}disabled{{/unless}}"></div>
+                        </button>
                     </div>
-                </div>
-
-                <div class="attr mp" data-tooltip="Punti Menti: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
-                    <div class="progress-container">
-                        <div class="pregress-bar">
-                            <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
-                        </div>
-                        <input type="number" min="0" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
-                        <div class="crisis"></div>
-                        <button type="button" class="max js_setAttrValue" data-attr="mp">{{system.resources.mp.max}}</button>
-                    </div>
-                </div>
-
-                <div class="attr status">
-                    <button type="button" class="js_setStatus" data-status="slow" data-tooltip="{{localize 'FU.Status.slow'}}">
-                        <div class="icon icon-slow {{#unless system.staus.slow.active}}disabled{{/unless}}"></div>
-                    </button>
-                    <button type="button" class="js_setStatus" data-status="dazed" data-tooltip="{{localize 'FU.Status.dazed'}}">
-                        <div class="icon icon-dazed {{#unless system.staus.dazed.active}}disabled{{/unless}}"></div>
-                    </button>
-                    <button type="button" class="js_setStatus" data-status="weak" data-tooltip="{{localize 'FU.Status.weak'}}">
-                        <div class="icon icon-weak {{#unless system.staus.weak.active}}disabled{{/unless}}"></div>
-                    </button>
-                    <button type="button" class="js_setStatus" data-status="shaken" data-tooltip="{{localize 'FU.Status.shaken'}}">
-                        <div class="icon icon-shaken {{#unless system.staus.shaken.active}}disabled{{/unless}}"></div>
-                    </button>
-
-                    <button type="button" class="js_setStatus" data-status="enraged" data-tooltip="{{localize 'FU.Status.enraged'}}">
-                        <div class="icon icon-enraged {{#unless system.staus.enraged.active}}disabled{{/unless}}"></div>
-                    </button>
-                    <button type="button" class="js_setStatus" data-status="poisoned" data-tooltip="{{localize 'FU.Status.poisoned'}}">
-                        <div class="icon icon-poisoned {{#unless system.staus.poisoned.active}}disabled{{/unless}}"></div>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="attributes-container params">
-                <div class="attr">
-                    <label>
-                        Iniziativa: {{system.resources.params.init.current}}
-                    </label>
-                </div>
-
-                <div class="attr">
-                    <label>
-                        Difesa: {{system.resources.params.def.current}}
-                    </label>
-                </div>
-
-                <div class="attr">
-                    <label>
-                        Difesa Magica: {{system.resources.params.mdef.current}}
-                    </label>
                 </div>
             </div>
             
