@@ -1,22 +1,21 @@
-
 <li>
 	<div class="btn-container">
 		{{#if @root.editable}}
-			<button type="button" class="js_deleteItem" data-itemid="{{item._id}}">
+			<button type="button" class="js_deleteItem" data-itemid="{{item._id}}" data-tooltip="Elimina">
 				<i class="fa fa-trash m-0"></i>
 			</button>
 
-			<button type="button" class="js_editItem" data-itemid="{{item._id}}">
+			<button type="button" class="js_editItem" data-itemid="{{item._id}}" data-tooltip="Modifica">
 				<i class="fa fa-pencil m-0"></i>
 			</button>
 		{{/if}}
 	</div>
 	<div class="item-box">
 		{{#if @root.editable}}
-			<button type="button" class="js_showItemInChat" data-itemid="{{item._id}}">
+			<button type="button" class="js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="Mostra in Chat">
 				<i class="fa fa-comment m-0"></i>
 			</button>
-			<button type="button" class="name js_rollActorItem" data-itemid="{{item._id}}" data-primary="{{item.system.attributes.primary.value}}" data-secondary="{{item.system.attributes.secondary.value}}">
+			<button type="button" class="name js_rollActorItem" data-itemid="{{item._id}}" data-primary="{{item.system.attributes.primary.value}}" data-secondary="{{item.system.attributes.secondary.value}}" data-tooltip="Lancia l'incantesimo">
 				{{item.name}}
 				{{#if item.system.isOffensive.value}}
 					<div class="icon icon-offensive"></div>
@@ -33,12 +32,12 @@
 		<p>
 			{{#if item.system.isOffensive.value}}
 				<strong class="ml-0">
-					【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.level.checkBonus 0}}+{{/gt}}
-					{{#unless (eq actor.level.checkBonus 0)}}
-						{{actor.level.checkBonus}}
+					【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.level.checkBonus.spell 0}}+{{/gt}}
+					{{#unless (eq actor.level.checkBonus.spell 0)}}
+						{{actor.level.checkBonus.spell}}
 					{{/unless}}
 				</strong>
-				<small class="{{#if (eq actor.level.checkBonus 0)}}ml-0{{/if}}">◆</small>
+				<small class="{{#if (eq actor.level.checkBonus.spell 0)}}ml-0{{/if}}">◆</small>
 			{{/if}}
 			<strong>
 				{{#if item.system.MPCost.upTo}}

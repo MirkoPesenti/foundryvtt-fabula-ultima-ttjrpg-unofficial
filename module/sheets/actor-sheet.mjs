@@ -92,9 +92,9 @@ export class FabulaActorSheet extends ActorSheet {
 			this._onDropNpc( actor, sourceItem );
 			this._onDropCharacter( actor, sourceItem );
 			
+		} else {
+			return super._onDrop(e);
 		}
-
-		return super._onDrop(e);
 	}
 
 	activateListeners( html ) {
@@ -498,16 +498,137 @@ export class FabulaActorSheet extends ActorSheet {
 
 		new Dialog({
 			title: 'Effettua un test',
-			content: `<div></div>`,
+			content: `
+				<div class="skill-test">
+					<div class="flexrow">
+						<h4>Scegli le caratteristiche</h4>
+						<div class="flexcolumn">
+							<div class="title">Primaria</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckPrimary" id="attrPrimary_dex" value="dex" />
+								<label for="attrPrimary_dex">Destrezza</label>
+							</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckPrimary" id="attrPrimary_ins" value="ins" />
+								<label for="attrPrimary_ins">Intuito</label>
+							</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckPrimary" id="attrPrimary_mig" value="mig" />
+								<label for="attrPrimary_mig">Vigore</label>
+							</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckPrimary" id="attrPrimary_wlp" value="wlp" />
+								<label for="attrPrimary_wlp">Volontà</label>
+							</div>
+						</div>
+						<div class="flexcolumn">
+							<div class="title">Secondaria</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckSecondary" id="attrSecondary_dex" value="dex" />
+								<label for="attrSecondary_dex">Destrezza</label>
+							</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckSecondary" id="attrSecondary_ins" value="ins" />
+								<label for="attrSecondary_ins">Intuito</label>
+							</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckSecondary" id="attrSecondary_mig" value="mig" />
+								<label for="attrSecondary_mig">Vigore</label>
+							</div>
+							<div class="form-group">
+								<input type="radio" name="formCheckSecondary" id="attrSecondary_wlp" value="wlp" />
+								<label for="attrSecondary_wlp">Volontà</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			`,
 			buttons: {
+				cancel: {
+					label: 'Annulla',
+				},
 				confirm: {
 					label: 'Conferma',
 					callback: async (html) => {
-						
+						const attrPrimary = html.find('[name="formCheckPrimary"]:checked').val();
+						const attrSecondary = html.find('[name="formCheckSecondary"]:checked').val();
+
+						if ( attrPrimary && attrSecondary ) {
+
+							let rollString = '';
+							const primary = actor.system.attributes[attrPrimary].value;
+							const secondary = actor.system.attributes[attrSecondary].value;
+							rollString += `d${primary}+d${secondary}`;
+							if ( actor.system.level.checkBonus.checks > 0 ) {
+								rollString += `+${actor.system.level.checkBonus.checks}`;
+							}
+
+							const template = `systems/fabula/templates/chat/check-base.hbs`;
+
+							const roll = new Roll( rollString, actor.getRollData() );
+							await roll.evaluate();
+
+							const results = [];
+							for ( let i = 0; i < roll.dice.length; i++ ) {
+								for ( let x = 0; x < roll.dice[i].results.length; x++ ) {
+									results.push( roll.dice[i].results[x].result );
+								}
+							}
+
+							// Check High Roll
+							let highRoll = Math.max(...results);
+
+							// Check Critical Success
+							let critSuccess = results.every( val => val === results[0] && val >= 6 && val <= 12 );
+							
+							// Check Critical Failure
+							let critFailure = results.every( val => val === 1 );
+							
+							const checkData = {
+								roll: roll,
+								highRoll: highRoll,
+								crit: {
+									success: critSuccess,
+									failure: critFailure,
+								},
+
+							};
+
+							renderTemplate( template, checkData ).then(content => {
+								roll.toMessage({
+									user: game.user.id,
+									speaker: ChatMessage.getSpeaker({ actor: actor }),
+									flavor: 'Test di caratteristica',
+									content: content,
+									rollMode: game.settings.get( 'core', 'rollMode' ),
+								}).then(chatMessage => {
+									setTimeout(() => {
+										const message = document.querySelector(`.message[data-message-id="${chatMessage.id}"]`);
+										const buttons = message.querySelectorAll(".js_rerollDice");
+					
+										buttons.forEach(btn => {
+											btn.addEventListener('click', (ev) => {
+												const reRoll = ev.currentTarget.dataset.roll;
+												new Roll( reRoll, actor.getRollData() ).toMessage({
+													user: game.user.id,
+													speaker: ChatMessage.getSpeaker({ actor: actor }),
+													flavor: 'Hai ritirato il dado',
+													rollMode: game.settings.get( 'core', 'rollMode' ),
+												});
+												// $(ev.currentTarget).attr('disabled','true');
+											});
+										});
+									}, 100);
+								});
+							});
+
+							return true;
+
+						} else {
+							ui.notifications.warn('Devi scegliere una caratteristica primaria e una secondaria');
+							return false;
+						}
 					}
-				},
-				cancel: {
-					label: 'Annulla',
 				},
 			},
 		}).render(true);
@@ -641,9 +762,12 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 		if ( (item.type == 'attack' || item.type == 'weapon') && item.system.precisionBonus != 0 ) {
 			rollString += `+${item.system.precisionBonus}`;
+			if ( actor.system.level.checkBonus.test > 0 ) {
+				rollString += `+${actor.system.level.checkBonus.test}`;
+			}
 		}
-		if ( actor.system.level.checkBonus > 0 ) {
-			rollString += `+${actor.system.level.checkBonus}`;
+		if ( item.type == 'spell' && actor.system.level.checkBonus.spell > 0 ) {
+			rollString += `+${actor.system.level.checkBonus.spell}`;
 		}
 
 		const roll = new Roll( rollString, actor.getRollData() );

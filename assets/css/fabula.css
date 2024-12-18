@@ -217,6 +217,10 @@ select {height:var(--form-field-height);}
 .dialog-content .flexrow .form-group input[type="checkbox"] {margin:0;flex-shrink:0;}
 .dialog-content .flexrow .form-group input:not([type="checkbox"]):not([type="radio"]) {width:auto;margin-left:auto;}
 .dialog-content .flexrow .form-group label {padding-left:5px;}
+.dialog-content .skill-test > .flexrow {gap:10px;}
+.dialog-content .skill-test h4 {flex:0 0 100%;text-align:center;margin:0;}
+.dialog-content .skill-test .flexcolumn {padding:10px;padding-top:20px;border:1px solid var(--color-primary);border-radius:5px;margin:10px 0;position:relative;}
+.dialog-content .skill-test .flexcolumn .title {margin:0;text-align:center;position:absolute;top:0;left:15px;right:15px;transform:translate(0,-50%);border-radius:5px;}
 
 /* Editor */
 .editor-content h2 {position:relative;width:80%;border:0;text-transform:uppercase;font-family:"Yanone Kaffeesatz", sans-serif;font-weight:500;font-size:23px;padding:8px 15px 3px;margin:20px 0 5px;background:linear-gradient(to right, rgba(var(--color-gradient-bg-rgb),1) 0%, rgba(var(--color-gradient-bg-rgb),1) 30%, rgba(var(--color-gradient-bg-rgb),0) 100%);}
@@ -651,7 +655,8 @@ a.content-link i, a.inline-roll i {color:var(--color-white);}
 .sheet.actor .npc .list .editor .editor-menu {border-radius:0;}
 .sheet.actor .npc .list p {user-select:text;}
 .sheet.actor .npc .list p * {user-select:text;}
-.sheet.actor .npc .list p small {font-size:12px;font-weight:400;color:var(--color-primary);margin:0 5px;}
+.sheet.actor .npc .list p small {font-size:12px;font-weight:400;color:var(--color-primary);margin:0 5px;position:relative;bottom:2px;}
+.sheet.actor .npc .list .martial-icon {font-family:"FnT_BasicShapes1",sans-serif;color:var(--color-red);}
 
 .sheet.actor .npc .list-attacks .flex-head select {flex:0 0 auto;margin-left:10px;}
 .sheet.actor .npc .list-attacks .flex-precision {margin-bottom:10px;}

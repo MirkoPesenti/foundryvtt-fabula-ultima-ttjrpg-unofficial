@@ -12,14 +12,17 @@ export class DefencesDataModel extends foundry.abstract.DataModel {
 		return ({
 			def: new SchemaField({
 				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				fixed: new NumberField({ initial: null, integer: true, nullable: true }),
 				bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
 			}),
 			mdef: new SchemaField({
 				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				fixed: new NumberField({ initial: null, integer: true, nullable: true }),
 				bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
 			}),
 			init: new SchemaField({
 				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				fixed: new NumberField({ initial: null, integer: true, nullable: true }),
 				bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
 			}),
 		});

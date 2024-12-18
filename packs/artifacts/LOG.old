@@ -1,5 +1,1 @@
-2024/12/17-20:18:47.136 2820 Log #84: 0 ops saved to Table #85 OK
-2024/12/17-20:18:47.136 2820 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\artifacts/000084.log: OK
-2024/12/17-20:18:47.140 2820 Table #78: 60 entries OK
-2024/12/17-20:18:47.144 2820 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\artifacts/MANIFEST-000083: OK
-2024/12/17-20:18:47.147 2820 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\artifacts; recovered 1 files; 47337 bytes. Some data may have been lost. ****
+2024/12/17-20:18:47.167 2820 Delete type=3 #1

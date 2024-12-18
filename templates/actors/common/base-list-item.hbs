@@ -1,22 +1,40 @@
 <li>
 	<div class="btn-container">
 		{{#if @root.editable}}
-			<button type="button" class="js_deleteItem" data-itemid="{{item._id}}">
+			<button type="button" class="js_deleteItem" data-itemid="{{item._id}}" data-tooltip="Elimina">
 				<i class="fa fa-trash m-0"></i>
 			</button>
 
-			<button type="button" class="js_editItem" data-itemid="{{item._id}}">
+			<button type="button" class="js_editItem" data-itemid="{{item._id}}" data-tooltip="Modifica">
 				<i class="fa fa-pencil m-0"></i>
 			</button>
 		{{/if}}
 	</div>
 	<div class="item-box">
 		{{#if @root.editable}}
-			<button type="button" class="name {{#if (or (eq item.type 'weapon') (eq item.type 'accessory'))}}no-float{{/if}} js_showItemInChat" data-tooltip="Mostra in chat" data-itemid="{{item._id}}">
+			<button type="button" class="name {{#if (eq item.type 'accessory')}}no-float{{/if}} js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="Mostra in Chat">
 				{{item.name}}
+				{{#if item.system.isMartial.value}}
+					<div class="martial-icon">l</div>
+				{{/if}}
 			</button>
 		{{else}}
 			<label>{{item.name}}</label>
+		{{/if}}
+
+		{{#if (eq item.type 'weapon')}}
+			<p>
+				<strong>{{localize (concat 'FU.weaponCategories.' item.system.type)}}</strong>
+				<small>◆</small>
+				<strong>
+					Arma a
+					{{#if item.system.needTwoHands}}
+						Due Mani
+					{{else}}
+						Una Mano
+					{{/if}}
+				</strong>
+			</p>
 		{{/if}}
 
 		{{#if (eq item.type 'armor')}}
