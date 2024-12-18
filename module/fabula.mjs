@@ -544,8 +544,9 @@ Handlebars.registerHelper('divide', function( a, b ){
 	return ( a / b );
 });
 
-Handlebars.registerHelper('add', function(a, b) {
-    return Number(a) + Number(b);
+Handlebars.registerHelper('add', function() {
+    let args = Array.prototype.slice.call(arguments, 0, -1);
+    return args.reduce((sum, value) => sum + Number(value), 0);
 });
 
 Handlebars.registerHelper("arrayLengthGt", function(array, length, options) {

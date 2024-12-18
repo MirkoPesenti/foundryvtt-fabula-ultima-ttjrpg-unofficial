@@ -448,11 +448,59 @@
                         <label>Bonus Iniz.:</label>
                         <input type="number" name="system.resources.params.init.bonus" value="{{system.resources.params.init.bonus}}">
                     </div>
+                </div>
+                <div class="flexrow">
+                    <div class="form-group">
+                        <label>Bonus Precisione:</label>
+                        <input type="number" name="system.bonus.test" value="{{system.bonus.test}}">
+                    </div>
 
-                    {{!-- <div class="form-group">
-                        <label>Bonus tiri:</label>
-                        <input type="number" name="system.testBonus" value="{{system.testBonus}}">
-                    </div> --}}
+                    <div class="form-group">
+                        <label>Bonus Test Magie:</label>
+                        <input type="number" name="system.bonus.spell" value="{{system.bonus.spell}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bonus Test Contrapposto:</label>
+                        <input type="number" name="system.bonus.checks" value="{{system.bonus.checks}}">
+                    </div>
+                </div>
+                <div class="flexrow">
+                    <div class="form-group">
+                        <label>Bonus danno Attacchi Base:</label>
+                        <input type="number" name="system.bonus.damage.base" value="{{system.bonus.damage.base}}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bonus danno Incantesimi:</label>
+                        <input type="number" name="system.bonus.damage.spell" value="{{system.bonus.damage.spell}}">
+                    </div>
+                </div>
+                <div class="flexrow">
+                    <div class="form-group">
+                        <input type="checkbox" name="system.status.slow.immunity" id="system.status.slow.immunity" {{checked system.status.slow.immunity}}>
+                        <label for="system.status.slow.immunity">Immunità Lento</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="system.status.dazed.immunity" id="system.status.dazed.immunity" {{checked system.status.dazed.immunity}}>
+                        <label for="system.status.dazed.immunity">Immunità Confuso</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="system.status.weak.immunity" id="system.status.weak.immunity" {{checked system.status.weak.immunity}}>
+                        <label for="system.status.weak.immunity">Immunità Debole</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="system.status.shaken.immunity" id="system.status.shaken.immunity" {{checked system.status.shaken.immunity}}>
+                        <label for="system.status.shaken.immunity">Immunità Scosso</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="system.status.enraged.immunity" id="system.status.enraged.immunity" {{checked system.status.enraged.immunity}}>
+                        <label for="system.status.enraged.immunity">Immunità Furente</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" name="system.status.poisoned.immunity" id="system.status.poisoned.immunity" {{checked system.status.poisoned.immunity}}>
+                        <label for="system.status.poisoned.immunity">Immunità Avvelentato</label>
+                    </div>
                 </div>
 
                 <div class="title">
@@ -469,12 +517,12 @@
                             {{this.name}}
 
                             {{#if @root.editable}}
-                                <button type="button" class="ml-auto freeFreature {{#if this.system.isFree}}active{{/if}}" data-id="{{this._id}}">Gratuita</button>
+                                <button type="button" class="ml-auto js_setFreeFeature {{#if this.system.isFree}}active{{/if}}" data-id="{{this._id}}">Gratuita</button>
                             {{/if}}
                             
                             {{#gt this.system.level.max 1}}
                                 <span>
-                                    (<span>l</span>{{this.system.level.max}})
+                                    (<span>l</span>{{this.system.level.current}})
                                 </span>
                             {{/gt}}
 

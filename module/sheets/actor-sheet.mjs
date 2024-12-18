@@ -140,7 +140,7 @@ export class FabulaActorSheet extends ActorSheet {
 		});
 
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
-		html.on('click', '.freeFreature', this._freeClassFeature.bind(this));
+		html.on('click', '.js_setFreeFeature', this._setFreeFeature.bind(this));
 
 		// Roll a Test
 		html.on('click', '.js_rollActorTest', this._rollActorTest.bind(this));
@@ -465,26 +465,29 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
-	async _freeClassFeature(event) {
+	async _setFreeFeature(event) {
 		event.preventDefault();
 		const actor = this.actor;
 		if ( actor.type == 'character' ) return;
 
 		let skillCount = actor.system.skills.current;
 		const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
-		const itemSelected = event.currentTarget.getAttribute('data-id');
+		const itemID = event.currentTarget.getAttribute('data-id');
+		let skillLevel = 1;
+
 		for (let i = 0; i < classFeatures.length; i++) {
-			if ( classFeatures[i]._id == itemSelected ) {
+			if ( classFeatures[i]._id == itemID ) {
 				classFeatures[i].system.isFree = !classFeatures[i].system.isFree;
+				if ( classFeatures[i].system.level.current > 1 ) skillLevel = classFeatures[i].system.level.current;
 				break;
 			}
 		}
 
 		if ( $(event.currentTarget).hasClass('active') ) {
-			skillCount++;
+			skillCount += skillLevel;
 			$(event.currentTarget).removeClass('active');
 		} else {
-			skillCount--;
+			skillCount -= skillLevel;
 			$(event.currentTarget).addClass('active');
 		}
 		
@@ -540,6 +543,10 @@ export class FabulaActorSheet extends ActorSheet {
 								<label for="attrSecondary_wlp">Volontà</label>
 							</div>
 						</div>
+						<div class="form-group">
+							<input type="checkbox" name="formBonusCheck" id="formBonusCheck" ${actor.system.level.checkBonus.checks <= 0 ? 'disabled' : ''} />
+							<label for="formBonusCheck">Applicare bonus ai Test Contrapposti? ${actor.system.level.checkBonus.checks > 0 ? '(+' + actor.system.level.checkBonus.checks + ')' : ''}</label>
+						</div>
 					</div>
 				</div>
 			`,
@@ -552,6 +559,7 @@ export class FabulaActorSheet extends ActorSheet {
 					callback: async (html) => {
 						const attrPrimary = html.find('[name="formCheckPrimary"]:checked').val();
 						const attrSecondary = html.find('[name="formCheckSecondary"]:checked').val();
+						const bonusCheck = html.find('[name="formBonusCheck"]').is(':checked');
 
 						if ( attrPrimary && attrSecondary ) {
 
@@ -559,7 +567,8 @@ export class FabulaActorSheet extends ActorSheet {
 							const primary = actor.system.attributes[attrPrimary].value;
 							const secondary = actor.system.attributes[attrSecondary].value;
 							rollString += `d${primary}+d${secondary}`;
-							if ( actor.system.level.checkBonus.checks > 0 ) {
+							
+							if ( bonusCheck ) {
 								rollString += `+${actor.system.level.checkBonus.checks}`;
 							}
 
@@ -760,8 +769,11 @@ export class FabulaActorSheet extends ActorSheet {
 		if ( attrSecondary ) {
 			rollString += `d${actor.system.attributes[attrSecondary].value}`;
 		}
-		if ( (item.type == 'attack' || item.type == 'weapon') && item.system.precisionBonus != 0 ) {
-			rollString += `+${item.system.precisionBonus}`;
+		if (item.type == 'attack' || item.type == 'weapon' ) {
+			if ( item.system.precisionBonus != 0 ) {
+				rollString += `+${item.system.precisionBonus}`;
+			}
+
 			if ( actor.system.level.checkBonus.test > 0 ) {
 				rollString += `+${actor.system.level.checkBonus.test}`;
 			}
@@ -894,30 +906,31 @@ export class FabulaActorSheet extends ActorSheet {
 		if ( actor.type != 'npc' ) return;
 		
 		if ( sourceItem.type == 'classFeature' ) {
-		} else {
-			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
-			ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
-		}
-
-	}
-
-	async _onDropCharacter( actor, sourceItem ) {
-
-		if ( actor.type != 'character' ) return;
-
-		if ( sourceItem.type == 'classFeature' ) {
-			let alreadyExist = false;
+			let maxxedSkill = false;
+			let levelUpSkill = false;
 			const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
 
 			for (let i = 0; i < classFeatures.length; i++) {
 				if ( classFeatures[i]._id == sourceItem._id ) {
-					alreadyExist = true;
+					if ( classFeatures[i].system.level.current == classFeatures[i].system.level.max ) {
+						maxxedSkill = true;
+					} else {
+						classFeatures[i].system.level.current++;
+						levelUpSkill = true;
+					}
 					break;
 				}
 			}
-			if ( alreadyExist ) {
-				ui.notifications.error(`L'item ${sourceItem.name} è già allegato a ${actor.name}!`);
+			
+			if ( maxxedSkill ) {
+				ui.notifications.error(`${actor.name} non può potenziare oltre l'abilità ${sourceItem.name}!`);
 				return false;
+			}
+
+			if ( levelUpSkill ) {
+				await actor.setFlag('fabula', 'classFeatures', classFeatures);
+				ui.notifications.info(`${actor.name} ha aumentato il livello dell'abilità ${sourceItem.name}!`);
+				return true;
 			}
 
 			if ( sourceItem.system.isLimited ) {
@@ -938,6 +951,7 @@ export class FabulaActorSheet extends ActorSheet {
 								if ( skillCount <= actor.system.skills.max ) {
 									await actor.update({ 'system.skills.current': skillCount });
 									const newItemData = sourceItem.toObject();
+									newItemData.system.level.current++;
 									const flags = actor.getFlag('fabula', 'classFeatures') || [];
 									flags.push(newItemData);
 									await actor.setFlag('fabula', 'classFeatures', flags);
@@ -956,6 +970,7 @@ export class FabulaActorSheet extends ActorSheet {
 				if ( skillCount <= actor.system.skills.max ) {
 					await actor.update({ 'system.skills.current': skillCount });
 					const newItemData = sourceItem.toObject();
+					newItemData.system.level.current++;
 					const flags = actor.getFlag('fabula', 'classFeatures') || [];
 					flags.push(newItemData);
 					await actor.setFlag('fabula', 'classFeatures', flags);
@@ -965,7 +980,18 @@ export class FabulaActorSheet extends ActorSheet {
 					return false;
 				}
 			}
-		} else if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
+		} else {
+			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
+		}
+
+	}
+
+	async _onDropCharacter( actor, sourceItem ) {
+
+		if ( actor.type != 'character' ) return;
+
+		if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
 
 			new Dialog({
 				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,

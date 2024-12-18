@@ -201,7 +201,7 @@
 		},
 		"affinityAbbr": {
 			"vulnerability": "VU",
-			"resistance": "RE",
+			"resistance": "RS",
 			"immunity": "IM",
 			"absorption": "AS"
 		},

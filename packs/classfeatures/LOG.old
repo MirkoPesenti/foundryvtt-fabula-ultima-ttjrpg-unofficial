@@ -1,1 +1,5 @@
-2024/12/17-20:18:46.844 2820 Delete type=3 #1
+2024/12/18-21:00:48.741 1d14 Log #410: 0 ops saved to Table #411 OK
+2024/12/18-21:00:48.741 1d14 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures/000410.log: OK
+2024/12/18-21:00:48.742 1d14 Table #399: 172 entries OK
+2024/12/18-21:00:48.746 1d14 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures/MANIFEST-000409: OK
+2024/12/18-21:00:48.749 1d14 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures; recovered 1 files; 72602 bytes. Some data may have been lost. ****

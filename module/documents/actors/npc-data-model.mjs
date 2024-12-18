@@ -39,6 +39,10 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 				test: new NumberField({ initial: 0, integer: true, nullable: false }),
 				spell: new NumberField({ initial: 0, integer: true, nullable: false }),
 				checks: new NumberField({ initial: 0, integer: true, nullable: false }),
+				damage: new SchemaField({
+					base: new NumberField({ initial: 0, integer: true, nullable: false }),
+					spell: new NumberField({ initial: 0, integer: true, nullable: false }),
+				}),
 			}),
 			status: new EmbeddedDataField(StatusesDataModel, {}),
 		};
@@ -72,6 +76,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		this.resources.params.init.current = Math.floor( ( this.attributes.dex.value + this.attributes.ins.value ) / 2 ) + this.resources.params.init.bonus;
 
 		// Checks and Damage Bonus
+		this.level.checkBonus = {};
 		this.level.checkBonus.test = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0;
 		this.level.checkBonus.test += this.bonus.test;
 		this.level.checkBonus.spell = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0
@@ -146,7 +151,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			speciesRules.push({
 				name: 'Bestia',
 				description: `
-					<p>Le <strong>bestie</strong> non possono acquisire l'Abilità <strong>Equipaggiabile</stron>.</p>
+					<p>Le <strong>bestie</strong> non possono acquisire l'Abilità <strong>Equipaggiabile</strong>.</p>
 				`,
 			});
 		} else if ( this.species.value == 'construct' ) {
@@ -236,7 +241,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		const baseMP = Object.keys(FU.attributes).includes(this.resources.mp.attribute)
 			? data.attributes[this.resources.mp.attribute].value
 			: data.attributes.mig.value;
-		const maxMP = ( baseMP * 5 ) + ( data.level.value * 2 ) + data.resources.mp.bonus;
+		const maxMP = ( baseMP * 5 ) + data.level.value + data.resources.mp.bonus;
 		data.resources.mp.max = maxMP;
 		
 		if ( data.rank.value == 'champion' )

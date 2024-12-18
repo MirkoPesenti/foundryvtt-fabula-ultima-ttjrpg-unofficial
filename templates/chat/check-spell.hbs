@@ -11,10 +11,10 @@
 		</div>
 	</div>
 	{{#if item.system.isOffensive.value}}
-		{{> 'systems/fabula/templates/chat/common/dice-result.hbs' roll=roll crit=crit}}
+		{{> 'systems/fabula/templates/chat/common/dice-result.hbs'}}
 	{{/if}}
 	{{#if item.system.damage.hasDamage.value}}
-		{{> 'systems/fabula/templates/chat/common/dice-damage.hbs' item=item}}
+		{{> 'systems/fabula/templates/chat/common/dice-damage.hbs'}}
 	{{/if}}
 	{{#allTrue crit.success item.system.opportunity.value}}
 		<div class="dice-opportunity">
