@@ -23,4 +23,8 @@ export class ArcanumDataModel extends foundry.abstract.TypeDataModel {
 			})),
 		};
 	}
+
+	transferEffects() {
+		return this.item?.isEquipped ?? false;
+	}
 }

@@ -24,4 +24,8 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 			}),
 		};
 	}
+
+	transferEffects() {
+		return this.data?.transferEffects instanceof Function ? this.data?.transferEffects() : true;
+	}
 }

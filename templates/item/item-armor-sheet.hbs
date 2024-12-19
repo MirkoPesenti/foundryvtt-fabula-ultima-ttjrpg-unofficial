@@ -13,8 +13,17 @@
         {{/if}}
     </header>
 
+    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
+        <a class="item" data-tab="base">
+            <span>Base</span>
+        </a>
+        <a class="item" data-tab="effects">
+            <span>Effetti</span>
+        </a>
+    </nav>
+
     <section class="sheet-body">
-        <div class="tab">
+        <div class="tab base" data-group="primary" data-tab="base">
             {{#if @root.editable}}
                 <div class="editable-options">
                     <div class="flexrow">
@@ -123,6 +132,39 @@
                     {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                 </div>
             </div>
+        </div>
+
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            {{#each effects as |category catIndex|}}
+                <div class="title">
+                    {{category.label}}
+                    {{#if @root.editable}}
+                        <button type="button" class="js_manageActiveEffect" data-action="create">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    {{/if}}
+                </div>
+                <ul class="list list-effects">
+                    {{#each category.effects as |effect|}}
+                        <li>
+                            <div class="btn-container">
+                                {{#if @root.editable}}
+                                    <button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="remove" data-tooltip="Elimina">
+                                        <i class="fa fa-trash m-0"></i>
+                                    </button>
+
+                                    <button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="open" data-tooltip="Modifica">
+                                        <i class="fa fa-pencil m-0"></i>
+                                    </button>
+                                {{/if}}
+                            </div>
+                            <div class="item-box">
+                                <label>{{effect.name}}</label>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ul>
+            {{/each}}
         </div>
     </section>
 </form>

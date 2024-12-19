@@ -18,7 +18,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			villain: new StringField({ initial: '', blank: true, choices: Object.keys(FU.villainTypes) }),
 			rank: new SchemaField({
 				value: new StringField({ initial: 'soldier', choices: Object.keys(FU.enemyRanks) }),
-				replacedSoldiers: new NumberField({ initial: 0, min: 0, max: 6 }),
+				replacedSoldiers: new NumberField({ initial: 1, min: 1, max: 6 }),
 			}),
 			attributes: new EmbeddedDataField(AttributesDataModel, {}),
 			resources: new SchemaField({
@@ -68,7 +68,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		else if ( this.rank.value == 'champion' )
 			this.rank.replacedSoldiers = 2;
 		else
-			this.rank.replacedSoldiers = 0;
+			this.rank.replacedSoldiers = 1;
 			
 		// Defence, Magic Defence and Initiative
 		this.resources.params.def.current = this.attributes.dex.value + this.resources.params.def.bonus;
@@ -145,6 +145,16 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.resources.params.init.current += this.rank.replacedSoldiers;
 		}
 
+		// Set Ultima Points
+		let maxUp = 0;
+		if ( this.villain == 'minor' )
+			maxUp = 5;
+		else if ( this.villain == 'major' )
+			maxUp = 10;
+		else if ( this.villain == 'supreme' )
+			maxUp = 15;
+		this.resources.up.max = maxUp;
+
 		// Set Species Rules
 		const speciesRules = [];
 		if ( this.species.value == 'beast' ) {
@@ -220,44 +230,45 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		const data = this;
 
 		// Max HP
-		const baseHP = Object.keys(FU.attributes).includes(this.resources.hp.attribute)
-			? data.attributes[this.resources.hp.attribute].value
-			: data.attributes.mig.value;
-		const maxHP = ( baseHP * 5 ) + ( data.level.value * 2 ) + data.resources.hp.bonus;
-		data.resources.hp.max = maxHP;
-		
-		if ( data.rank.value == 'elite' )
-			data.resources.hp.max *= 2;
-		else if ( data.rank.value == 'champion' )
-			data.resources.hp.max *= data.rank.replacedSoldiers;
-
-		if ( data.resources.hp.current > data.resources.hp.max )
-			data.resources.hp.current = data.resources.hp.max;
+		Object.defineProperty(this.resources.hp, 'max', {
+			configurable: true,
+			enumerable: true,
+			get() {
+				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].value : data.attributes.mig.value;
+				return ( ( baseAttr * 5 ) + ( data.level.value * 2 ) + this.bonus ) * data.rank.replacedSoldiers;
+			},
+			set( newVal ) {
+				delete this.max;
+				this.max = newVal;
+			}
+		});
 
 		// HP Crisis
-		data.resources.hp.crisis = Math.floor( data.resources.hp.max / 2 );
+		Object.defineProperty(this.resources.hp, 'crisis', {
+			configurable: true,
+			enumerable: true,
+			get() {
+				return Math.floor( this.max / 2 );
+			},
+			set( newVal ) {
+				delete this.crisis;
+				this.crisis = newVal;
+			}
+		});
 
 		// Max MP
-		const baseMP = Object.keys(FU.attributes).includes(this.resources.mp.attribute)
-			? data.attributes[this.resources.mp.attribute].value
-			: data.attributes.mig.value;
-		const maxMP = ( baseMP * 5 ) + data.level.value + data.resources.mp.bonus;
-		data.resources.mp.max = maxMP;
-		
-		if ( data.rank.value == 'champion' )
-			data.resources.mp.max *= 2;
-
-		if ( data.resources.mp.current > data.resources.mp.max )
-			data.resources.mp.current = data.resources.mp.max;
-
-		// Set Ultima Points
-		let maxUp = 0;
-		if ( data.villain == 'minor' )
-			maxUp = 5;
-		else if ( data.villain == 'major' )
-			maxUp = 10;
-		else if ( data.villain == 'supreme' )
-			maxUp = 15;
-		data.resources.up.max = maxUp;
+		Object.defineProperty(this.resources.mp, 'max', {
+			configurable: true,
+			enumerable: true,
+			get() {
+				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].value : data.attributes.wlp.value;
+				const multiplier = data.rank.value == 'champion' ? 2 : 1;
+				return ( ( baseAttr * 5 ) + data.level.value + this.bonus ) * multiplier;
+			},
+			set( newVal ) {
+				delete this.max;
+				this.max = newVal;
+			}
+		});
 	}
 }

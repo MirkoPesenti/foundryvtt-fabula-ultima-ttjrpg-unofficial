@@ -17,4 +17,8 @@ export class AccessoryDataModel extends foundry.abstract.TypeDataModel {
 			cost: new NumberField({ initial: 1, min: 0, integer: true }),
 		};
 	}
+
+	transferEffects() {
+		return this.parent.isEquipped;
+	}
 }

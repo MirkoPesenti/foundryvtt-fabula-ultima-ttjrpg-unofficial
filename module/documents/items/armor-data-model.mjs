@@ -37,4 +37,8 @@ export class ArmorDataModel extends foundry.abstract.TypeDataModel {
 			initiativeMalus: new NumberField({ initial: 0, integer: true }),
 		};
 	}
+
+	transferEffects() {
+		return this.parent.isEquipped;
+	}
 }

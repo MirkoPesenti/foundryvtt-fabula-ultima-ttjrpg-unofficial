@@ -33,4 +33,8 @@ export class WeaponDataModel extends foundry.abstract.TypeDataModel {
 			damage: new EmbeddedDataField(DamageDataModel, {}),
 		};
 	}
+
+	transferEffects() {
+		return this.parent.isEquipped;
+	}
 }

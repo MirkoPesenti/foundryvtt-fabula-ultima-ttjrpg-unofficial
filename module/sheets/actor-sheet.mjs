@@ -1,5 +1,5 @@
 import { FU } from "../helpers/config.mjs";
-import { createActiveEffect } from "../helpers/effects.mjs";
+import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
 
 const NPCaccordions = {
 	attack: false,
@@ -41,7 +41,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 	async getData() {
 		const context = super.getData();
-		const actorData = context.actor;
+		const actorData = this.actor;
 
 		context.system = actorData.system;
 		context.flags = actorData.flags;
@@ -73,6 +73,13 @@ export class FabulaActorSheet extends ActorSheet {
 		};
 		
 		context.rollData = context.actor.getRollData();
+
+		context.effects = prepareActiveEffect(Array.from(this.actor.allApplicableEffects()));
+		context.allEffects = [...context.effects.temporary.effects, ...context.effects.passive.effects, ...context.effects.inactive.effects];
+
+		for ( const effect of context.allEffects ) {
+			effect.enrichedDescription = effect.description ? await TextEditor.enrichHTML(effect.description) : '';
+		}
 
 		context.FU = FU;
 
@@ -291,7 +298,7 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click','.js_rollActorItem', this._rollActorItem.bind(this));
 
 		// Manage Active Effects
-		html.on('click','.js_createActiveEffect', (e) => createActiveEffect(e, this.actor));
+		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.actor));
 
 		html.on('click','.getActor', () => console.log(this.actor));
 		html.on('click','.addClass', () => {
@@ -391,6 +398,7 @@ export class FabulaActorSheet extends ActorSheet {
 		const rituals = [];
 		const baseItems = [];
 		const attacks = [];
+		const effects = [];
 
 		for ( let i of context.items ) {
 
@@ -424,6 +432,8 @@ export class FabulaActorSheet extends ActorSheet {
 				baseItems.push(i);
 			} else if (i.type === 'attack') {
 				attacks.push(i);
+			} else if (i.type === 'effect') {
+				effects.push(i);
 			}
 		}
 
@@ -438,6 +448,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.rituals = rituals;
 		context.baseItems = baseItems;
 		context.attacks = attacks;
+		context.effects = effects;
 		context.classFeature = {};
 
 		for (const item of this.actor.itemTypes.classFeature) {

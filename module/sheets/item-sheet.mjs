@@ -1,5 +1,5 @@
 import { FU } from "../helpers/config.mjs";
-import { changeProjectProgress } from "../helpers/effects.mjs";
+import { prepareActiveEffect, manageActiveEffect, changeProjectProgress } from "../helpers/effects.mjs";
 
 function returnSortedPack( packId, itemType ) {
 	const pack = game.packs.get( packId );
@@ -71,7 +71,7 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'accessory' ||
 			this.object.type == 'consumable'
 		)
-			options.height = 375;
+			options.height = 500;
 		else
 			options.height = 300;
 
@@ -123,6 +123,13 @@ export class FabulaItemSheet extends ItemSheet {
 			arcanum: returnSortedPack( 'fabula.arcanum', 'arcanum' ),
 		}
 
+		context.effects = prepareActiveEffect(this.item.effects);
+		context.allEffects = [...context.effects.temporary.effects, ...context.effects.passive.effects, ...context.effects.inactive.effects];
+
+		for ( const effect of context.allEffects ) {
+			effect.enrichedDescription = effect.description ? await TextEditor.enrichHTML(effect.description) : '';
+		}
+
 		context.FU = FU;
 
 		// Add class to Sheet based of Item sourcebook
@@ -141,6 +148,9 @@ export class FabulaItemSheet extends ItemSheet {
 
 		// html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
 		// html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
+
+		// Manage Active Effects
+		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.item));
 
 		html.on('drop', this._onDropItem.bind(this));
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));

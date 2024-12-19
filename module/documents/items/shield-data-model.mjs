@@ -24,4 +24,8 @@ export class ShieldDataModel extends foundry.abstract.TypeDataModel {
 			magicDefenseBonus: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }),
 		};
 	}
+
+	transferEffects() {
+		return this.parent.isEquipped;
+	}
 }

@@ -42,6 +42,27 @@ export class FabulaActor extends Actor {
 		systemData.specialRules = systemData.specialRules || [];
 	}
 
+	*allApplicableEffects() {
+		for ( const effect of super.allApplicableEffects() ) {
+			const item = effect.parent;
+
+			if ( item instanceof FabulaActor ) {
+				if ( item.system.transferEffects instanceof Function ? item.system.transferEffects() : true ) {
+					yield effect;
+				}
+			} else {
+				yield effect;
+			}
+		}
+	}
+
+	applyActiveEffects() {
+		if ( this.system.prepareEmbeddedData instanceof Function ) {
+			this.system.prepareEmbeddedData();
+		}
+		return super.applyActiveEffects();
+	}
+
 	applyActiveEffects() {
 		if (this.system.prepareEmbeddedData instanceof Function) {
 			this.system.prepareEmbeddedData();
