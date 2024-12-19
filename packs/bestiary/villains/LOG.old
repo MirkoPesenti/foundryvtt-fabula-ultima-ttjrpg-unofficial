@@ -1,5 +1,1 @@
-2024/12/18-21:00:48.943 2138 Log #68: 0 ops saved to Table #69 OK
-2024/12/18-21:00:48.943 2138 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/000068.log: OK
-2024/12/18-21:00:48.950 2138 Table #57: 2 entries OK
-2024/12/18-21:00:48.953 2138 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/MANIFEST-000067: OK
-2024/12/18-21:00:48.956 2138 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains; recovered 1 files; 1734 bytes. Some data may have been lost. ****
+2024/12/18-21:00:48.965 2138 Delete type=3 #1

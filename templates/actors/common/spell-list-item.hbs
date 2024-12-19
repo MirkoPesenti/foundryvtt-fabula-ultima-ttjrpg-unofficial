@@ -55,13 +55,13 @@
 		</p>
 
 		<div class="description">
-			{{{item.system.description}}}
+			{{{item.enrichedHtml.description}}}
 		</div>
 		
-		{{#if item.system.opportunity.value}}
+		{{#if item.enrichedHtml.opportunity.value}}
 			<div class="opportunity">
 				<strong>Opportunità:</strong>
-				{{{item.system.opportunityEffect}}}
+				{{{item.enrichedHtml.opportunityEffect}}}
 			</div>
 		{{/if}}
 	</div>

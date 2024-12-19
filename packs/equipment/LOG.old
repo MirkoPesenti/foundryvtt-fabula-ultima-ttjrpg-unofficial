@@ -1,5 +1,1 @@
-2024/12/18-21:00:48.851 2138 Log #126: 0 ops saved to Table #127 OK
-2024/12/18-21:00:48.851 2138 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment/000126.log: OK
-2024/12/18-21:00:48.851 2138 Table #115: 367 entries OK
-2024/12/18-21:00:48.856 2138 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment/MANIFEST-000125: OK
-2024/12/18-21:00:48.859 2138 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment; recovered 1 files; 116999 bytes. Some data may have been lost. ****
+2024/12/18-21:00:48.867 2138 Delete type=3 #1

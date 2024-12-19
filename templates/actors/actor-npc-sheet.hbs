@@ -1,6 +1,6 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
 
-    <button type="button" class="getActor" style="position:absolute;top:0px;left:100px;">log</button>
+    <button type="button" class="getActor" style="width:auto;margin:0;background-color:#fff;border:1px solid #000;border-radius:5px;font-size:16px;position:absolute;left:5px;bottom:50px;">log</button>
 
     <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
         <a class="item" data-tab="base">
@@ -249,11 +249,8 @@
             
             <div class="tab base" data-group="primary" data-tab="base">
                 <nav class="tabs inner-tabs" data-group="secondary">
-                    <a class="item active" data-tab="attacks">
-                        <span>Attacchi</span>
-                    </a>
-                    <a class="item" data-tab="spells">
-                        <span>Incantesimi</span>
+                    <a class="item" data-tab="base">
+                        <span>Azioni base</span>
                     </a>
                     <a class="item" data-tab="actions">
                         <span>Altre azioni</span>
@@ -261,9 +258,12 @@
                     <a class="item" data-tab="rules">
                         <span>Regole speciali</span>
                     </a>
+                    <a class="item" data-tab="effects">
+                        <span>Effetti</span>
+                    </a>
                 </nav>
 
-                <div class="tab inner-tab active" data-group="secondary" data-tab="attacks">
+                <div class="tab inner-tab" data-group="secondary" data-tab="base">
                     <div class="content-collapse open attack">
                         <div class="title">
                             Attacchi base
@@ -314,9 +314,7 @@
                             </div>
                         </div>
                     {{/if}}
-                </div>
-
-                <div class="tab inner-tab" data-group="secondary" data-tab="spells">
+                    
                     <div class="content-collapse open spell">
                         <div class="title">
                             Incantesimi
@@ -401,6 +399,23 @@
                             </ul>
                         {{/each}}
                     {{/if}}
+                </div>
+
+                <div class="tab inner-tab" data-group="secondary" data-tab="effects">
+                    <div class="content-collapse open effects">
+                        <div class="title">
+                            Effetti
+                            {{#if @root.editable}}
+                                <button type="button" class="">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            {{/if}}
+                        </div>
+                        <div class="collapse">
+                            <ul class="list list-active-effects">
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 

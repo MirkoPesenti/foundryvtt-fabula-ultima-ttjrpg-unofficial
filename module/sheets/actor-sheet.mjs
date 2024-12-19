@@ -7,6 +7,8 @@ const NPCaccordions = {
 	rule: false,
 };
 
+let lastOpennedInnerTab = 'base';
+
 /**
  * Extend basic ActorSheet
  * @extends {ActorSheet}
@@ -113,6 +115,18 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 		});
 
+		$(html).find('.tabs.inner-tabs > .item').each((index, element) => {
+			const group = $(element).parent('.tabs').data('group');
+
+			if ( $(element).is(`[data-tab="${lastOpennedInnerTab}"]`) ) {
+				$(element).addClass('active');
+				$(html).find(`.tab.inner-tab[data-group="${group}"][data-tab="${lastOpennedInnerTab}"]`).addClass('active');
+			} else {
+				$(element).removeClass('active');
+				$(html).find(`.tab.inner-tab[data-group="${group}"][data-tab="${$(element).data('tab')}"]`).removeClass('active');
+			}
+		});
+
 		// Inner tabs
 		html.on('click', '.tabs.inner-tabs > .item', (e) => {
 			e.preventDefault();
@@ -131,6 +145,7 @@ export class FabulaActorSheet extends ActorSheet {
 				$(innerTabs).each((index, el) => {
 					if ( $(el).is(`[data-tab="${tab}"]`) ) {
 						$(el).addClass('active');
+						lastOpennedInnerTab = tab;
 					} else {
 						$(el).removeClass('active');
 					}
@@ -373,8 +388,15 @@ export class FabulaActorSheet extends ActorSheet {
 		const baseItems = [];
 		const attacks = [];
 
-		for (let i of context.items) {
-			i.img = i.img || CONST.DEFAULT_TOKEN;
+		for ( let i of context.items ) {
+
+			// Enriches description fields
+			for ( let item of context.items ) {
+				item.enrichedHtml = {
+					description: await TextEditor.enrichHTML( item.system?.description ?? '' ),
+					opportunity: await TextEditor.enrichHTML( item.system?.opportunityEffect ?? '' ),
+				};
+			}
 
 			if (i.type === 'weapon') {
 				weapons.push(i);
