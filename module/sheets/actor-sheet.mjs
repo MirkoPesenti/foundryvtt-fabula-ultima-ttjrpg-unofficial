@@ -1,4 +1,5 @@
 import { FU } from "../helpers/config.mjs";
+import { createActiveEffect } from "../helpers/effects.mjs";
 
 const NPCaccordions = {
 	attack: false,
@@ -288,6 +289,9 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Roll spell test
 		html.on('click','.js_rollActorItem', this._rollActorItem.bind(this));
+
+		// Manage Active Effects
+		html.on('click','.js_createActiveEffect', (e) => createActiveEffect(e, this.actor));
 
 		html.on('click','.getActor', () => console.log(this.actor));
 		html.on('click','.addClass', () => {

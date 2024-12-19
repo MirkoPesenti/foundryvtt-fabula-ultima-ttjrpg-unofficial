@@ -1,3 +1,5 @@
+import { FabulaActor } from "../documents/actors/actor.mjs";
+
 export async function changeProjectProgress( event, item, increase = true, value = undefined ) {
     event.preventDefault();
     let newValue = item.system.progress.current;
@@ -12,4 +14,19 @@ export async function changeProjectProgress( event, item, increase = true, value
         newValue = value;
     }
     await item.update({ 'system.progress.current': newValue });
+}
+
+export async function createActiveEffect(event, owner) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    let effect;
+
+    if ( owner instanceof FabulaActor ) {
+    } else {
+    }
+
+    return owner.createEmbeddedDocuments('ActiveEffect', [{
+        label: 'Nuovo effetto',
+        icon: 'icons/svg/aura.svg',
+    }]);
 }

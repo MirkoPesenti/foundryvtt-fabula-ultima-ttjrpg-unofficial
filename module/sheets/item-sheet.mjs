@@ -90,6 +90,8 @@ export class FabulaItemSheet extends ItemSheet {
 		context.system = itemData.system;
 		context.flags = itemData.flags;
 
+		await this._prepareFlags(context);
+
 		// Add required CONFIG data
 		context.sourcebook = CONFIG.FU.sourcebook;
 		context.ItemTypes = CONFIG.FU.ItemTypes;
@@ -391,6 +393,40 @@ export class FabulaItemSheet extends ItemSheet {
 		}
 
 		return data;
+	}
+
+	async _prepareFlags(context) {
+
+		const features = [];
+		const spells = [];
+		const subItems = [];
+
+		if ( context.flags.fabula?.subItems ) {
+			for ( let i of context.flags.fabula.subItems ) {
+
+				// Enriches description fields
+				for ( let item of context.flags.fabula.subItems ) {
+					item.enrichedHtml = {
+						description: await TextEditor.enrichHTML( item.system?.description ?? '' ),
+						opportunity: await TextEditor.enrichHTML( item.system?.opportunityEffect ?? '' ),
+					};
+				}
+
+				if (i.type === 'spell') {
+					spells.push(i);
+				} else if (i.type === 'classFeature') {
+					features.push(i);
+				} else {
+					subItems.push(i);
+				}
+
+			}
+
+			context.features = features;
+			context.spells = spells;
+			context.subItems = subItems;
+
+		}
 	}
 
 	async _onDropItem(event) {

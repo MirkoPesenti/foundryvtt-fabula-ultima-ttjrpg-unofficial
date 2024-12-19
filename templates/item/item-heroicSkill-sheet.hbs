@@ -39,50 +39,48 @@
                         </p>
                     </div>
                 {{/if}}
-                <div class="feature-body {{#if flags.fabula.spells}}has-subitem{{/if}}">
+                <div class="feature-body {{#if spells}}has-subitem{{/if}}">
                     {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
-                    {{#each flags.fabula.spells as |spell spellIndex|}}
-                        {{#if (eq spell.type "spell")}}
-                            <table class="is-4">
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <strong>{{spell.name}}</strong>
-                                            {{#if spell.system.isOffensive.value}}
-                                                <div class="icon icon-offensive"></div>
-                                            {{/if}}
-                                        </td>
-                                        <td>
-                                            <strong>PM:</strong>
-                                            {{#if spell.system.MPCost.upTo}}
-                                                Fino a
-                                            {{/if}}
+                    {{#each spells}}
+                        <table class="is-4">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>{{this.name}}</strong>
+                                        {{#if this.system.isOffensive.value}}
+                                            <div class="icon icon-offensive"></div>
+                                        {{/if}}
+                                    </td>
+                                    <td>
+                                        <strong>PM:</strong>
+                                        {{#if this.system.MPCost.upTo}}
+                                            Fino a
+                                        {{/if}}
 
-                                            {{spell.system.MPCost.value}}
+                                        {{this.system.MPCost.value}}
 
-                                            {{#gt spell.system.target.number 1}}
-                                                x {{localize 'FU.targetAbbr'}}
-                                            {{/gt}}
-                                        </td>
-                                        <td>
-                                            <strong>Bersaglio:</strong>
-                                            {{spell.system.target.value}}
-                                        </td>
-                                        <td>
-                                            <strong>Durata:</strong>
-                                            {{localize (concat 'FU.SpellDurations.' spell.system.duration.value)}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="editor">
-                                {{{spell.system.description}}}
-                                {{#if spell.system.opportunity.value}}
-                                    <p><strong>Opportunità:</strong></p>
-                                    {{{spell.system.opportunityEffect}}}
-                                {{/if}}
-                            </div>
-                        {{/if}}
+                                        {{#gt this.system.target.number 1}}
+                                            x {{localize 'FU.targetAbbr'}}
+                                        {{/gt}}
+                                    </td>
+                                    <td>
+                                        <strong>Bersaglio:</strong>
+                                        {{this.system.target.value}}
+                                    </td>
+                                    <td>
+                                        <strong>Durata:</strong>
+                                        {{localize (concat 'FU.SpellDurations.' this.system.duration.value)}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="editor">
+                            {{{this.system.description}}}
+                            {{#if this.system.opportunity.value}}
+                                <p><strong>Opportunità:</strong></p>
+                                {{{this.system.opportunityEffect}}}
+                            {{/if}}
+                        </div>
                     {{/each}}
                 </div>
             </div>

@@ -257,86 +257,84 @@
             {{/if}}
             
             <div class="title">Abilità di classe</div>
-            {{#each flags.fabula.subItems}}
-                {{#if (eq this.type "classFeature")}}
-                    <div class="feature-box">
-                        <div class="feature-head">
-                            {{#if @root.editable}}
-                                <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
-                            {{/if}}
-                            
-                            {{this.name}}
-                            {{#gt this.system.level.max 1}}
-                                <span>
-                                    (<span>l</span>{{this.system.level.max}})
-                                </span>
-                            {{/gt}}
+            {{#each features}}
+                <div class="feature-box">
+                    <div class="feature-head">
+                        {{#if @root.editable}}
+                            <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
+                        {{/if}}
+                        
+                        {{this.name}}
+                        {{#gt this.system.level.max 1}}
+                            <span>
+                                (<span>l</span>{{this.system.level.max}})
+                            </span>
+                        {{/gt}}
+                    </div>
+                    <div class="feature-body">
+                        {{{this.enrichedHtml.description}}}
+                    </div>
+                </div>
+                {{#each this.flags.fabula.subItems}}
+                    <div class="equip-box">
+                        <div class="equip-head">
+                            <img src="{{this.img}}" title="{{this.name}}" />
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Arma</th>
+                                        <th>Precisione</th>
+                                        <th>Danno</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{localize (concat 'FU.weaponCategories.' this.system.type)}}</td>
+                                        <td>
+                                            <strong>
+                                                【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.primary.value)}}
+                                                + 
+                                                {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.secondary.value)}}】
+                                                {{#unless (eq this.system.precisionBonus 0)}}
+                                                    {{#gt this.system.precisionBonus 0}}
+                                                        +{{this.system.precisionBonus}}
+                                                    {{else}}
+                                                        {{this.system.precisionBonus}}
+                                                    {{/gt}}
+                                                {{/unless}}
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <strong>
+                                                【TM
+                                                {{#gt_e this.system.damage.value 0}}
+                                                    + {{this.system.damage.value}}】
+                                                {{else}}
+                                                    - {{multiply this.system.damage.value -1}}】
+                                                {{/gt_e}}
+                                                {{localize (concat 'FU.DamageTypes.' this.system.damage.type.value)}}
+                                            </strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="feature-body">
-                            {{{this.system.description}}}
+                        <div class="equip-body">
+                            <div class="desc-container">
+                                {{#if this.system.needTwoHands}}
+                                    Due mani
+                                {{else}}
+                                    Una mano
+                                {{/if}}
+                                <span class="diamond-char">◆</span>
+                                {{localize (concat 'FU.WeaponRanges.' this.system.range)}}
+                            </div>
+                            <div class="desc-container">
+                                {{{this.system.description}}}
+                            </div>
                         </div>
                     </div>
-                    {{#each this.flags.fabula.subItems}}
-                        <div class="equip-box">
-                            <div class="equip-head">
-                                <img src="{{this.img}}" title="{{this.name}}" />
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Arma</th>
-                                            <th>Precisione</th>
-                                            <th>Danno</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>{{localize (concat 'FU.weaponCategories.' this.system.type)}}</td>
-                                            <td>
-                                                <strong>
-                                                    【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.primary.value)}}
-                                                    + 
-                                                    {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.secondary.value)}}】
-                                                    {{#unless (eq this.system.precisionBonus 0)}}
-                                                        {{#gt this.system.precisionBonus 0}}
-                                                            +{{this.system.precisionBonus}}
-                                                        {{else}}
-                                                            {{this.system.precisionBonus}}
-                                                        {{/gt}}
-                                                    {{/unless}}
-                                                </strong>
-                                            </td>
-                                            <td>
-                                                <strong>
-                                                    【TM
-                                                    {{#gt_e this.system.damage.value 0}}
-                                                        + {{this.system.damage.value}}】
-                                                    {{else}}
-                                                        - {{multiply this.system.damage.value -1}}】
-                                                    {{/gt_e}}
-                                                    {{localize (concat 'FU.DamageTypes.' this.system.damage.type.value)}}
-                                                </strong>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="equip-body">
-                                <div class="desc-container">
-                                    {{#if this.system.needTwoHands}}
-                                        Due mani
-                                    {{else}}
-                                        Una mano
-                                    {{/if}}
-                                    <span class="diamond-char">◆</span>
-                                    {{localize (concat 'FU.WeaponRanges.' this.system.range)}}
-                                </div>
-                                <div class="desc-container">
-                                    {{{this.system.description}}}
-                                </div>
-                            </div>
-                        </div>
-                    {{/each}}
-                {{/if}}
+                {{/each}}
             {{/each}}
         </div>
     </section>
