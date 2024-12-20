@@ -36,9 +36,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
 			skills: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
 			bonus: new SchemaField({
-				test: new NumberField({ initial: 0, integer: true, nullable: false }),
-				spell: new NumberField({ initial: 0, integer: true, nullable: false }),
-				checks: new NumberField({ initial: 0, integer: true, nullable: false }),
 				damage: new SchemaField({
 					base: new NumberField({ initial: 0, integer: true, nullable: false }),
 					spell: new NumberField({ initial: 0, integer: true, nullable: false }),
@@ -78,11 +75,8 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		// Checks and Damage Bonus
 		this.level.checkBonus = {};
 		this.level.checkBonus.test = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0;
-		this.level.checkBonus.test += this.bonus.test;
 		this.level.checkBonus.spell = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0
-		this.level.checkBonus.spell += this.bonus.spell;
 		this.level.checkBonus.checks = 0;
-		this.level.checkBonus.checks += this.bonus.checks;
 
 		if ( this.level.value == 60 )
 			this.level.damageBonus = 15;

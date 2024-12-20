@@ -68,6 +68,7 @@ export async function manageActiveEffect(event, owner) {
 
         return owner.createEmbeddedDocuments('ActiveEffect', [{
             label: 'Nuovo effetto',
+            icon: 'systems/fabula/assets/icons/default-effect.png',
             origin: owner.uuid,
             'duration.rounds': content.dataset.effectType === 'temporary' ? 1 : undefined,
             disabled: content.dataset.effectType === 'inactive',
