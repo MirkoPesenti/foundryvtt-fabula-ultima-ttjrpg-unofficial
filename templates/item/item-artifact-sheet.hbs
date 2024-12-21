@@ -13,8 +13,17 @@
         {{/if}}
     </header>
 
+    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
+        <a class="item" data-tab="base">
+            <span>Base</span>
+        </a>
+        <a class="item" data-tab="effects">
+            <span>Effetti</span>
+        </a>
+    </nav>
+
     <section class="sheet-body">
-        <div class="tab">
+        <div class="tab base" data-group="primary" data-tab="base">
             <div class="equip-box">
                 <div class="equip-head">
                     <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
@@ -41,6 +50,12 @@
                     {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                 </div>
             </div>
+        </div>
+
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            {{#each effects as |category catIndex|}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
+            {{/each}}
         </div>
     </section>
 </form>

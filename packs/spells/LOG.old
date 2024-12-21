@@ -1,3 +1,5 @@
-2024/12/20-08:13:15.430897 3104a9000 Recovering log #204
-2024/12/20-08:13:15.431185 3104a9000 Delete type=0 #204
-2024/12/20-08:13:15.431210 3104a9000 Delete type=3 #203
+2024/12/21-11:12:35.719 3504 Log #208: 0 ops saved to Table #209 OK
+2024/12/21-11:12:35.720 3504 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells/000208.log: OK
+2024/12/21-11:12:35.721 3504 Table #194: 39 entries OK
+2024/12/21-11:12:35.723 3504 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells/MANIFEST-000207: OK
+2024/12/21-11:12:35.727 3504 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells; recovered 1 files; 19072 bytes. Some data may have been lost. ****

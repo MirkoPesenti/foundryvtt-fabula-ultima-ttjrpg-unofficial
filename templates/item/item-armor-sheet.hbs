@@ -136,60 +136,7 @@
 
         <div class="tab effects" data-group="primary" data-tab="effects">
             {{#each effects as |category catIndex|}}
-                <div class="content-collapse open effects" data-effect-type="{{category.type}}">
-                    <div class="title">
-                        {{category.label}}
-                        {{#if @root.editable}}
-                            <button type="button" class="js_manageActiveEffect" data-action="create">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        {{/if}}
-                        {{!-- <button type="button" class="js_toggleCollapse" aria-expanded="false">
-                            <i class="fa fa-angle-down"></i>
-                        </button> --}}
-                    </div>
-                    <div class="collapse">
-                        <ul class="list list-effects">
-                            {{#each category.effects as |effect|}}
-                                <li>
-                                    <div class="btn-container">
-                                        {{#if @root.editable}}
-                                            <button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="toggle" data-tooltip="Abilita / Disattiva">
-                                                {{#if effect.disabled}}
-                                                    <i class="far fa-circle-check m-0"></i>
-                                                {{else}}
-                                                    <i class="fa fa-circle-check m-0"></i>
-                                                {{/if}}
-                                            </button>
-
-                                            <button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="remove" data-tooltip="Elimina">
-                                                <i class="fa fa-trash m-0"></i>
-                                            </button>
-
-                                            <button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="open" data-tooltip="Modifica">
-                                                <i class="fa fa-pencil m-0"></i>
-                                            </button>
-                                        {{/if}}
-                                    </div>
-                                    <div class="item-box">
-                                        <label>{{effect.name}}</label>
-                                        <p>
-                                            {{effect.sourceName}}
-                                            <small>◆</small>
-                                            {{effect.duration.name}}
-                                        </p>
-                                        
-                                        {{#if effect.enrichedDescription}}
-                                            <div class="description">
-                                                {{{effect.enrichedDescription}}}
-                                            </div>
-                                        {{/if}}
-                                    </div>
-                                </li>
-                            {{/each}}
-                        </ul>
-                    </div>
-                </div>
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
             {{/each}}
         </div>
     </section>

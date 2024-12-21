@@ -11,6 +11,9 @@ export const preloadPartialTemplates = async function() {
         'systems/fabula/templates/actors/common/spell-list-item.hbs',
         'systems/fabula/templates/actors/common/base-list-item.hbs',
 
+        // Commons
+        'systems/fabula/templates/common/active-effects.hbs',
+
         // Chat Messages
         'systems/fabula/templates/chat/common/dice-result.hbs',
         'systems/fabula/templates/chat/common/dice-damage.hbs',

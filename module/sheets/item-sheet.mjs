@@ -385,6 +385,7 @@ export class FabulaItemSheet extends ItemSheet {
 		
 		if ( data['system.type.value'] ) {
 			const typeImages = {
+				"": 'systems/fabula/assets/icons/default-spell.png',
 				chimerism: 'systems/fabula/assets/icons/classes/chimerist.png',
 				elementalism: 'systems/fabula/assets/icons/classes/elementalist.png',
 				entropism: 'systems/fabula/assets/icons/classes/entropist.png',
