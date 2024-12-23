@@ -1,230 +1,264 @@
 {
-	"id": "fabula",
-	"title": "Fabula Ultima TTJRPG (Unofficial)",
-	"description": "An Unofficial system for playing Fabula Ultima in the Foundry Virtual Tabletop environment.",
-	"version": "1.0.0",
-	"authors": [
-		{
-			"name": "OmegaPrime",
-			"discord": "0mega_prime"
-		},
-		{
-			"name": "Bog27",
-			"discord": "Bog"
-		}
-	],
-	"compatibility": {
-		"minimum": "12",
-		"verified": "12",
-		"maximum": "12"
-	},
-	"esmodules": ["module/fabula.mjs"],
-	"styles": ["assets/css/fabula.css"],
-	"packs": [
-		{
-			"name": "classes",
-			"label": "Classi",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/classes",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "classfeatures",
-			"label": "Abilità di Classe",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/classfeatures",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "spells",
-			"label": "Incantesimi",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/spells",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "heroicskill",
-			"label": "Abilità Eroiche",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/heroicskill",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "arcanum",
-			"label": "Arcana",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/arcanum",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "consumable",
-			"label": "Consumabili",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/consumable",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "equipment",
-			"label": "Equipaggiamento",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/equipment",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "artifacts",
-			"label": "Artefatti",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/artifacts",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "npcFeatures",
-			"label": "Abilità",
-			"type": "Item",
-			"system": "fabula",
-			"path": "packs/bestiary/npcFeatures",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "villains",
-			"label": "Cattivi",
-			"type": "Actor",
-			"system": "fabula",
-			"path": "packs/bestiary/villains",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		},
-		{
-			"name": "npc",
-			"label": "PNG",
-			"type": "Actor",
-			"system": "fabula",
-			"path": "packs/bestiary/npc",
-			"ownership": {
-				"PLAYER": "OBSERVER",
-				"ASSISTANT": "OWNER"
-			}
-		}
-	],
-	"packFolders": [
-		{
-			"name": "Introduzione",
-			"sorting": "m",
-			"color": "#8B5C00",
-			"packs": []
-		},
-		{
-			"name": "Regole di Gioco",
-			"sorting": "m",
-			"color": "#005995",
-			"packs": [
-				"consumable",
-				"equipment",
-				"artifacts"
-			]
-		},
-		{
-			"name": "Premi Start",
-			"sorting": "m",
-			"color": "#2F6A29",
-			"packs": [
-				"classes",
-				"classfeatures",
-				"spells",
-				"heroicskill",
-				"arcanum"
-			]
-		},
-		{
-			"name": "Game Master",
-			"sorting": "m",
-			"color": "#871906",
-			"packs": []
-		},
-		{
-			"name": "Bestiario",
-			"sorting": "m",
-			"color": "#572D57",
-			"packs": [
-				"npcFeatures",
-				"villains",
-				"npc"
-			]
-		}
-	],
-	"languages": [
-		{
-			"lang": "it",
-			"name": "Italiano",
-			"path": "lang/it.json"
-		}
-	],
-	"relationships": {
-		"requires": [
-			{
-				"id": "socketlib",
-				"type": "module"
-			}
-		]
-	},
-	"flags": {
-		"hotReload": {
-			"extensions": ["css", "hbs", "json"],
-			"paths": ["css", "lang", "templates"]
-		}
-	},
-    "media": [
-        {
-            "type": "cover",
-            "loop": false,
-            "flags": {}
-        },
-        {
-            "type": "setup",
-            "url": "systems/fabula/assets/img/ui/fabula-repo.jpg",
-            "thumbnail": "systems/fabula/assets/img/ui/fabula-thumbnail.jpg"
-        }
-    ],
-    "background": "systems/fabula/assets/img/ui/fabula-background.webp",
-	"socket": true,
-	"readme": "README.md",
-	"url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical",
-	"manifest": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/blob/main/system.json"
+  "id": "fabula",
+  "title": "Fabula Ultima TTJRPG (Unofficial)",
+  "description": "An Unofficial system for playing Fabula Ultima in the Foundry Virtual Tabletop environment.",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "OmegaPrime",
+      "discord": "0mega_prime",
+      "flags": {}
+    },
+    {
+      "name": "Bog27",
+      "discord": "Bog",
+      "flags": {}
+    }
+  ],
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12",
+    "maximum": "12"
+  },
+  "esmodules": [
+    "module/fabula.mjs"
+  ],
+  "styles": [
+    "assets/css/fabula.css"
+  ],
+  "packs": [
+    {
+      "name": "classes",
+      "label": "Classi",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/classes",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "classfeatures",
+      "label": "Abilità di Classe",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/classfeatures",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "spells",
+      "label": "Incantesimi",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/spells",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "heroicskill",
+      "label": "Abilità Eroiche",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/heroicskill",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "arcanum",
+      "label": "Arcana",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/arcanum",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "consumable",
+      "label": "Consumabili",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/consumable",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "equipment",
+      "label": "Equipaggiamento",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/equipment",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "artifacts",
+      "label": "Artefatti",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/artifacts",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "npcFeatures",
+      "label": "Abilità",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/bestiary/npcFeatures",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "villains",
+      "label": "Cattivi",
+      "type": "Actor",
+      "system": "fabula",
+      "path": "packs/bestiary/villains",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
+      "name": "npc",
+      "label": "PNG",
+      "type": "Actor",
+      "system": "fabula",
+      "path": "packs/bestiary/npc",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Introduzione",
+      "sorting": "m",
+      "color": "#8b5c00",
+      "packs": [],
+      "folders": []
+    },
+    {
+      "name": "Regole di Gioco",
+      "sorting": "m",
+      "color": "#005995",
+      "packs": [
+        "consumable",
+        "equipment",
+        "artifacts"
+      ],
+      "folders": []
+    },
+    {
+      "name": "Premi Start",
+      "sorting": "m",
+      "color": "#2f6a29",
+      "packs": [
+        "classes",
+        "classfeatures",
+        "spells",
+        "heroicskill",
+        "arcanum"
+      ],
+      "folders": []
+    },
+    {
+      "name": "Game Master",
+      "sorting": "m",
+      "color": "#871906",
+      "packs": [],
+      "folders": []
+    },
+    {
+      "name": "Bestiario",
+      "sorting": "m",
+      "color": "#572d57",
+      "packs": [
+        "npcFeatures",
+        "villains",
+        "npc"
+      ],
+      "folders": []
+    }
+  ],
+  "languages": [
+    {
+      "lang": "it",
+      "name": "Italiano",
+      "path": "lang/it.json",
+      "flags": {}
+    }
+  ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "socketlib",
+        "type": "module",
+        "compatibility": {}
+      }
+    ]
+  },
+  "flags": {
+    "hotReload": {
+      "extensions": [
+        "css",
+        "hbs",
+        "json"
+      ],
+      "paths": [
+        "css",
+        "lang",
+        "templates"
+      ]
+    }
+  },
+  "media": [
+    {
+      "type": "cover",
+      "loop": false,
+      "flags": {}
+    },
+    {
+      "type": "setup",
+      "url": "systems/fabula/assets/img/ui/fabula-repo.jpg",
+      "thumbnail": "systems/fabula/assets/img/ui/fabula-thumbnail.jpg",
+      "loop": false,
+      "flags": {}
+    }
+  ],
+  "background": "systems/fabula/assets/img/ui/fabula-background.webp",
+  "socket": true,
+  "readme": "README.md",
+  "url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical",
+  "manifest": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/blob/main/system.json"
 }
