@@ -23,6 +23,7 @@ export class WeaponDataModel extends foundry.abstract.TypeDataModel {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			description: new HTMLField(),
 			isMartial: new SchemaField({ value: new BooleanField() }),
+			isEquipped: new BooleanField({ initial: false }),
 			rarity: new StringField({ initial: 'base', choices: Object.keys(FU.rarityList) }),
 			type: new StringField({ initial: 'sword', choices: Object.keys(FU.weaponCategories) }),
 			cost: new NumberField({ initial: 1, min: 0, integer: true }),

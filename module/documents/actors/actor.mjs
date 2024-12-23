@@ -24,6 +24,8 @@ export class FabulaActor extends Actor {
 		const actorData = this;
 		const systemData = actorData.system;
 		const flags = actorData.flags.boilerplate || {};
+		
+		this.items.forEach((item) => item.applyActiveEffects());
 	
 		this._prepareCharacterData(actorData);
 		this._prepareNpcData(actorData);
@@ -54,13 +56,6 @@ export class FabulaActor extends Actor {
 				yield effect;
 			}
 		}
-	}
-
-	applyActiveEffects() {
-		if ( this.system.prepareEmbeddedData instanceof Function ) {
-			this.system.prepareEmbeddedData();
-		}
-		return super.applyActiveEffects();
 	}
 
 	applyActiveEffects() {

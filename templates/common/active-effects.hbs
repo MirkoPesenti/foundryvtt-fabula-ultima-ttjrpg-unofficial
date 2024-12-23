@@ -1,6 +1,6 @@
 <div class="content-collapse open effects" data-effect-type="{{category.type}}">
-	<div class="title">
-		{{category.label}}
+	<div class="title title-list">
+		<span>{{category.label}}</span>
 		{{#if @root.editable}}
 			<button type="button" class="js_manageActiveEffect" data-action="create">
 				<i class="fa fa-plus"></i>
@@ -37,8 +37,10 @@
 						<label>{{effect.name}}</label>
 						<p>
 							{{effect.sourceName}}
-							<small>◆</small>
-							{{effect.duration.name}}
+							{{#if effect.duration.name}}
+								<small>◆</small>
+								{{effect.duration.name}}
+							{{/if}}
 						</p>
 						
 						{{#if effect.enrichedDescription}}

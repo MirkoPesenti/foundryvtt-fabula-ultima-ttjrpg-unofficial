@@ -18,7 +18,7 @@ export class EquipDataModel extends foundry.abstract.DataModel {
 		};
 	}
 
-	isEquipped(item) {
+	equippedItem(item) {
 		return item && Object.values(this).includes(item?.id);
 	}
 }

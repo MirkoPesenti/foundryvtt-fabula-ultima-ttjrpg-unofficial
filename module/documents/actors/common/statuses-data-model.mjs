@@ -29,41 +29,41 @@ export class StatusesDataModel extends foundry.abstract.DataModel {
 	#prepareStatus(actor) {
 
 		// Status slow
-		if ( this.slow.active && actor.system.attributes.dex.value > 6 ) {
-			actor.system.attributes.dex.value -= 2;
+		if ( this.slow.active && actor.system.attributes.dex.current > 6 ) {
+			actor.system.attributes.dex.current -= 2;
 		}
 
 		// Status dazed
-		if ( this.dazed.active && actor.system.attributes.ins.value > 6 ) {
-			actor.system.attributes.ins.value -= 2;
+		if ( this.dazed.active && actor.system.attributes.ins.current > 6 ) {
+			actor.system.attributes.ins.current -= 2;
 		}
 
 		// Status weak
-		if ( this.weak.active && actor.system.attributes.mig.value > 6 ) {
-			actor.system.attributes.mig.value -= 2;
+		if ( this.weak.active && actor.system.attributes.mig.current > 6 ) {
+			actor.system.attributes.mig.current -= 2;
 		}
 
 		// Status shaken
-		if ( this.shaken.active && actor.system.attributes.wlp.value > 6 ) {
-			actor.system.attributes.wlp.value -= 2;
+		if ( this.shaken.active && actor.system.attributes.wlp.current > 6 ) {
+			actor.system.attributes.wlp.current -= 2;
 		}
 
 		// Status enraged
 		if ( this.enraged.active ) {
-			if ( actor.system.attributes.dex.value > 6 )
-				actor.system.attributes.dex.value -= 2;
+			if ( actor.system.attributes.dex.current > 6 )
+				actor.system.attributes.dex.current -= 2;
 
-			if ( actor.system.attributes.ins.value > 6 )
-			actor.system.attributes.ins.value -= 2;
+			if ( actor.system.attributes.ins.current > 6 )
+			actor.system.attributes.ins.current -= 2;
 		}
 
 		// Status poisoned
 		if ( this.poisoned.active ) {
-			if ( actor.system.attributes.wlp.value > 6 )
-				actor.system.attributes.wlp.value -= 2;
+			if ( actor.system.attributes.wlp.current > 6 )
+				actor.system.attributes.wlp.current -= 2;
 
-			if ( actor.system.attributes.mig.value > 6 )
-				actor.system.attributes.mig.value -= 2;
+			if ( actor.system.attributes.mig.current > 6 )
+				actor.system.attributes.mig.current -= 2;
 		}
 
 	}

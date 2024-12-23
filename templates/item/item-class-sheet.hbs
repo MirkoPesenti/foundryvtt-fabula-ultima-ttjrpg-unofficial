@@ -20,9 +20,9 @@
         <a class="item" data-tab="benefits">
             <span>Benefici</span>
         </a>
-        <a class="item" data-tab="effects">
+        {{!-- <a class="item" data-tab="effects">
             <span>Effetti</span>
-        </a>
+        </a> --}}
     </nav>
 
     <section class="sheet-body">
@@ -147,116 +147,7 @@
                 {{/if}}
             {{else}}
                 <div class="title">Benefici gratuiti</div>
-                <ul class="list-base">
-                    {{#if (or system.bonus.hp system.bonus.mp system.bonus.ip)}}
-                        <li>
-                            Aumenti permanentemente i tuoi
-                            {{#if system.bonus.hp}}
-                                Punti Vita
-                            {{/if}}
-                            {{#allTrue system.bonus.hp system.bonus.mp}}
-                                <strong>o</strong>
-                            {{/allTrue}}
-                            {{#allTrue system.bonus.hp system.bonus.ip}}
-                                <strong>o</strong>
-                            {{/allTrue}}
-                            {{#if system.bonus.mp}}
-                                Punti Mente
-                            {{/if}}
-                            {{#allTrue system.bonus.mp system.bonus.ip}}
-                                <strong>o</strong>
-                            {{/allTrue}}
-                            {{#if system.bonus.ip}}
-                                Punti Inventario
-                            {{/if}}
-
-                            massimi di 
-                            {{#if (or system.bonus.hp system.bonus.mp)}}
-                                5
-                            {{/if}}
-                            {{#if system.bonus.ip}}
-                                2
-                            {{/if}}
-                            {{#atLeastTwoTrue system.bonus.hp system.bonus.mp system.bonus.ip}}
-                                (a tua scelta)
-                            {{/atLeastTwoTrue}}
-                            .
-                        </li>
-                    {{/if}}
-
-                    {{#if (or system.bonus.ritual.arcanism system.bonus.ritual.chimerism system.bonus.ritual.elementalism system.bonus.ritual.entropism system.bonus.ritual.ritualism system.bonus.ritual.spiritism)}}
-                        <li>
-                            Puoi eseguire i Rituali i cui effetti rientrino nella disciplina di 
-                            {{#if system.bonus.ritual.arcanism}}
-                                <strong>Arcanismo</strong>.
-                            {{/if}}
-                            {{#if system.bonus.ritual.chimerism}}
-                                <strong>Chimerismo</strong>.
-                            {{/if}}
-                            {{#if system.bonus.ritual.elementalism}}
-                                <strong>Elementalismo</strong>.
-                            {{/if}}
-                            {{#if system.bonus.ritual.entropism}}
-                                <strong>Entropismo</strong>.
-                            {{/if}}
-                            {{#if system.bonus.ritual.ritualism}}
-                                <strong>Ritualismo</strong>.
-                            {{/if}}
-                            {{#if system.bonus.ritual.spiritism}}
-                                <strong>Spiritismo</strong>.
-                            {{/if}}
-                        </li>
-                    {{/if}}
-
-                    {{#if (or system.bonus.weapon.meleeWeapon system.bonus.weapon.rangedWeapon system.bonus.weapon.armor system.bonus.weapon.shield)}}
-                        <li>
-                            Puoi equipaggiare le
-                            {{#if system.bonus.weapon.meleeWeapon}}
-                                <strong>armi da mischia marziali</strong>
-                            {{/if}}
-
-                            {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.rangedWeapon}}
-                                e le
-                            {{/allTrue}}
-                            {{#if system.bonus.weapon.rangedWeapon}}
-                                <strong>armi a distanza marziali</strong>
-                            {{/if}}
-
-                            {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.armor}}
-                                e le
-                            {{/allTrue}}
-                            {{#allTrue system.bonus.weapon.rangedWeapon system.bonus.weapon.armor}}
-                                e le
-                            {{/allTrue}}
-                            {{#if system.bonus.weapon.armor}}
-                                <strong>armature marziali</strong>
-                            {{/if}}
-                            
-                            {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.shield}}
-                                e gli
-                            {{/allTrue}}
-                            {{#allTrue system.bonus.weapon.rangedWeapon system.bonus.weapon.shield}}
-                                e gli
-                            {{/allTrue}}
-                            {{#allTrue system.bonus.weapon.armor system.bonus.weapon.shield}}
-                                e gli
-                            {{/allTrue}}
-                            {{#if system.bonus.weapon.shield}}
-                                <strong>scudi marziali</strong>
-                            {{/if}}
-                            .
-                        </li>
-                    {{/if}}
-
-                    {{#if system.bonus.projects.value}}
-                        <li>
-                            Puoi avviare i <strong>Progetti</strong>.
-                            {{#if system.bonus.projects.condition}}
-                                {{{system.bonus.projects.condition}}}
-                            {{/if}}
-                        </li>
-                    {{/if}}
-                </ul>
+                {{> 'systems/fabula/templates/common/class/free-benefits.hbs'}}
             {{/if}}
             
             <div class="title">Abilità di classe</div>
@@ -341,10 +232,10 @@
             {{/each}}
         </div>
 
-        <div class="tab effects" data-group="primary" data-tab="effects">
+        {{!-- <div class="tab effects" data-group="primary" data-tab="effects">
             {{#each effects as |category catIndex|}}
                 {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
             {{/each}}
-        </div>
+        </div> --}}
     </section>
 </form>

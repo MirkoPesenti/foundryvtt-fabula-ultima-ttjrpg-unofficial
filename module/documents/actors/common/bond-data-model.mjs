@@ -16,4 +16,14 @@ export class BondDataModel extends foundry.abstract.DataModel {
 			bond3: new StringField({ initial: '', blank: true, choices: Object.keys(FU.bondType3) }),
 		});
 	}
+
+	prepareData() {
+		let bondStrength = 0;
+
+		if ( this.bond1 != '' ) bondStrength++;
+		if ( this.bond2 != '' ) bondStrength++;
+		if ( this.bond3 != '' ) bondStrength++;
+
+		this.strength = bondStrength;
+	}
 }

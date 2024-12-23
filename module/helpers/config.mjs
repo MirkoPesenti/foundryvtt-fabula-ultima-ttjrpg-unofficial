@@ -50,6 +50,13 @@ FU.attributesAbbr = {
 	wlp: 'FU.attributesAbbr.wlp',
 };
 
+FU.attributesDice = {
+	6: 'FU.D6',
+	8: 'FU.D8',
+	10: 'FU.D10',
+	12: 'FU.D12',
+};
+
 FU.currencies = {
 	zenit: {
 		label: 'FU.Zenit',
@@ -179,19 +186,19 @@ FU.martialItems = {
 };
 
 FU.bondType1 = {
-	"": "FU.selectOption",
+	"": "FU.bond.none",
 	admiration: 'FU.bond.admiration',
 	inferiority: 'FU.bond.inferiority',
 };
 
 FU.bondType2 = {
-	"": "FU.selectOption",
+	"": "FU.bond.none",
 	loyalty: 'FU.bond.loyalty',
 	mistrust: 'FU.bond.mistrust',
 };
 
 FU.bondType3 = {
-	"": "FU.selectOption",
+	"": "FU.bond.none",
 	affection: 'FU.bond.affection',
 	hatred: 'FU.bond.hatred',
 };
@@ -210,7 +217,7 @@ FU.consumableType = {
 };
 
 FU.villainTypes = {
-	"": "FU.selectOption",
+	"": "FU.villain.none",
 	minor: 'FU.villain.minor',
 	major: 'FU.villain.major',
 	supreme: 'FU.villain.supreme',

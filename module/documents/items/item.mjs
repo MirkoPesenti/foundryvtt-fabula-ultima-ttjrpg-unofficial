@@ -36,7 +36,7 @@ export class FabulaItem extends Item {
 			Object.assign(overrides, c);
 		}
 
-		this.overrides = foundry.utils.expandedObject(overrides);
+		this.overrides = foundry.utils.expandObject(overrides);
 		this.render();
 	}
 

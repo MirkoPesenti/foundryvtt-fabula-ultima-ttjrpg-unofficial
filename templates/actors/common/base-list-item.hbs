@@ -1,23 +1,31 @@
-<li>
-	<div class="btn-container">
-		{{#if @root.editable}}
-			<button type="button" class="js_deleteItem" data-itemid="{{item._id}}" data-tooltip="Elimina">
-				<i class="fa fa-trash m-0"></i>
-			</button>
+<li class="{{item.system.sourcebook}}">
+	{{#unless item.system.isEquipped}}
+		<div class="btn-container">
+			{{#if @root.editable}}
+				<button type="button" class="js_deleteItem" data-itemid="{{item._id}}" data-tooltip="Elimina">
+					<i class="fa fa-trash m-0"></i>
+				</button>
 
-			<button type="button" class="js_editItem" data-itemid="{{item._id}}" data-tooltip="Modifica">
-				<i class="fa fa-pencil m-0"></i>
-			</button>
-		{{/if}}
-	</div>
+				<button type="button" class="js_editItem" data-itemid="{{item._id}}" data-tooltip="Modifica">
+					<i class="fa fa-pencil m-0"></i>
+				</button>
+			{{/if}}
+		</div>
+	{{/unless}}
 	<div class="item-box">
 		{{#if @root.editable}}
-			<button type="button" class="name {{#if (eq item.type 'accessory')}}no-float{{/if}} js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="Mostra in Chat">
+			<button type="button" class="name js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="Mostra in Chat">
 				{{item.name}}
 				{{#if item.system.isMartial.value}}
 					<div class="martial-icon">l</div>
 				{{/if}}
 			</button>
+
+			{{#unless (or (eq item.type 'baseItem') (eq item.type 'heroicSkill'))}}
+				<button type="button" class="equip js_equipItem" data-itemid="{{item._id}}" data-tooltip="Equipaggia">
+					<div class="icon icon-equip-action"></div>
+				</button>
+			{{/unless}}
 		{{else}}
 			<label>{{item.name}}</label>
 		{{/if}}
@@ -39,32 +47,44 @@
 
 		{{#if (eq item.type 'armor')}}
 			<p>
-				<strong>Difesa</strong>
-				{{#unless item.system.defBonus.def.isFixed}}+{{/unless}}
-				{{item.system.defBonus.def.value}}
-				<small>◆</small>
+				{{#unless (eq item.system.defBonus.def.value 0)}}
+					<strong>Difesa</strong>
+					{{#unless item.system.defBonus.def.isFixed}}+{{/unless}}
+					{{item.system.defBonus.def.value}}
+				{{/unless}}
 
-				<strong>D. Magica</strong>
-				{{#unless item.system.defBonus.mdef.isFixed}}+{{/unless}}
-				{{item.system.defBonus.mdef.value}}
-				<small>◆</small>
+				{{#unless (eq item.system.defBonus.mdef.value 0)}}
+					<small>◆</small>
+					<strong>D. Magica</strong>
+					{{#unless item.system.defBonus.mdef.isFixed}}+{{/unless}}
+					{{item.system.defBonus.mdef.value}}
+				{{/unless}}
 
-				<strong>Iniziativa</strong>
-				{{#gt item.system.initiativeMalus 0}}+{{/gt}}{{#unless (eq item.system.initiativeMalus 0)}}{{item.system.initiativeMalus}}{{/unless}}
+				{{#unless (eq item.system.initiativeMalus 0)}}
+					<small>◆</small>
+					<strong>Iniziativa</strong>
+					{{#gt item.system.initiativeMalus 0}}+{{/gt}}{{item.system.initiativeMalus}}
+				{{/unless}}
 			</p>
 		{{/if}}
 
 		{{#if (eq item.type 'shield')}}
 			<p>
-				<strong>Difesa</strong>
-				{{#gt item.system.defenseBonus 0}}+{{/gt}}{{#unless (eq item.system.defenseBonus 0)}}{{item.system.defenseBonus}}{{/unless}}
-				<small>◆</small>
-				<strong>Difesa Magica</strong>
-				{{#gt item.system.magicDefenseBonus 0}}+{{/gt}}{{#unless (eq item.system.magicDefenseBonus 0)}}{{item.system.magicDefenseBonus}}{{/unless}}
+				{{#unless (eq item.system.defenseBonus 0)}}
+					<strong>Difesa</strong>
+					{{#gt item.system.defenseBonus 0}}+{{/gt}}{{item.system.defenseBonus}}
+				{{/unless}}
+				{{#unless (eq item.system.magicDefenseBonus 0)}}
+					{{#unless (eq item.system.defenseBonus 0)}}
+						<small>◆</small>
+					{{/unless}}
+					<strong>Difesa Magica</strong>
+					{{#gt item.system.magicDefenseBonus 0}}+{{/gt}}{{item.system.magicDefenseBonus}}
+				{{/unless}}
 			</p>
 		{{/if}}
 
-		<div class="description">
+		<div class="description" {{#if (eq item.type 'accessory')}}style="margin-top:30px;"{{/if}}>
 			{{{item.enrichedHtml.description}}}
 		</div>
 	</div>

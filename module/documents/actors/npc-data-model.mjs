@@ -2,6 +2,7 @@ import { AttributesDataModel } from "./common/attributes-data-model.mjs";
 import { DefencesDataModel } from "./common/defences-data-model.mjs";
 import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
 import { StatusesDataModel } from "./common/statuses-data-model.mjs";
+import { EquipDataModel } from "./common/equip-data-model.mjs";
 import { FU } from '../../helpers/config.mjs';
 
 /**
@@ -9,7 +10,7 @@ import { FU } from '../../helpers/config.mjs';
  */
 export class NpcDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, StringField, EmbeddedDataField, ArrayField, HTMLField, NumberField, BooleanField } = foundry.data.fields;
+		const { SchemaField, StringField, EmbeddedDataField, HTMLField, NumberField, BooleanField } = foundry.data.fields;
 		return {
 			description: new HTMLField(),
 			traits: new StringField(),
@@ -31,8 +32,8 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 					bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
 				}),
 				up: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
-				params: new EmbeddedDataField(DefencesDataModel, {}),
 			}),
+			params: new EmbeddedDataField(DefencesDataModel, {}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
 			skills: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
 			bonus: new SchemaField({
@@ -42,6 +43,8 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 				}),
 			}),
 			status: new EmbeddedDataField(StatusesDataModel, {}),
+			equip: new EmbeddedDataField(EquipDataModel, {}),
+			equippable: new BooleanField({ initial: false }),
 		};
 	}
 
@@ -53,8 +56,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 	}
 
 	prepareBaseData() {
-		const data = this;
-		
 		this.resources.hp.attribute = 'mig';
 		this.resources.mp.attribute = 'wlp';
 
@@ -66,11 +67,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.rank.replacedSoldiers = 2;
 		else
 			this.rank.replacedSoldiers = 1;
-			
-		// Defence, Magic Defence and Initiative
-		this.resources.params.def.current = this.attributes.dex.value + this.resources.params.def.bonus;
-		this.resources.params.mdef.current = this.attributes.ins.value + this.resources.params.mdef.bonus;
-		this.resources.params.init.current = Math.floor( ( this.attributes.dex.value + this.attributes.ins.value ) / 2 ) + this.resources.params.init.bonus;
 
 		// Checks and Damage Bonus
 		this.level.checkBonus = {};
@@ -132,11 +128,11 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		if ( this.rank.value == 'elite' ) {
 			this.skills.max += 1;
 			this.combat.turns = 2;
-			this.resources.params.init.current += 1;
+			this.params.init.current += 1;
 		} else if ( this.rank.value == 'champion' ) {
 			this.skills.max += this.rank.replacedSoldiers;
 			this.combat.turns = this.rank.replacedSoldiers;
-			this.resources.params.init.current += this.rank.replacedSoldiers;
+			this.params.init.current += this.rank.replacedSoldiers;
 		}
 
 		// Set Ultima Points
@@ -217,6 +213,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 
 		this.#prepareBasicData();
 		this.status.prepareData();
+		this.params.prepareData();
 
 	}
 	
@@ -228,7 +225,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			configurable: true,
 			enumerable: true,
 			get() {
-				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].value : data.attributes.mig.value;
+				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].base : data.attributes.mig.base;
 				return ( ( baseAttr * 5 ) + ( data.level.value * 2 ) + this.bonus ) * data.rank.replacedSoldiers;
 			},
 			set( newVal ) {
@@ -255,7 +252,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			configurable: true,
 			enumerable: true,
 			get() {
-				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].value : data.attributes.wlp.value;
+				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].base : data.attributes.wlp.base;
 				const multiplier = data.rank.value == 'champion' ? 2 : 1;
 				return ( ( baseAttr * 5 ) + data.level.value + this.bonus ) * multiplier;
 			},

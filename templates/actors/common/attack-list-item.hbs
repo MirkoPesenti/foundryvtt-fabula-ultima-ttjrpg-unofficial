@@ -1,13 +1,19 @@
-<li>
+<li class="{{item.system.sourcebook}}">
 	<div class="btn-container">
 		{{#if @root.editable}}
-			<button type="button" class="js_deleteItem" data-itemid="{{item._id}}" data-tooltip="Elimina">
-				<i class="fa fa-trash m-0"></i>
-			</button>
+			{{#unless item.system.isEquipped}}
+				<button type="button" class="js_deleteItem" data-itemid="{{item._id}}" data-tooltip="Elimina">
+					<i class="fa fa-trash m-0"></i>
+				</button>
 
-			<button type="button" class="js_editItem" data-itemid="{{item._id}}" data-tooltip="Modifica">
-				<i class="fa fa-pencil m-0"></i>
-			</button>
+				<button type="button" class="js_editItem" data-itemid="{{item._id}}" data-tooltip="Modifica">
+					<i class="fa fa-pencil m-0"></i>
+				</button>
+			{{else}}
+				<button type="button" class="equip js_equipItem" data-itemid="{{item._id}}" data-tooltip="Equipaggia">
+					<div class="icon icon-equip-action"></div>
+				</button>
+			{{/unless}}
 		{{/if}}
 	</div>
 	<div class="item-box">
@@ -30,10 +36,17 @@
 		{{/if}}
 		<p>
 			<strong class="m-0">
-				【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt (add item.system.precisionBonus actor.level.checkBonus.test) 0}}+{{/gt}}
-				{{#unless (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}}
-					{{add item.system.precisionBonus actor.level.checkBonus.test}}
-				{{/unless}}
+				{{#if (eq actor.type 'npc')}}
+					【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt (add item.system.precisionBonus actor.level.checkBonus.test) 0}}+{{/gt}}
+					{{#unless (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}}
+						{{add item.system.precisionBonus actor.level.checkBonus.test}}
+					{{/unless}}
+				{{else}}
+					【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt item.system.precisionBonus 0}}+{{/gt}}
+					{{#unless (eq item.system.precisionBonus 0)}}
+						{{item.system.precisionBonus}}
+					{{/unless}}
+				{{/if}}
 			</strong>
 			<small class="mr-0 {{#if (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}} ml-0{{/if}}">◆</small>
 			<strong>【TM{{#gt (add item.system.damage.value actor.level.damageBonus actor.bonus.damage.base) 0}} + {{add item.system.damage.value actor.level.damageBonus actor.bonus.damage.base}}{{/gt}}】</strong>danni da <strong>{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}</strong>

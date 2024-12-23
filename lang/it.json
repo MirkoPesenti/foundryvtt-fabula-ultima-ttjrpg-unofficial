@@ -44,6 +44,10 @@
 			"mig": "VIG",
 			"wlp": "VOL"
 		},
+		"D6": "d6",
+		"D8": "d8",
+		"D10": "d10",
+		"D12": "d12",
 		"MP": "Punti Mente",
 		"MPabbr": "PM",
 		"IP": "Punti Inventario",
@@ -62,8 +66,9 @@
 		"potency": "Potenza",
 		"area": "Area",
 		"uses": "Usi",
-		"defence": "Difesa",
-		"magicDefence": "Difesa Magica",
+		"def": "Difesa",
+		"mdef": "Difesa Magica",
+		"init": "Iniziativa",
 		"magicDefenceAbbr": "D. Magica",
 		"equipmentMartial": "Marziale",
 		"type": "Tipologia",
@@ -180,6 +185,7 @@
 			"DamageTab": "Danno"
 		},
 		"bond": {
+			"none": "Nessun legame",
 			"admiration": "Ammirazione",
 			"inferiority": "Inferiotità",
 			"loyalty": "Lealtà",
@@ -210,6 +216,7 @@
 			"utility": "Utilità"
 		},
 		"villain": {
+			"none": "Non Cattivo",
 			"minor": "Minore",
 			"major": "Maggiore",
 			"supreme": "Supremo"

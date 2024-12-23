@@ -1,386 +1,477 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
 
+    {{!-- <button type="button" class="getActor" style="width:auto;margin:0;background-color:#fff;border:1px solid #000;border-radius:5px;font-size:16px;position:absolute;left:5px;top:35px;z-index:99999;">log</button> --}}
+
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+        <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+        <div class="head-container">
+            <div class="header-fields">
+                <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'FU.Sheet.Name'}}" class="name"/>
+                <div class="form-group group-input-circle">
+                    <label>Livello del personaggio</label>
+                    <input type="number" name="system.level.value" value="{{system.level.value}}" readonly />
+                    {{#allTrue (or (sm system.level.value 5) (gte system.level.exp 10)) (sm system.level.value 50)}}
+                        <button type="button" class="level-up js_levelUpCharacter" data-tooltip="Puoi salire di livello">
+                            <div class="icon icon-level-up"></div>
+                        </button>
+                    {{/allTrue}}
+                </div>
+            </div>
+            
+            <div class="attributes-container">
+                <div class="attr hp" data-tooltip="Punti Vita: {{system.resources.hp.current}}<br>Crisi: {{system.resources.hp.crisis}}<br>PV Massimi: {{system.resources.hp.max}}">
+                    <label>Punti Vita</label>
+                    <div class="progress-container">
+                        <div class="pregress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
+                            <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
+                        </div>
+                        <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
+                        <button type="button" class="crisis js_setAttrValue" data-attr="hp" data-value="{{system.resources.hp.crisis}}">
+                            {{system.resources.hp.crisis}}
+                        </button>
+                        <button type="button" class="max js_setAttrValue" data-attr="hp" data-value="{{system.resources.hp.max}}">{{system.resources.hp.max}}</button>
+                    </div>
+                </div>
+
+                <div class="attr mp" data-tooltip="Punti Mente: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
+                    <label>Punti Mente</label>
+                    <div class="progress-container">
+                        <div class="pregress-bar">
+                            <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
+                        </div>
+                        <input type="number" min="0" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
+                        <div class="crisis"></div>
+                        <button type="button" class="max js_setAttrValue" data-attr="mp">{{system.resources.mp.max}}</button>
+                    </div>
+                </div>
+
+                <div class="attr ip" data-tooltip="Punti Inventario: {{system.resources.ip.current}}<br>PI Massimi: {{system.resources.ip.max}}">
+                    <label>Punti Inventario</label>
+                    <div class="progress-container">
+                        <div class="pregress-bar">
+                            <div class="bar" style="width:{{percentage system.resources.ip.current system.resources.ip.max}}%"></div>
+                        </div>
+                        <input type="number" min="0" name="system.resources.ip.current" value="{{system.resources.ip.current}}">
+                        <div class="crisis"></div>
+                        <button type="button" class="max js_setAttrValue" data-attr="ip">{{system.resources.ip.max}}</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
+
+        <div class="break"></div>
+
+        <div class="attributes-container">
+            {{#each system.attributes as |attr attrIndex|}}
+                <div class="attr">
+                    <label>{{localize (concat 'FU.attributes.' attrIndex)}}</label>
+                    <select name="system.attributes.{{attrIndex}}.base" {{#if (lookup (lookup @root.actor.overrides.system.attributes attrIndex) 'base')}}disabled data-tooltip="Non puoi modificare la {{localize (concat 'FU.attributes.' attrIndex)}} <br> finché hai un effetto che la influenza"{{/if}}>
+                        {{selectOptions @root.FU.attributesDice selected=attr.base localize=true}}
+                    </select>
+                    <label>
+                        {{attr.current}}
+                        {{#if (eq attr.current attr.base)}}
+                            <i class="fa fa-fw fa-minus"></i>
+                        {{else}}
+                            {{#gt attr.current attr.base}}
+                                <i class="fa fa-fw fa-caret-up is-up"></i>
+                            {{else}}
+                                <i class="fa fa-fw fa-caret-down is-down"></i>
+                            {{/gt}}
+                        {{/if}}
+                    </label>
+                </div>
+            {{/each}}
+        </div>
+
+        <div class="attributes-container small">
+            <div class="attr">
+                <label>Punti Fabula</label>
+                <input type="number" min="0" name="system.resources.fp" value="{{system.resources.fp}}">
+            </div>
+        </div>
+
+        <div class="attributes-container small">
+            <div class="attr">
+                <label>Esperienza</label>
+                <input type="number" min="0" name="system.level.exp" value="{{system.level.exp}}">
+            </div>
+        </div>
+
+        <div class="break"></div>
+
+        <div class="attributes-container small">
+            {{#each system.params as |param paramIndex|}}
+                <div class="attr param">
+                    <label>{{localize (concat 'FU.' paramIndex)}}</label>
+                    {{#if param.fixed}}
+                        <input type="number" value="{{param.fixed}}" readonly>
+                    {{else}}
+                        <input type="number" value="{{param.value}}" readonly>
+                    {{/if}}
+                </div>
+            {{/each}}
+        </div>
+
+        <div class="attributes-container small">
+            <div class="attr">
+                <label>Zenit</label>
+                <input type="number" min="0" name="system.resources.zenit" value="{{system.resources.zenit}}">
+            </div>
+        </div>
+        
+        <div class="attributes-container roll">
+            <div class="attr">
+                <button type="button" class="btn-roll js_rollActorTest" data-tooltip="Effettua un Test">
+                    <div class="icon icon-test"></div>
+                </button>
+                <button type="button" class="btn-roll init js_rollInitiative" data-tooltip="Tira per l'Iniziativa">
+                    <div class="icon icon-initiative"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="break"></div>
+
+        <div class="attributes-container">
+            <div class="attr status">
+                <label>Status</label>
+                {{#each system.status as |status statusIndex|}}
+                    <div data-tooltip="{{localize (concat 'FU.Status.' statusIndex)}}">
+                        <button type="button" class="js_setStatus{{#if status.immunity}} is-immune{{/if}}" data-status="{{statusIndex}}">
+                            <div class="icon icon-{{statusIndex}} {{#unless status.active}}disabled{{/unless}}"></div>
+                        </button>
+                    </div>
+                {{/each}}
+            </div>
+        </div>
+        
+        <div class="attributes-container">
+            <div class="attr affinities">
+                <label>Affinità</label>
+                <button type="button" class="js_setAffinity" data-affinity="physical" data-tooltip="Fisico: {{#if system.affinity.physical}}{{localize (concat 'FU.affinity.' system.affinity.physical)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-physical {{#unless system.affinity.physical}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.physical}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.physical)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="air" data-tooltip="Aria: {{#if system.affinity.air}}{{localize (concat 'FU.affinity.' system.affinity.air)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-air {{#unless system.affinity.air}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.air}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.air)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="bolt" data-tooltip="Fulmine: {{#if system.affinity.bolt}}{{localize (concat 'FU.affinity.' system.affinity.bolt)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-bolt {{#unless system.affinity.bolt}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.bolt}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.bolt)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="dark" data-tooltip="Ombra: {{#if system.affinity.dark}}{{localize (concat 'FU.affinity.' system.affinity.dark)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-dark {{#unless system.affinity.dark}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.dark}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.dark)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="earth" data-tooltip="Terra: {{#if system.affinity.earth}}{{localize (concat 'FU.affinity.' system.affinity.earth)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-earth {{#unless system.affinity.earth}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.earth}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.earth)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="fire" data-tooltip="Fuoco: {{#if system.affinity.fire}}{{localize (concat 'FU.affinity.' system.affinity.fire)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-fire {{#unless system.affinity.fire}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.fire}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.fire)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="ice" data-tooltip="Ghiaccio: {{#if system.affinity.ice}}{{localize (concat 'FU.affinity.' system.affinity.ice)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-ice {{#unless system.affinity.ice}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.ice}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.ice)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="light" data-tooltip="Luce: {{#if system.affinity.light}}{{localize (concat 'FU.affinity.' system.affinity.light)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-light {{#unless system.affinity.light}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.light}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.light)}}</span>
+                    {{/if}}
+                </button>
+                <button type="button" class="js_setAffinity" data-affinity="poison" data-tooltip="Veleno: {{#if system.affinity.poison}}{{localize (concat 'FU.affinity.' system.affinity.poison)}}{{else}}Neutro{{/if}}">
+                    <div class="icon icon-poison {{#unless system.affinity.poison}}disabled{{/unless}}"></div>
+                    {{#if system.affinity.poison}}
+                        <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.poison)}}</span>
+                    {{/if}}
+                </button>
+            </div>
         </div>
     </header>
 
-    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
-        <a class="item" data-tab="description"><span>{{localize 'FU.Sheet.DescriptionTab'}}</span></a>
-        <a class="item" data-tab="class"><span>Classi</span></a>
-        <a class="item" data-tab="equip"><span>Equipaggiamento</span></a>
+    <nav class="sheet-tabs tabs inner-tabs" data-group="primary">
+        <a class="item" data-tab="base">
+            <span>Equipaggiamento</span>
+        </a>
+        <a class="item" data-tab="spells">
+            <span>Incantesimi</span>
+        </a>
+        <a class="item" data-tab="skills">
+            <span>Abilità</span>
+        </a>
+        <a class="item" data-tab="heroic">
+            <span>Eroiche</span>
+        </a>
+        <a class="item" data-tab="traits">
+            <span>Tratti</span>
+        </a>
+        <a class="item" data-tab="effects">
+            <span>Effetti</span>
+        </a>
     </nav>
-
     <section class="sheet-body">
-        <div class="tab desc" data-group="primary" data-tab="description">
-            <table>
-                <tbody>
-                    <tr>
-                        <td style="text-align:left;vertical-align:top;width:33%;">
-                            <span data-tooltip="Lorem ipsum">Livello:</span> {{system.level.value}} | Esperienza: {{system.resources.exp}}<br>
-                            Punti Vita: {{system.resources.hp.current}} / {{system.resources.hp.max}} | Crisi: {{system.resources.hp.crisis}} <br>
-                            Punti Mente: {{system.resources.mp.current}} / {{system.resources.mp.max}} <br>
-                            Punti Inventario: {{system.resources.ip.current}} / {{system.resources.ip.max}} <br>
-                            <ul>
-                                <li>Destrezza (DES): D{{system.attributes.dex.value}}</li>
-                                <li>Intuito (INT): D{{system.attributes.ins.value}}</li>
-                                <li>Vigore (VIG): D{{system.attributes.mig.value}}</li>
-                                <li>Volontà (VOL): D{{system.attributes.wlp.value}}</li>
-                            </ul>
-                            Punti Fabula: {{system.resources.fp}} <br>
-                            Zenit: {{system.resources.zenit}}z <br>
-                            <ul>
-                                <li>Difesa: {{system.resources.params.def.bonus}}</li>
-                                <li>Difesa magica: {{system.resources.params.mdef.bonus}}</li>
-                                <li>Modificatore iniziativa: {{system.resources.params.init.bonus}}</li>
-                            </ul>
-                        </td>
-                        <td style="text-align:left;vertical-align:top;width:33%;">
-                            Genere: {{system.features.pronouns}} <br>
-                            Identità: {{system.features.identity}} <br>
-                            Tema: {{system.features.theme}} <br>
-                            Origine: {{system.features.origin}} <br>
-                            Legami: <br>
-                            <ul>
-                                {{#each system.bond}}
-                                <li>
-                                    {{this.name}} | {{this.bond1}} | {{this.bond2}} | {{this.bond3}}
-                                </li>
-                                {{/each}}
-                            </ul>
-                            Equipaggiamento: <br>
-                            <ul>
-                                <li>
-                                    Armatura: <br>
-                                    {{#each items as |subItem subItemIndex|}}
-                                        {{#if (eq subItem._id ../system.equip.armor)}}
-                                            {{subItem.name}}
-                                        {{/if}}
-                                    {{/each}}
-                                    {{#if system.equip.armor}}
-                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.armor}}" data-type="system.equip.armor">
-                                            Rimuovi
-                                        </button>
-                                    {{/if}}
-                                </li>
-                                <li>
-                                    Mano primaria: <br>
-                                    {{#each items as |subItem subItemIndex|}}
-                                        {{#if (eq subItem._id ../system.equip.mainHand)}}
-                                            {{subItem.name}}
-                                        {{/if}}
-                                    {{/each}}
-                                    {{#if system.equip.mainHand}}
-                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.mainHand}}" data-type="system.equip.mainHand">
-                                            Rimuovi
-                                        </button>
-                                    {{/if}}
-                                </li>
-                                {{#if (or (not (eq system.equip.mainHand system.equip.offHand)) (not system.equip.offHand))}}
-                                <li>
-                                    Mano secondaria: <br>
-                                    <span>
-                                    {{#each items as |subItem subItemIndex|}}
-                                        {{#if (eq subItem._id ../system.equip.offHand)}}
-                                            {{subItem.name}}
-                                        {{/if}}
-                                    {{/each}}
-                                    {{#if system.equip.offHand}}
-                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.offHand}}" data-type="system.equip.offHand">
-                                            Rimuovi
-                                        </button>
-                                    {{/if}}
-                                    </span>
-                                </li>
-                                {{/if}}
-                                <li>
-                                    Accessio: <br>
-                                    {{#each items as |subItem subItemIndex|}}
-                                        {{#if (eq subItem._id ../system.equip.accessory)}}
-                                            {{subItem.name}}
-                                        {{/if}}
-                                    {{/each}}
-                                    {{#if system.equip.accessory}}
-                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.accessory}}" data-type="system.equip.accessory">
-                                            Rimuovi
-                                        </button>
-                                    {{/if}}
-                                </li>
-                                <li>
-                                    Arcanum: <br>
-                                    {{#each items as |subItem subItemIndex|}}
-                                        {{#if (eq subItem._id ../system.equip.arcanum)}}
-                                            {{subItem.name}}
-                                        {{/if}}
-                                    {{/each}}
-                                    {{#if system.equip.arcanum}}
-                                        <button type="button" class="js_removeEquipItem" data-id="{{system.equip.arcanum}}" data-type="system.equip.arcanum">
-                                            Rimuovi
-                                        </button>
-                                    {{/if}}
-                                </li>
-                            </ul>
-                        </td>
-                        <td style="text-align:left;vertical-align:top;width:33%;">
-                            Affinità: <br>
-                            <ul>
-                                <li>Fisico: {{system.affinity.physical}}</li>
-                                <li>Aria: {{system.affinity.air}}</li>
-                                <li>Lampo: {{system.affinity.bolt}}</li>
-                                <li>Oscurità: {{system.affinity.dark}}</li>
-                                <li>Terra: {{system.affinity.earth}}</li>
-                                <li>Fuoco: {{system.affinity.fire}}</li>
-                                <li>Ghiaccio: {{system.affinity.ice}}</li>
-                                <li>Luce: {{system.affinity.light}}</li>
-                                <li>Veleno: {{system.affinity.poison}}</li>
-                            </ul>
-                            Status: <br>
-                            <ul>
-                                {{#if system.status.slow.active}}
-                                    <li>Rallentato</li>
-                                {{/if}}
-                                {{#if system.status.dazed.active}}
-                                    <li>Confuso</li>
-                                {{/if}}
-                                {{#if system.status.weak.active}}
-                                    <li>Indebolito</li>
-                                {{/if}}
-                                {{#if system.status.shaken.active}}
-                                    <li>Scosso</li>
-                                {{/if}}
-                                {{#if system.status.enraged.active}}
-                                    <li>Furente</li>
-                                {{/if}}
-                                {{#if system.status.poisoned.active}}
-                                    <li>Avvelenato</li>
-                                {{/if}}
-                            </ul>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <ul>
-                {{#each items as |subItem subItemIndex|}}
-                    {{#allTrue (eq this.type "shield") (not (eq this._id ../system.equip.offHand))}}
-                        {{!-- Item: Shields --}}
-                        <li style="display:flex;flex-wrap:wrap;">
-                            <span style="width:50%;">
-                                {{subItem.name}} {{#if subItem.system.isMartial.value}}<span>l</span>{{/if}}
-                                <br>
-                                Difesa: + {{subItem.system.defenseBonus}} | D. Magica: + {{subItem.system.magicDefenseBonus}}
-                            </span>
-                            <div style="flex-grow:1;width:50%;">
-                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
-                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
-                            </div>
-                            <div class="width:100%">
-                                {{{subItem.system.description}}}
-                            </div>
-                        </li>
-                        <hr>
-                    {{/allTrue}}
-                    
-                    {{#allTrue (eq this.type "armor") (not (eq this._id ../system.equip.armor))}}
-                        {{!-- Item: Armors --}}
-                        <li style="display:flex;flex-wrap:wrap;">
-                            <span style="width:50%;">
-                                {{subItem.name}} {{#if subItem.system.isMartial.value}}<span>l</span>{{/if}}
-                                <br>
-                                Difesa:
-                                {{#if subItem.system.defBonus.def.isFixed}}
-                                    {{subItem.system.defBonus.def.value}}
-                                {{else}}
-                                    Taglia DES
-                                    {{#gt subItem.system.defBonus.def.value 0}}
-                                        + {{subItem.system.defBonus.def.value}}
-                                    {{/gt}}
-                                {{/if}}
-                                <br>
-                                D. Magica:
-                                {{#if subItem.system.defBonus.mdef.isFixed}}
-                                    {{subItem.system.defBonus.mdef.value}}
-                                {{else}}
-                                    Taglia INT
-                                    {{#gt subItem.system.defBonus.mdef.value 0}}
-                                        + {{subItem.system.defBonus.mdef.value}}
-                                    {{/gt}}
-                                {{/if}}
-                                {{#unless (eq system.initiativeMalus 0)}}
-                                    <br>
-                                    iniziativa:
-                                    {{#gt system.initiativeMalus 0}}
-                                        +{{system.initiativeMalus}}
-                                    {{else}}
-                                        {{system.initiativeMalus}}
-                                    {{/gt}}
-                                {{/unless}}
-                            </span>
-                            <div style="flex-grow:1;width:50%;">
-                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
-                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
-                            </div>
-                            <div class="width:100%">
-                                {{{subItem.system.description}}}
-                            </div>
-                        </li>
-                        <hr>
-                    {{/allTrue}}
+        <div class="tab base" data-group="primary" data-tab="base">
+            <div class="title title-list">
+                <span>Equipaggiamento</span>
+            </div>
+            <div class="equip-container">
+                <div class="equip-slots">
+                    <div class="slot armor" {{#if system.equip.armor}}data-tooltip="Armatura <br> {{lookup (getItemByID items system.equip.armor) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.armor) 'img'}})"{{else}}data-tooltip="Armatura"{{/if}}></div>
+                    <div class="slot-list">
+                        <div class="slot mainHand" {{#if system.equip.mainHand}}data-tooltip="Mano principale <br> {{lookup (getItemByID items system.equip.mainHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.mainHand) 'img'}})"{{else}}data-tooltip="Mano principale"{{/if}}></div>
+                        
+                        <div class="slot-linked {{#allTrue system.equip.mainHand (eq system.equip.mainHand system.equip.offHand)}}show{{/allTrue}}">
+                            <i class="fa fa-fw fa-link"></i>
+                        </div>
 
-                    {{#allTrue (eq this.type "accessory") (not (eq this._id ../system.equip.accessory))}}
-                        {{!-- Item: Accessories --}}
-                        <li style="display:flex;flex-wrap:wrap;">
-                            <span style="width:50%;">
-                                {{subItem.name}}
-                                <br>
-                            </span>
-                            <div style="flex-grow:1;width:50%;">
-                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
-                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
-                            </div>
-                            <div class="width:100%">
-                                {{{subItem.system.description}}}
-                            </div>
-                        </li>
-                        <hr>
-                    {{/allTrue}}
-
-                    {{#allTrue (eq this.type "weapon") (not (eq this._id ../system.equip.mainHand)) (not (eq this._id ../system.equip.offHand))}}
-                        {{!-- Item: Accessories --}}
-                        <li style="display:flex;flex-wrap:wrap;">
-                            <span style="width:50%;">
-                                {{subItem.name}}
-                                <br>
-                                <button type="button" class="roll" data-roll="d{{getAttributeValue ../system.attributes subItem.system.precisionAttributes.primary.value}}+d{{getAttributeValue ../system.attributes subItem.system.precisionAttributes.secondary.value}}{{#unless (eq subItem.system.precisionBonus 0)}}{{#gt subItem.system.precisionBonus 0}}+{{subItem.system.precisionBonus}}{{else}}{{subItem.system.precisionBonus}}{{/gt}}{{/unless}}">
-                                    【{{localize (concat 'FU.attributesAbbr.' subItem.system.precisionAttributes.primary.value)}}
-                                    + 
-                                    {{localize (concat 'FU.attributesAbbr.' subItem.system.precisionAttributes.secondary.value)}}】
-                                    {{#unless (eq subItem.system.precisionBonus 0)}}
-                                        {{#gt subItem.system.precisionBonus 0}}
-                                            +{{subItem.system.precisionBonus}}
-                                        {{else}}
-                                            {{subItem.system.precisionBonus}}
-                                        {{/gt}}
-                                    {{/unless}}
-                                </button>
-                                <br>
-                                <strong>
-                                    【TM
-                                    {{#gt_e subItem.system.damage.value 0}}
-                                        + {{subItem.system.damage.value}}】
-                                    {{else}}
-                                        - {{multiply subItem.system.damage.value -1}}】
-                                    {{/gt_e}}
-                                    {{localize (concat 'FU.DamageTypes.' subItem.system.damage.type.value)}}
-                                </strong>
-                            </span>
-                            <div style="flex-grow:1;width:50%;">
-                                <button type="button" class="js_equipItem" data-type="{{subItem.type}}" data-id="{{subItem._id}}">Equipaggia</button>
-                                <button type="button" class="js_removeItem" data-id="{{subItem._id}}">Rimuovi</button>
-                            </div>
-                            <div class="width:100%">
-                                {{#if subItem.system.needTwoHands}}
-                                    Due mani
-                                {{else}}
-                                    Una mano
-                                {{/if}}
-                                <span class="diamond-char">◆</span>
-                                {{localize (concat 'FU.WeaponRanges.' subItem.system.range)}}
-                                {{{subItem.system.description}}}
-                            </div>
-                        </li>
-                        <hr>
-                    {{/allTrue}}
-                {{/each}}
-            </ul>
-        </div>
-        <div class="tab desc" data-group="primary" data-tab="class">
-            {{#each flags.fabula.classes}}
-                <strong>{{name}} ({{system.level.value}})</strong>
-                <ul>
-                    {{#each ../flags.fabula.classFeatures}}
-                        {{#if (eq system.origin ../_id)}}
-                        <li>
-                            <strong>{{name}} ( Lv. {{system.level.current}} )</strong>
-                            <br>
-                            {{{system.description}}}
-                        </li>
+                        <div class="slot offHand" {{#if system.equip.offHand}}data-tooltip="Mano secondaria <br> {{lookup (getItemByID items system.equip.offHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.offHand) 'img'}})"{{else}}data-tooltip="Mano secondaria"{{/if}}></div>
+                    </div>
+                    <div class="slot accessory" {{#if system.equip.accessory}}data-tooltip="Accessorio <br> {{lookup (getItemByID items system.equip.accessory) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.accessory) 'img'}})"{{else}}data-tooltip="Accessorio"{{/if}}></div>
+                </div>
+                <ul class="list list-equip">
+                    {{#each weapons}}
+                        {{#if this.system.isEquipped}}
+                            {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
+                        {{/if}}
+                    {{/each}}
+                    {{#each armors}}
+                        {{#if this.system.isEquipped}}
+                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                        {{/if}}
+                    {{/each}}
+                    {{#each shields}}
+                        {{#if this.system.isEquipped}}
+                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                        {{/if}}
+                    {{/each}}
+                    {{#each accessories}}
+                        {{#if this.system.isEquipped}}
+                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
                         {{/if}}
                     {{/each}}
                 </ul>
-                <hr>
-            {{/each}}
-        </div>
-        <div class="tab desc" data-group="primary" data-tab="equip">
-            <ul>
-                {{#each items as |subItem subItemIndex|}}
-                    {{#unless (eq this.type "class")}}
-                        <li>
-                            {{#if subItem.system.isOffensive.value}}
-                                <button type="button" class="js_rollSpellTest" data-roll="d{{getAttributeValue ../system.attributes subItem.system.attributes.primary.value}}+d{{getAttributeValue ../system.attributes subItem.system.attributes.secondary.value}}" data-id="{{subItem._id}}">
-                                    Test Magia: <strong>【{{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' subItem.system.attributes.secondary.value)}}】</strong>
-                                </button>
-                            {{/if}}
-                            <button type="button" class="js_showInChat" data-id="{{subItem._id}}" data-type="{{subItem.type}}">
-                                Chat
-                            </button>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Nome</th>
-                                        <th>PM</th>
-                                        <th>Bersaglio</th>
-                                        <th>Durata</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            {{subItem.name}}
-                                            {{#if subItem.system.isOffensive.value}}
-                                                <div class="icon icon-offensive"></div>
-                                            {{/if}}
-                                        </td>
-                                        <td>
-                                            {{#if subItem.system.MPCost.upTo}}
-                                                Fino a
-                                            {{/if}}
-                                            {{subItem.system.MPCost.value}}
-                                            {{#gt subItem.system.target.number 1}}
-                                                x B
-                                            {{/gt}}
-                                        </td>
-                                        <td>
-                                            {{subItem.system.target.value}}
-                                        </td>
-                                        <td>
-                                            {{subItem.system.duration.value}}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            {{{subItem.system.description}}}
-                            {{#if subItem.system.opportunity.value}}
-                                <strong>Opportunità:</strong>
-                                {{{subItem.system.opportunityEffect}}}
-                            {{/if}}
-                            <hr>
-                        </li>
+            </div>
+            <ul class="list list-equip">
+                {{#each weapons}}
+                    {{#unless this.system.isEquipped}}
+                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                    {{/unless}}
+                {{/each}}
+                {{#each armors}}
+                    {{#unless this.system.isEquipped}}
+                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                    {{/unless}}
+                {{/each}}
+                {{#each shields}}
+                    {{#unless this.system.isEquipped}}
+                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                    {{/unless}}
+                {{/each}}
+                {{#each accessories}}
+                    {{#unless this.system.isEquipped}}
+                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
                     {{/unless}}
                 {{/each}}
             </ul>
         </div>
 
-        <button type="button" class="roll" data-roll="d{{system.attributes.dex.value}}+@level.value">
-            roll dex: D{{system.attributes.dex.value}} + Level: {{system.level.value}}
-        </button>
+        <div class="tab spells" data-group="primary" data-tab="spells">
+            <div class="title title-list">
+                <span>Incantesimi</span>
+                {{#if @root.editable}}
+                    <button type="button" class="js_createItem" data-type="spell">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                {{/if}}
+            </div>
+            <ul class="list list-spells">
+                {{#each spells}}
+                    {{> 'systems/fabula/templates/actors/common/spell-list-item.hbs' item=this actor=../system}}
+                {{/each}}
+            </ul>
+        </div>
+        
+        <div class="tab skills" data-group="primary" data-tab="skills">
+            <div class="title title-list">
+                <span>Equipaggiabili</span>
+            </div>
+            <div class="flexrow martial">
+                <div class="form-group">
+                    <input type="checkbox" name="system.useMartial.melee" id="system.useMartial.melee" {{checked system.useMartial.melee}} disabled>
+                    <label for="system.useMartial.melee">Armi da Mischia Marziali</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="system.useMartial.ranged" id="system.useMartial.ranged" {{checked system.useMartial.ranged}} disabled>
+                    <label for="system.useMartial.ranged">Armi a Distanza Marziali</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="system.useMartial.shield" id="system.useMartial.shield" {{checked system.useMartial.shield}} disabled>
+                    <label for="system.useMartial.shield">Scudi Marziali</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="system.useMartial.armor" id="system.useMartial.armor" {{checked system.useMartial.armor}} disabled>
+                    <label for="system.useMartial.armor">Armature Marziali</label>
+                </div>
+            </div>
 
-        <button type="button" class="getActor">log</button>
-        <button type="button" class="addClass">Classe</button>
+            <div class="title title-list">
+                <span>Classi</span>
+            </div>
+            <ul class="list list-classes">
+                {{#each classes}}
+                    <li class="{{this.system.sourcebook}}">
+                        <div class="btn-container">
+                            {{#if @root.editable}}
+                                {{#unless item.system.isEquipped}}
+                                    <button type="button" class="js_deleteItem" data-itemid="{{this._id}}" data-tooltip="Elimina">
+                                        <i class="fa fa-trash m-0"></i>
+                                    </button>
+                                    <button type="button" class="js_editItem" data-itemid="{{this._id}}" data-tooltip="Modifica">
+                                        <i class="fa fa-pencil m-0"></i>
+                                    </button>
+                                {{/unless}}
+                            {{/if}}
+                        </div>
+                        <div class="item-box">
+                            <div class="title">
+                                {{this.name}}
+                                <span>Livello. {{this.system.level.value}}</span>
+                            </div>
+                            <div class="benefits">
+                                {{> 'systems/fabula/templates/common/class/free-benefits.hbs'}}
+                            </div>
+                            {{#each this.flags.fabula.subItems as |feature featureIndex|}}
+                                {{#gt feature.system.level.current 0}}
+                                    <div class="feature-box">
+                                        <div class="feature-head">                                            
+                                            <button type="button" class="js_showItemInChat" data-itemid="{{../this._id}}" data-flag="{{featureIndex}}" data-tooltip="Mostra in Chat">
+                                                <i class="fa fa-comment m-0"></i>
+                                            </button>
+                                            {{feature.name}}
+                                            {{#gt feature.system.level.max 1}}
+                                                <span>
+                                                    (<span>l</span>{{feature.system.level.current}} / {{feature.system.level.max}})
+                                                </span>
+                                            {{/gt}}
+                                        </div>
+                                        <div class="feature-body">
+                                            {{{feature.enrichedHtml.description}}}
+                                        </div>
+                                    </div>
+                                {{/gt}}
+                            {{/each}}
+                        </div>
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+        
+        <div class="tab heroic" data-group="primary" data-tab="heroic">
+            <div class="title title-list">
+                <span>Abilità eroiche</span>
+            </div>
+            <ul class="list list-heroic">
+                {{#each heroicSkills}}
+                    {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                {{/each}}
+            </ul>
+        </div>
+
+        <div class="tab traits" data-group="primary" data-tab="traits">
+            <div class="title title-list">
+                <span>Tratti</span>
+            </div>
+            <div class="flexrow">
+                <div class="form-group">
+                    <label>Genere</label>
+                    <input type="text" name="system.features.pronouns" value="{{system.features.pronouns}}">
+                </div>
+                <div class="form-group">
+                    <label>Identità</label>
+                    <input type="text" name="system.features.identity" value="{{system.features.identity}}">
+                </div>
+                <div class="form-group">
+                    <label>Tema</label>
+                    <input type="text" name="system.features.theme" value="{{system.features.theme}}">
+                </div>
+                <div class="form-group">
+                    <label>Origine</label>
+                    <input type="text" name="system.features.origin" value="{{system.features.origin}}">
+                </div>
+            </div>
+
+            <div class="title title-list">
+                <span>Legami</span>
+                {{#if @root.editable}}
+                    <button type="button" class="js_addNewBond">
+                        <i class="fa fa-plus"></i>
+                    </button>
+                {{/if}}
+            </div>
+            <ul class="list list-bonds">
+                {{#each system.bond as |bond bondIndex|}}
+                    <li>
+                        <div class="btn-container">
+                            {{#if @root.editable}}
+                                <button type="button" class="js_deleteBond" data-index="{{bondIndex}}" data-tooltip="Elimina">
+                                    <i class="fa fa-trash m-0"></i>
+                                </button>
+                            {{/if}}
+                        </div>
+                        <div class="item-box">
+                            <div class="title title-list">
+                                <input type="text" name="system.bond.{{bondIndex}}.name" value="{{bond.name}}">
+                            </div>
+                            <div class="flexrow">
+                                <div class="form-group">
+                                    <select name="system.bond.{{bondIndex}}.bond1">
+                                        {{selectOptions @root.FU.bondType1 selected=bond.bond1 localize=true}}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select name="system.bond.{{bondIndex}}.bond2">
+                                        {{selectOptions @root.FU.bondType2 selected=bond.bond2 localize=true}}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <select name="system.bond.{{bondIndex}}.bond3">
+                                        {{selectOptions @root.FU.bondType3 selected=bond.bond3 localize=true}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {{/each}}
+            </ul>
+            
+            <div class="title title-list">
+                <span>Descrizione</span>
+            </div>
+            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+        </div>
+
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            {{#each effects as |category catIndex|}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
+            {{/each}}
+        </div>
     </section>
 </form>

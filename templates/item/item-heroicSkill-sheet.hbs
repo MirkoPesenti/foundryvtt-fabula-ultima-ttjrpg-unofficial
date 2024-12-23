@@ -16,9 +16,9 @@
             <a class="item" data-tab="summary">
                 <span>Descrizione</span>
             </a>
-            <a class="item" data-tab="effects">
+            {{!-- <a class="item" data-tab="effects">
                 <span>Effetti</span>
-            </a>
+            </a> --}}
         </nav>
     {{/if}}
 
@@ -94,10 +94,10 @@
             {{editor enrichedHtml.summary target="system.summary" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
         </div>
 
-        <div class="tab effects" data-group="primary" data-tab="effects">
+        {{!-- <div class="tab effects" data-group="primary" data-tab="effects">
             {{#each effects as |category catIndex|}}
                 {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
             {{/each}}
-        </div>
+        </div> --}}
     </section>
 </form>

@@ -60,12 +60,14 @@
 
 ### NPC
 
-- FE: Scheda
-- Interazione con eventuali Item
-- Messaggi in chat
-- Tiri di dado
+- Item equipaggiati
 - Token?
 - Data entry NPC
+
+## Active Effects
+
+- Gestire active effects per oggetti equipaggiati e non
+- FE: Lista
 
 ## Other
 

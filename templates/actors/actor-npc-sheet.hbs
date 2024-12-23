@@ -15,18 +15,15 @@
     </nav>
 
     <div class="btn-roll-group">
-        <button type="button" class="js_rollActorTest" data-tooltip="Effettua un Test">
+        <button type="button" class="btn-roll js_rollActorTest" data-tooltip="Effettua un Test">
             <div class="icon icon-test"></div>
         </button>
-        {{!-- <button type="button" class="init js_rollInitiative" data-tooltip="Tira per l'Iniziativa">
-            <div class="icon icon-initiative"></div>
-        </button> --}}
     </div>
 
     <section class="sheet-body">
         <div class="tab">
             <div class="header">
-                <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" class="{{#sm_e system.resources.hp.current system.resources.hp.crisis}}is-crisis{{/sm_e}}" />
+                <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
                 <div class="header-body">
                     <div class="head">
                         <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'FU.Sheet.Name'}}" class="name"/>
@@ -107,42 +104,26 @@
             </div>
 
             <div class="attributes-container">
-                <div class="attr">
-                    <label>DES</label>
-                    <select name="system.attributes.dex.value" {{#if (lookup (lookup @root.actor.overrides.system.attributes 'dex') 'value')}}disabled data-tooltip="Non puoi modificare la Destrezza <br> finché hai un effetto che la influenza"{{/if}}>
-                        <option value="6" {{#if (eq system.attributes.dex.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.attributes.dex.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.attributes.dex.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.attributes.dex.value 12)}}selected{{/if}}>d12</option>
-                    </select>
-                </div>
-                <div class="attr">
-                    <label>INT</label>
-                    <select name="system.attributes.ins.value" {{#if (lookup (lookup @root.actor.overrides.system.attributes 'ins') 'value')}}disabled data-tooltip="Non puoi modificare l'Intuito <br> finché hai un effetto che la influenza"{{/if}}>
-                        <option value="6" {{#if (eq system.attributes.ins.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.attributes.ins.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.attributes.ins.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.attributes.ins.value 12)}}selected{{/if}}>d12</option>
-                    </select>
-                </div>
-                <div class="attr">
-                    <label>VIG</label>
-                    <select name="system.attributes.mig.value" {{#if (lookup (lookup @root.actor.overrides.system.attributes 'mig') 'value')}}disabled data-tooltip="Non puoi modificare il Vigore <br> finché hai un effetto che la influenza"{{/if}}>
-                        <option value="6" {{#if (eq system.attributes.mig.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.attributes.mig.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.attributes.mig.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.attributes.mig.value 12)}}selected{{/if}}>d12</option>
-                    </select>
-                </div>
-                <div class="attr">
-                    <label>VOL</label>
-                    <select name="system.attributes.wlp.value" {{#if (lookup (lookup @root.actor.overrides.system.attributes 'wlp') 'value')}}disabled data-tooltip="Non puoi modificare la Volontà <br> finché hai un effetto che la influenza"{{/if}}>
-                        <option value="6" {{#if (eq system.attributes.wlp.value 6)}}selected{{/if}}>d6</option>
-                        <option value="8" {{#if (eq system.attributes.wlp.value 8)}}selected{{/if}}>d8</option>
-                        <option value="10" {{#if (eq system.attributes.wlp.value 10)}}selected{{/if}}>d10</option>
-                        <option value="12" {{#if (eq system.attributes.wlp.value 12)}}selected{{/if}}>d12</option>
-                    </select>
-                </div>
+                {{#each system.attributes as |attr attrIndex|}}
+                    <div class="attr">
+                        <label>{{localize (concat 'FU.attributesAbbr.' attrIndex)}}</label>
+                        <select name="system.attributes.{{attrIndex}}.base" {{#if (lookup (lookup @root.actor.overrides.system.attributes attrIndex) 'base')}}disabled data-tooltip="Non puoi modificare la {{localize (concat 'FU.attributes.' attrIndex)}} <br> finché hai un effetto che la influenza"{{/if}}>
+                            {{selectOptions @root.FU.attributesDice selected=attr.base localize=true}}
+                        </select>
+                        <label>
+                            {{attr.current}}
+                            {{#if (eq attr.current attr.base)}}
+                                <i class="fa fa-fw fa-minus"></i>
+                            {{else}}
+                                {{#gt attr.current attr.base}}
+                                    <i class="fa fa-fw fa-caret-up is-up"></i>
+                                {{else}}
+                                    <i class="fa fa-fw fa-caret-down is-down"></i>
+                                {{/gt}}
+                            {{/if}}
+                        </label>
+                    </div>
+                {{/each}}
 
                 {{#unless (eq system.resources.up.max 0)}}
                     <div class="attr">
@@ -153,24 +134,6 @@
                         {{/unless}}
                     </div>
                 {{/unless}}
-
-                {{!-- <div class="attr hp">
-                    <label>PV</label>
-                    <div class="info">
-                        {{system.resources.hp.max}}
-                        <span>◆</span>
-                        {{system.resources.hp.crisis}}
-                    </div>
-                </div> --}}
-
-                {{!-- <div class="attr mp">
-                    <label>PM</label>
-                    <div class="info">
-                        {{system.resources.mp.max}}
-                        <span>◆</span>
-                        {{system.resources.mp.crisis}}
-                    </div>
-                </div> --}}
             </div>
 
             <div class="outer-container">
@@ -178,7 +141,7 @@
                     <div class="attributes-container">
                         <div class="attr hp" data-tooltip="Punti Vita: {{system.resources.hp.current}}<br>Crisi: {{system.resources.hp.crisis}}<br>PV Massimi: {{system.resources.hp.max}}">
                             <div class="progress-container">
-                                <div class="pregress-bar">
+                                <div class="pregress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
                                     <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
                                 </div>
                                 <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
@@ -189,7 +152,7 @@
                             </div>
                         </div>
 
-                        <div class="attr mp" data-tooltip="Punti Menti: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
+                        <div class="attr mp" data-tooltip="Punti Mente: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
                             <div class="progress-container">
                                 <div class="pregress-bar">
                                     <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
@@ -202,47 +165,30 @@
                     </div>
                     
                     <div class="attributes-container params">
-                        <div class="attr">
-                            <label>
-                                Iniziativa: {{system.resources.params.init.current}}
-                            </label>
-                        </div>
-
-                        <div class="attr">
-                            <label>
-                                Difesa: {{system.resources.params.def.current}}
-                            </label>
-                        </div>
-
-                        <div class="attr">
-                            <label>
-                                Difesa Magica: {{system.resources.params.mdef.current}}
-                            </label>
-                        </div>
+                        {{#each system.params as |param paramIndex|}}
+                            <div class="attr">
+                                <label>
+                                    {{localize (concat 'FU.' paramIndex)}}:
+                                    {{#if param.fixed}}
+                                        {{param.fixed}}
+                                    {{else}}
+                                        {{param.value}}
+                                    {{/if}}
+                                </label>
+                            </div>
+                        {{/each}}
                     </div>
                 </div>
 
                 <div class="container-right">
                     <div class="attr status">
-                        <button type="button" class="js_setStatus" data-status="slow" data-tooltip="{{localize 'FU.Status.slow'}}">
-                            <div class="icon icon-slow {{#unless system.status.slow.active}}disabled{{/unless}}"></div>
-                        </button>
-                        <button type="button" class="js_setStatus" data-status="dazed" data-tooltip="{{localize 'FU.Status.dazed'}}">
-                            <div class="icon icon-dazed {{#unless system.status.dazed.active}}disabled{{/unless}}"></div>
-                        </button>
-                        <button type="button" class="js_setStatus" data-status="weak" data-tooltip="{{localize 'FU.Status.weak'}}">
-                            <div class="icon icon-weak {{#unless system.status.weak.active}}disabled{{/unless}}"></div>
-                        </button>
-                        <button type="button" class="js_setStatus" data-status="shaken" data-tooltip="{{localize 'FU.Status.shaken'}}">
-                            <div class="icon icon-shaken {{#unless system.status.shaken.active}}disabled{{/unless}}"></div>
-                        </button>
-
-                        <button type="button" class="js_setStatus" data-status="enraged" data-tooltip="{{localize 'FU.Status.enraged'}}">
-                            <div class="icon icon-enraged {{#unless system.status.enraged.active}}disabled{{/unless}}"></div>
-                        </button>
-                        <button type="button" class="js_setStatus" data-status="poisoned" data-tooltip="{{localize 'FU.Status.poisoned'}}">
-                            <div class="icon icon-poisoned {{#unless system.status.poisoned.active}}disabled{{/unless}}"></div>
-                        </button>
+                        {{#each system.status as |status statusIndex|}}
+                            <div data-tooltip="{{localize (concat 'FU.Status.' statusIndex)}}">
+                                <button type="button" class="js_setStatus{{#if status.immunity}} is-immune{{/if}}" data-status="{{statusIndex}}">
+                                    <div class="icon icon-{{statusIndex}} {{#unless status.active}}disabled{{/unless}}"></div>
+                                </button>
+                            </div>
+                        {{/each}}
                     </div>
                 </div>
             </div>
@@ -279,7 +225,9 @@
                         <div class="collapse">
                             <ul class="list list-attacks">
                                 {{#each weapons}}
-                                    {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
+                                    {{#if this.system.isEquipped}}
+                                        {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
+                                    {{/if}}
                                 {{/each}}
                                 {{#each attacks}}
                                     {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
@@ -309,7 +257,7 @@
                         </div>
                     </div>
 
-                    {{#if (or (arrayLengthGt weapons 0) (arrayLengthGt armors 0) (arrayLengthGt shields 0) (arrayLengthGt accessories 0))}}
+                    {{#if system.equippable}}
                         <div class="content-collapse open equip">
                             <div class="title">
                                 Equipaggiamento
@@ -318,18 +266,58 @@
                                 </button> --}}
                             </div>
                             <div class="collapse">
+                                <div class="equip-container">
+                                    <div class="equip-slots">
+                                        <div class="slot armor" {{#if system.equip.armor}}data-tooltip="Armatura <br> {{lookup (getItemByID items system.equip.armor) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.armor) 'img'}})"{{else}}data-tooltip="Armatura"{{/if}}></div>
+                                        <div class="slot-list">
+                                            <div class="slot mainHand" {{#if system.equip.mainHand}}data-tooltip="Mano principale <br> {{lookup (getItemByID items system.equip.mainHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.mainHand) 'img'}})"{{else}}data-tooltip="Mano principale"{{/if}}></div>
+                                            
+                                            <div class="slot-linked {{#allTrue system.equip.mainHand (eq system.equip.mainHand system.equip.offHand)}}show{{/allTrue}}">
+                                                <i class="fa fa-fw fa-link"></i>
+                                            </div>
+
+                                            <div class="slot offHand" {{#if system.equip.offHand}}data-tooltip="Mano secondaria <br> {{lookup (getItemByID items system.equip.offHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.offHand) 'img'}})"{{else}}data-tooltip="Mano secondaria"{{/if}}></div>
+                                        </div>
+                                        <div class="slot accessory" {{#if system.equip.accessory}}data-tooltip="Accessorio <br> {{lookup (getItemByID items system.equip.accessory) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.accessory) 'img'}})"{{else}}data-tooltip="Accessorio"{{/if}}></div>
+                                    </div>
+                                    <ul class="list list-equip">
+                                        {{#each armors}}
+                                            {{#if this.system.isEquipped}}
+                                                {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                            {{/if}}
+                                        {{/each}}
+                                        {{#each shields}}
+                                            {{#if this.system.isEquipped}}
+                                                {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                            {{/if}}
+                                        {{/each}}
+                                        {{#each accessories}}
+                                            {{#if this.system.isEquipped}}
+                                                {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                            {{/if}}
+                                        {{/each}}
+                                    </ul>
+                                </div>
                                 <ul class="list list-equip">
                                     {{#each weapons}}
-                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{#unless this.system.isEquipped}}
+                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{/unless}}
                                     {{/each}}
                                     {{#each armors}}
-                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{#unless this.system.isEquipped}}
+                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{/unless}}
                                     {{/each}}
                                     {{#each shields}}
-                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{#unless this.system.isEquipped}}
+                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{/unless}}
                                     {{/each}}
                                     {{#each accessories}}
-                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{#unless this.system.isEquipped}}
+                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
+                                        {{/unless}}
                                     {{/each}}
                                 </ul>
                             </div>
@@ -425,6 +413,11 @@
                         <select name="system.villain">
                             {{selectOptions villainTypes selected=system.villain localize=true}}
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="checkbox" name="system.equippable" id="system.equippable" {{checked system.equippable}}>
+                        <label for="system.equippable">Può equipaggiare oggetti?</label>
                     </div>
                 </div>
 

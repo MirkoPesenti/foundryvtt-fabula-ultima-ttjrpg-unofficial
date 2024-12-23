@@ -1,5 +1,6 @@
-import { FU } from "../helpers/config.mjs";
 import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
+import { addClassToActor } from "../helpers/class-helpers.mjs";
+import { FU } from "../helpers/config.mjs";
 
 const NPCaccordions = {
 	attack: false,
@@ -27,7 +28,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 	render( force = false, options = {} ) {
 		if (  this.object.type == 'character' )
-			options.height = 700;
+			options.height = 900;
 		else if ( this.object.type == 'npc' )
 			options.height = 700;
 
@@ -99,6 +100,11 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
+			if ( sourceItem.type == 'rule' ) {
+				ui.notifications.warn('Non puoi equipaggiare una regola');
+				return false;
+			}
+
 			this._onDropNpc( actor, sourceItem );
 			this._onDropCharacter( actor, sourceItem );
 			
@@ -107,9 +113,247 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
+	async _onDropNpc( actor, sourceItem ) {
+
+		if ( actor.type != 'npc' ) return;
+		
+		if ( sourceItem.type == 'class' || sourceItem.type == 'heroicSkill' | sourceItem.type == 'consumable' ) {
+			ui.notifications.warn(`Non puoi aggiungere gli oggetti come ${sourceItem.name} ad un NPC`); 
+		} else if ( sourceItem.type == 'classFeature' ) {
+			let maxxedSkill = false;
+			let levelUpSkill = false;
+			const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
+
+			for (let i = 0; i < classFeatures.length; i++) {
+				if ( classFeatures[i]._id == sourceItem._id ) {
+					if ( classFeatures[i].system.level.current == classFeatures[i].system.level.max ) {
+						maxxedSkill = true;
+					} else {
+						classFeatures[i].system.level.current++;
+						levelUpSkill = true;
+					}
+					break;
+				}
+			}
+			
+			if ( maxxedSkill ) {
+				ui.notifications.error(`${actor.name} non può potenziare oltre l'abilità ${sourceItem.name}!`);
+				return false;
+			}
+
+			if ( levelUpSkill ) {
+				await actor.setFlag('fabula', 'classFeatures', classFeatures);
+				ui.notifications.info(`${actor.name} ha aumentato il livello dell'abilità ${sourceItem.name}!`);
+				return true;
+			}
+
+			if ( sourceItem.system.isLimited ) {
+				new Dialog({
+					title: `Stai aggiungendo l'abilità ${sourceItem.name}`,
+					content: `
+						<p>L'abilità <strong>${sourceItem.name}</strong> è limitiata! Sei sicuro di volerla aggiungere?</p>
+					`,
+					buttons: {
+						no: {
+							label: 'No',
+						},
+						yes: {
+							label: 'Si',
+							callback: async () => {
+								const skillCount = actor.system.skills.current + 1;
+
+								if ( skillCount <= actor.system.skills.max ) {
+									await actor.update({ 'system.skills.current': skillCount });
+									const newItemData = sourceItem.toObject();
+									newItemData.system.level.current++;
+									const flags = actor.getFlag('fabula', 'classFeatures') || [];
+									flags.push(newItemData);
+									await actor.setFlag('fabula', 'classFeatures', flags);
+									return true;
+								} else {
+									ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+									return false;
+								}
+							},
+						},
+					}
+				}).render(true);
+			} else {
+				const skillCount = actor.system.skills.current + 1;
+
+				if ( skillCount <= actor.system.skills.max ) {
+					await actor.update({ 'system.skills.current': skillCount });
+					const newItemData = sourceItem.toObject();
+					newItemData.system.level.current++;
+					const flags = actor.getFlag('fabula', 'classFeatures') || [];
+					flags.push(newItemData);
+					await actor.setFlag('fabula', 'classFeatures', flags);
+					return true;
+				} else {
+					ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+					return false;
+				}
+			}
+		} else if ( sourceItem.type == 'weapon' || sourceItem.type == 'armor' || sourceItem.type == 'accessory' || sourceItem.type == 'shield' ) {
+			if ( actor.system.equippable ) {
+				actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+				ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
+			} else {
+				ui.notifications.warn(`${actor.name} non ha l'abilità di equipaggiare oggetti`);
+			}
+		} else {
+			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
+		}
+
+	}
+
+	async _onDropCharacter( actor, sourceItem ) {
+
+		if ( actor.type != 'character' ) return;
+
+		if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
+
+			new Dialog({
+				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
+				content: `
+					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
+				`,
+				buttons: {
+					no: {
+						label: 'No',
+						callback: async () => {
+							const newItemData = sourceItem.toObject();
+							await actor.createEmbeddedDocuments("Item", [newItemData]);
+							ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto all'equipaggiamento!`);
+						},
+					},
+					yes: {
+						label: 'Si',
+						callback: async () => {
+							const actorZenits = actor.system.resources.zenit;
+							if ( actorZenits < sourceItem.system.cost ) {
+								ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
+							} else {
+								actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
+								const newItemData = sourceItem.toObject();
+								await actor.createEmbeddedDocuments("Item", [newItemData]);
+								ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
+							}
+						},
+					},
+				}
+			}).render(true);
+			return true;
+
+		} else if ( sourceItem.type == 'class' ) {
+
+			if (
+				await Dialog.confirm({
+					title: `Stai acquisendo un livello nella classe ${sourceItem.name}`,
+					content: `<p>Sei sicuro di voler acquisire un livello nella classe ${sourceItem.name}?</p>`,
+					rejectClose: false,
+				})
+			) {
+				await addClassToActor( actor, sourceItem );
+			}
+
+		} else if ( sourceItem.type == 'classFeature' ) {
+		} else if ( sourceItem.type == 'heroicSkill' ) {
+
+			const classes = actor.items.filter( item => item.type == 'class' && item.system.level.value == 10 );
+			const heroics = actor.items.filter( item => item.type == 'heroicSkill' );
+			if ( classes.length - heroics.length > 0) {
+
+				let obtainSkill = false;
+
+				// Check Class
+				if ( sourceItem.system.requirements.class.length > 0 ) {
+					
+					if ( sourceItem.system.requirements.multiClass ) {
+						const checkClasses = classes.filter( item => item.type == 'class' && sourceItem.system.requirements.class.includes( item.name ) );
+						if ( checkClasses.length >= 2 )
+							obtainSkill = true;
+						else
+							obtainSkill = false;
+					} else {
+						if ( classes.some( item => sourceItem.system.requirements.class.includes( item.name ) ) )
+							obtainSkill = true;
+						else
+							obtainSkill = false;
+					}
+				}
+
+				// Check Class Feature
+				if ( sourceItem.system.requirements.classFeature.length > 0 ) {
+					const allClasses = actor.items.filter( item => item.type == 'class' );
+					if ( !(allClasses.some( (item) => {
+						let checked = false;
+						if ( item.flags?.fabula?.subItems ) {
+							if ( sourceItem.system.requirements.multiClassFeature ) {
+								// const checkFeature = subItem.filter( item => item.type == 'class' && sourceItem.system.requirements.class.includes( item.name ) );
+								if ( sourceItem.system.requirements.classFeature.every( str => item.flags.fabula.subItems.some( item => item.name == str ) ) )
+									checked = true;
+							} else {
+								for ( const subItem of item.flags?.fabula?.subItems ) {
+									if ( sourceItem.system.requirements.classFeature.includes( subItem.name )  ) {
+										if ( sourceItem.system.requirements.classFeatureLevel > 0 ) {
+											if ( subItem.system.level.current >= sourceItem.system.requirements.classFeatureLevel )
+												checked = true;
+										} else {
+											checked = true;
+										}
+									}
+								}
+							}
+						}
+
+						return checked;
+					})) ) obtainSkill = false;
+				}
+
+				// Check Actor level
+				if ( sourceItem.system.requirements.level > 0 ) {
+					if ( !(actor.system.level.value >= sourceItem.system.requirements.level) ) obtainSkill = false;
+				}
+
+				// Check Spells
+				if ( sourceItem.system.requirements.spell.length > 0 ) {
+					const spells = actor.items.filter( item => item.type == 'spell' );
+					if ( !(sourceItem.system.requirements.spell.every( str => spells.some( item => item.name == str ) )) ) obtainSkill = false;
+				}
+
+				// Check Offensive Spells
+				if ( sourceItem.system.requirements.offensiveSpells > 0 ) {
+					const offensiveSpells = actor.items.filter( item => item.type == 'spell' && item.system.isOffensive.value === true );
+					if ( !(offensiveSpells.length >= sourceItem.system.requirements.offensiveSpells) ) obtainSkill = false;
+				}
+
+				console.log(sourceItem.system.requirements);
+				if ( obtainSkill ) {
+					actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+					ui.notifications.info(`Abilità Eroica ${sourceItem.name} aggiunta!`);
+				} else {
+					ui.notifications.warn(`Non possiedi i requisiti necessari per ottenere l'Abilità Eroica ${sourceItem.name}!`);
+				}
+
+			} else {
+				ui.notifications.warn(`Non puoi acquisire l'Abilità Eroica ${sourceItem.name} finché non padroneggi un'altra classe!`);
+			}
+
+		} else {
+			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+		}
+
+	}
+
 	activateListeners( html ) {
 		super.activateListeners( html );
 
+		// Debug Actor
+		html.on('click','.getActor', () => console.log(this.actor));
+
+		// Toggle collapse on Sheet open
 		$(html).find('.content-collapse').each((index, element) => {
 			for ( const key in NPCaccordions ) {
 				const content = element;
@@ -123,15 +367,14 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 		});
 
-		$(html).find('.tabs.inner-tabs > .item').each((index, element) => {
-			const group = $(element).parent('.tabs').data('group');
-
+		// Toggle inner tabs on Sheet open
+		$(html).find('.tabs.inner-tabs[data-group="secondary"] > .item').each((index, element) => {
 			if ( $(element).is(`[data-tab="${lastOpennedInnerTab}"]`) ) {
 				$(element).addClass('active');
-				$(html).find(`.tab.inner-tab[data-group="${group}"][data-tab="${lastOpennedInnerTab}"]`).addClass('active');
+				$(html).find(`.tab.inner-tab[data-group="secondary"][data-tab="${lastOpennedInnerTab}"]`).addClass('active');
 			} else {
 				$(element).removeClass('active');
-				$(html).find(`.tab.inner-tab[data-group="${group}"][data-tab="${$(element).data('tab')}"]`).removeClass('active');
+				$(html).find(`.tab.inner-tab[data-group="secondary"][data-tab="${$(element).data('tab')}"]`).removeClass('active');
 			}
 		});
 
@@ -162,9 +405,6 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 		});
 
-		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
-		html.on('click', '.js_setFreeFeature', this._setFreeFeature.bind(this));
-
 		// Roll a Test
 		html.on('click', '.js_rollActorTest', this._rollActorTest.bind(this));
 
@@ -175,49 +415,7 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click', '.js_setAttrValue', this._setAttrValue.bind(this));
 
 		// Equip Item
-		html.on('click','.js_equipItem', async (e) => {
-			e.preventDefault();
-			const itemType = e.currentTarget.dataset.type;
-			const itemID = e.currentTarget.dataset.id;
-
-			if ( itemType == 'shield' || itemType == 'armor' || itemType == 'accessory' ) {
-				
-				const equipPlace = itemType == 'shield' ? 'offHand' : itemType;
-				const prevItemId = this.actor.system.equip[equipPlace];
-				const item = this.actor.items.find(i => i.id === itemID && i.type === itemType);
-				if ( prevItemId ) {
-					const prevItem = this.actor.items.find(i => i.id === prevItemId);
-
-					if ( equipPlace == 'offHand' && this.actor.system.equip.mainHand == prevItem.id ) {
-						ui.notifications.error(`L\'oggetto ${item.name} ha bisogno che la Mano Secondaria sia libera per essere equipaggiato!`);
-						return;
-					}
-
-					await prevItem.update({ 'system.isEquipped': false });
-				}
-				await item.update({ 'system.isEquipped': true });
-				const objAttr = 'system.equip.' + equipPlace;
-				await this.actor.update({ [objAttr]: itemID });
-
-			} else if ( itemType == 'weapon' ) {
-				const item = this.actor.items.find(i => i.id === itemID && i.type === itemType);
-				if ( item.system.needTwoHands && this.actor.system.equip.offHand ) {
-					ui.notifications.error(`L\'oggetto ${item.name} ha bisogno di Due Mani per essere equipaggiato!`);
-					return;
-				}
-
-				const prevItemId = this.actor.system.equip.mainHand;
-				if ( prevItemId ) {
-					const prevItem = this.actor.items.find(i => i.id === prevItemId);
-					await prevItem.update({ 'system.isEquipped': false });
-				}
-				await item.update({ 'system.isEquipped': true });
-				await this.actor.update({ 'system.equip.mainHand': itemID });
-				if ( item.system.needTwoHands ) {
-					await this.actor.update({ 'system.equip.offHand': itemID });
-				}
-			}
-		});
+		html.on('click','.js_equipItem', this._equipItem.bind(this));
 
 		// Remove equipped Item
 		html.on('click','.js_removeEquipItem', async (e) => {
@@ -296,94 +494,54 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Roll spell test
 		html.on('click','.js_rollActorItem', this._rollActorItem.bind(this));
+		
+		// Remove skill from NPC
+		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
+
+		// Set NPC skill as free
+		html.on('click', '.js_setFreeFeature', this._setFreeFeature.bind(this));
 
 		// Manage Active Effects
 		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.actor));
 
-		html.on('click','.getActor', () => console.log(this.actor));
-		html.on('click','.addClass', () => {
-			const pack = game.packs.get('fabula.classes');
-			const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
-			let options = '';
-			sortedPack.forEach((value, key) => {
-				options += `<option value="${value.name}">${value.name}</option>`;
-			})
-			new Dialog({
-				title: 'Seleziona Classe',
-				content: `
-					<form>
-						<div class="form-group">
-							<label>Classe:</label>
-							<select id="formClass">
-								${options}
-							</select>
-						</div>
-					</form>
-				`,
-				buttons: {
-					confirm: {
-						label: 'Conferma',
-						callback: async (html) => {
-							const selectedClass = html.find('#formClass').val();
-							const entry = pack.index.find(e => e.name === selectedClass);
-							if (entry) {
-								const actor = this;
-								const document = await pack.getDocument(entry._id);
-								if ( ( document.system.bonus.hp + document.system.bonus.mp + document.system.bonus.ip ) > 1 ) {
-									let radios = '';
-									if ( document.system.bonus.hp )
-										radios += `<div class="form-group">
-													<label for="formClassBenefit">Punti Ferita</label>
-													<input type="radio" name="formClassBenefit" value="hp" />
-												</div>`;
-									if ( document.system.bonus.mp )
-										radios += `<div class="form-group">
-													<label for="formClassBenefit">Punti Mente</label>
-													<input type="radio" name="formClassBenefit" value="mp" />
-												</div>`;
-									if ( document.system.bonus.ip )
-										radios += `<div class="form-group">
-													<label for="formClassBenefit">Punti Inventario</label>
-													<input type="radio" name="formClassBenefit" value="ip" />
-												</div>`;
-									new Dialog({
-										title: 'Scegli beneficio',
-										content: `<form>${radios}</form>`,
-										buttons: {
-											confirm: {
-												label: 'Conferma',
-												callback: async (html) => {
-													const radio = html.find('[name="formClassBenefit"]:checked').val();
-													let clonedDocument = document.toObject()
-													clonedDocument.system.bonus = {
-														hp: false,
-														mp: false,
-														ip: false,
-													}
-													clonedDocument.system.bonus[radio] = true;
-													await actor._addClass( clonedDocument );
-												}
-											},
-											cancel: {
-												label: 'Annulla',
-											},
-										},
-									}).render(true);
-								} else {
-									await actor._addClass( document.toObject() );
-								}
-							}
-							return null;
-						}
-					},
-					cancel: {
-						label: 'Annulla',
-					},
-				},
-			}).render(true);
+		// Add new bond
+		html.on('click', '.js_addNewBond', async (ev) => {
+			ev.preventDefault();
+			const array = this.actor.system.bond;
+			const bonds = [...array];
+			bonds.push({});
+			await this.actor.update({ 'system.bond': bonds });
 		});
 
+		// Remove bond by index
+		html.on('click', '.js_deleteBond', async (ev) => {
+			ev.preventDefault();
+			const index = ev.currentTarget.dataset.index;
+			const array = this.actor.system.bond;
+			const bonds = [...array];
+			if ( index ) {
+				bonds.splice( index, 1 );
+				await this.actor.update({ 'system.bond': bonds });
+			}
+		});
+
+		// Level up Character
+		html.on('click', '.js_levelUpCharacter', this._levelUpCharacter.bind(this));
+
 		if (!this.isEditable) return;
+	}
+
+	_getSubmitData( updateData = {} ) {
+		const data = super._getSubmitData( updateData );
+		
+		if ( this.actor.type == 'npc' ) {
+			const defaultPath = 'systems/fabula/assets/img/npc/default';
+			if ( data['img'] == 'icons/svg/mystery-man.svg' || data['img'].includes(defaultPath) ) {
+				data['img'] = `${defaultPath}/${data['system.species.value']}.png`;
+			}
+		}
+
+		return data;
 	}
 
 	async _prepareItems(context) {
@@ -392,8 +550,8 @@ export class FabulaActorSheet extends ActorSheet {
 		const shields = [];
 		const accessories = [];
 		const classes = [];
+		const heroicSkills = [];
 		const spells = [];
-		const consumables = [];
 		const projects = [];
 		const rituals = [];
 		const baseItems = [];
@@ -410,6 +568,17 @@ export class FabulaActorSheet extends ActorSheet {
 				};
 			}
 
+			// Enriches flags description fields
+			if ( i.flags?.fabula ) {
+				for ( let [namespace, values] of Object.entries(i.flags.fabula) ) {
+					for ( let [key, value] of Object.entries(values) ) {
+						value.enrichedHtml = {
+							description: await TextEditor.enrichHTML( value.system?.description ?? '' ),
+						}
+					}
+				}
+			}
+
 			if (i.type === 'weapon') {
 				weapons.push(i);
 			} else if (i.type === 'armor') {
@@ -420,10 +589,10 @@ export class FabulaActorSheet extends ActorSheet {
 				accessories.push(i);
 			} else if (i.type === 'class') {
 				classes.push(i);
+			} else if (i.type === 'heroicSkill') {
+				heroicSkills.push(i);
 			} else if (i.type === 'spell') {
 				spells.push(i);
-			} else if (i.type === 'consumable') {
-				consumables.push(i);
 			} else if (i.type === 'project') {
 				projects.push(i);
 			} else if (i.type === 'ritual') {
@@ -442,8 +611,8 @@ export class FabulaActorSheet extends ActorSheet {
 		context.shields = shields;
 		context.accessories = accessories;
 		context.classes = classes;
+		context.heroicSkills = heroicSkills;
 		context.spells = spells;
-		context.consumables = consumables;
 		context.projects = projects;
 		context.rituals = rituals;
 		context.baseItems = baseItems;
@@ -458,6 +627,57 @@ export class FabulaActorSheet extends ActorSheet {
 			});
 			featureType.items[item.id] = { item, additionalData: await featureType.feature?.getAdditionalData(item.system.data) };
 		}
+	}
+
+	async _levelUpCharacter(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const pack = game.packs.get('fabula.classes');
+		const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
+
+		let options = '';
+		for ( const item of sortedPack ) {
+			options += `<option value="${item.name}">${item.name}</option>`;
+			// <option disabled>──────────</option>
+		}
+
+		new Dialog({
+			title: 'Seleziona Classe',
+			content: `
+				<form>
+					<div class="form-group">
+						<label>Classe:</label>
+						<select id="formClass">
+							<option value="">Scegli una classe</option>
+							${options}
+						</select>
+					</div>
+				</form>
+			`,
+			buttons: {
+				cancel: {
+					label: 'Annulla',
+				},
+				confirm: {
+					label: 'Conferma',
+					callback: async (html) => {
+						const selectedClass = html.find('#formClass').val();
+						if ( selectedClass != '' ) {
+							const entry = pack.index.find(e => e.name === selectedClass);
+							if (entry) {
+								const soruceItem = await pack.getDocument(entry._id);
+								await addClassToActor( actor, soruceItem );
+								return true;
+							}
+						} else {
+							ui.notifications.error('Devi selezionare una classe');
+							return false;
+						}
+					}
+				},
+			},
+		}).render(true);
+
 	}
 
 	async _setAttrValue(event) {
@@ -580,9 +800,9 @@ export class FabulaActorSheet extends ActorSheet {
 								<label for="attrSecondary_wlp">Volontà</label>
 							</div>
 						</div>
-						<div class="form-group">
-							<input type="checkbox" name="formBonusCheck" id="formBonusCheck" ${actor.system.level.checkBonus.checks <= 0 ? 'disabled' : ''} />
-							<label for="formBonusCheck">Applicare bonus ai Test Contrapposti? ${actor.system.level.checkBonus.checks > 0 ? '(+' + actor.system.level.checkBonus.checks + ')' : ''}</label>
+						<div class="form-group" style="${actor.type != 'npc' ? 'display:none' : ''}">
+							<input type="checkbox" name="formBonusCheck" id="formBonusCheck" ${actor.system.level?.checkBonus?.checks <= 0 ? 'disabled' : ''} />
+							<label for="formBonusCheck">Applicare bonus ai Test Contrapposti? ${actor.system.level?.checkBonus?.checks > 0 ? '(+' + actor.system.level?.checkBonus?.checks + ')' : ''}</label>
 						</div>
 					</div>
 				</div>
@@ -601,8 +821,8 @@ export class FabulaActorSheet extends ActorSheet {
 						if ( attrPrimary && attrSecondary ) {
 
 							let rollString = '';
-							const primary = actor.system.attributes[attrPrimary].value;
-							const secondary = actor.system.attributes[attrSecondary].value;
+							const primary = actor.system.attributes[attrPrimary].current;
+							const secondary = actor.system.attributes[attrSecondary].current;
 							rollString += `d${primary}+d${secondary}`;
 							
 							if ( bonusCheck ) {
@@ -683,9 +903,9 @@ export class FabulaActorSheet extends ActorSheet {
 	async _rollInitiative(event) {
 		event.preventDefault();
 		const actor = this.actor;
-		let rollString = `d${actor.system.attributes.dex.value}+d${actor.system.attributes.ins.value}`;
-		if ( actor.resources.params.init.current != 0 )
-			rollString += `+${actor.resources.params.init.current}`;
+		let rollString = `d${actor.system.attributes.dex.current}+d${actor.system.attributes.ins.current}`;
+		if ( actor.system.params.init.value != 0 )
+			rollString += `+${actor.system.params.init.value}`;
 
 		const roll = new Roll( rollString, actor.getRollData() );
 		await roll.evaluate();
@@ -738,10 +958,20 @@ export class FabulaActorSheet extends ActorSheet {
 		const element = event.currentTarget;
 		const messageClass = element.dataset.class || 'item-description';
 		const itemID = element.dataset.itemid;
-		const item = this.actor.items.get( itemID );
+		const flag = element.dataset.flag || false;
+		const item = this.actor.items.get( itemID );		
 
-		let messageTitle = item.name;
-		let messageContent = item.system.description;
+		let messageTitle;
+		let messageContent;
+		
+		if ( flag && item.flags?.fabula?.subItems[flag] ) {
+			const subItem = item.flags?.fabula?.subItems[flag];
+			messageTitle = subItem.name;
+			messageContent = subItem.system.description;
+		} else {
+			messageTitle = item.name;
+			messageContent = item.system.description;
+		}
 
 		if ( item.type == 'spell' ) {
 			if ( item.system.isOffensive.value )
@@ -800,22 +1030,22 @@ export class FabulaActorSheet extends ActorSheet {
 
 		let rollString = '';
 		if ( attrPrimary ) {
-			rollString += `d${actor.system.attributes[attrPrimary].value}`;
+			rollString += `d${actor.system.attributes[attrPrimary].current}`;
 		}
 		if ( attrPrimary && attrSecondary ) rollString += '+';
 		if ( attrSecondary ) {
-			rollString += `d${actor.system.attributes[attrSecondary].value}`;
+			rollString += `d${actor.system.attributes[attrSecondary].current}`;
 		}
 		if (item.type == 'attack' || item.type == 'weapon' ) {
 			if ( item.system.precisionBonus != 0 ) {
 				rollString += `+${item.system.precisionBonus}`;
 			}
 
-			if ( actor.system.level.checkBonus.test > 0 ) {
+			if ( actor.system.level?.checkBonus?.test > 0 ) {
 				rollString += `+${actor.system.level.checkBonus.test}`;
 			}
 		}
-		if ( item.type == 'spell' && actor.system.level.checkBonus.spell > 0 ) {
+		if ( item.type == 'spell' && actor.system.level?.checkBonus?.spell > 0 ) {
 			rollString += `+${actor.system.level.checkBonus.spell}`;
 		}
 
@@ -938,139 +1168,60 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
-	async _onDropNpc( actor, sourceItem ) {
+	async _equipItem(event) {
+		event.preventDefault();
+		const element = event.currentTarget;
+		const itemID = element.dataset.itemid;
 
-		if ( actor.type != 'npc' ) return;
-		
-		if ( sourceItem.type == 'classFeature' ) {
-			let maxxedSkill = false;
-			let levelUpSkill = false;
-			const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
+		const item = this.actor.items.get( itemID );
 
-			for (let i = 0; i < classFeatures.length; i++) {
-				if ( classFeatures[i]._id == sourceItem._id ) {
-					if ( classFeatures[i].system.level.current == classFeatures[i].system.level.max ) {
-						maxxedSkill = true;
-					} else {
-						classFeatures[i].system.level.current++;
-						levelUpSkill = true;
-					}
-					break;
+		if ( item ) {
+
+			const equippedData = foundry.utils.deepClone(this.actor.system.equip);
+			let slot;
+			if ( item.type == 'weapon' ) {
+				slot = 'mainHand';
+			} else if ( item.type == 'shield' ) {
+				slot = 'offHand';
+			} else if ( item.type == 'armor' ) {
+				slot = 'armor';
+			} else if ( item.type == 'accessory' ) {
+				slot = 'accessory';
+			}
+
+			if ( this.actor.type == 'character' && item.system.isMartial.value ) {
+				let martialSlot = slot;
+				if ( item.type == 'weapon' ) {
+					martialSlot = item.system.range;
 				}
-			}
-			
-			if ( maxxedSkill ) {
-				ui.notifications.error(`${actor.name} non può potenziare oltre l'abilità ${sourceItem.name}!`);
-				return false;
-			}
 
-			if ( levelUpSkill ) {
-				await actor.setFlag('fabula', 'classFeatures', classFeatures);
-				ui.notifications.info(`${actor.name} ha aumentato il livello dell'abilità ${sourceItem.name}!`);
-				return true;
-			}
-
-			if ( sourceItem.system.isLimited ) {
-				new Dialog({
-					title: `Stai aggiungendo l'abilità ${sourceItem.name}`,
-					content: `
-						<p>L'abilità <strong>${sourceItem.name}</strong> è limitiata! Sei sicuro di volerla aggiungere?</p>
-					`,
-					buttons: {
-						no: {
-							label: 'No',
-						},
-						yes: {
-							label: 'Si',
-							callback: async () => {
-								const skillCount = actor.system.skills.current + 1;
-
-								if ( skillCount <= actor.system.skills.max ) {
-									await actor.update({ 'system.skills.current': skillCount });
-									const newItemData = sourceItem.toObject();
-									newItemData.system.level.current++;
-									const flags = actor.getFlag('fabula', 'classFeatures') || [];
-									flags.push(newItemData);
-									await actor.setFlag('fabula', 'classFeatures', flags);
-									return true;
-								} else {
-									ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
-									return false;
-								}
-							},
-						},
-					}
-				}).render(true);
-			} else {
-				const skillCount = actor.system.skills.current + 1;
-
-				if ( skillCount <= actor.system.skills.max ) {
-					await actor.update({ 'system.skills.current': skillCount });
-					const newItemData = sourceItem.toObject();
-					newItemData.system.level.current++;
-					const flags = actor.getFlag('fabula', 'classFeatures') || [];
-					flags.push(newItemData);
-					await actor.setFlag('fabula', 'classFeatures', flags);
-					return true;
-				} else {
-					ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+				if ( !this.actor.system.useMartial[martialSlot] ) {
+					ui.notifications.warn(`Non puoi equipaggiare ${item.name} perché è un'equipaggiamento Marziale`);
 					return false;
 				}
 			}
-		} else {
-			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
-			ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
-		}
 
-	}
-
-	async _onDropCharacter( actor, sourceItem ) {
-
-		if ( actor.type != 'character' ) return;
-
-		if ( sourceItem.type == 'accessory' || sourceItem.type == 'armor' || sourceItem.type == 'shield' || sourceItem.type == 'weapon' ) {
-
-			new Dialog({
-				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
-				content: `
-					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
-				`,
-				buttons: {
-					no: {
-						label: 'No',
-						callback: async () => {
-							const newItemData = sourceItem.toObject();
-							await actor.createEmbeddedDocuments("Item", [newItemData]);
-							ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto all'equipaggiamento!`);
-						},
-					},
-					yes: {
-						label: 'Si',
-						callback: async () => {
-							const actorZenits = actor.system.resources.zenit;
-							if ( actorZenits < sourceItem.system.cost ) {
-								ui.notifications.error(`Non hai abbastanza Zenit per comprare l'oggetto ${sourceItem.name}`);
-							} else {
-								actor.update({ 'system.resources.zenit': actorZenits - sourceItem.system.cost });
-								const newItemData = sourceItem.toObject();
-								await actor.createEmbeddedDocuments("Item", [newItemData]);
-								ui.notifications.info(`Oggetto ${sourceItem.name} acquistato al costo di ${sourceItem.system.cost}z`);
-							}
-						},
-					},
+			if ( equippedData[slot] !== null && equippedData[slot] !== item._id ) {
+				const equippedItem = this.actor.items.get( equippedData[slot] );
+				if ( equippedItem ) {
+					await equippedItem.update({ 'system.isEquipped': false });
 				}
-			}).render(true);
-		
-			return true;
-		} else {
-			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			}
+
+			if ( item.system.needTwoHands ) {
+				equippedData.mainHand = equippedData.mainHand == itemID ? null : itemID;
+				equippedData.offHand = equippedData.offHand == itemID ? null : itemID;
+			} else {
+				if ( ( slot == 'offHand' || slot == 'mainHand' ) && equippedData.mainHand === equippedData.offHand ) {
+					equippedData.mainHand = null;
+					equippedData.offHand = null;
+				}
+				equippedData[slot] = equippedData[slot] == itemID ? null : itemID;
+			}
+
+			await item.update({ 'system.isEquipped': !item.system.isEquipped});
+			await this.actor.update({ 'system.equip': equippedData });
+
 		}
-
-	}
-
-	async _addClass( classItem ) {
-		const actorClasses = this.actor.getFlag('fabula', 'classes') || [];
-		actorClasses.push(classItem);
-		await this.actor.setFlag('fabula', 'classes', actorClasses);
 	}
 }
