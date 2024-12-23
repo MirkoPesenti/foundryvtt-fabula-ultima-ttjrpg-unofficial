@@ -225,5 +225,6 @@
     "background": "systems/fabula/assets/img/ui/fabula-background.webp",
 	"socket": true,
 	"readme": "README.md",
-	"url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical"
+	"url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical",
+	"manifest": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/blob/main/system.json"
 }
