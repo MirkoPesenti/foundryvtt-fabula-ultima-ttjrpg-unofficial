@@ -30,7 +30,7 @@ function openFreeBenefirsChildDialog( radios, newClass ) {
 	return new Promise((resolve) => {
 		new Dialog({
 			title: `Scegli i benefici gratuiti della classe ${newClass.name}`,
-			content: `<form>${radios}</form>`,
+			content: `<form class="flexrow">${radios}</form>`,
 			buttons: {
 				cancel: {
 					label: 'Annulla',
@@ -107,7 +107,7 @@ function openAttributesIncreaseChildDialog( actor ) {
 	});
 }
 
-function openClassFeaturesChildDialog( sourceClass, actor ) {
+async function openClassFeaturesChildDialog( sourceClass, actor ) {
 
 	const classFeatures = sourceClass.flags?.fabula?.subItems;
 	if ( !classFeatures ) {
@@ -115,10 +115,10 @@ function openClassFeaturesChildDialog( sourceClass, actor ) {
 		return false;
 	}
 
-	let skillOptions = '<div class="flexcolumn">';
+	let skillOptions = '<div class="form-choose-feature">';
 	for ( const skill of classFeatures ) {
 		skillOptions += `
-			<div class="form-group">
+			<div class="form-feature-group ${skill.system.sourcebook}">
 				<label class="${skill.system.level.current == skill.system.level.max ? 'disabled' : ''}">
 					<div class="title">
 						${skill.name}
@@ -127,16 +127,25 @@ function openClassFeaturesChildDialog( sourceClass, actor ) {
 			skillOptions += `
 						<span class="upgrade">
 							${skill.system.level.current}
-							<i class="fa fa-fw fa-angle-right"></i>
+							<i class="fa fa-fw fa-right-long"></i>
 							${skill.system.level.current + 1}
 						</span>
 			`;
+		} else {
+			skillOptions += `
+						<span class="upgrade">
+							<span>MAX</span>
+						</span>
+			`;
 		}
+		const enrichedDescription = await TextEditor.enrichHTML( skill.system.description ?? '' );
 		skillOptions += `
-						<span class="max">${skill.system.level.max}</span>
+						<span class="max">
+							(<span>l</span> ${skill.system.level.max})
+						</span>
 					</div>
 					<div class="description">
-						${skill.system.description}
+						${enrichedDescription}
 					</div>
 					<input type="radio" name="formClassFeature" value="${skill._id}" ${skill.system.level.current == skill.system.level.max ? 'disabled' : ''} />
 				</label>
@@ -176,6 +185,8 @@ function openClassFeaturesChildDialog( sourceClass, actor ) {
 					}
 				}
 			}
+		}, {
+			width: 500,
 		}).render(true);
 	});
 }
@@ -229,19 +240,19 @@ export async function addClassToActor( actor, sourceItem ) {
 			let radios = '';
 			if ( newClass.system.bonus.hp ) {
 				radios += `<div class="form-group">
-							<input type="radio" name="formClassBenefit" id="benefitHP" value="hp" />
+							<input type="radio" style="flex:0;" name="formClassBenefit" id="benefitHP" value="hp" />
 							<label for="benefitHP">Punti Ferita</label>
 						</div>`;
 			}
 			if ( newClass.system.bonus.mp ) {
 				radios += `<div class="form-group">
-							<input type="radio" name="formClassBenefit" id="benefitMP" value="mp" />
+							<input type="radio" style="flex:0;" name="formClassBenefit" id="benefitMP" value="mp" />
 							<label for="benefitMP">Punti Mente</label>
 						</div>`;
 			}
 			if ( newClass.system.bonus.ip ) {
 				radios += `<div class="form-group">
-							<input type="radio" name="formClassBenefit" id="benefitIP" value="ip" />
+							<input type="radio" style="flex:0;" name="formClassBenefit" id="benefitIP" value="ip" />
 							<label for="benefitIP">Punti Inventario</label>
 						</div>`;
 			}

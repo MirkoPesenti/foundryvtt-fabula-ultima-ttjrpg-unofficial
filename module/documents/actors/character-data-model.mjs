@@ -5,6 +5,7 @@ import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
 import { StatusesDataModel } from "./common/statuses-data-model.mjs";
 import { EquipDataModel } from "./common/equip-data-model.mjs";
 import { MartialDataModel } from "./common/martial-data-model.mjs";
+import { CharacterMigration } from "./migrations/character-migration.mjs";
 import { FU } from "../../helpers/config.mjs";
 
 /**
@@ -38,7 +39,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 					current: new NumberField({ initial: 6, min: 0, integer: true, nullable: false }),
 					bonus: new NumberField({ initial: 0, integer: true, nullable: false }),
 				}),
-				fp: new NumberField({ initial: 3, min: 0, integer: true, nullable: false }),
+				fp: new SchemaField({ current: new NumberField({ initial: 3, min: 0, integer: true, nullable: false }), }),
 				zenit: new NumberField({ initial: 500, min: 0, integer: true, nullable: false }),
 			}),
 			bond: new ArrayField(new EmbeddedDataField(BondDataModel, {})),
@@ -48,6 +49,11 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			equip: new EmbeddedDataField(EquipDataModel, {}),
 			useMartial: new EmbeddedDataField(MartialDataModel, {}),
 		};
+	}
+
+	static migrateData( source ) {
+		CharacterMigration.run( source );
+		return source;
 	}
 
 	/**
@@ -129,6 +135,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				this.max = newVal;
 			}
 		});
+		if ( data.resources.hp.current > data.resources.hp.max )
+			data.resources.hp.current = data.resources.hp.max;
 
 		// HP Crisis
 		Object.defineProperty(this.resources.hp, 'crisis', {
@@ -156,6 +164,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				this.max = newVal;
 			}
 		});
+		if ( data.resources.mp.current > data.resources.mp.max )
+			data.resources.mp.current = data.resources.mp.max;
 
 		// Max IP
 		Object.defineProperty(this.resources.ip, 'max', {
@@ -169,5 +179,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 				this.max = newVal;
 			}
 		});
+		if ( data.resources.ip.current > data.resources.ip.max )
+			data.resources.ip.current = data.resources.ip.max;
 	}
 }

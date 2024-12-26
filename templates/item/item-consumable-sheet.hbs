@@ -14,9 +14,11 @@
         <a class="item" data-tab="base">
             <span>Base</span>
         </a>
-        <a class="item" data-tab="effects">
-            <span>Effetti</span>
-        </a>
+        {{#if @root.editable}}
+            <a class="item" data-tab="effects">
+                <span>Effetti</span>
+            </a>
+        {{/if}}
     </nav>
 
     <section class="sheet-body">
@@ -57,10 +59,57 @@
             </div>
         </div>
 
-        <div class="tab effects" data-group="primary" data-tab="effects">
-            {{#each effects as |category catIndex|}}
-                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
-            {{/each}}
-        </div>
+        {{#if @root.editable}}
+            <div class="tab effects" data-group="primary" data-tab="effects">
+                <div class="form-group">
+                    <input type="checkbox" name="system.recover.hasRecover" id="system.recover.hasRecover" {{checked system.recover.hasRecover}}>
+                    <label for="system.recover.hasRecover">Permette di recuperare delle risorse?</label>
+                </div>
+                {{#if system.recover.hasRecover}}
+                    <div class="form-group group-inputs">
+                        <input type="number" name="system.recover.recoverValue" min="0" value="{{system.recover.recoverValue}}">
+                        <select name="system.recover.recoverResource">
+                            {{selectOptions recoverResources selected=system.recover.recoverResource localize=true}}
+                        </select>
+                    </div>
+                {{/if}}
+
+                <hr>
+
+                <div class="form-group">
+                    <input type="checkbox" name="system.status.hasRecover" id="system.status.hasRecover" {{checked system.status.hasRecover}}>
+                    <label for="system.status.hasRecover">Permette di guarire da uno status?</label>
+                </div>
+                {{#if system.status.hasRecover}}
+                    <div class="form-group group-inputs">
+                        <select name="system.status.value">
+                            {{selectOptions statusses selected=system.status.value localize=true}}
+                        </select>
+                    </div>
+                {{/if}}
+
+                <hr>
+                
+                <div class="form-group">
+                    <input type="checkbox" name="system.rest" id="system.rest" {{checked system.rest}}>
+                    <label for="system.rest">Permette di fare un riposo ovunque?</label>
+                </div>
+
+                <hr>
+
+                <div class="form-group">
+                    <input type="checkbox" name="system.damage.hasDamage.value" id="system.damage.hasDamage.value" {{checked system.damage.hasDamage.value}}>
+                    <label for="system.damage.hasDamage.value">Infligge del danno ai nemici?</label>
+                </div>
+                {{#if system.damage.hasDamage.value}}
+                    <div class="form-group group-inputs">
+                        <input type="number" name="system.damage.value" min="0" value="{{system.damage.value}}">
+                        <select name="system.damage.type.value">
+                            {{selectOptions DamageTypes selected=system.damage.type.value localize=true}}
+                        </select>
+                    </div>
+                {{/if}}
+            </div>
+        {{/if}}
     </section>
 </form>

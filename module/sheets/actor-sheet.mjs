@@ -1,5 +1,8 @@
 import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
 import { addClassToActor } from "../helpers/class-helpers.mjs";
+import { rollDiceToChat } from "../helpers/roll-helpers.mjs";
+import { awaitDialogSelect, generateDataLink, returnSortedPack } from "../helpers/helpers.mjs";
+import { incrementSessionResource, initSessionJournal } from "../helpers/journal-helpers.mjs";
 import { FU } from "../helpers/config.mjs";
 
 const NPCaccordions = {
@@ -68,6 +71,14 @@ export class FabulaActorSheet extends ActorSheet {
 		context.species = CONFIG.FU.species;
 		context.NPCactionTypes = CONFIG.FU.NPCactionTypes;
 
+		// Add list of items sorted by packs to CONFIG data
+		context.itemLists = {
+			class: returnSortedPack( 'fabula.classes', 'class' ),
+			spell: returnSortedPack( 'fabula.spells', 'spell' ),
+			heroicSkill: returnSortedPack( 'fabula.heroicskill', 'heroicSkill' ),
+			arcanum: returnSortedPack( 'fabula.arcanum', 'arcanum' ),
+		}
+
 		context.enrichedHtml = {
 			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
 			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
@@ -102,6 +113,11 @@ export class FabulaActorSheet extends ActorSheet {
 
 			if ( sourceItem.type == 'rule' ) {
 				ui.notifications.warn('Non puoi equipaggiare una regola');
+				return false;
+			}
+
+			if ( sourceItem.name == FU.UnarmedStrike.name ) {
+				ui.notifications.warn(`Non puoi equipaggiare ${FU.UnarmedStrike.name} perché lo possiedi già`);
 				return false;
 			}
 
@@ -246,6 +262,137 @@ export class FabulaActorSheet extends ActorSheet {
 			}).render(true);
 			return true;
 
+		} else if ( sourceItem.type == 'consumable' ) {
+
+			if ( actor.system.resources.ip.current >= sourceItem.system.IPCost ) {
+
+				let messageTitle = `Ha usato ${generateDataLink( soruceItem, null, null, null, 'ml-05 mr-05' )}`;
+				let messageContent = '';
+
+				// Recover HP or MP
+				if ( sourceItem.system.recover.hasRecover ) {
+					const recoverResource = sourceItem.system.recover.recoverResource;
+					const currentReskey = `system.resources.${recoverResource}.current`;
+					const currentRes = actor.system.resources[recoverResource].current;
+
+					if ( currentRes == actor.system.resources[recoverResource].max ) {
+						ui.notifications.warn(`I tuoi ${game.i18n.localize(FU.recoverResources[recoverResource])} sono già al massimo`);
+						return false;
+					}
+
+					const newRes = currentRes + sourceItem.system.recover.recoverValue;
+					await actor.update({ [currentReskey]: newRes });
+
+					messageTitle += `per recuperare ${sourceItem.system.recover.recoverValue} ${game.i18n.localize(FU.recoverResources[recoverResource])}`;
+					messageContent = `
+						<div class="flexrow">
+							<div>${currentRes}</div>
+							<i class="fa fa-fw fa-right-long"></i>
+							<div>${actor.system.resources[recoverResource].current}</div>
+						</div>
+					`;
+				}
+
+				// Full rest
+				if ( sourceItem.system.rest ) {
+					actor.fullRest();
+
+					messageTitle += `per effettuare un riposo`;
+					messageContent = `
+						<button type="button" class="js_actorFullRest">
+							<i class="fa fa-fw fa-bed"></i>
+							Fai un riposo
+						</button>
+					`;
+				}
+
+				// Remove status
+				if ( sourceItem.system.status.hasRecover ) {
+
+					let status = '';
+					if ( sourceItem.system.status.value == '' ) {
+
+						status = await awaitDialogSelect({
+							title: `Stai usando ${sourceItem.name}`,
+							optionsLabel: 'Scegli da quale status vuoi essere guarito',
+							options: `
+								<option value="slow">${game.i18n.localize(FU.statusses['slow'])}</option>
+								<option value="dazed">${game.i18n.localize(FU.statusses['dazed'])}</option>
+								<option value="weak">${game.i18n.localize(FU.statusses['weak'])}</option>
+								<option value="shaken">${game.i18n.localize(FU.statusses['shaken'])}</option>
+								<option value="enraged">${game.i18n.localize(FU.statusses['enraged'])}</option>
+								<option value="poisoned">${game.i18n.localize(FU.statusses['poisoned'])}</option>
+							`,
+						});
+
+						if ( status == false ) return false;
+
+					} else {
+						status = sourceItem.system.status.value;
+					}
+
+					const recoverKey = `system.status.${status}.active`;
+
+					if ( !actor.system.status[status].active ) {
+						ui.notifications.warn(`Non sei afflitto dallo status ${game.i18n.localize(FU.statusses[status])}!`);
+						return false;
+					}
+
+					await actor.update({ [recoverKey]: false });
+					messageTitle += `per guarire dallo status <strong>${game.i18n.localize(FU.statusses[status])}</strong>`;
+				}
+
+				// Inflict damage
+				if ( sourceItem.system.damage.hasDamage ) {
+
+					let damageType = '';
+					if ( sourceItem.system.status.value == '' ) {
+
+						damageType = await awaitDialogSelect({
+							title: `Stai usando ${sourceItem.name}`,
+							optionsLabel: 'Scegli da il tipo di danno:',
+							options: `
+								<option value="air">${game.i18n.localize(FU.DamageTypes['air'])}</option>
+								<option value="bolt">${game.i18n.localize(FU.DamageTypes['bolt'])}</option>
+								<option value="fire">${game.i18n.localize(FU.DamageTypes['fire'])}</option>
+								<option value="ice">${game.i18n.localize(FU.DamageTypes['ice'])}</option>
+								<option value="earth">${game.i18n.localize(FU.DamageTypes['earth'])}</option>
+							`,
+						});
+
+						if ( damageType == false ) return false;
+
+					} else {
+						damageType = sourceItem.system.damage.type.value;
+					}
+					
+					messageTitle += `per infliggere:`;
+					messageContent = `
+						<div class="flexrow">
+							<div>${sourceItem.system.damage.value}</div>
+							<div>danni da ${game.i18n.localize(FU.DamageTypes[damageType])}</div>
+						</div>
+					`;
+				}
+
+				const reducedIP = actor.system.resources.ip.current - sourceItem.system.IPCost;
+				await actor.update({ 'system.resources.ip.current': reducedIP });
+
+				const chatData = {
+					user: game.user.id,
+					speaker: ChatMessage.getSpeaker({ actor: this.name }),
+					flavor: messageTitle,
+					content: messageContent,
+					flags: {
+						customClass: 'consumable-check',
+					},
+				};
+				ChatMessage.create(chatData);
+
+			} else {
+				ui.notifications.warn(`Non hai abbastanza Punti Inventario per utilizzare ${sourceItem.name}`);
+			}
+
 		} else if ( sourceItem.type == 'class' ) {
 
 			if (
@@ -329,7 +476,6 @@ export class FabulaActorSheet extends ActorSheet {
 					if ( !(offensiveSpells.length >= sourceItem.system.requirements.offensiveSpells) ) obtainSkill = false;
 				}
 
-				console.log(sourceItem.system.requirements);
 				if ( obtainSkill ) {
 					actor.createEmbeddedDocuments( 'Item', [sourceItem] );
 					ui.notifications.info(`Abilità Eroica ${sourceItem.name} aggiunta!`);
@@ -352,6 +498,53 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Debug Actor
 		html.on('click','.getActor', () => console.log(this.actor));
+
+		// Abilitate operations inside HP / MP / IP inputs
+		html.on('change',"input[name='system.resources.hp.current']", async (event) => {
+			const operators = [ '-', '+' ];
+			const currentHP = this.actor.system.resources.hp.current;
+			const stringVal = $(event.currentTarget).val();
+			const inputVal = parseFloat( $(event.currentTarget).val() );
+			
+			if ( operators.includes( stringVal[0] ) ) {
+				if ( !isNaN(inputVal) ) {
+					const newHP = currentHP + inputVal;
+					await this.actor.update({ 'system.resources.hp.current': newHP });
+				}
+			} else if ( isNaN(inputVal) ) {
+				await this.actor.update({ 'system.resources.hp.current': currentHP });
+			}
+		});
+		html.on('change',"input[name='system.resources.mp.current']", async (event) => {
+			const operators = [ '-', '+' ];
+			const currentMP = this.actor.system.resources.mp.current;
+			const stringVal = $(event.currentTarget).val();
+			const inputVal = parseFloat( $(event.currentTarget).val() );
+			
+			if ( operators.includes( stringVal[0] ) ) {
+				if ( !isNaN(inputVal) ) {
+					const newMP = currentMP + inputVal;
+					await this.actor.update({ 'system.resources.mp.current': newMP });
+				}
+			} else if ( isNaN(inputVal) ) {
+				await this.actor.update({ 'system.resources.mp.current': currentMP });
+			}
+		});
+		html.on('change',"input[name='system.resources.ip.current']", async (event) => {
+			const operators = [ '-', '+' ];
+			const currentIP = this.actor.system.resources.ip.current;
+			const stringVal = $(event.currentTarget).val();
+			const inputVal = parseFloat( $(event.currentTarget).val() );
+			
+			if ( operators.includes( stringVal[0] ) ) {
+				if ( !isNaN(inputVal) ) {
+					const newIP = currentIP + inputVal;
+					await this.actor.update({ 'system.resources.ip.current': newIP });
+				}
+			} else if ( isNaN(inputVal) ) {
+				await this.actor.update({ 'system.resources.ip.current': currentIP });
+			}
+		});
 
 		// Toggle collapse on Sheet open
 		$(html).find('.content-collapse').each((index, element) => {
@@ -405,30 +598,23 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 		});
 
+		// Open Compendium
+		html.on('click', '.js_openCompendium', this._openCompendium.bind(this));
+
 		// Roll a Test
 		html.on('click', '.js_rollActorTest', this._rollActorTest.bind(this));
 
 		// Roll for initiative
 		html.on('click', '.js_rollInitiative', this._rollInitiative.bind(this));
 
+		// Use Fabula Points or Ultima Points
+		html.on('click', '.js_useFUPoint', this._useFUPoint.bind(this));
+
 		// Set Attributes values
 		html.on('click', '.js_setAttrValue', this._setAttrValue.bind(this));
 
 		// Equip Item
 		html.on('click','.js_equipItem', this._equipItem.bind(this));
-
-		// Remove equipped Item
-		html.on('click','.js_removeEquipItem', async (e) => {
-			e.preventDefault();
-			const itemType = e.currentTarget.dataset.type;
-			const itemID = e.currentTarget.dataset.id;
-			const item = this.actor.items.find(i => i.id === itemID);
-			await item.update({ 'system.isEquipped': false });
-			await this.actor.update({ [itemType]: null });
-			if ( itemType == 'system.equip.mainHand' && item.system.needTwoHands ) {
-				await this.actor.update({ 'system.equip.offHand': null });
-			}
-		});
 
 		// Remove Item from Actor
 		html.on('click','.js_removeItem', async (e) => {
@@ -540,6 +726,7 @@ export class FabulaActorSheet extends ActorSheet {
 				data['img'] = `${defaultPath}/${data['system.species.value']}.png`;
 			}
 		}
+		data['token.texture.src'] = data['img'];
 
 		return data;
 	}
@@ -632,26 +819,54 @@ export class FabulaActorSheet extends ActorSheet {
 	async _levelUpCharacter(event) {
 		event.preventDefault();
 		const actor = this.actor;
-		const pack = game.packs.get('fabula.classes');
-		const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
+		const context = await this.getData();
+		const compendium = game.packs.get('fabula.classes');
 
-		let options = '';
-		for ( const item of sortedPack ) {
-			options += `<option value="${item.name}">${item.name}</option>`;
-			// <option disabled>──────────</option>
+		let content = `<div class="folders-tabs">`;
+		let counter = 0;
+		for ( const folder of context.itemLists.class ) {
+
+			const folderID = folder.folder.toLowerCase().replace(/[^a-z]/g, '');
+			content += `<button type="button" class="folder-tab ${folderID} ${counter == 0 ? 'active' : ''}" data-dialog-tab="${folderID}">${folder.folder}</button>`;
+			counter++;
+
 		}
+		content += `</div>`;
+		content += `<div class="folders-content">`;
+		counter = 0;
+		for ( const folder of context.itemLists.class ) {
+
+			const folderID = folder.folder.toLowerCase().replace(/[^a-z]/g, '');
+			content += `<div class="folder-list ${folderID} ${counter == 0 ? 'active' : ''}" data-dialog-tab="${folderID}">`;
+			for ( const item of folder.items ) {
+
+				const itemClass = await compendium.getDocument( item._id );
+				content += `
+					<div class="form-class-group">
+						<label>
+							<input type="radio" name="formClass" value="${itemClass.name}" />
+							<div class="class-icon">
+								<img src="${itemClass.img}" alt="${itemClass.name}" />
+							</div>
+							<div class="class-name">
+								${generateDataLink( itemClass, itemClass.name, `Apri classe ${itemClass.name}` )}
+							</div>
+						</label>
+					</div>
+				`;
+				
+			}
+			content += `</div>`;
+			counter++;
+
+		}
+		content += `</div>`;
 
 		new Dialog({
 			title: 'Seleziona Classe',
 			content: `
-				<form>
-					<div class="form-group">
-						<label>Classe:</label>
-						<select id="formClass">
-							<option value="">Scegli una classe</option>
-							${options}
-						</select>
-					</div>
+				<form class="form-choose-class">
+					${content}
 				</form>
 			`,
 			buttons: {
@@ -661,11 +876,11 @@ export class FabulaActorSheet extends ActorSheet {
 				confirm: {
 					label: 'Conferma',
 					callback: async (html) => {
-						const selectedClass = html.find('#formClass').val();
+						const selectedClass = html.find('[name="formClass"]:checked').val();
 						if ( selectedClass != '' ) {
-							const entry = pack.index.find(e => e.name === selectedClass);
+							const entry = compendium.index.find(e => e.name === selectedClass);
 							if (entry) {
-								const soruceItem = await pack.getDocument(entry._id);
+								const soruceItem = await compendium.getDocument(entry._id);
 								await addClassToActor( actor, soruceItem );
 								return true;
 							}
@@ -676,6 +891,30 @@ export class FabulaActorSheet extends ActorSheet {
 					}
 				},
 			},
+			render: (html) => {
+				const folders = html.find('.folders-tabs .folder-tab');
+				folders.each((index, folder) => {
+					$(folder).on('click', (e) => {
+						e.preventDefault();
+						const element = e.currentTarget;
+						const tab = $(element).data('dialog-tab');
+						$(element).siblings().each((i, list) => {
+							$(list).removeClass('active');
+						});
+						$(element).addClass('active');
+
+						html.find('.folders-content .folder-list').each((i, list) => {
+							$(list).removeClass('active');
+							if ( $(list).is(`[data-dialog-tab="${tab}"]`) ) {
+								$(list).addClass('active');
+							}
+						});
+					});
+				});
+			},
+		}, {
+			width: 500,
+			height: 400,
 		}).render(true);
 
 	}
@@ -829,64 +1068,7 @@ export class FabulaActorSheet extends ActorSheet {
 								rollString += `+${actor.system.level.checkBonus.checks}`;
 							}
 
-							const template = `systems/fabula/templates/chat/check-base.hbs`;
-
-							const roll = new Roll( rollString, actor.getRollData() );
-							await roll.evaluate();
-
-							const results = [];
-							for ( let i = 0; i < roll.dice.length; i++ ) {
-								for ( let x = 0; x < roll.dice[i].results.length; x++ ) {
-									results.push( roll.dice[i].results[x].result );
-								}
-							}
-
-							// Check High Roll
-							let highRoll = Math.max(...results);
-
-							// Check Critical Success
-							let critSuccess = results.every( val => val === results[0] && val >= 6 && val <= 12 );
-							
-							// Check Critical Failure
-							let critFailure = results.every( val => val === 1 );
-							
-							const checkData = {
-								roll: roll,
-								highRoll: highRoll,
-								crit: {
-									success: critSuccess,
-									failure: critFailure,
-								},
-
-							};
-
-							renderTemplate( template, checkData ).then(content => {
-								roll.toMessage({
-									user: game.user.id,
-									speaker: ChatMessage.getSpeaker({ actor: actor }),
-									flavor: 'Test di caratteristica',
-									content: content,
-									rollMode: game.settings.get( 'core', 'rollMode' ),
-								}).then(chatMessage => {
-									setTimeout(() => {
-										const message = document.querySelector(`.message[data-message-id="${chatMessage.id}"]`);
-										const buttons = message.querySelectorAll(".js_rerollDice");
-					
-										buttons.forEach(btn => {
-											btn.addEventListener('click', (ev) => {
-												const reRoll = ev.currentTarget.dataset.roll;
-												new Roll( reRoll, actor.getRollData() ).toMessage({
-													user: game.user.id,
-													speaker: ChatMessage.getSpeaker({ actor: actor }),
-													flavor: 'Hai ritirato il dado',
-													rollMode: game.settings.get( 'core', 'rollMode' ),
-												});
-												// $(ev.currentTarget).attr('disabled','true');
-											});
-										});
-									}, 100);
-								});
-							});
+							await rollDiceToChat( actor, rollString );
 
 							return true;
 
@@ -898,17 +1080,6 @@ export class FabulaActorSheet extends ActorSheet {
 				},
 			},
 		}).render(true);
-	}
-
-	async _rollInitiative(event) {
-		event.preventDefault();
-		const actor = this.actor;
-		let rollString = `d${actor.system.attributes.dex.current}+d${actor.system.attributes.ins.current}`;
-		if ( actor.system.params.init.value != 0 )
-			rollString += `+${actor.system.params.init.value}`;
-
-		const roll = new Roll( rollString, actor.getRollData() );
-		await roll.evaluate();
 	}
 
 	async _createItem(event) {
@@ -942,6 +1113,12 @@ export class FabulaActorSheet extends ActorSheet {
 		const itemID = element.dataset.itemid;
 
 		const item = this.actor.items.get( itemID );
+
+		if ( item.name == FU.UnarmedStrike.name ) {
+			ui.notifications.warn(`Non puoi eliminare l'Item ${FU.UnarmedStrike.name}`);
+			return;
+		}
+
 		if (
 			await Dialog.confirm({
 				title: `Stai eliminando ${item.name}`,
@@ -1015,6 +1192,16 @@ export class FabulaActorSheet extends ActorSheet {
 		ChatMessage.create(chatData);
 	}
 
+	async _rollInitiative(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		let rollString = `d${actor.system.attributes.dex.current}+d${actor.system.attributes.ins.current}`;
+		if ( actor.system.params.init.value != 0 )
+			rollString += `+${actor.system.params.init.value}`;
+
+		await rollDiceToChat( actor, rollString, null, 'init' );
+	}
+
 	async _rollActorItem(event) {
 		event.preventDefault();
 		const actor = this.actor;
@@ -1049,69 +1236,7 @@ export class FabulaActorSheet extends ActorSheet {
 			rollString += `+${actor.system.level.checkBonus.spell}`;
 		}
 
-		const roll = new Roll( rollString, actor.getRollData() );
-		await roll.evaluate();
-
-		const results = [];
-		for ( let i = 0; i < roll.dice.length; i++ ) {
-			for ( let x = 0; x < roll.dice[i].results.length; x++ ) {
-				results.push( roll.dice[i].results[x].result );
-			}
-		}
-		
-		// Check High Roll
-		let highRoll = Math.max(...results);
-
-		// Check Critical Success
-		let critSuccess = results.every( val => val === results[0] && val >= 6 && val <= 12 );
-		
-		// Check Critical Failure
-		let critFailure = results.every( val => val === 1 );
-		
-		const checkData = {
-			item: item,
-			roll: roll,
-			highRoll: highRoll,
-			crit: {
-				success: critSuccess,
-				failure: critFailure,
-			},
-
-		};
-
-		renderTemplate( template, checkData ).then(content => {
-			roll.toMessage({
-				user: game.user.id,
-				speaker: ChatMessage.getSpeaker({ actor: actor }),
-				flavor: game.i18n.localize( FU.ItemTypes[item.type] ),
-				content: content,
-				flags: {
-					customClass: `${item.type}-check`,
-				},
-				rollMode: game.settings.get( 'core', 'rollMode' ),
-			}).then(chatMessage => {
-				setTimeout(() => {
-					const message = document.querySelector(`.message[data-message-id="${chatMessage.id}"]`);
-					const buttons = message.querySelectorAll(".js_rerollDice");
-
-					buttons.forEach(btn => {
-						btn.addEventListener('click', (ev) => {
-							const reRoll = ev.currentTarget.dataset.roll;
-							new Roll( reRoll, actor.getRollData() ).toMessage({
-								user: game.user.id,
-								speaker: ChatMessage.getSpeaker({ actor: actor }),
-								flavor: 'Hai ritirato il dado',
-								flags: {
-									customClass: `${item.type}-check`,
-								},
-								rollMode: game.settings.get( 'core', 'rollMode' ),
-							});
-							// $(ev.currentTarget).attr('disabled','true');
-						});
-					});
-				}, 100);
-			});
-		});
+		await rollDiceToChat( actor, rollString, null, templateType, item, template );
 	}
 
 	async _setAffinity(event) {
@@ -1209,6 +1334,19 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 			if ( item.system.needTwoHands ) {
+				if ( equippedData.mainHand !== null && equippedData.mainHand !== itemID ) {
+					const mainHandItem = this.actor.items.find( item => item._id == equippedData.mainHand );
+					if ( mainHandItem.system.isEquipped ) {
+						await mainHandItem.update({ 'system.isEquipped': false });
+					}
+				}
+				if ( equippedData.offHand !== null && equippedData.offHand !== itemID ) {
+					const offHandItem = this.actor.items.find( item => item._id == equippedData.offHand );
+					if ( offHandItem.system.isEquipped ) {
+						await offHandItem.update({ 'system.isEquipped': false });
+					}
+				}
+
 				equippedData.mainHand = equippedData.mainHand == itemID ? null : itemID;
 				equippedData.offHand = equippedData.offHand == itemID ? null : itemID;
 			} else {
@@ -1218,9 +1356,56 @@ export class FabulaActorSheet extends ActorSheet {
 				}
 				equippedData[slot] = equippedData[slot] == itemID ? null : itemID;
 			}
+			
+			const embeddedItem = this.actor.items.find( item => item.name == FU.UnarmedStrike.name );
+			if ( embeddedItem ) {
+				if ( !equippedData.mainHand ) {
+					equippedData.mainHand = embeddedItem._id;
+					await embeddedItem.update({ 'system.isEquipped': true });
+				} else if ( !equippedData.offHand ) {
+					equippedData.offHand = embeddedItem._id;
+					await embeddedItem.update({ 'system.isEquipped': true });
+				}
+			}
 
-			await item.update({ 'system.isEquipped': !item.system.isEquipped});
+			if ( item.name !== embeddedItem.name ) {
+				await item.update({ 'system.isEquipped': !item.system.isEquipped});
+			}
 			await this.actor.update({ 'system.equip': equippedData });
+
+		}
+	}
+
+	_openCompendium(event) {
+		event.preventDefault();
+		const element = event.currentTarget;
+		const compendiumID = element.dataset.compendium;
+
+		if ( compendiumID ) {
+			const compendium = game.packs.get( compendiumID );
+			if ( compendium )
+				compendium.render(true);
+			else
+				ui.notifications.error(`Il compendio ${compendiumID} non è stato trovato!`);
+		}
+	}
+
+	async _useFUPoint(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const resource = actor.type == 'character' ? 'fp' : 'up';
+		const currentResource = actor.system.resources[resource].current;
+		if ( currentResource > 0 ) {
+
+			const newResource = currentResource - 1;
+			const journal = await initSessionJournal();
+			const chatData = {
+				actor: actor,
+				currentResource: currentResource,
+				newResource: newResource,
+			};
+			await incrementSessionResource( resource, journal, chatData );
+			await actor.update({ 'system.resources.fp.current': newResource });
 
 		}
 	}

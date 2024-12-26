@@ -1,4 +1,4 @@
-import { SYSTEM } from "../../helpers/config.mjs";
+import { FU } from "../../helpers/config.mjs";
 
 /**
  * Extend basic Actor
@@ -65,6 +65,27 @@ export class FabulaActor extends Actor {
 		return super.applyActiveEffects();
 	}
 
+	async _onCreate( data, options, userId ) {
+		await super._onCreate( data, options, userId );
+
+		// Check if Unarmed Strike is equipped to the Actor
+		if ( this.type == 'character' || this.type == 'npc' ) {
+			if ( FU.UnarmedStrike ) {
+				const embeddedItem = this.items.find( item => item.name == FU.UnarmedStrike.name );
+
+				if ( !embeddedItem ) {
+					const createdItem = await this.createEmbeddedDocuments( 'Item', [FU.UnarmedStrike] );
+					if ( this.type == 'character' )
+					await createdItem[0].update({ 'system.isEquipped': true });
+					await this.update({
+						'system.equip.mainHand': createdItem[0]._id,
+						'system.equip.offHand': createdItem[0]._id,
+					});
+				}
+			}
+		}
+	}
+
 	getRollData() {
 		const data = super.getRollData();
 	  
@@ -80,6 +101,17 @@ export class FabulaActor extends Actor {
 	  
 	_getNpcRollData(data) {
 		if (this.type !== 'npc') return;
+	}
+
+	async fullRest() {
+		this.update({ 'system.resources.hp.current': this.system.resources.hp.max });
+		this.update({ 'system.resources.mp.current': this.system.resources.mp.max });
+		this.update({ 'system.status.slow.active': false });
+		this.update({ 'system.status.dazed.active': false });
+		this.update({ 'system.status.weak.active': false });
+		this.update({ 'system.status.shaken.active': false });
+		this.update({ 'system.status.enraged.active': false });
+		this.update({ 'system.status.poisoned.active': false });
 	}
 
 }

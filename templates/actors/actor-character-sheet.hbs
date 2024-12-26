@@ -1,6 +1,6 @@
 <form class="{{cssClass}} {{actor.type}} flexcol" autocomplete="off">
 
-    {{!-- <button type="button" class="getActor" style="width:auto;margin:0;background-color:#fff;border:1px solid #000;border-radius:5px;font-size:16px;position:absolute;left:5px;top:35px;z-index:99999;">log</button> --}}
+    <button type="button" class="getActor" style="width:auto;margin:0;background-color:#fff;border:1px solid #000;border-radius:5px;font-size:16px;position:absolute;left:5px;top:35px;z-index:99999;">log</button>
 
     <header class="sheet-header">
         <img src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
@@ -25,7 +25,7 @@
                         <div class="pregress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
                             <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
                         </div>
-                        <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
+                        <input type="text" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
                         <button type="button" class="crisis js_setAttrValue" data-attr="hp" data-value="{{system.resources.hp.crisis}}">
                             {{system.resources.hp.crisis}}
                         </button>
@@ -39,7 +39,7 @@
                         <div class="pregress-bar">
                             <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
                         </div>
-                        <input type="number" min="0" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
+                        <input type="text" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
                         <div class="crisis"></div>
                         <button type="button" class="max js_setAttrValue" data-attr="mp">{{system.resources.mp.max}}</button>
                     </div>
@@ -51,8 +51,12 @@
                         <div class="pregress-bar">
                             <div class="bar" style="width:{{percentage system.resources.ip.current system.resources.ip.max}}%"></div>
                         </div>
-                        <input type="number" min="0" name="system.resources.ip.current" value="{{system.resources.ip.current}}">
-                        <div class="crisis"></div>
+                        <input type="text" name="system.resources.ip.current" value="{{system.resources.ip.current}}">
+                        <div class="crisis">
+                            <button type="button" class="js_openCompendium" data-compendium="fabula.consumable" data-tooltip="Apri elenco di consumabili">
+                                <i class="fa fa-suitcase m-0"></i>
+                            </button>
+                        </div>
                         <button type="button" class="max js_setAttrValue" data-attr="ip">{{system.resources.ip.max}}</button>
                     </div>
                 </div>
@@ -86,8 +90,8 @@
 
         <div class="attributes-container small">
             <div class="attr">
-                <label>Punti Fabula</label>
-                <input type="number" min="0" name="system.resources.fp" value="{{system.resources.fp}}">
+                <label>Zenit</label>
+                <input type="number" min="0" name="system.resources.zenit" value="{{system.resources.zenit}}">
             </div>
         </div>
 
@@ -115,8 +119,13 @@
 
         <div class="attributes-container small">
             <div class="attr">
-                <label>Zenit</label>
-                <input type="number" min="0" name="system.resources.zenit" value="{{system.resources.zenit}}">
+                <label>Punti Fabula</label>
+                <input type="number" min="0" name="system.resources.fp.current" value="{{system.resources.fp.current}}">
+                {{#gt system.resources.fp.current 0}}
+                    <button type="button" class="btn-roll js_useFUPoint" data-tooltip="Utilizza Punto Fabula">
+                        <div class="icon icon-fabula"></div>
+                    </button>
+                {{/gt}}
             </div>
         </div>
         
@@ -310,7 +319,7 @@
         </div>
         
         <div class="tab skills" data-group="primary" data-tab="skills">
-            <div class="title title-list">
+            {{!-- <div class="title title-list">
                 <span>Equipaggiabili</span>
             </div>
             <div class="flexrow martial">
@@ -330,7 +339,7 @@
                     <input type="checkbox" name="system.useMartial.armor" id="system.useMartial.armor" {{checked system.useMartial.armor}} disabled>
                     <label for="system.useMartial.armor">Armature Marziali</label>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="title title-list">
                 <span>Classi</span>
@@ -399,7 +408,7 @@
             <div class="title title-list">
                 <span>Tratti</span>
             </div>
-            <div class="flexrow">
+            <div class="flexrow flex-traits">
                 <div class="form-group">
                     <label>Genere</label>
                     <input type="text" name="system.features.pronouns" value="{{system.features.pronouns}}">
@@ -439,6 +448,9 @@
                         <div class="item-box">
                             <div class="title title-list">
                                 <input type="text" name="system.bond.{{bondIndex}}.name" value="{{bond.name}}">
+                                {{#gt bond.strength 0}}
+                                    <span>+ {{bond.strength}}</span>
+                                {{/gt}}
                             </div>
                             <div class="flexrow">
                                 <div class="form-group">

@@ -23,6 +23,10 @@
 			"weapon": "Arma"
 		}
 	},
+	"CONTROLS": {
+		"GroupClock": "Orologi",
+		"CreateClock": "Crea nuovo orologio"
+	},
 	"FU": {
 		"sourcebook": {
 			"base": "Manuale Base",
@@ -48,9 +52,14 @@
 		"D8": "d8",
 		"D10": "d10",
 		"D12": "d12",
+		"HP": "Punti Vita",
+		"HPabbr": "PV",
 		"MP": "Punti Mente",
 		"MPabbr": "PM",
 		"IP": "Punti Inventario",
+		"fp": "Punti Fabula",
+		"up": "Punti Ultima",
+		"exp": "Punti Esperienza",
 		"IPabbr": "PI",
 		"Zenit": "Zenit",
 		"ZenitPL": "Zenit",
@@ -77,6 +86,9 @@
 		"twoHands": "Due mani",
 		"selectOption": "Seleziona un'opzione",
 		"selectType": "Scegli il tipo",
+		"identity": "Identità",
+		"theme": "Tema",
+		"origin": "Origine",
 		"DamageTypes": {
 			"physical": "Fisico",
 			"air": "Aria",
@@ -240,6 +252,14 @@
 			"attack": "Attacco base",
 			"other": "Altra azione",
 			"rule": "Regola speciale"
+		},
+		"activeEffectsModes": {
+			"0": "Custom",
+			"1": "Multiply",
+			"2": "Add",
+			"3": "Downgrade",
+			"4": "Upgrade",
+			"5": "Override"
 		}
 	}
 }

@@ -1,21 +1,5 @@
 import { FabulaActor } from "../documents/actors/actor.mjs";
 
-export async function changeProjectProgress( event, item, increase = true, value = undefined ) {
-    event.preventDefault();
-    let newValue = item.system.progress.current;
-    if ( value == undefined ) {
-
-        if ( increase )
-            newValue += item.system.progress.step;
-        else
-            newValue -= item.system.progress.step;
-
-    } else {
-        newValue = value;
-    }
-    await item.update({ 'system.progress.current': newValue });
-}
-
 export function prepareActiveEffect(effects) {
 
     const cats = {
@@ -76,6 +60,7 @@ export async function manageActiveEffect(event, owner) {
 
     } else if ( action == 'open' ) {
 
+        console.log(effect);
         return effect.sheet.render(true);
 
     } else if ( action == 'remove' ) {

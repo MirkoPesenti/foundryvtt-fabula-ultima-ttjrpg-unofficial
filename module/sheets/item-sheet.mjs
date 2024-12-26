@@ -1,33 +1,6 @@
 import { FU } from "../helpers/config.mjs";
-import { prepareActiveEffect, manageActiveEffect, changeProjectProgress } from "../helpers/effects.mjs";
-
-function returnSortedPack( packId, itemType ) {
-	const pack = game.packs.get( packId );
-	const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
-
-	const items = Array.from(
-		sortedPack.reduce((acc, item) => {
-			if ( item.type == itemType ) {
-				if ( !acc.has( item.folder ) ) {
-					const foundFolder = pack.folders.find( folder => folder._id === item.folder );
-					acc.set( item.folder, { folder: foundFolder.name, items: [] } );
-				}
-
-				acc.get( item.folder ).items.push( item );
-			}
-			return acc;
-		}, new Map()).values()
-	);
-
-	const sortedItemsList = items.sort((a, b) => {
-		if ( a.folder === game.i18n.localize('FU.sourcebook.base') ) return -1;
-		if ( b.folder === game.i18n.localize('FU.sourcebook.base') ) return 1;
-
-		return a.folder.localeCompare(b.folder);
-	});
-
-	return sortedItemsList;
-}
+import { returnSortedPack, changeProjectProgress } from "../helpers/helpers.mjs";
+import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
 
 /**
  * Extend basic ItemSheet
@@ -107,6 +80,8 @@ export class FabulaItemSheet extends ItemSheet {
 		context.usesList = CONFIG.FU.usesList;
 		context.rarityList = CONFIG.FU.rarityList;
 		context.consumableType = CONFIG.FU.consumableType;
+		context.recoverResources = CONFIG.FU.recoverResources;
+		context.statusses = CONFIG.FU.statusses;
 
 		context.enrichedHtml = {
 			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),

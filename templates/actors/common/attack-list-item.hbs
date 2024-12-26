@@ -36,23 +36,17 @@
 		{{/if}}
 		<p>
 			<strong class="m-0">
-				{{#if (eq actor.type 'npc')}}
-					【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt (add item.system.precisionBonus actor.level.checkBonus.test) 0}}+{{/gt}}
-					{{#unless (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}}
-						{{add item.system.precisionBonus actor.level.checkBonus.test}}
-					{{/unless}}
-				{{else}}
-					【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt item.system.precisionBonus 0}}+{{/gt}}
-					{{#unless (eq item.system.precisionBonus 0)}}
-						{{item.system.precisionBonus}}
-					{{/unless}}
-				{{/if}}
+				【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt (add item.system.precisionBonus actor.level.checkBonus.test) 0}}+{{/gt}}
+				{{#unless (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}}
+					{{add item.system.precisionBonus actor.level.checkBonus.test}}
+				{{/unless}}
 			</strong>
 			<small class="mr-0 {{#if (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}} ml-0{{/if}}">◆</small>
 			<strong>【TM{{#gt (add item.system.damage.value actor.level.damageBonus actor.bonus.damage.base) 0}} + {{add item.system.damage.value actor.level.damageBonus actor.bonus.damage.base}}{{/gt}}】</strong>danni da <strong>{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}</strong>
 		</p>
 
 		<div class="description">
+			<label>{{localize (concat 'FU.weaponCategories.' item.system.type)}}</label>
 			{{{item.enrichedHtml.description}}}
 		</div>
 	</div>

@@ -6,9 +6,11 @@
 				<div class="dice">
 					<header class="part-header flexrow">
 						<span class="part-formula">{{dice.number}}d{{dice.faces}}</span>
-						<button type="button" class="part-total js_rerollDice" data-roll="{{dice.number}}d{{dice.faces}}" data-tooltip="Invoca un tratto per ritirare il dado">
-							<i class="fa fa-rotate m-0"></i>
-						</button>
+						{{#unless ../../crit.failure}}
+							<button type="button" class="part-total js_rerollDice" data-actor="{{../roll.data.parent._id}}" data-item="{{../item._id}}" data-mode="{{../checkMode}}" data-formula="{{../roll.formula}}" data-result-primary="{{../roll.dice.0.results.0.result}}" data-roll-primary="1d{{../roll.dice.0.faces}}"  data-result-secondary="{{../roll.dice.1.results.0.result}}" data-roll-secondary="1d{{../roll.dice.1.faces}}" data-tooltip="Invoca un tratto per ritirare i dadi" {{#if (eq ../roll.data.parent.system.resources.fp.current 0)}}disabled{{/if}}>
+								<i class="fa fa-rotate m-0"></i>
+							</button>
+						{{/unless}}
 					</header>
 					<ol class="dice-rolls">
 						{{#each dice.results}}
@@ -22,4 +24,9 @@
 		{{/each}}
 	</div>
 	<h4 class="dice-total{{#if crit.success}} success{{/if}}{{#if crit.failure}} failure{{/if}}">{{roll.total}}</h4>
+	{{#allTrue (arrayLengthGt roll.data.parent.system.bond 0) (eq roll.data.parent.type 'character') (not reroll)}}
+		<button type="button" class="js_addRollBondBonus" data-actor="{{roll.data.parent._id}}" data-item="{{item._id}}" data-mode="{{checkMode}}" data-formula="{{roll.formula}}" data-primary="{{roll.dice.0.results.0.result}}" data-secondary="{{roll.dice.1.results.0.result}}">
+			Aggiungi bonus con un legame
+		</button>
+	{{/allTrue}}
 </div>

@@ -61,11 +61,11 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 
 		(this.combat ??= {}).turns = 1;
 		
-		if ( this.rank.value == 'elite' )
+		if ( this.rank.value == 'elite' && this.rank.replacedSoldiers < 1 )
 			this.rank.replacedSoldiers = 1;
-		else if ( this.rank.value == 'champion' )
+		else if ( this.rank.value == 'champion' && this.rank.replacedSoldiers < 2 )
 			this.rank.replacedSoldiers = 2;
-		else
+		else if ( this.rank.value == 'soldier' && this.rank.replacedSoldiers > 1 )
 			this.rank.replacedSoldiers = 1;
 
 		// Checks and Damage Bonus

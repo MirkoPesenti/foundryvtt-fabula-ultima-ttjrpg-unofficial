@@ -2,6 +2,8 @@ export const SYSTEM = 'Fabula Ultima';
 
 export const FU = {};
 
+FU.journalName = 'Tracciamento risorse';
+
 FU.ItemTypes = {
 	"": "FU.selectOption",
 	accessory: 'TYPES.Item.accessory',
@@ -70,6 +72,11 @@ FU.rarityList = {
 	rare: 'FU.rarityList.rare'
 };
 
+FU.recoverResources = {
+	hp: 'FU.HP',
+	mp: 'FU.MP',
+},
+
 /**
  * @typedef {"untyped", "physical", "air", "bolt", "dark", "earth", "fire", "ice", "light", "poison"} DamageTypes
  * @type {Object<DamageTypes, string}
@@ -86,6 +93,16 @@ FU.DamageTypes = {
 	ice: 'FU.DamageTypes.ice',
 	light: 'FU.DamageTypes.light',
 	poison: 'FU.DamageTypes.poison',
+};
+
+FU.statusses = {
+	"": "FU.selectType",
+	slow: 'FU.Status.slow',
+	dazed: 'FU.Status.dazed',
+	weak: 'FU.Status.weak',
+	shaken: 'FU.Status.shaken',
+	enraged: 'FU.Status.enraged',
+	poisoned: 'FU.Status.poisoned',
 };
 
 /**

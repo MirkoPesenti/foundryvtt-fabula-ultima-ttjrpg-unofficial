@@ -126,7 +126,7 @@
                 {{/each}}
 
                 {{#unless (eq system.resources.up.max 0)}}
-                    <div class="attr">
+                    <div class="attr js_useFUPoint">
                         <label>PU</label>
                         <input type="number" min="0" max="{{system.resources.up.max}}" name="system.resources.up.current" value="{{system.resources.up.current}}">
                         {{#unless (eq system.resources.up.max 0)}}
