@@ -2,17 +2,17 @@
   "id": "fabula",
   "title": "Fabula Ultima TTJRPG (Unofficial)",
   "description": "An Unofficial system for playing Fabula Ultima in the Foundry Virtual Tabletop environment.",
-  "version": "1.1.0",
+  "version": "0.1.1",
   "authors": [
     {
       "name": "OmegaPrime",
       "discord": "0mega_prime",
-      "flags": {}
+      "url": "https://github.com/MirkoPesenti"
     },
     {
-      "name": "Bog27",
-      "discord": "Bog",
-      "flags": {}
+      "name": "Marco Bertolini",
+      "discord": "devberto",
+      "url": "https://github.com/bertolinimarco"
     }
   ],
   "compatibility": {
@@ -215,8 +215,12 @@
     {
       "lang": "it",
       "name": "Italiano",
-      "path": "lang/it.json",
-      "flags": {}
+      "path": "lang/it.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/it.json"
     }
   ],
   "relationships": {
@@ -260,6 +264,6 @@
   "socket": true,
   "readme": "README.md",
   "url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical",
-  "manifest": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/releases/download/1.1.0/system.json",
-  "download": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/releases/download/1.1.0/fabula.zip"
+  "manifest": "https://raw.githubusercontent.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/master/system.json",
+  "download": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/releases/download/0.1.1/fabula.zip"
 }
