@@ -60,7 +60,6 @@ export async function manageActiveEffect(event, owner) {
 
     } else if ( action == 'open' ) {
 
-        console.log(effect);
         return effect.sheet.render(true);
 
     } else if ( action == 'remove' ) {

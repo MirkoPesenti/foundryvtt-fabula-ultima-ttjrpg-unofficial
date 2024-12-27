@@ -406,6 +406,17 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 		} else if ( sourceItem.type == 'classFeature' ) {
+			
+			if (
+				await Dialog.confirm({
+					title: `Stai acquisendo l'abilità ${sourceItem.name}`,
+					content: `<p>Sei sicuro di voler acquisire un livello nella classe ${sourceItem.folder.name} per ottenere l'abilità ${sourceItem.name}?</p>`,
+					rejectClose: false,
+				})
+			) {
+				await addClassToActor( actor, sourceItem, true );
+			}
+
 		} else if ( sourceItem.type == 'heroicSkill' ) {
 
 			const classes = actor.items.filter( item => item.type == 'class' && item.system.level.value == 10 );

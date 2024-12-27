@@ -107,7 +107,7 @@ function openAttributesIncreaseChildDialog( actor ) {
 	});
 }
 
-async function openClassFeaturesChildDialog( sourceClass, actor ) {
+async function openClassFeaturesChildDialog( sourceClass, actor, featureItem = null ) {
 
 	const classFeatures = sourceClass.flags?.fabula?.subItems;
 	if ( !classFeatures ) {
@@ -115,90 +115,115 @@ async function openClassFeaturesChildDialog( sourceClass, actor ) {
 		return false;
 	}
 
-	let skillOptions = '<div class="form-choose-feature">';
-	for ( const skill of classFeatures ) {
-		skillOptions += `
-			<div class="form-feature-group ${skill.system.sourcebook}">
-				<label class="${skill.system.level.current == skill.system.level.max ? 'disabled' : ''}">
-					<div class="title">
-						${skill.name}
-		`;
-		if ( skill.system.level.current < skill.system.level.max ) {
+	if ( featureItem === null ) {
+		let skillOptions = '<div class="form-choose-feature">';
+		for ( const skill of classFeatures ) {
 			skillOptions += `
-						<span class="upgrade">
-							${skill.system.level.current}
-							<i class="fa fa-fw fa-right-long"></i>
-							${skill.system.level.current + 1}
-						</span>
+				<div class="form-feature-group ${skill.system.sourcebook}">
+					<label class="${skill.system.level.current == skill.system.level.max ? 'disabled' : ''}">
+						<div class="title">
+							${skill.name}
 			`;
-		} else {
+			if ( skill.system.level.current < skill.system.level.max ) {
+				skillOptions += `
+							<span class="upgrade">
+								${skill.system.level.current}
+								<i class="fa fa-fw fa-right-long"></i>
+								${skill.system.level.current + 1}
+							</span>
+				`;
+			} else {
+				skillOptions += `
+							<span class="upgrade">
+								<span>MAX</span>
+							</span>
+				`;
+			}
+			const enrichedDescription = await TextEditor.enrichHTML( skill.system.description ?? '' );
 			skillOptions += `
-						<span class="upgrade">
-							<span>MAX</span>
-						</span>
+							<span class="max">
+								(<span>l</span> ${skill.system.level.max})
+							</span>
+						</div>
+						<div class="description">
+							${enrichedDescription}
+						</div>
+						<input type="radio" name="formClassFeature" value="${skill._id}" ${skill.system.level.current == skill.system.level.max ? 'disabled' : ''} />
+					</label>
+				</div>
 			`;
 		}
-		const enrichedDescription = await TextEditor.enrichHTML( skill.system.description ?? '' );
-		skillOptions += `
-						<span class="max">
-							(<span>l</span> ${skill.system.level.max})
-						</span>
-					</div>
-					<div class="description">
-						${enrichedDescription}
-					</div>
-					<input type="radio" name="formClassFeature" value="${skill._id}" ${skill.system.level.current == skill.system.level.max ? 'disabled' : ''} />
-				</label>
-			</div>
-		`;
-	}
-	skillOptions += '</div>';
+		skillOptions += '</div>';
 
-	return new Promise((resolve) => {
-		new Dialog({
-			title: `Hai scelto la classe ${sourceClass.name}!`,
-			content: `
-				<p>Scegli una delle seguenti <strong>Abilità di Classe</strong>:</p>
-				${skillOptions}
-			`,
-			buttons: {
-				cancel: {
-					label: 'Annulla',
-					callback: () => resolve(false),
-				},
-				confirm: {
-					label: 'Conferma',
-					callback: async (html) => {
-						const featureID = html.find('input[name="formClassFeature"]:checked').val();
-						const feature = classFeatures.find((element) => element._id == featureID);
-						feature.system.level.current++;
+		return new Promise((resolve) => {
+			new Dialog({
+				title: `Hai scelto la classe ${sourceClass.name}!`,
+				content: `
+					<p>Scegli una delle seguenti <strong>Abilità di Classe</strong>:</p>
+					${skillOptions}
+				`,
+				buttons: {
+					cancel: {
+						label: 'Annulla',
+						callback: () => resolve(false),
+					},
+					confirm: {
+						label: 'Conferma',
+						callback: async (html) => {
+							const featureID = html.find('input[name="formClassFeature"]:checked').val();
+							const feature = classFeatures.find((element) => element._id == featureID);
+							feature.system.level.current++;
 
-						if ( feature?.flags?.fabula?.subItems ) {
-							const subItems = feature?.flags?.fabula?.subItems;
-							for ( const item of subItems ) {
-								await actor.createEmbeddedDocuments("Item", [item]);
+							if ( feature?.flags?.fabula?.subItems ) {
+								const subItems = feature?.flags?.fabula?.subItems;
+								for ( const item of subItems ) {
+									await actor.createEmbeddedDocuments("Item", [item]);
+								}
 							}
-						}
 
-						await sourceClass.setFlag('fabula', 'subItems', classFeatures);
-						resolve(true);
+							await sourceClass.setFlag('fabula', 'subItems', classFeatures);
+							resolve(true);
+						}
 					}
 				}
+			}, {
+				width: 500,
+			}).render(true);
+		});
+	} else {
+
+		const feature = classFeatures.find(element => element._id == featureItem._id);
+		feature.system.level.current++;
+
+		if ( feature?.flags?.fabula?.subItems ) {
+			const subItems = feature?.flags?.fabula?.subItems;
+			for ( const item of subItems ) {
+				await actor.createEmbeddedDocuments("Item", [item]);
 			}
-		}, {
-			width: 500,
-		}).render(true);
-	});
+		}
+
+		await sourceClass.setFlag('fabula', 'subItems', classFeatures);
+		return true;
+
+	}
 }
 
-export async function addClassToActor( actor, sourceItem ) {
+export async function addClassToActor( actor, sourceItem, isClassFeature = false ) {
 
 	if ( actor.system.level.value >= 50 ) {
 		ui.notifications.warn('Hai già raggiunto il livello massimo! Non puoi aumentare ulteriolmente il livello');
 		return false;
 	}
-
-	let className = sourceItem.name;
+	
+	let className;
+	let featureItem;
+	if ( isClassFeature ) {
+		className = sourceItem.folder.name;
+		featureItem = sourceItem.toObject();
+	} else {
+		className = sourceItem.name;
+		featureItem = null;
+	}
 	let obtainHeroicSkill = false;
 
 	// Check if Actor has already 3 non masterd classes
@@ -223,7 +248,7 @@ export async function addClassToActor( actor, sourceItem ) {
 		}
 		
 		let featureAdded = false;
-		featureAdded = await openClassFeaturesChildDialog( embeddedClass, actor );
+		featureAdded = await openClassFeaturesChildDialog( embeddedClass, actor, featureItem );
 
 		if ( featureAdded && embeddedClass.system.level.value < 10 ) {
 			const newLevel = embeddedClass.system.level.value + 1;
@@ -235,7 +260,15 @@ export async function addClassToActor( actor, sourceItem ) {
 	} else {
 
 		// Check if class gives multiple choice of benefits
-		const newClass = sourceItem.toObject();
+		let newClass;
+		if ( isClassFeature ) {
+			const pack = game.packs.get('fabula.classes');
+			const classInPack = pack.index.find(item => item.name == sourceItem.folder.name);
+			const classDocument = await pack.getDocument( classInPack._id );
+			newClass = classDocument.toObject();
+		} else {
+			newClass = sourceItem.toObject();
+		}
 		if ( ( newClass.system.bonus.hp + newClass.system.bonus.mp + newClass.system.bonus.ip ) > 1 ) {
 			let radios = '';
 			if ( newClass.system.bonus.hp ) {
@@ -263,7 +296,7 @@ export async function addClassToActor( actor, sourceItem ) {
 
 		const addedClass = actor.items.find( item => item.type === 'class' && item.name == className );
 		let featureAdded = false;
-		featureAdded = await openClassFeaturesChildDialog( addedClass, actor );
+		featureAdded = await openClassFeaturesChildDialog( addedClass, actor, featureItem );
 
 		if ( !featureAdded ) {
 			const itemToBeRemoved = actor.items.get( addedClass._id );
