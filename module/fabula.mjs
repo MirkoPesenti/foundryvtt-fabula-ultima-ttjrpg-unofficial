@@ -204,14 +204,40 @@ Hooks.on('renderJournalPageSheet', async (app, html, data) => {
 
 Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 	const keys = [
+		// Resources
 		'system.resources.hp.bonus',
 		'system.resources.mp.bonus',
 		'system.resources.ip.bonus',
+
+		// Attributes
+		'system.attributes.dex.current',
+		'system.attributes.ins.current',
+		'system.attributes.mig.current',
+		'system.attributes.wlp.current',
 		
+		// Defences
 		'system.params.def.bonus',
 		'system.params.mdef.bonus',
 		'system.params.init.bonus',
+
+		// Bonus to damages
+		'system.bonus.damage.base',
+		'system.bonus.damage.spell',
+
+		// Bonus to rolls
+		'system.bonus.checks.base',
+		'system.bonus.checks.attack',
+		'system.bonus.checks.spell',
+
+		// Immunity to statusses
+		'system.status.slow.immunity',
+		'system.status.dazed.immunity',
+		'system.status.weak.immunity',
+		'system.status.shaken.immunity',
+		'system.status.enraged.immunity',
+		'system.status.poisoned.immunity',
 		
+		// Affinity to damages
 		'system.affinity.physical',
 		'system.affinity.air',
 		'system.affinity.bolt',
@@ -222,9 +248,15 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 		'system.affinity.light',
 		'system.affinity.poison',
 	];
+	const values = [
+		'true',
+		'vulnerability',
+		'resistance',
+		'immunity',
+		'absorption',
+	];
 
 	const inputList = html.find('.changes-list .key input');
-	
 	inputList.each(function() {
 		const inputField = $(this);
 		inputField.on('input', function () {
@@ -235,18 +267,44 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 			html.find('.fabula-autocomplete-suggestions').remove();
 
 			if ( suggestions.length > 0 ) {
-				const suggestionList = $('<div class="fabula-autocomplete-suggestions"></div>').css({
-					position: 'absolute',
-					background: '#fff',
-					border: '1px solid #000',
-					zIndex: 1000,
-				});
+				const suggestionList = $('<div class="fabula-autocomplete-suggestions"></div>');
 
 				suggestions.forEach(sug => {
-					const suggestionItem = $(`<div>${sug}</div>`).css({
-						padding: '5px',
-						cursor: 'pointer',
+					const suggestionItem = $(`<div class="fabula-autocomplete-item">${sug}</div>`);
+					suggestionItem.on('click', () => {
+						$(input).val(sug);
+						suggestionList.remove();
 					});
+					suggestionList.append(suggestionItem);
+				});
+
+				$(input).after(suggestionList);
+			}
+		});
+
+		inputField.on('blur', () => {
+			setTimeout(function() {
+				html.find('.fabula-autocomplete-suggestions').remove();
+			}, 200);
+		});
+	});
+
+	const valueList = html.find('.changes-list .value input');
+	valueList.each(function() {
+		const inputField = $(this);
+		inputField.on('input', function () {
+			const input = this;
+			const value = input.value.toLowerCase();
+			const suggestions = values.filter( key => key.toLowerCase().includes( value ) );
+
+			html.find('.fabula-autocomplete-suggestions').remove();
+
+			if ( suggestions.length > 0 ) {
+				const suggestionList = $('<div class="fabula-autocomplete-suggestions"></div>');
+				suggestionList.css({'maxWidth': '130px'});
+
+				suggestions.forEach(sug => {
+					const suggestionItem = $(`<div class="fabula-autocomplete-item">${sug}</div>`);
 					suggestionItem.on('click', () => {
 						$(input).val(sug);
 						suggestionList.remove();

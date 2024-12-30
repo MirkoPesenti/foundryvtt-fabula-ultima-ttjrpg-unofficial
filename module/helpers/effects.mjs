@@ -26,7 +26,15 @@ export function prepareActiveEffect(effects) {
         } else if ( e.isTemporary ) {
             cats.temporary.effects.push(e);
         } else {
-            cats.passive.effects.push(e);
+            if ( e.parent.isEmbedded && e.parent.type != 'classFeature' && e.parent.type != 'heroicSkill' ) {
+                if ( e.parent.system.isEquipped ) {
+                    cats.passive.effects.push(e);
+                } else {
+                    cats.inactive.effects.push(e);
+                }
+            } else {
+                cats.passive.effects.push(e);
+            }
         }
     }
 
@@ -50,26 +58,28 @@ export async function manageActiveEffect(event, owner) {
     
     if ( action == 'create' ) {
 
-        return owner.createEmbeddedDocuments('ActiveEffect', [{
+        const createdEffect = await owner.createEmbeddedDocuments('ActiveEffect', [{
             label: 'Nuovo effetto',
             icon: 'systems/fabula/assets/icons/default-effect.svg',
             origin: owner.uuid,
             'duration.rounds': content.dataset.effectType === 'temporary' ? 1 : undefined,
             disabled: content.dataset.effectType === 'inactive',
         }]);
+        createdEffect[0].sheet.render(true);
 
     } else if ( action == 'open' ) {
 
-        return effect.sheet.render(true);
+        effect.sheet.render(true);
 
     } else if ( action == 'remove' ) {
 
-        return effect.delete();
+        await effect.delete();
 
     } else if ( action == 'toggle' ) {
-
-        return effect.update({ disabled: !effect.disabled });
+        
+        await effect.update({ disabled: !effect.disabled });
 
     }
 
+    return;
 }

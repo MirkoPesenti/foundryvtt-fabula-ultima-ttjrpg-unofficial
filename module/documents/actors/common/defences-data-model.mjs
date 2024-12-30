@@ -118,7 +118,7 @@ export class DefencesDataModel extends foundry.abstract.DataModel {
 	}
 
 	#prepareInitiative(actor) {
-		const bonus = this.init.bonus;
+		const data = this;
 		const equippedData = actor.system.equip;
 		let initBonus = 0;
 
@@ -136,9 +136,9 @@ export class DefencesDataModel extends foundry.abstract.DataModel {
 				let init = 0;
 				if ( actor.type == 'npc' ) {
 					const rankBonus = actor.system.rank.value != 'soldier' ? actor.system.rank.replacedSoldiers : 0;
-					init += bonus + ( ( actor.system.attributes.dex.base + actor.system.attributes.ins.base ) / 2 ) + rankBonus + initBonus;
+					init += data.init.bonus + ( ( actor.system.attributes.dex.base + actor.system.attributes.ins.base ) / 2 ) + rankBonus + initBonus;
 				} else {
-					init += bonus + initBonus;
+					init += data.init.bonus + initBonus;
 				}
 				return init;
 			},

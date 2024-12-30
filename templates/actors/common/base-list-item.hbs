@@ -1,5 +1,5 @@
 <li class="{{item.system.sourcebook}}">
-	{{#unless item.system.isEquipped}}
+	{{#if (or (eq actor.type 'npc') (and (not item.system.isEquipped) (eq actor.type 'character')))}}
 		<div class="btn-container">
 			{{#if @root.editable}}
 				<button type="button" class="btn-action-edit js_editItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.edit'}}">
@@ -10,7 +10,7 @@
 				</button>
 			{{/if}}
 		</div>
-	{{/unless}}
+	{{/if}}
 	<div class="item-box">
 		<div class="item-box-data">
 			{{#if @root.editable}}
@@ -21,7 +21,7 @@
 					{{/if}}
 				</button>
 
-				{{#unless (or (eq item.type 'baseItem') (eq item.type 'heroicSkill'))}}
+				{{#unless (or (eq item.type 'baseItem') (eq item.type 'heroicSkill') (eq actor.type 'npc'))}}
 					<button type="button" class="btn-action-equip equip js_equipItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.equip'}}">
 						<div class="icon icon-equip-action"></div>
 					</button>

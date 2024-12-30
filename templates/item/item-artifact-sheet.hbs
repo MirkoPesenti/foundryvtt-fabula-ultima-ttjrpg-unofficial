@@ -54,7 +54,7 @@
 
         <div class="tab effects" data-group="primary" data-tab="effects">
             {{#each effects as |category catIndex|}}
-                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../item}}
             {{/each}}
         </div>
     </section>

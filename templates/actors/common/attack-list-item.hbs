@@ -1,7 +1,7 @@
 <li class="{{item.system.sourcebook}}">
 	<div class="btn-container">
 		{{#if @root.editable}}
-			{{#unless item.system.isEquipped}}
+			{{#if (or (eq actor.type 'npc') (and (not item.system.isEquipped) (eq actor.type 'character')))}}
 				<button type="button" class="btn-action-edit js_editItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.edit'}}">
 					<i class="fa fa-pencil m-0"></i>
 				</button>
@@ -12,7 +12,7 @@
 				<button type="button" class="btn-action-equip equip js_equipItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.equip'}}">
 					<div class="icon icon-equip-action"></div>
 				</button>
-			{{/unless}}
+			{{/if}}
 		{{/if}}
 	</div>
 	<div class="item-box">
@@ -35,22 +35,24 @@
 				
 			{{/if}}
 			<strong>
-				【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt (add item.system.precisionBonus actor.level.checkBonus.test) 0}}+{{/gt}}
-				{{#unless (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}}
-					{{add item.system.precisionBonus actor.level.checkBonus.test}}
+				【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt (add item.system.precisionBonus actor.system.bonus.checks.attack) 0}}+{{/gt}}
+				{{#unless (eq (add item.system.precisionBonus actor.system.bonus.checks.attack) 0)}}
+					{{add item.system.precisionBonus actor.system.bonus.checks.attack}}
 				{{/unless}}
 			</strong>
 
-			<div class="divider-decoration {{#if (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}}ml-0{{/if}}"></div>
+			<div class="divider-decoration {{#if (eq (add item.system.precisionBonus actor.system.bonus.checks.attack) 0)}}ml-0{{/if}}"></div>
 
-			<strong>【TM{{#gt (add item.system.damage.value actor.level.damageBonus actor.bonus.damage.base) 0}} + {{add item.system.damage.value actor.level.damageBonus actor.bonus.damage.base}}{{/gt}}】</strong>danni da&nbsp;<strong>{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}</strong>
+			<strong>【TM{{#gt (add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base) 0}} + {{add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base}}{{/gt}}】</strong>{{#unless (eq item.system.damage.type.value '')}}danni da&nbsp;<strong>{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}</strong>{{/unless}}
 		</div>
 		
 
 		<div class="item-box-description">
-			<div class="weapon-category">
+			{{#if item.system.type}}
+				<div class="weapon-category">
 				<strong>{{localize (concat 'FU.weaponCategories.' item.system.type)}}</strong>
 				<div class="divider-decoration"></div>
+			{{/if}}
 				<div class="text">{{{item.enrichedHtml.description}}}</div>
 			</div>
 		</div>

@@ -10,14 +10,10 @@
 		</strong>
 	</div>
 	<div class="dice-total">
-		{{#if (eq roll.data.parent.type 'npc')}}
-			{{#if (eq item.type 'spell')}}
-				{{add highRoll item.system.damage.value roll.data.level.damageBonus roll.data.bonus.damage.spell}}
-			{{else}}
-				{{add highRoll item.system.damage.value roll.data.level.damageBonus roll.data.bonus.damage.base}}
-			{{/if}}
+		{{#if (eq item.type 'spell')}}
+			{{add highRoll item.system.damage.value roll.data.level.damageBonus roll.data.bonus.damage.spell}}
 		{{else}}
-			{{add highRoll item.system.damage.value}}
+			{{add highRoll item.system.damage.value roll.data.level.damageBonus roll.data.bonus.damage.base}}
 		{{/if}}
 	</div>
 </div>

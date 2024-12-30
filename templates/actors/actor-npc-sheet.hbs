@@ -45,55 +45,55 @@
                     </div>
 
                     <div class="affinities">
-                        <button type="button" class="js_setAffinity" data-affinity="physical" data-tooltip="Fisico: {{#if system.affinity.physical}}{{localize (concat 'FU.affinity.' system.affinity.physical)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="physical" data-tooltip="Fisico: {{#if system.affinity.physical}}{{localize (concat 'FU.affinity.' system.affinity.physical)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.physical}}disabled{{/if}}>
                             <div class="icon icon-physical {{#unless system.affinity.physical}}disabled{{/unless}}"></div>
                             {{#if system.affinity.physical}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.physical)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="air" data-tooltip="Aria: {{#if system.affinity.air}}{{localize (concat 'FU.affinity.' system.affinity.air)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="air" data-tooltip="Aria: {{#if system.affinity.air}}{{localize (concat 'FU.affinity.' system.affinity.air)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.air}}disabled{{/if}}>
                             <div class="icon icon-air {{#unless system.affinity.air}}disabled{{/unless}}"></div>
                             {{#if system.affinity.air}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.air)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="bolt" data-tooltip="Fulmine: {{#if system.affinity.bolt}}{{localize (concat 'FU.affinity.' system.affinity.bolt)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="bolt" data-tooltip="Fulmine: {{#if system.affinity.bolt}}{{localize (concat 'FU.affinity.' system.affinity.bolt)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.bolt}}disabled{{/if}}>
                             <div class="icon icon-bolt {{#unless system.affinity.bolt}}disabled{{/unless}}"></div>
                             {{#if system.affinity.bolt}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.bolt)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="dark" data-tooltip="Ombra: {{#if system.affinity.dark}}{{localize (concat 'FU.affinity.' system.affinity.dark)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="dark" data-tooltip="Ombra: {{#if system.affinity.dark}}{{localize (concat 'FU.affinity.' system.affinity.dark)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.dark}}disabled{{/if}}>
                             <div class="icon icon-dark {{#unless system.affinity.dark}}disabled{{/unless}}"></div>
                             {{#if system.affinity.dark}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.dark)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="earth" data-tooltip="Terra: {{#if system.affinity.earth}}{{localize (concat 'FU.affinity.' system.affinity.earth)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="earth" data-tooltip="Terra: {{#if system.affinity.earth}}{{localize (concat 'FU.affinity.' system.affinity.earth)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.earth}}disabled{{/if}}>
                             <div class="icon icon-earth {{#unless system.affinity.earth}}disabled{{/unless}}"></div>
                             {{#if system.affinity.earth}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.earth)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="fire" data-tooltip="Fuoco: {{#if system.affinity.fire}}{{localize (concat 'FU.affinity.' system.affinity.fire)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="fire" data-tooltip="Fuoco: {{#if system.affinity.fire}}{{localize (concat 'FU.affinity.' system.affinity.fire)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.fire}}disabled{{/if}}>
                             <div class="icon icon-fire {{#unless system.affinity.fire}}disabled{{/unless}}"></div>
                             {{#if system.affinity.fire}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.fire)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="ice" data-tooltip="Ghiaccio: {{#if system.affinity.ice}}{{localize (concat 'FU.affinity.' system.affinity.ice)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="ice" data-tooltip="Ghiaccio: {{#if system.affinity.ice}}{{localize (concat 'FU.affinity.' system.affinity.ice)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.ice}}disabled{{/if}}>
                             <div class="icon icon-ice {{#unless system.affinity.ice}}disabled{{/unless}}"></div>
                             {{#if system.affinity.ice}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.ice)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="light" data-tooltip="Luce: {{#if system.affinity.light}}{{localize (concat 'FU.affinity.' system.affinity.light)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="light" data-tooltip="Luce: {{#if system.affinity.light}}{{localize (concat 'FU.affinity.' system.affinity.light)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.light}}disabled{{/if}}>
                             <div class="icon icon-light {{#unless system.affinity.light}}disabled{{/unless}}"></div>
                             {{#if system.affinity.light}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.light)}}</span>
                             {{/if}}
                         </button>
-                        <button type="button" class="js_setAffinity" data-affinity="poison" data-tooltip="Veleno: {{#if system.affinity.poison}}{{localize (concat 'FU.affinity.' system.affinity.poison)}}{{else}}Neutro{{/if}}">
+                        <button type="button" class="js_setAffinity" data-affinity="poison" data-tooltip="Veleno: {{#if system.affinity.poison}}{{localize (concat 'FU.affinity.' system.affinity.poison)}}{{else}}Neutro{{/if}}" {{#if @root.actor.overrides.system.affinity.poison}}disabled{{/if}}>
                             <div class="icon icon-poison {{#unless system.affinity.poison}}disabled{{/unless}}"></div>
                             {{#if system.affinity.poison}}
                                 <span>{{localize (concat 'FU.affinityAbbr.' system.affinity.poison)}}</span>
@@ -225,12 +225,12 @@
                         <div class="collapse">
                             <ul class="list list-attacks">
                                 {{#each weapons}}
-                                    {{#if this.system.isEquipped}}
-                                        {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
-                                    {{/if}}
+                                    {{#unless (eq this.name 'Colpo Senz\'Armi')}}
+                                        {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../actor}}
+                                    {{/unless}}
                                 {{/each}}
                                 {{#each attacks}}
-                                    {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../system}}
+                                    {{> 'systems/fabula/templates/actors/common/attack-list-item.hbs' item=this actor=../actor}}
                                 {{/each}}
                             </ul>
                         </div>
@@ -266,58 +266,15 @@
                                 </button> --}}
                             </div>
                             <div class="collapse">
-                                <div class="equip-container">
-                                    <div class="equip-slots">
-                                        <div class="slot armor" {{#if system.equip.armor}}data-tooltip="Armatura <br> {{lookup (getItemByID items system.equip.armor) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.armor) 'img'}})"{{else}}data-tooltip="Armatura"{{/if}}></div>
-                                        <div class="slot-list">
-                                            <div class="slot mainHand" {{#if system.equip.mainHand}}data-tooltip="Mano principale <br> {{lookup (getItemByID items system.equip.mainHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.mainHand) 'img'}})"{{else}}data-tooltip="Mano principale"{{/if}}></div>
-                                            
-                                            <div class="slot-linked {{#allTrue system.equip.mainHand (eq system.equip.mainHand system.equip.offHand)}}show{{/allTrue}}">
-                                                <i class="fa fa-fw fa-link"></i>
-                                            </div>
-
-                                            <div class="slot offHand" {{#if system.equip.offHand}}data-tooltip="Mano secondaria <br> {{lookup (getItemByID items system.equip.offHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.offHand) 'img'}})"{{else}}data-tooltip="Mano secondaria"{{/if}}></div>
-                                        </div>
-                                        <div class="slot accessory" {{#if system.equip.accessory}}data-tooltip="Accessorio <br> {{lookup (getItemByID items system.equip.accessory) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.accessory) 'img'}})"{{else}}data-tooltip="Accessorio"{{/if}}></div>
-                                    </div>
-                                    <ul class="list list-equip">
-                                        {{#each armors}}
-                                            {{#if this.system.isEquipped}}
-                                                {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
-                                            {{/if}}
-                                        {{/each}}
-                                        {{#each shields}}
-                                            {{#if this.system.isEquipped}}
-                                                {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
-                                            {{/if}}
-                                        {{/each}}
-                                        {{#each accessories}}
-                                            {{#if this.system.isEquipped}}
-                                                {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
-                                            {{/if}}
-                                        {{/each}}
-                                    </ul>
-                                </div>
                                 <ul class="list list-equip">
-                                    {{#each weapons}}
-                                        {{#unless this.system.isEquipped}}
-                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
-                                        {{/unless}}
-                                    {{/each}}
                                     {{#each armors}}
-                                        {{#unless this.system.isEquipped}}
-                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
-                                        {{/unless}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=../actor item=this}}
                                     {{/each}}
                                     {{#each shields}}
-                                        {{#unless this.system.isEquipped}}
-                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
-                                        {{/unless}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=../actor item=this}}
                                     {{/each}}
                                     {{#each accessories}}
-                                        {{#unless this.system.isEquipped}}
-                                            {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=this}}
-                                        {{/unless}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=../actor item=this}}
                                     {{/each}}
                                 </ul>
                             </div>
@@ -342,7 +299,7 @@
                             <ul class="list list-other-actions">
                                 {{#each baseItems as |action indexAction|}}
                                     {{#if (not action.system.rule)}}
-                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=action}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=../actor item=action}}
                                     {{/if}}
                                 {{/each}}
                             </ul>
@@ -367,7 +324,7 @@
                             <ul class="list list-special-rules">
                                 {{#each baseItems as |rule indexRule|}}
                                     {{#if rule.system.rule}}
-                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' item=rule}}
+                                        {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=../actor item=rule}}
                                     {{/if}}
                                 {{/each}}
                             </ul>
@@ -391,7 +348,7 @@
 
                 <div class="tab inner-tab" data-group="secondary" data-tab="effects">
                     {{#each effects as |category catIndex|}}
-                        {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
+                        {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../actor}}
                     {{/each}}
                 </div>
             </div>
@@ -414,108 +371,103 @@
                             {{selectOptions villainTypes selected=system.villain localize=true}}
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <input type="checkbox" name="system.equippable" id="system.equippable" {{checked system.equippable}}>
-                        <label for="system.equippable">Può equipaggiare oggetti?</label>
-                    </div>
                 </div>
 
                 <div class="title">
                     Abilità
                     <span class="is-on-right">【{{system.skills.current}} / {{system.skills.max}}】</span>
                 </div>
-                {{#each flags.fabula.classFeatures}}
-                    <div class="feature-box">
-                        <div class="feature-head">
-                            {{#if @root.editable}}
-                                <button type="button" class="btn-action-delete removeFeature" data-id="{{this._id}}">
+                {{#each items}}
+                    {{#if (eq this.type 'classFeature')}}
+                        <div class="feature-box">
+                            <div class="feature-head">
+                                {{#if @root.editable}}
+                                    <button type="button" class="btn-action-delete js_deleteItem" data-itemid="{{this._id}}">
                                     <i class="fa fa-trash m-0"></i>
                                 </button>
-                            {{/if}}
-                            
-                            {{this.name}}
+                                {{/if}}
+                                
+                                {{this.name}}
 
-                            {{#if @root.editable}}
-                                <button type="button" class="ml-auto js_setFreeFeature {{#if this.system.isFree}}active{{/if}}" data-id="{{this._id}}">Gratuita</button>
-                            {{/if}}
-                            
-                            {{#gt this.system.level.max 1}}
-                                <span>
-                                    (<span>l</span>{{this.system.level.current}})
-                                </span>
-                            {{/gt}}
+                                {{#if @root.editable}}
+                                    <button type="button" class="ml-auto js_setFreeFeature {{#if this.system.isFree}}active{{/if}}" data-itemid="{{this._id}}">Gratuita</button>
+                                {{/if}}
 
-                            {{#if this.system.isLimited}}
-                                <span>
-                                    (<span class="font-yanone">LIMITATA</span>)
-                                </span>
-                            {{/if}}
+                                {{#if (not this.system.isUnlimited)}}
+                                    <span>
+                                        (<span class="font-yanone">LIMITATA</span>)
+                                    </span>
+                                {{else}}
+                                    <span>
+                                        (<span>l</span>{{this.system.level.current}})
+                                    </span>
+                                {{/if}}
+                            </div>
+                            <div class="feature-body">
+                                {{{this.system.description}}}
+                            </div>
                         </div>
-                        <div class="feature-body">
-                            {{{this.system.description}}}
-                        </div>
-                    </div>
-                    {{#each this.flags.fabula.subItems}}
-                        <div class="equip-box">
-                            <div class="equip-head">
-                                <img src="{{this.img}}" title="{{this.name}}" />
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Arma</th>
-                                            <th>Precisione</th>
-                                            <th>Danno</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>{{localize (concat 'FU.weaponCategories.' this.system.type)}}</td>
-                                            <td>
-                                                <strong>
-                                                    【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.primary.value)}}
-                                                    + 
-                                                    {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.secondary.value)}}】
-                                                    {{#unless (eq this.system.precisionBonus 0)}}
-                                                        {{#gt this.system.precisionBonus 0}}
-                                                            +{{this.system.precisionBonus}}
+                        {{#each this.flags.fabula.subItems}}
+                            <div class="equip-box">
+                                <div class="equip-head">
+                                    <img src="{{this.img}}" title="{{this.name}}" />
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Arma</th>
+                                                <th>Precisione</th>
+                                                <th>Danno</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{localize (concat 'FU.weaponCategories.' this.system.type)}}</td>
+                                                <td>
+                                                    <strong>
+                                                        【{{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.primary.value)}}
+                                                        + 
+                                                        {{localize (concat 'FU.attributesAbbr.' this.system.precisionAttributes.secondary.value)}}】
+                                                        {{#unless (eq this.system.precisionBonus 0)}}
+                                                            {{#gt this.system.precisionBonus 0}}
+                                                                +{{this.system.precisionBonus}}
+                                                            {{else}}
+                                                                {{this.system.precisionBonus}}
+                                                            {{/gt}}
+                                                        {{/unless}}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <strong>
+                                                        【TM
+                                                        {{#gt_e this.system.damage.value 0}}
+                                                            + {{this.system.damage.value}}】
                                                         {{else}}
-                                                            {{this.system.precisionBonus}}
-                                                        {{/gt}}
-                                                    {{/unless}}
-                                                </strong>
-                                            </td>
-                                            <td>
-                                                <strong>
-                                                    【TM
-                                                    {{#gt_e this.system.damage.value 0}}
-                                                        + {{this.system.damage.value}}】
-                                                    {{else}}
-                                                        - {{multiply this.system.damage.value -1}}】
-                                                    {{/gt_e}}
-                                                    {{localize (concat 'FU.DamageTypes.' this.system.damage.type.value)}}
-                                                </strong>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="equip-body">
-                                <div class="desc-container">
-                                    {{#if this.system.needTwoHands}}
-                                        Due mani
-                                    {{else}}
-                                        Una mano
-                                    {{/if}}
-                                    <div class="divider-decoration"></div>
-                                    {{localize (concat 'FU.WeaponRanges.' this.system.range)}}
+                                                            - {{multiply this.system.damage.value -1}}】
+                                                        {{/gt_e}}
+                                                        {{localize (concat 'FU.DamageTypes.' this.system.damage.type.value)}}
+                                                    </strong>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="desc-container">
-                                    {{{this.system.description}}}
+                                <div class="equip-body">
+                                    <div class="desc-container">
+                                        {{#if this.system.needTwoHands}}
+                                            Due mani
+                                        {{else}}
+                                            Una mano
+                                        {{/if}}
+                                        <div class="divider-decoration"></div>
+                                        {{localize (concat 'FU.WeaponRanges.' this.system.range)}}
+                                    </div>
+                                    <div class="desc-container">
+                                        {{{this.system.description}}}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    {{/each}}
+                        {{/each}}
+                    {{/if}}
                 {{/each}}
             </div>
 

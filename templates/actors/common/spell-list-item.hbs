@@ -32,12 +32,12 @@
 			
 			{{#if item.system.isOffensive.value}}
 				<strong>
-					【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.level.checkBonus.spell 0}}+{{/gt}}
-					{{#unless (eq actor.level.checkBonus.spell 0)}}
-						{{actor.level.checkBonus.spell}}
+					【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.bonus.checks.spell 0}}+{{/gt}}
+					{{#unless (eq actor.bonus.checks.spell 0)}}
+						{{actor.bonus.checks.spell}}
 					{{/unless}}
 				</strong>
-				<div class="divider-decoration{{#if (eq actor.level.checkBonus.spell 0)}}m-0{{/if}}"></div>
+				<div class="divider-decoration{{#if (eq actor.bonus.checks.spell 0)}}m-0{{/if}}"></div>
 			{{/if}}
 			<strong>
 				{{#if item.system.MPCost.upTo}}
@@ -58,10 +58,10 @@
 			{{{item.enrichedHtml.description}}}
 		</div>
 		
-		{{#if item.enrichedHtml.opportunity.value}}
+		{{#if item.enrichedHtml.opportunity}}
 			<div class="opportunity">
 				<strong>Opportunità:</strong>
-				{{{item.enrichedHtml.opportunityEffect}}}
+				{{{item.enrichedHtml.opportunity}}}
 			</div>
 		{{/if}}
 	</div>
