@@ -468,7 +468,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet.fabula form {max-height:100%;}
 .sheet .editable button:not(.editor button) {width:auto;margin:0;background-color:var(--fu-color-white);border:1px solid var(--fu-color-primary);border-radius:5px;font-size:16px;line-height:1.2;--fu-color-shadow-primary:var(--fu-color-primary);transition:box-shadow .15s ease-in-out;}
 .sheet.fabula .sheet-header {position:relative;min-height:93px;padding:40px 75px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:var(--fu-sheet-header-bg);flex-grow:0;outline:1px solid var(--fu-color-primary);outline-offset:1px;}
-.sheet.fabula .sheet-header input {border:0;border-radius:0;width:100%;padding:0;height:auto;color:var(--fu-color-text);text-transform:uppercase;font-family:CreditValley;font-size:50px;}
+.sheet.fabula .sheet-header input {border:0;border-radius:0;width:100%;padding:0;height:auto;color:var(--fu-color-white);text-transform:uppercase;font-family:CreditValley;font-size:50px;}
 .sheet.fabula .sheet-header .icon {position:absolute;bottom:14px;left:35px;width:35px;height:35px;background-repeat:no-repeat;background-position:center center;background-size:contain;}
 .sheet.fabula .sheet-header .martial-icon {position:absolute;bottom:5px;left:35px;font-family:"FnT_BasicShapes1",sans-serif;font-size:35px;color:var(--fu-color-red);}
 .sheet.fabula .sheet-header .class-icon {position:absolute;bottom:0;right:50px;z-index:1;width:54px;height:54px;padding:9px;border:3px solid var(--fu-color-primary);outline:1px solid var(--fu-color-primary);outline-offset:-6px;background-color:var(--fu-color-white);transform:translate(50%, 50%) rotate(45deg);}
@@ -635,6 +635,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet .class .desc-container:not(.equip-box .desc-container) {position:absolute;right:15px;bottom:15px;z-index:1;width:60%;max-height:382px;overflow:hidden;overflow-y:auto;}
 .sheet .class .desc-container:not(.equip-box .desc-container) .box {padding:5px 15px;border:1px solid rgba(var(--fu-color-primary-rgb),.3);border-radius:10px;background:linear-gradient(to left, rgba(var(--fu-color-gradient-bg-rgb),0) 0%, rgba(var(--fu-color-gradient-bg-rgb),1) 100%);font-size:15px;text-align:justify;color:var(--fu-text-color);}
 .sheet .class .desc-container:not(.equip-box .desc-container) .box + .box {margin-top:15px;}
+.sheet .class .desc-container:not(.equip-box .desc-container) .box .editor {background-color:transparent;}
 .sheet .class .list-questions {list-style:diamonds;padding-left:12px;color:var(--fu-text-color);}
 .sheet .class .list-questions > li {padding-left:5px;}
 .sheet .class .list-questions > li::marker {font-size:12px;color:var(--fu-color-primary);}
@@ -778,7 +779,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet.actor .list li .item-box label {font-weight:700;}
 .sheet.actor .list li .item-box label::after {content:"◆";font-size:12px;font-weight:400;margin:0 5px;color:var(--fu-color-primary);}
 
-.sheet.actor .list li .item-box .item-box-data {display:flex;align-items: center;padding:3px 6px;background:linear-gradient(to right, rgba(var(--fu-color-gradient-bg-rgb),1) 0%, rgba(var(--fu-color-gradient-bg-rgb),1) 30%, rgba(var(--fu-color-gradient-bg-rgb),0) 100%);}
+.sheet.actor .list li .item-box .item-box-data {display:flex;flex-wrap:wrap;align-items:center;padding:3px 6px;background:linear-gradient(to right, rgba(var(--fu-color-gradient-bg-rgb),1) 0%, rgba(var(--fu-color-gradient-bg-rgb),1) 30%, rgba(var(--fu-color-gradient-bg-rgb),0) 100%);}
 .sheet.actor .list li .item-box .item-box-description {background-color: var(--fu-box-bg);}
 .sheet.actor .list li .item-box .item-box-description p {margin:0;padding:8px;}
 
@@ -816,8 +817,8 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet.actor .list-spells .opportunity > strong {float:left;margin-right:5px;}
 .sheet.actor .list-equip .item-box button.no-float {float:none;}
 
-.divider-decoration {position:relative;width:13px;margin:0 1px;display:inline-block;vertical-align:middle;text-align:center;}
-.divider-decoration:before {content:"◆";font-size:13px;position:absolute;top:-9px;left:0;right:0;}
+.divider-decoration {position:relative;width:20px;margin:0 1px;display:inline-block;vertical-align:middle;text-align:center;}
+.divider-decoration:before {content:"◆";font-size:13px;position:absolute;top:-9px;left:0;right:0;color:var(--fu-color-primary);}
 
 /* Sheets > Actors > Character */
 .sheet.actor .character {background:none;padding:0;background:linear-gradient(to left, rgba(var(--fu-color-primary-rgb),0) 0%, rgba(var(--fu-color-primary-rgb),0.1) 30%, rgba(var(--fu-color-primary-rgb),0.1) 100%);max-height:unset;}
@@ -842,7 +843,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet.actor .character .sheet-header .head-container {padding-left:15px;flex-grow:1;}
 .sheet.actor .character .sheet-header .header-fields {display:flex;align-items:flex-end;position:relative;}
 .sheet.actor .character .sheet-header .header-fields::before {content:"";position:absolute;top:26px;left:0;right:30px;height:2px;background:linear-gradient(to right, rgba(var(--fu-color-primary-rgb),0) 0%, rgba(var(--fu-color-primary-rgb),.4) 30%, rgba(var(--fu-color-primary-rgb)) 40%, rgba(var(--fu-color-primary-rgb)) 100%);}
-.sheet.actor .character .sheet-header .header-fields input.name {text-transform:none;font-size:40px;font-family:var(--fu-font-secondary);flex-grow:1;box-shadow:none;margin-top:30px;background-color:transparent;}
+.sheet.actor .character .sheet-header .header-fields input.name {text-transform:none;font-size:40px;font-family:var(--fu-font-secondary);flex-grow:1;box-shadow:none;margin-top:30px;background-color:transparent;color:var(--fu-color-text);}
 .sheet.actor .character .sheet-header .header-fields input.name:hover {background-color: var(--fu-input-bg-hover);}
 .sheet.actor .character .sheet-header .header-fields .group-input-circle input {width:70px;height:70px;}
 .sheet.actor .character .sheet-header .attributes-container {flex:1 0 auto;}

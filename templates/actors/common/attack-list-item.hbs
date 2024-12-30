@@ -46,15 +46,16 @@
 			<strong>【TM{{#gt (add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base) 0}} + {{add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base}}{{/gt}}】</strong>{{#unless (eq item.system.damage.type.value '')}}danni da&nbsp;<strong>{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}</strong>{{/unless}}
 		</div>
 		
-
-		<div class="item-box-description">
-			{{#if item.system.type}}
+		{{#unless (and (eq item.enrichedHtml.description '') (not item.system.type))}}
+			<div class="item-box-description">
 				<div class="weapon-category">
-				<strong>{{localize (concat 'FU.weaponCategories.' item.system.type)}}</strong>
-				<div class="divider-decoration"></div>
-			{{/if}}
-				<div class="text">{{{item.enrichedHtml.description}}}</div>
+					{{#if item.system.type}}
+						<strong>{{localize (concat 'FU.weaponCategories.' item.system.type)}}</strong>
+						<div class="divider-decoration"></div>
+					{{/if}}
+					<div class="text">{{{item.enrichedHtml.description}}}</div>
+				</div>
 			</div>
-		</div>
+		{{/unless}}
 	</div>
 </li>

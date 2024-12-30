@@ -49,7 +49,7 @@
 								</a>
 							{{/if}}
 							{{#if effect.duration.name}}
-								<div class="divider-decoration"></div>
+								<span class="divider-decoration"></span>
 								{{effect.duration.name}}
 							{{/if}}
 						</p>
@@ -61,7 +61,13 @@
 						{{/if}}
 
 						{{#each effect.changes}}
-							<p>{{this.key}} <div class="divider-decoration"></div> {{localize (concat 'FU.activeEffectsModes.' this.mode)}} <div class="divider-decoration"></div> {{this.value}}</p>
+							<p>
+								{{this.key}}
+								<span class="divider-decoration"></span>
+								{{localize (concat 'FU.activeEffectsModes.' this.mode)}}
+								<span class="divider-decoration"></span>
+								{{this.value}}
+							</p>
 						{{/each}}
 					</div>
 				</li>
