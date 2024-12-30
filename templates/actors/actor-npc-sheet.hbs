@@ -141,7 +141,7 @@
                     <div class="attributes-container">
                         <div class="attr hp" data-tooltip="Punti Vita: {{system.resources.hp.current}}<br>Crisi: {{system.resources.hp.crisis}}<br>PV Massimi: {{system.resources.hp.max}}">
                             <div class="progress-container">
-                                <div class="pregress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
+                                <div class="progress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
                                     <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
                                 </div>
                                 <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
@@ -154,7 +154,7 @@
 
                         <div class="attr mp" data-tooltip="Punti Mente: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
                             <div class="progress-container">
-                                <div class="pregress-bar">
+                                <div class="progress-bar">
                                     <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
                                 </div>
                                 <input type="number" min="0" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
@@ -429,7 +429,9 @@
                     <div class="feature-box">
                         <div class="feature-head">
                             {{#if @root.editable}}
-                                <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
+                                <button type="button" class="btn-action-delete removeFeature" data-id="{{this._id}}">
+                                    <i class="fa fa-trash m-0"></i>
+                                </button>
                             {{/if}}
                             
                             {{this.name}}
@@ -505,7 +507,7 @@
                                     {{else}}
                                         Una mano
                                     {{/if}}
-                                    <span class="diamond-char">◆</span>
+                                    <div class="divider-decoration"></div>
                                     {{localize (concat 'FU.WeaponRanges.' this.system.range)}}
                                 </div>
                                 <div class="desc-container">

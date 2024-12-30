@@ -1,265 +1,284 @@
 {
-	"TYPES": {
-		"Actor": {
-			"character": "Personaggio",
-			"npc": "PNG"
-		},
-		"Item": {
-			"accessory": "Accessorio",
-			"arcanum": "Arcanum",
-			"armor": "Armatura",
-			"artifact": "Artefatto",
-			"attack": "Attacco",
-			"baseItem": "Base",
-			"class": "Classe",
-			"classFeature": "Abilità di classe",
-			"consumable": "Consumabile",
-			"heroicSkill": "Abilità eroica",
-			"project": "Progetto",
-			"ritual": "Rituale",
-			"rule": "Regola",
-			"spell": "Incantesimo",
-			"shield": "Scudo",
-			"weapon": "Arma"
-		}
-	},
-	"CONTROLS": {
-		"GroupClock": "Orologi",
-		"CreateClock": "Crea nuovo orologio"
-	},
-	"FU": {
-		"sourcebook": {
-			"base": "Manuale Base",
-			"bonusAce": "Bonus: Pesca la tua Carta!",
-			"bonusNecromancer": "Bonus: Un regalo bello da Morire!",
-			"atlasHighFantasy": "Atlante High Fantasy",
-			"atlasTechnoFantasy": "Atlante Techno Fantasy",
-			"atlasNaturalFantasy": "Atlante Natural Fantasy"
-		},
-		"attributes": {
-			"dex": "Destrezza",
-			"ins": "Intuito",
-			"mig": "Vigore",
-			"wlp": "Volontà"
-		},
-		"attributesAbbr": {
-			"dex": "DES",
-			"ins": "INT",
-			"mig": "VIG",
-			"wlp": "VOL"
-		},
-		"D6": "d6",
-		"D8": "d8",
-		"D10": "d10",
-		"D12": "d12",
-		"HP": "Punti Vita",
-		"HPabbr": "PV",
-		"MP": "Punti Mente",
-		"MPabbr": "PM",
-		"IP": "Punti Inventario",
-		"fp": "Punti Fabula",
-		"up": "Punti Ultima",
-		"exp": "Punti Esperienza",
-		"IPabbr": "PI",
-		"Zenit": "Zenit",
-		"ZenitPL": "Zenit",
-		"ZenitAbbr": "z",
-		"cost": "Costo",
-		"rarity": "Rarità",
-		"target": "Bersaglio",
-		"targetPL": "Bersagli",
-		"targetAbbr": "B",
-		"duration": "Durata",
-		"difficultyLevel": "Livello di Difficoltà",
-		"difficultyLevelAbbr": "LD",
-		"potency": "Potenza",
-		"area": "Area",
-		"uses": "Usi",
-		"def": "Difesa",
-		"mdef": "Difesa Magica",
-		"init": "Iniziativa",
-		"magicDefenceAbbr": "D. Magica",
-		"equipmentMartial": "Marziale",
-		"type": "Tipologia",
-		"requiredHands": "Mani richieste",
-		"oneHand": "Una mano",
-		"twoHands": "Due mani",
-		"selectOption": "Seleziona un'opzione",
-		"selectType": "Scegli il tipo",
-		"identity": "Identità",
-		"theme": "Tema",
-		"origin": "Origine",
-		"DamageTypes": {
-			"physical": "Fisico",
-			"air": "Aria",
-			"bolt": "Fulmine",
-			"dark": "Ombra",
-			"earth": "Terra",
-			"fire": "Fuoco",
-			"ice": "Ghiaccio",
-			"light": "Luce",
-			"poison": "Veleno"
-		},
-		"Status": {
-			"slow": "Lento",
-			"dazed": "Confuso",
-			"weak": "Debole",
-			"shaken": "Scosso",
-			"enraged": "Furente",
-			"poisoned": "Avvelenato"
-		},
-		"ItemTypes": {
-			"spell": "Incantesimo",
-			"spellPL": "Incantesimi",
-			"ritual": "Rituale",
-			"ritualPL": "Rituali",
-			"accessory": "Accessorio",
-			"accessoryPL": "Accessori",
-			"armor": "Armatura",
-			"armorPL": "Armature",
-			"weapon": "Arma",
-			"weaponPL": "Armi",
-			"shield": "Scudo",
-			"shieldPL": "Scudi",
-			"project": "Progetto",
-			"projectPL": "Progetti",
-			"consumable": "Consumabile",
-			"consumablePL": "Consumabili"
-		},
-		"MagicDisciplines": {
-			"arcanism": "Arcanismo",
-			"chimerism": "Chimerismo",
-			"elementalism": "Elementalismo",
-			"entropism": "Entropismo",
-			"ritualism": "Ritualismo",
-			"spiritism": "Spiritismo"
-		},
-		"SpellDurations": {
-			"instantaneous": "Istantanea",
-			"scene": "Scena"
-		},
-		"spellOpportunity": "Opportunità",
-		"spellOffensive": "Offensivo",
-		"potencyList": {
-			"minor": "Minore",
-			"medium": "Media",
-			"major": "Maggiore",
-			"extreme": "Estrema"
-		},
-		"areaList": {
-			"individual": "Individuale",
-			"small": "Piccola",
-			"large": "Grande",
-			"huge": "Enorme"
-		},
-		"usesList": {
-			"consumable": "Consumabile",
-			"permanent": "Permanente"
-		},
-		"ritualReduction": "Riduzione",
-		"projectFlaw": "Terribile difetto",
-		"descriptionNoQuality": "Nessuna Qualità.",
-		"weaponCategories": {
-			"arcane": "Arcano",
-			"arcanePL": "Arcane",
-			"bow": "Arco",
-			"bowPL": "Archi",
-			"brawling": "da Rissa",
-			"brawlingPL": "da Rissa",
-			"dagger": "Pugnale",
-			"daggerPL": "Pugnali",
-			"firearm": "da Fuoco",
-			"firearmPL": "da Fuoco",
-			"flail": "Flagello",
-			"flailPL": "Flagelli",
-			"heavy": "Pesante",
-			"heavyPL": "Pesanti",
-			"spear": "Lancia",
-			"spearPL": "Lance",
-			"sword": "Spada",
-			"swordPL": "Spade",
-			"thrown": "da Lancio",
-			"thrownPL": "da Lancio"
-		},
-		"range": "Portata",
-		"WeaponRanges": {
-			"melee": "Mischia",
-			"ranged": "Distanza"
-		},
-		"rarityList": {
-			"base": "Base",
-			"rare": "Raro"
-		},
-		"Sheet": {
-			"Name": "Nome",
-			"DescriptionTab": "Descrizione",
-			"DetailsTab": "Dettagli",
-			"DamageTab": "Danno"
-		},
-		"bond": {
-			"none": "Nessun legame",
-			"admiration": "Ammirazione",
-			"inferiority": "Inferiotità",
-			"loyalty": "Lealtà",
-			"mistrust": "Sfiducia",
-			"affection": "Affetto",
-			"hatred": "Odio"
-		},
-		"martialItems": {
-			"meleeWeapon": "Armi da mischia marziali",
-			"rangedWeapon": "Armi a distanza marziali",
-			"armor": "Armature marziali",
-			"shield": "Scudi marziali"
-		},
-		"affinity": {
-			"vulnerability": "Vulnerabile",
-			"resistance": "Resistente",
-			"immunity": "Immune",
-			"absorption": "Assorbimento"
-		},
-		"affinityAbbr": {
-			"vulnerability": "VU",
-			"resistance": "RS",
-			"immunity": "IM",
-			"absorption": "AS"
-		},
-		"consumable": {
-			"potion": "Pozione",
-			"utility": "Utilità"
-		},
-		"villain": {
-			"none": "Non Cattivo",
-			"minor": "Minore",
-			"major": "Maggiore",
-			"supreme": "Supremo"
-		},
-		"enemy": {
-			"soldier": "Soldato",
-			"elite": "Élite",
-			"champion": "Campione"
-		},
-		"species": {
-			"beast": "Bestia",
-			"construct": "Costrutto",
-			"demon": "Demone",
-			"elemental": "Elementale",
-			"monster": "Mostro",
-			"plant": "Pianta",
-			"undead": "Non morto",
-			"humanoid": "Umanoide"
-		},
-		"NPCactions": {
-			"attack": "Attacco base",
-			"other": "Altra azione",
-			"rule": "Regola speciale"
-		},
-		"activeEffectsModes": {
-			"0": "Custom",
-			"1": "Multiply",
-			"2": "Add",
-			"3": "Downgrade",
-			"4": "Upgrade",
-			"5": "Override"
-		}
-	}
+  "TYPES": {
+    "Actor": {
+      "character": "Personaggio",
+      "npc": "PNG"
+    },
+    "Item": {
+      "accessory": "Accessorio",
+      "arcanum": "Arcanum",
+      "armor": "Armatura",
+      "artifact": "Artefatto",
+      "attack": "Attacco",
+      "baseItem": "Base",
+      "class": "Classe",
+      "classFeature": "Abilità di classe",
+      "consumable": "Consumabile",
+      "heroicSkill": "Abilità eroica",
+      "project": "Progetto",
+      "ritual": "Rituale",
+      "rule": "Regola",
+      "spell": "Incantesimo",
+      "shield": "Scudo",
+      "weapon": "Arma",
+      "martialItem": "Oggetto Marziale"
+    }
+  },
+  "CONTROLS": {
+    "GroupClock": "Orologi",
+    "CreateClock": "Crea nuovo orologio"
+  },
+  "FU": {
+    "sourcebook": {
+      "base": "Manuale Base",
+      "bonusAce": "Bonus: Pesca la tua Carta!",
+      "bonusNecromancer": "Bonus: Un regalo bello da Morire!",
+      "atlasHighFantasy": "Atlante High Fantasy",
+      "atlasTechnoFantasy": "Atlante Techno Fantasy",
+      "atlasNaturalFantasy": "Atlante Natural Fantasy"
+    },
+    "attributes": {
+      "dex": "Destrezza",
+      "ins": "Intuito",
+      "mig": "Vigore",
+      "wlp": "Volontà"
+    },
+    "attributesAbbr": {
+      "dex": "DES",
+      "ins": "INT",
+      "mig": "VIG",
+      "wlp": "VOL"
+    },
+    "D6": "d6",
+    "D8": "d8",
+    "D10": "d10",
+    "D12": "d12",
+    "HP": "Punti Vita",
+    "HPabbr": "PV",
+    "MP": "Punti Mente",
+    "MPabbr": "PM",
+    "IP": "Punti Inventario",
+    "fp": "Punti Fabula",
+    "up": "Punti Ultima",
+    "exp": "Punti Esperienza",
+    "IPabbr": "PI",
+    "Zenit": "Zenit",
+    "ZenitPL": "Zenit",
+    "ZenitAbbr": "z",
+    "cost": "Costo",
+    "rarity": "Rarità",
+    "target": "Bersaglio",
+    "targetPL": "Bersagli",
+    "targetAbbr": "B",
+    "duration": "Durata",
+    "difficultyLevel": "Livello di Difficoltà",
+    "difficultyLevelAbbr": "LD",
+    "potency": "Potenza",
+    "area": "Area",
+    "uses": "Usi",
+    "def": "Difesa",
+    "mdef": "Difesa Magica",
+    "init": "Iniziativa",
+    "magicDefenceAbbr": "D. Magica",
+    "type": "Tipologia",
+    "requiredHands": "Mani richieste",
+    "oneHand": "Una mano",
+    "twoHands": "Due mani",
+    "selectOption": "Seleziona un'opzione",
+    "selectType": "Scegli il tipo",
+    "identity": "Identità",
+    "theme": "Tema",
+    "origin": "Origine",
+    "DamageTypes": {
+      "physical": "Fisico",
+      "air": "Aria",
+      "bolt": "Fulmine",
+      "dark": "Ombra",
+      "earth": "Terra",
+      "fire": "Fuoco",
+      "ice": "Ghiaccio",
+      "light": "Luce",
+      "poison": "Veleno"
+    },
+    "Status": {
+      "slow": "Lento",
+      "dazed": "Confuso",
+      "weak": "Debole",
+      "shaken": "Scosso",
+      "enraged": "Furente",
+      "poisoned": "Avvelenato"
+    },
+    "ItemTypes": {
+      "spell": "Incantesimo",
+      "spellPL": "Incantesimi",
+      "ritual": "Rituale",
+      "ritualPL": "Rituali",
+      "accessory": "Accessorio",
+      "accessoryPL": "Accessori",
+      "armor": "Armatura",
+      "armorPL": "Armature",
+      "weapon": "Arma",
+      "weaponPL": "Armi",
+      "shield": "Scudo",
+      "shieldPL": "Scudi",
+      "project": "Progetto",
+      "projectPL": "Progetti",
+      "consumable": "Consumabile",
+      "consumablePL": "Consumabili"
+    },
+    "MagicDisciplines": {
+      "arcanism": "Arcanismo",
+      "chimerism": "Chimerismo",
+      "elementalism": "Elementalismo",
+      "entropism": "Entropismo",
+      "ritualism": "Ritualismo",
+      "spiritism": "Spiritismo"
+    },
+    "SpellDurations": {
+      "instantaneous": "Istantanea",
+      "scene": "Scena"
+    },
+    "spellOpportunity": "Opportunità",
+    "spellOffensive": "Offensivo",
+    "potencyList": {
+      "minor": "Minore",
+      "medium": "Media",
+      "major": "Maggiore",
+      "extreme": "Estrema"
+    },
+    "areaList": {
+      "individual": "Individuale",
+      "small": "Piccola",
+      "large": "Grande",
+      "huge": "Enorme"
+    },
+    "usesList": {
+      "consumable": "Consumabile",
+      "permanent": "Permanente"
+    },
+    "ritualReduction": "Riduzione",
+    "projectFlaw": "Terribile difetto",
+    "descriptionNoQuality": "Nessuna Qualità.",
+    "equipment": {
+      "mainHand": "Mano Principale",
+      "offHand": "Mano Secondaria",
+      "armor": "Armatura",
+      "shield": "Scudo",
+      "accessory": "Accessorio",
+      "martial": "Marziale"
+    },
+    "weaponCategories": {
+      "arcane": "Arcano",
+      "arcanePL": "Arcane",
+      "bow": "Arco",
+      "bowPL": "Archi",
+      "brawling": "da Rissa",
+      "brawlingPL": "da Rissa",
+      "dagger": "Pugnale",
+      "daggerPL": "Pugnali",
+      "firearm": "da Fuoco",
+      "firearmPL": "da Fuoco",
+      "flail": "Flagello",
+      "flailPL": "Flagelli",
+      "heavy": "Pesante",
+      "heavyPL": "Pesanti",
+      "spear": "Lancia",
+      "spearPL": "Lance",
+      "sword": "Spada",
+      "swordPL": "Spade",
+      "thrown": "da Lancio",
+      "thrownPL": "da Lancio"
+    },
+    "range": "Portata",
+    "WeaponRanges": {
+      "melee": "Mischia",
+      "ranged": "Distanza"
+    },
+    "rarityList": {
+      "base": "Base",
+      "rare": "Raro"
+    },
+    "Sheet": {
+      "Name": "Nome",
+      "DescriptionTab": "Descrizione",
+      "DetailsTab": "Dettagli",
+      "DamageTab": "Danno"
+    },
+    "bond": {
+      "inputName": "Nome del legame",
+      "none": "Nessun legame",
+      "admiration": "Ammirazione",
+      "inferiority": "Inferiotità",
+      "loyalty": "Lealtà",
+      "mistrust": "Sfiducia",
+      "affection": "Affetto",
+      "hatred": "Odio"
+    },
+    "martialItems": {
+      "meleeWeapon": "Armi da mischia marziali",
+      "rangedWeapon": "Armi a distanza marziali",
+      "armor": "Armature marziali",
+      "shield": "Scudi marziali"
+    },
+    "affinity": {
+      "vulnerability": "Vulnerabile",
+      "resistance": "Resistente",
+      "immunity": "Immune",
+      "absorption": "Assorbimento"
+    },
+    "affinityAbbr": {
+      "vulnerability": "VU",
+      "resistance": "RS",
+      "immunity": "IM",
+      "absorption": "AS"
+    },
+    "consumable": {
+      "potion": "Pozione",
+      "utility": "Utilità"
+    },
+    "villain": {
+      "none": "Non Cattivo",
+      "minor": "Minore",
+      "major": "Maggiore",
+      "supreme": "Supremo"
+    },
+    "enemy": {
+      "soldier": "Soldato",
+      "elite": "Élite",
+      "champion": "Campione"
+    },
+    "species": {
+      "beast": "Bestia",
+      "construct": "Costrutto",
+      "demon": "Demone",
+      "elemental": "Elementale",
+      "monster": "Mostro",
+      "plant": "Pianta",
+      "undead": "Non morto",
+      "humanoid": "Umanoide"
+    },
+    "NPCactions": {
+      "attack": "Attacco base",
+      "other": "Altra azione",
+      "rule": "Regola speciale"
+    },
+    "activeEffectsModes": {
+      "0": "Custom",
+      "1": "Multiply",
+      "2": "Add",
+      "3": "Downgrade",
+      "4": "Upgrade",
+      "5": "Override"
+    },
+    "actions": {
+      "showInChat": "Mostra in chat",
+      "delete": "Elimina",
+      "edit": "Modifica",
+      "equip": "Equipaggia",
+      "attack": "Effettua un attacco",
+      "test": "Effettua un test",
+      "castSpell": "Lancia incantesimo",
+      "toggleActive": "Attiva/Disattiva"
+    }
+  }
 }

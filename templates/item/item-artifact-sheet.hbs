@@ -3,7 +3,7 @@
     <header class="sheet-header">
         <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
         {{#if system.isMartial.value}}
-            <div class="martial-icon">l</div>
+            <div class="martial-icon" data-tooltip="{{localize 'TYPES.Item.martialItem'}}">l</div>
         {{/if}}
 
         {{#if @root.editable}}

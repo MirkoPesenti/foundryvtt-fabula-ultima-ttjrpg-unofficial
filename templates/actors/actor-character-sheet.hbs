@@ -8,7 +8,7 @@
             <div class="header-fields">
                 <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'FU.Sheet.Name'}}" class="name"/>
                 <div class="form-group group-input-circle">
-                    <label>Livello del personaggio</label>
+                    <label>Livello</label>
                     <input type="number" name="system.level.value" value="{{system.level.value}}" readonly />
                     {{#allTrue (or (sm system.level.value 5) (gte system.level.exp 10)) (sm system.level.value 50)}}
                         <button type="button" class="level-up js_levelUpCharacter" data-tooltip="Puoi salire di livello">
@@ -22,7 +22,7 @@
                 <div class="attr hp" data-tooltip="Punti Vita: {{system.resources.hp.current}}<br>Crisi: {{system.resources.hp.crisis}}<br>PV Massimi: {{system.resources.hp.max}}">
                     <label>Punti Vita</label>
                     <div class="progress-container">
-                        <div class="pregress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
+                        <div class="progress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
                             <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
                         </div>
                         <input type="text" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
@@ -36,7 +36,7 @@
                 <div class="attr mp" data-tooltip="Punti Mente: {{system.resources.mp.current}}<br>PM Massimi: {{system.resources.mp.max}}">
                     <label>Punti Mente</label>
                     <div class="progress-container">
-                        <div class="pregress-bar">
+                        <div class="progress-bar">
                             <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
                         </div>
                         <input type="text" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
@@ -48,7 +48,7 @@
                 <div class="attr ip" data-tooltip="Punti Inventario: {{system.resources.ip.current}}<br>PI Massimi: {{system.resources.ip.max}}">
                     <label>Punti Inventario</label>
                     <div class="progress-container">
-                        <div class="pregress-bar">
+                        <div class="progress-bar">
                             <div class="bar" style="width:{{percentage system.resources.ip.current system.resources.ip.max}}%"></div>
                         </div>
                         <input type="text" name="system.resources.ip.current" value="{{system.resources.ip.current}}">
@@ -243,17 +243,17 @@
             </div>
             <div class="equip-container">
                 <div class="equip-slots">
-                    <div class="slot armor" {{#if system.equip.armor}}data-tooltip="Armatura <br> {{lookup (getItemByID items system.equip.armor) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.armor) 'img'}})"{{else}}data-tooltip="Armatura"{{/if}}></div>
+                    <div class="slot armor" {{#if system.equip.armor}}data-tooltip="{{localize 'FU.equipment.armor'}} <br> {{lookup (getItemByID items system.equip.armor) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.armor) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.armor'}}"{{/if}}></div>
                     <div class="slot-list">
-                        <div class="slot mainHand" {{#if system.equip.mainHand}}data-tooltip="Mano principale <br> {{lookup (getItemByID items system.equip.mainHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.mainHand) 'img'}})"{{else}}data-tooltip="Mano principale"{{/if}}></div>
+                        <div class="slot mainHand" {{#if system.equip.mainHand}}data-tooltip="{{localize 'FU.equipment.mainHand'}} <br> {{lookup (getItemByID items system.equip.mainHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.mainHand) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.mainHand'}}"{{/if}}></div>
                         
                         <div class="slot-linked {{#allTrue system.equip.mainHand (eq system.equip.mainHand system.equip.offHand)}}show{{/allTrue}}">
                             <i class="fa fa-fw fa-link"></i>
                         </div>
 
-                        <div class="slot offHand" {{#if system.equip.offHand}}data-tooltip="Mano secondaria <br> {{lookup (getItemByID items system.equip.offHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.offHand) 'img'}})"{{else}}data-tooltip="Mano secondaria"{{/if}}></div>
+                        <div class="slot offHand" {{#if system.equip.offHand}}data-tooltip="{{localize 'FU.equipment.offHand'}} <br> {{lookup (getItemByID items system.equip.offHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.offHand) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.offHand'}}"{{/if}}></div>
                     </div>
-                    <div class="slot accessory" {{#if system.equip.accessory}}data-tooltip="Accessorio <br> {{lookup (getItemByID items system.equip.accessory) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.accessory) 'img'}})"{{else}}data-tooltip="Accessorio"{{/if}}></div>
+                    <div class="slot accessory" {{#if system.equip.accessory}}data-tooltip="{{localize 'FU.equipment.accessory'}} <br> {{lookup (getItemByID items system.equip.accessory) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.accessory) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.accessory'}}"{{/if}}></div>
                 </div>
                 <ul class="list list-equip">
                     {{#each weapons}}
@@ -306,7 +306,7 @@
             <div class="title title-list">
                 <span>Incantesimi</span>
                 {{#if @root.editable}}
-                    <button type="button" class="js_createItem" data-type="spell">
+                    <button type="button" class="btn-action-add js_createItem" data-type="spell">
                         <i class="fa fa-plus"></i>
                     </button>
                 {{/if}}
@@ -350,11 +350,11 @@
                         <div class="btn-container">
                             {{#if @root.editable}}
                                 {{#unless item.system.isEquipped}}
-                                    <button type="button" class="js_deleteItem" data-itemid="{{this._id}}" data-tooltip="Elimina">
-                                        <i class="fa fa-trash m-0"></i>
-                                    </button>
-                                    <button type="button" class="js_editItem" data-itemid="{{this._id}}" data-tooltip="Modifica">
+                                    <button type="button" class="btn-action-edit js_editItem" data-itemid="{{this._id}}" data-tooltip="{{localize 'FU.actions.edit'}}">
                                         <i class="fa fa-pencil m-0"></i>
+                                    </button>
+                                    <button type="button" class="btn-action-delete js_deleteItem" data-itemid="{{this._id}}" data-tooltip="{{localize 'FU.actions.delete'}}">
+                                        <i class="fa fa-trash m-0"></i>
                                     </button>
                                 {{/unless}}
                             {{/if}}
@@ -371,7 +371,7 @@
                                 {{#gt feature.system.level.current 0}}
                                     <div class="feature-box">
                                         <div class="feature-head">                                            
-                                            <button type="button" class="js_showItemInChat" data-itemid="{{../this._id}}" data-flag="{{featureIndex}}" data-tooltip="Mostra in Chat">
+                                            <button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{../this._id}}" data-flag="{{featureIndex}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
                                                 <i class="fa fa-comment m-0"></i>
                                             </button>
                                             {{feature.name}}
@@ -440,14 +440,14 @@
                     <li>
                         <div class="btn-container">
                             {{#if @root.editable}}
-                                <button type="button" class="js_deleteBond" data-index="{{bondIndex}}" data-tooltip="Elimina">
+                                <button type="button" class="btn-action-delete js_deleteBond" data-index="{{bondIndex}}" data-tooltip="{{localize 'FU.actions.delete'}}">
                                     <i class="fa fa-trash m-0"></i>
                                 </button>
                             {{/if}}
                         </div>
                         <div class="item-box">
                             <div class="title title-list">
-                                <input type="text" name="system.bond.{{bondIndex}}.name" value="{{bond.name}}">
+                                <input type="text" name="system.bond.{{bondIndex}}.name" value="{{bond.name}}" placeholder="{{localize 'FU.bond.inputName'}}">
                                 {{#gt bond.strength 0}}
                                     <span>+ {{bond.strength}}</span>
                                 {{/gt}}
