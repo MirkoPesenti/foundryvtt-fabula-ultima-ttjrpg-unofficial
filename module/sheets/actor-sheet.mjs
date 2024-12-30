@@ -233,11 +233,11 @@ export class FabulaActorSheet extends ActorSheet {
 			new Dialog({
 				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
 				content: `
-					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
+					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost} Zenit <i class="fa fa-fw fa-coins"></i></p>
 				`,
 				buttons: {
 					no: {
-						label: 'No',
+						label: 'Aggiungi gratuitamente',
 						callback: async () => {
 							const newItemData = sourceItem.toObject();
 							await actor.createEmbeddedDocuments("Item", [newItemData]);
@@ -245,7 +245,7 @@ export class FabulaActorSheet extends ActorSheet {
 						},
 					},
 					yes: {
-						label: 'Si',
+						label: 'Paga il costo',
 						callback: async () => {
 							const actorZenits = actor.system.resources.zenit;
 							if ( actorZenits < sourceItem.system.cost ) {

@@ -310,6 +310,7 @@ select {height:var(--fu-form-field-height);}
 .dialog-content .title {font-family:var(--fu-font-secondary);font-size:18px;font-weight:500;color:var(--fu-color-white);background-color:var(--fu-color-primary);padding:6px 18px 3px;margin:15px -8px 8px;}
 .dialog-content .title:first-child {margin-top:0;}
 .dialog-content input[type="checkbox"]:checked, .dialog-content input[type="radio"]:checked {--fu-color-checkbox-checked:var(--fu-color-primary);}
+.dialog-content p {margin-bottom:20px;}
 .dialog-content .form-checks {margin-bottom:8px;}
 .dialog-content .flexrow {gap:10px 0;}
 .dialog-content .flexrow .form-group {flex-basis:33%;display:flex;align-items:center;}
