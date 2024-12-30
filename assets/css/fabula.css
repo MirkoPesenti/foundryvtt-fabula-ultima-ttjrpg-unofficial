@@ -703,7 +703,8 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet.actor .list li .item-box .item-box-description {background-color: var(--fu-color-white);}
 .sheet.actor .list li .item-box .item-box-description p {margin:0;padding:8px;}
 
-.sheet.actor .list li .item-box .item-box-description .weapon-category {display: flex;align-items: center;padding:0 8px;}
+.sheet.actor .list li .item-box .item-box-description .weapon-category {display: flex;align-items: center;padding:8px;gap:4px;}
+.sheet.actor .list li .item-box .item-box-description .weapon-category .text p {padding:0;}
 
 .sheet.actor .list .flex-head {margin-bottom:10px;}
 .sheet.actor .list .editor {border:1px solid var(--fu-color-primary);border-radius:3px;overflow:hidden;}
@@ -736,8 +737,8 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet.actor .list-spells .opportunity > strong {float:left;margin-right:5px;}
 .sheet.actor .list-equip .item-box button.no-float {float:none;}
 
-.divider-decoration {position:relative;width:10px;margin:0 1px;display:inline-block;vertical-align:middle;}
-.divider-decoration:before {content:"◆";font-size:11px;position:absolute;top:-9px;left:0;right:0;}
+.divider-decoration {position:relative;width:13px;margin:0 1px;display:inline-block;vertical-align:middle;text-align:center;}
+.divider-decoration:before {content:"◆";font-size:13px;position:absolute;top:-9px;left:0;right:0;}
 
 /* Sheets > Actors > Character */
 .sheet.actor .character {background:none;padding:0;background:linear-gradient(to left, rgba(var(--fu-color-primary-rgb),0) 0%, rgba(var(--fu-color-primary-rgb),0.1) 30%, rgba(var(--fu-color-primary-rgb),0.1) 100%);max-height:unset;}

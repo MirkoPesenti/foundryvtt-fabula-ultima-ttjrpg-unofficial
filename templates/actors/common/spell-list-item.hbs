@@ -31,7 +31,7 @@
 			{{/if}}
 			
 			{{#if item.system.isOffensive.value}}
-				<strong class="ml-0">
+				<strong>
 					【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.level.checkBonus.spell 0}}+{{/gt}}
 					{{#unless (eq actor.level.checkBonus.spell 0)}}
 						{{actor.level.checkBonus.spell}}

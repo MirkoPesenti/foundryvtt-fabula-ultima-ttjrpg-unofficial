@@ -34,7 +34,7 @@
 			<div class="icon icon-{{item.system.range}}" data-tooltip="{{localize (concat 'FU.WeaponRanges.' item.system.range)}}"></div>
 				
 			{{/if}}
-			<strong class="m-0">
+			<strong>
 				【{{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.precisionAttributes.secondary.value)}}】{{#gt (add item.system.precisionBonus actor.level.checkBonus.test) 0}}+{{/gt}}
 				{{#unless (eq (add item.system.precisionBonus actor.level.checkBonus.test) 0)}}
 					{{add item.system.precisionBonus actor.level.checkBonus.test}}
