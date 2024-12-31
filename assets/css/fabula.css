@@ -736,10 +736,9 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 /* .sheet.actor .window-content .attributes-container .attr label .is-up {color:var(--fu-color-hp);}
 .sheet.actor .window-content .attributes-container .attr label .is-down {color:var(--fu-input-text;} */
 .sheet.actor .window-content .attributes-container .attr .progress-container {width:100%;display:flex;flex-wrap:wrap;align-items:stretch;justify-content:space-between;overflow:hidden;}
-.sheet.actor .window-content .attributes-container .attr .progress-container .progress-bar {width:100%;height:25px;position:relative;}
+.sheet.actor .window-content .attributes-container .attr .progress-container .progress-bar {position:relative;width:100%;height:25px;border-radius:5px;background-color:var(--fu-box-bg);border:1px solid var(--fu-input-border-color);}
 .sheet.actor .window-content .attributes-container .attr .progress-container .progress-bar .bar {position:absolute;top:0;left:0;bottom:0;height:100%;background-color:var(--fu-color-progress);}
 .sheet.actor .window-content .attributes-container .attr .progress-container > * {border:0;border-radius:0;display:flex;align-items:center;justify-content:center;box-shadow:none;font-family:var(--fu-font-secondary);font-size:16px;font-weight:700;color:var(--fu-color-progress);}
-.sheet.actor .window-content .attributes-container .attr .progress-container .progress-bar {background-color:transparent;}
 
 .sheet.actor .window-content .attributes-container .attr .progress-container input, .sheet.actor .window-content .attributes-container .attr .progress-container .max {width:50px;background-color: transparent;}
 
