@@ -43,7 +43,10 @@
 
 			<div class="divider-decoration {{#if (eq (add item.system.precisionBonus actor.system.bonus.checks.attack) 0)}}ml-0{{/if}}"></div>
 
-			<strong>【TM{{#gt (add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base) 0}} + {{add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base}}{{/gt}}】</strong>{{#unless (eq item.system.damage.type.value '')}}danni da&nbsp;<strong>{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}</strong>{{/unless}}
+			<strong>【TM{{#gt (add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base) 0}} + {{add item.system.damage.value actor.system.level.damageBonus actor.system.bonus.damage.base}}{{/gt}}】</strong>{{#unless (eq item.system.damage.type.value '')}}
+			
+			<div class="icon icon-{{item.system.damage.type.value}}" data-tooltip="{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}"></div>
+			{{/unless}}
 		</div>
 		
 		{{#unless (and (eq item.enrichedHtml.description '') (not item.system.type))}}
