@@ -1,3 +1,5 @@
-2024/12/30-11:39:39.606 312c Recovering log #232
-2024/12/30-11:39:39.610 312c Delete type=0 #232
-2024/12/30-11:39:39.610 312c Delete type=3 #231
+2025/01/03-10:24:27.757 5d9c Log #236: 0 ops saved to Table #237 OK
+2025/01/03-10:24:27.758 5d9c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/000236.log: OK
+2025/01/03-10:24:27.766 5d9c Table #214: 5 entries OK
+2025/01/03-10:24:27.776 5d9c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/MANIFEST-000235: OK
+2025/01/03-10:24:27.779 5d9c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable; recovered 1 files; 1355 bytes. Some data may have been lost. ****

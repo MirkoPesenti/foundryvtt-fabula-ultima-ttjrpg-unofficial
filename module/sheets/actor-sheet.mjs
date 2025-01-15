@@ -86,7 +86,7 @@ export class FabulaActorSheet extends ActorSheet {
 		
 		context.rollData = context.actor.getRollData();
 
-		context.effects = prepareActiveEffect(Array.from(this.actor.allApplicableEffects()));
+		context.effects = await prepareActiveEffect(Array.from(this.actor.allApplicableEffects()));
 		context.allEffects = [...context.effects.temporary.effects, ...context.effects.passive.effects, ...context.effects.inactive.effects];
 
 		for ( const effect of context.allEffects ) {
@@ -755,7 +755,6 @@ export class FabulaActorSheet extends ActorSheet {
 		const rituals = [];
 		const baseItems = [];
 		const attacks = [];
-		const effects = [];
 
 		for ( let i of context.items ) {
 
@@ -800,8 +799,6 @@ export class FabulaActorSheet extends ActorSheet {
 				baseItems.push(i);
 			} else if (i.type === 'attack') {
 				attacks.push(i);
-			} else if (i.type === 'effect') {
-				effects.push(i);
 			}
 		}
 
@@ -828,7 +825,6 @@ export class FabulaActorSheet extends ActorSheet {
 		context.rituals = rituals;
 		context.baseItems = baseItems;
 		context.attacks = attacks;
-		context.effects = effects;
 		context.classFeature = {};
 
 		for (const item of this.actor.itemTypes.classFeature) {
@@ -1285,14 +1281,14 @@ export class FabulaActorSheet extends ActorSheet {
 
 	async _equipItem(event) {
 		event.preventDefault();
+		const actor = this.actor;
 		const element = event.currentTarget;
 		const itemID = element.dataset.itemid;
 
-		const item = this.actor.items.get( itemID );
+		const item = actor.items.get( itemID );
 
 		if ( item ) {
-
-			const equippedData = foundry.utils.deepClone(this.actor.system.equip);
+			const equippedData = foundry.utils.deepClone(actor.system.equip);
 			let slot;
 			if ( item.type == 'weapon' ) {
 				slot = 'mainHand';
@@ -1304,20 +1300,20 @@ export class FabulaActorSheet extends ActorSheet {
 				slot = 'accessory';
 			}
 
-			if ( this.actor.type == 'character' && item.system.isMartial.value ) {
+			if ( actor.type == 'character' && item.system?.isMartial?.value ) {
 				let martialSlot = slot;
 				if ( item.type == 'weapon' ) {
 					martialSlot = item.system.range;
 				}
 
-				if ( !this.actor.system.useMartial[martialSlot] ) {
+				if ( !actor.system.useMartial[martialSlot] ) {
 					ui.notifications.warn(`Non puoi equipaggiare ${item.name} perché è un'equipaggiamento Marziale`);
 					return false;
 				}
 			}
 
 			if ( equippedData[slot] !== null && equippedData[slot] !== item._id ) {
-				const equippedItem = this.actor.items.get( equippedData[slot] );
+				const equippedItem = actor.items.get( equippedData[slot] );
 				if ( equippedItem ) {
 					await equippedItem.update({ 'system.isEquipped': false });
 				}
@@ -1325,13 +1321,13 @@ export class FabulaActorSheet extends ActorSheet {
 
 			if ( item.system.needTwoHands ) {
 				if ( equippedData.mainHand !== null && equippedData.mainHand !== itemID ) {
-					const mainHandItem = this.actor.items.find( item => item._id == equippedData.mainHand );
+					const mainHandItem = actor.items.find( item => item._id == equippedData.mainHand );
 					if ( mainHandItem.system.isEquipped ) {
 						await mainHandItem.update({ 'system.isEquipped': false });
 					}
 				}
 				if ( equippedData.offHand !== null && equippedData.offHand !== itemID ) {
-					const offHandItem = this.actor.items.find( item => item._id == equippedData.offHand );
+					const offHandItem = actor.items.find( item => item._id == equippedData.offHand );
 					if ( offHandItem.system.isEquipped ) {
 						await offHandItem.update({ 'system.isEquipped': false });
 					}
@@ -1347,7 +1343,7 @@ export class FabulaActorSheet extends ActorSheet {
 				equippedData[slot] = equippedData[slot] == itemID ? null : itemID;
 			}
 			
-			const embeddedItem = this.actor.items.find( item => item.name == FU.UnarmedStrike.name );
+			const embeddedItem = actor.items.find( item => item.name == FU.UnarmedStrike.name );
 			if ( embeddedItem ) {
 				if ( !equippedData.mainHand ) {
 					equippedData.mainHand = embeddedItem._id;
@@ -1361,8 +1357,8 @@ export class FabulaActorSheet extends ActorSheet {
 			if ( item.name !== embeddedItem.name ) {
 				await item.update({ 'system.isEquipped': !item.system.isEquipped});
 			}
-			await this.actor.update({ 'system.equip': equippedData });
-
+			await actor.update({ 'system.equip': equippedData });
+			actor.render(true);
 		}
 	}
 

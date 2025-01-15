@@ -1,3 +1,6 @@
-2024/12/30-11:39:39.759 312c Recovering log #207
-2024/12/30-11:39:39.763 312c Delete type=0 #207
-2024/12/30-11:39:39.763 312c Delete type=3 #206
+2025/01/03-10:24:28.029 333c Log #211: 159 ops saved to Table #212 OK
+2025/01/03-10:24:28.029 333c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/000211.log: OK
+2025/01/03-10:24:28.037 333c Table #195: 1 entries OK
+2025/01/03-10:24:28.037 333c Table #212: 159 entries OK
+2025/01/03-10:24:28.037 333c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/MANIFEST-000210: OK
+2025/01/03-10:24:28.045 333c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains; recovered 2 files; 119545 bytes. Some data may have been lost. ****

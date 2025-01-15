@@ -1,3 +1,5 @@
-2024/12/30-11:39:39.530 6504 Recovering log #347
-2024/12/30-11:39:39.537 6504 Delete type=0 #347
-2024/12/30-11:39:39.538 6504 Delete type=3 #346
+2025/01/03-10:24:27.647 5d9c Log #351: 0 ops saved to Table #352 OK
+2025/01/03-10:24:27.647 5d9c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\heroicskill/000351.log: OK
+2025/01/03-10:24:27.652 5d9c Table #329: 108 entries OK
+2025/01/03-10:24:27.655 5d9c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\heroicskill/MANIFEST-000350: OK
+2025/01/03-10:24:27.660 5d9c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\heroicskill; recovered 1 files; 77042 bytes. Some data may have been lost. ****

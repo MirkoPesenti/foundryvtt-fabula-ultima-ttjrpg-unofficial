@@ -221,6 +221,7 @@
       "shield": "Scudi marziali"
     },
     "affinity": {
+      "neutral": "Neutro",
       "vulnerability": "Vulnerabile",
       "resistance": "Resistente",
       "immunity": "Immune",

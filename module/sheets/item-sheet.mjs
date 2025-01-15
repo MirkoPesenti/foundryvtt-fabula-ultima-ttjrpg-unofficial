@@ -98,7 +98,7 @@ export class FabulaItemSheet extends ItemSheet {
 			arcanum: returnSortedPack( 'fabula.arcanum', 'arcanum' ),
 		}
 
-		context.effects = prepareActiveEffect(this.item.effects);
+		context.effects = await prepareActiveEffect(this.item.effects);
 		context.allEffects = [...context.effects.temporary.effects, ...context.effects.passive.effects, ...context.effects.inactive.effects];
 
 		for ( const effect of context.allEffects ) {

@@ -1,11 +1,6 @@
-2024/12/30-11:39:39.811 412c Recovering log #216
-2024/12/30-11:39:39.849 412c Level-0 table #218: started
-2024/12/30-11:39:39.909 412c Level-0 table #218: 1277227 bytes OK
-2024/12/30-11:39:39.916 412c Delete type=0 #216
-2024/12/30-11:39:39.919 412c Delete type=3 #215
-2024/12/30-11:39:40.015 5ebc Compacting 1@0 + 1@1 files
-2024/12/30-11:39:40.035 5ebc Generated table #220@0: 559 keys, 286302 bytes
-2024/12/30-11:39:40.035 5ebc Compacted 1@0 + 1@1 files => 286302 bytes
-2024/12/30-11:39:40.038 5ebc compacted to: files[ 0 1 0 0 0 0 0 ]
-2024/12/30-11:39:40.038 5ebc Delete type=2 #214
-2024/12/30-11:39:40.038 5ebc Delete type=2 #218
+2025/01/03-10:24:28.166 5320 Log #223: 554 ops saved to Table #225 OK
+2025/01/03-10:24:28.166 5320 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npc/000223.log: OK
+2025/01/03-10:24:28.174 5320 Table #224: 585 entries OK
+2025/01/03-10:24:28.174 5320 Table #225: 554 entries OK
+2025/01/03-10:24:28.174 5320 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npc/MANIFEST-000221: OK
+2025/01/03-10:24:28.182 5320 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npc; recovered 2 files; 699581 bytes. Some data may have been lost. ****

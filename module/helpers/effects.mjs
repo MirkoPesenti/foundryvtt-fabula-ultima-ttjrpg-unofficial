@@ -1,6 +1,6 @@
 import { FabulaActor } from "../documents/actors/actor.mjs";
 
-export function prepareActiveEffect(effects) {
+export async function prepareActiveEffect(effects) {
 
     const cats = {
         temporary: {
@@ -20,18 +20,20 @@ export function prepareActiveEffect(effects) {
         }
     }
 
-    for ( let e of effects ) {
-        if ( e.disabled ) {
-            cats.inactive.effects.push(e);
-        } else if ( e.isTemporary ) {
-            cats.temporary.effects.push(e);
+    for ( const e of effects ) {
+        if ( e.parent.isEmbedded && e.parent.type != 'classFeature' && e.parent.type != 'heroicSkill' ) {
+            if ( e.parent.system.isEquipped ) {
+                await e.update({ disabled: false });
+                cats.passive.effects.push(e);
+            } else {
+                await e.update({ disabled: true });
+                cats.inactive.effects.push(e);
+            }
         } else {
-            if ( e.parent.isEmbedded && e.parent.type != 'classFeature' && e.parent.type != 'heroicSkill' ) {
-                if ( e.parent.system.isEquipped ) {
-                    cats.passive.effects.push(e);
-                } else {
-                    cats.inactive.effects.push(e);
-                }
+            if ( e.disabled ) {
+                cats.inactive.effects.push(e);
+            } else if ( e.isTemporary ) {
+                cats.temporary.effects.push(e);
             } else {
                 cats.passive.effects.push(e);
             }
