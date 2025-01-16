@@ -308,12 +308,9 @@
                     <li class="{{this.system.sourcebook}}">
                         <div class="btn-container">
                             {{#if @root.editable}}
-                                {{#unless item.system.isEquipped}}
-                                    <button type="button" class="btn-action-edit js_editItem" data-itemid="{{this._id}}" data-tooltip="{{localize 'FU.actions.edit'}}">
-                                        <i class="fa fa-pencil m-0"></i>
-                                    </button>
-                                    <button type="button" class="btn-action-delete js_deleteItem" data-itemid="{{this._id}}" data-tooltip="{{localize 'FU.actions.delete'}}">
-                                        <i class="fa fa-trash m-0"></i>
+                                {{#unless this.system.isEquipped}}
+                                    <button type="button" class="btn-action-options" data-item="{{this._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+                                        <i class="fa fa-ellipsis-vertical m-0"></i>
                                     </button>
                                 {{/unless}}
                             {{/if}}

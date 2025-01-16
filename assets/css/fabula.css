@@ -340,6 +340,9 @@ select {height:var(--fu-form-field-height);}
 	100% {filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));}
 }
 
+/* UI > Context menu */
+.context-menu-options .context-items > .context-item {align-items:center;}
+
 /* UI > Clocks */
 .fabula.container-clock {width:250px;}
 .fabula.container-clock .inner-clock {pointer-events:all;}
@@ -436,9 +439,9 @@ select {height:var(--fu-form-field-height);}
 .editor-content ul > li p:last-child {margin-bottom:0;}
 .editor-content blockquote {transform:translateX(-15px);border:0;margin-left:0;margin-right:0;font-style:inherit;padding-left:15px;background:linear-gradient(to left, rgba(var(--fu-color-gradient-bg-rgb),0) 0%, rgba(var(--fu-color-gradient-bg-rgb),1) 100%);}
 .editor-content blockquote > * {display:inline-block;}
-a.content-link, a.inline-roll {background-color:var(--fu-color-primary);border-color:var(--fu-color-primary);color:var(--fu-color-white);font-weight:400;text-transform:uppercase;border-radius:5px;text-shadow:none;transition:box-shadow .15s ease-in-out;}
-a.content-link:hover, a.inline-roll:hover {box-shadow:0 0 10px rgba(var(--fu-color-primary-rgb));}
-a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
+a.content-link, a.inline-roll {background-color:transparent;border:0;border-bottom:2px solid var(--fu-color-primary);color:var(--fu-color-primary);font-weight:400;text-transform:uppercase;border-radius:0;text-shadow:none;box-shadow:none;transition:text-shadow .15s ease-in-out;}
+a.content-link:hover, a.inline-roll:hover {text-shadow:0 0 10px rgba(var(--fu-color-primary-rgb));}
+a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 
 /* Editor > Table */
 .editor-content table {background:transparent !important;margin-top:15px !important;}
@@ -506,6 +509,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-white);}
 .sheet.fabula .list-effects > li + li::after {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
 .sheet.fabula .list-effects > li .btn-container {flex-direction:column;flex-shrink:0;margin:0;gap:5px;width:30px;margin-right:10px;}
 .sheet.fabula .list-effects > li .btn-container button {width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;}
+.sheet.fabula .list-effects > li .btn-container button[disabled] {opacity:.5;cursor:not-allowed;}
 .sheet.fabula .list-effects > li .item-box {flex-grow:1;}
 .sheet.fabula .list-effects > li .item-box .name {margin-bottom:5px;margin-right:5px;}
 .sheet.fabula .list-effects > li .item-box label {float:left;font-weight:700;}

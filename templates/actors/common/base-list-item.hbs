@@ -2,11 +2,8 @@
 	{{#if (or (eq actor.type 'npc') (and (not item.system.isEquipped) (eq actor.type 'character')))}}
 		<div class="btn-container">
 			{{#if @root.editable}}
-				<button type="button" class="btn-action-edit js_editItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.edit'}}">
-					<i class="fa fa-pencil m-0"></i>
-				</button>
-				<button type="button" class="btn-action-delete js_deleteItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.delete'}}">
-					<i class="fa fa-trash m-0"></i>
+				<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+					<i class="fa fa-ellipsis-vertical m-0"></i>
 				</button>
 			{{/if}}
 		</div>
@@ -20,12 +17,6 @@
 						<div class="martial-icon" data-tooltip="{{localize 'TYPES.Item.martialItem'}}">l</div>
 					{{/if}}
 				</button>
-
-				{{#unless (or (eq item.type 'baseItem') (eq item.type 'heroicSkill') (eq actor.type 'npc'))}}
-					<button type="button" class="btn-action-equip equip js_equipItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.equip'}}">
-						<div class="icon icon-equip-action"></div>
-					</button>
-				{{/unless}}
 			{{else}}
 				<label>{{item.name}}</label>
 			{{/if}}

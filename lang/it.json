@@ -272,10 +272,12 @@
       "5": "Override"
     },
     "actions": {
+      "settings": "Opzioni",
       "showInChat": "Mostra in chat",
       "delete": "Elimina",
       "edit": "Modifica",
       "equip": "Equipaggia",
+      "unequip": "Disequipaggia",
       "attack": "Effettua un attacco",
       "test": "Effettua un test",
       "castSpell": "Lancia incantesimo",

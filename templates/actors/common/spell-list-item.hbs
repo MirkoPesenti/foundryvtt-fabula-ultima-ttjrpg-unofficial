@@ -1,11 +1,8 @@
 <li class="{{item.system.sourcebook}}">
 	<div class="btn-container">
 		{{#if @root.editable}}
-			<button type="button" class="btn-action-edit js_editItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.edit'}}">
-				<i class="fa fa-pencil m-0"></i>
-			</button>
-			<button type="button" class="btn-action-delete js_deleteItem" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.delete'}}">
-				<i class="fa fa-trash m-0"></i>
+			<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+				<i class="fa fa-ellipsis-vertical m-0"></i>
 			</button>
 		{{/if}}
 	</div>

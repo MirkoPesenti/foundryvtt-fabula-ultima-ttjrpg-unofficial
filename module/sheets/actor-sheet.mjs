@@ -629,7 +629,7 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click', '.js_setAttrValue', this._setAttrValue.bind(this));
 
 		// Equip Item
-		html.on('click','.js_equipItem', this._equipItem.bind(this));
+		html.on('click','.js_equipItem', (event) => this._equipItem( $(event.currentTarget) ));
 
 		// Remove Item from Actor
 		html.on('click','.js_removeItem', async (e) => {
@@ -685,10 +685,10 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click','.js_createItem', this._createItem.bind(this));
 
 		// Edit Item
-		html.on('click','.js_editItem', this._editItem.bind(this));
+		html.on('click','.js_editItem', (event) => this._editItem( $(event.currentTarget) ));
 
 		// Delete Item
-		html.on('click','.js_deleteItem', this._deleteItem.bind(this));
+		html.on('click','.js_deleteItem', (event) => this._deleteItem( $(event.currentTarget) ));
 		
 		// Show Item in Chat
 		html.on('click','.js_showItemInChat', this._showItemInChat.bind(this));
@@ -725,6 +725,95 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Level up Character
 		html.on('click', '.js_levelUpCharacter', this._levelUpCharacter.bind(this));
+
+		// ContextMenu item settings menu items
+		const contextMenuItemSettings = [
+			{
+				name: game.i18n.localize('FU.actions.edit'),
+				icon: '<i class="fa fa-pencil"></i>',
+				callback: this._editItem.bind(this),
+				condition: (el) => !!$(el).data('item'),
+			},
+			{
+				name: game.i18n.localize('FU.actions.delete'),
+				icon: '<i class="fa fa-trash"></i>',
+				callback: this._deleteItem.bind(this),
+				condition: (el) => !!$(el).data('item'),
+			},
+		];
+
+		// Edit ContextMenu item settings menu items
+		html.on('click','.btn-action-options', (event) => {
+			const actor = this.actor;
+
+			const itemId = event.currentTarget.dataset.item;
+			const item = actor.items.get( itemId );
+			if ( item ) {
+				contextMenuItemSettings.splice( 0, contextMenuItemSettings.length );
+
+				// Add edit option if doesn't exist
+				if ( !contextMenuItemSettings.some( opt => opt.name === game.i18n.localize('FU.actions.edit') ) ) {
+					contextMenuItemSettings.push({
+						name: game.i18n.localize('FU.actions.edit'),
+						icon: '<i class="fa fa-pencil"></i>',
+						callback: this._editItem.bind(this),
+						condition: (el) => !!$(el).data('item'),
+					});
+				}
+				// Add delete option if doesn't exist
+				if ( !contextMenuItemSettings.some( opt => opt.name === game.i18n.localize('FU.actions.delete') ) ) {
+					contextMenuItemSettings.push({
+						name: game.i18n.localize('FU.actions.delete'),
+						icon: '<i class="fa fa-trash"></i>',
+						callback: this._deleteItem.bind(this),
+						condition: (el) => !!$(el).data('item'),
+					});
+				}
+
+				// Add equip/unequip option
+				if ( 'isEquipped' in item.system ) {
+					if ( item.system.isEquipped ) {
+						contextMenuItemSettings.unshift({
+							name: game.i18n.localize('FU.actions.unequip'),
+							icon: '<i class="fa fa-shield-halved"></i>',
+							callback: this._equipItem.bind(this),
+							condition: (el) => !!$(el).data('item'),
+						});
+					} else {
+						contextMenuItemSettings.unshift({
+							name: game.i18n.localize('FU.actions.equip'),
+							icon: '<i class="fa fa-shield"></i>',
+							callback: this._equipItem.bind(this),
+							condition: (el) => !!$(el).data('item'),
+						});
+					}
+				}
+
+				// Remove not wanted options for Unarmed Strike item
+				if ( item.name === FU.UnarmedStrike.name ) {
+					let optIndex;
+					optIndex = contextMenuItemSettings.findIndex( opt => opt.name === game.i18n.localize('FU.actions.edit') );
+					contextMenuItemSettings.splice( optIndex, 1 );
+					
+					optIndex = contextMenuItemSettings.findIndex( opt => opt.name === game.i18n.localize('FU.actions.delete') );
+					contextMenuItemSettings.splice( optIndex, 1 );
+
+					optIndex = contextMenuItemSettings.findIndex( opt => opt.name === game.i18n.localize('FU.actions.unequip') );
+					contextMenuItemSettings.splice( optIndex, 1 );
+				}
+			}
+		});
+
+		// Init ContextMenu item settings
+		new ContextMenu(html, '.btn-action-options', contextMenuItemSettings, {
+			eventName: 'click',
+			onOpen: (menu) => {
+				setTimeout(() => {
+					menu.querySelector('nav#context-menu')?.classList.add('context-menu-options');
+				}, 1);
+			},
+			onClose: () => {},
+		});
 
 		if (!this.isEditable) return;
 	}
@@ -1086,19 +1175,15 @@ export class FabulaActorSheet extends ActorSheet {
 		createdItem.sheet.render(true);
 	}
 
-	async _editItem(event) {
-		const element = event.currentTarget;
-		const itemID = element.dataset.itemid;
-
-		const item = this.actor.items.get( itemID );
+	async _editItem(el) {
+		const itemId = $(el).data('item');
+		const item = this.actor.items.get( itemId );
 		if ( item ) item.sheet.render(true);
 	}
 
-	async _deleteItem(event) {
-		const element = event.currentTarget;
-		const itemID = element.dataset.itemid;
-
-		const item = this.actor.items.get( itemID );
+	async _deleteItem(el) {
+		const itemId = $(el).data('item');
+		const item = this.actor.items.get( itemId );
 
 		if ( item.name == FU.UnarmedStrike.name ) {
 			ui.notifications.warn(`Non puoi eliminare l'Item ${FU.UnarmedStrike.name}`);
@@ -1279,13 +1364,10 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
-	async _equipItem(event) {
-		event.preventDefault();
+	async _equipItem(el) {
 		const actor = this.actor;
-		const element = event.currentTarget;
-		const itemID = element.dataset.itemid;
-
-		const item = actor.items.get( itemID );
+		const itemId = $(el).data('item');
+		const item = actor.items.get( itemId );
 
 		if ( item ) {
 			const equippedData = foundry.utils.deepClone(actor.system.equip);
@@ -1320,27 +1402,27 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 			if ( item.system.needTwoHands ) {
-				if ( equippedData.mainHand !== null && equippedData.mainHand !== itemID ) {
+				if ( equippedData.mainHand !== null && equippedData.mainHand !== itemId ) {
 					const mainHandItem = actor.items.find( item => item._id == equippedData.mainHand );
 					if ( mainHandItem.system.isEquipped ) {
 						await mainHandItem.update({ 'system.isEquipped': false });
 					}
 				}
-				if ( equippedData.offHand !== null && equippedData.offHand !== itemID ) {
+				if ( equippedData.offHand !== null && equippedData.offHand !== itemId ) {
 					const offHandItem = actor.items.find( item => item._id == equippedData.offHand );
 					if ( offHandItem.system.isEquipped ) {
 						await offHandItem.update({ 'system.isEquipped': false });
 					}
 				}
 
-				equippedData.mainHand = equippedData.mainHand == itemID ? null : itemID;
-				equippedData.offHand = equippedData.offHand == itemID ? null : itemID;
+				equippedData.mainHand = equippedData.mainHand == itemId ? null : itemId;
+				equippedData.offHand = equippedData.offHand == itemId ? null : itemId;
 			} else {
 				if ( ( slot == 'offHand' || slot == 'mainHand' ) && equippedData.mainHand === equippedData.offHand ) {
 					equippedData.mainHand = null;
 					equippedData.offHand = null;
 				}
-				equippedData[slot] = equippedData[slot] == itemID ? null : itemID;
+				equippedData[slot] = equippedData[slot] == itemId ? null : itemId;
 			}
 			
 			const embeddedItem = actor.items.find( item => item.name == FU.UnarmedStrike.name );
@@ -1358,6 +1440,7 @@ export class FabulaActorSheet extends ActorSheet {
 				await item.update({ 'system.isEquipped': !item.system.isEquipped});
 			}
 			await actor.update({ 'system.equip': equippedData });
+			const context = await this.getData();
 			actor.render(true);
 		}
 	}
