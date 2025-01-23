@@ -1,6 +1,3 @@
-2025/01/03-10:24:27.952 333c Log #218: 6 ops saved to Table #219 OK
-2025/01/03-10:24:27.952 333c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures/000218.log: OK
-2025/01/03-10:24:27.955 333c Table #202: 38 entries OK
-2025/01/03-10:24:27.955 333c Table #219: 6 entries OK
-2025/01/03-10:24:27.959 333c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures/MANIFEST-000217: OK
-2025/01/03-10:24:27.962 333c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures; recovered 2 files; 18983 bytes. Some data may have been lost. ****
+2025/01/23-08:42:29.490317 310c06000 Recovering log #229
+2025/01/23-08:42:29.490646 310c06000 Delete type=3 #228
+2025/01/23-08:42:29.490685 310c06000 Delete type=0 #229

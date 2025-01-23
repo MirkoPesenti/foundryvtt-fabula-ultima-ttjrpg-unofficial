@@ -9,6 +9,7 @@ export const preloadPartialTemplates = async function() {
         // Actors
         'systems/fabula/templates/actors/common/attack-list-item.hbs',
         'systems/fabula/templates/actors/common/spell-list-item.hbs',
+        'systems/fabula/templates/actors/common/arcanum-list-item.hbs',
         'systems/fabula/templates/actors/common/base-list-item.hbs',
 
         // Commons

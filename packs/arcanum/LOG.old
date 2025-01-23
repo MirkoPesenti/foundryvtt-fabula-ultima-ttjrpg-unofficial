@@ -1,5 +1,9 @@
-2025/01/03-10:24:27.700 3488 Log #393: 0 ops saved to Table #394 OK
-2025/01/03-10:24:27.700 3488 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\arcanum/000393.log: OK
-2025/01/03-10:24:27.707 3488 Table #371: 14 entries OK
-2025/01/03-10:24:27.711 3488 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\arcanum/MANIFEST-000392: OK
-2025/01/03-10:24:27.714 3488 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\arcanum; recovered 1 files; 7956 bytes. Some data may have been lost. ****
+2025/01/23-08:42:29.471786 310c06000 Recovering log #406
+2025/01/23-08:42:29.472236 310c06000 Level-0 table #408: started
+2025/01/23-08:42:29.472511 310c06000 Level-0 table #408: 15593 bytes OK
+2025/01/23-08:42:29.472808 310c06000 Delete type=0 #406
+2025/01/23-08:42:29.473766 310c06000 Delete type=3 #404
+2025/01/23-08:42:29.473978 318e0b000 Compacting 4@0 + 0@1 files
+2025/01/23-08:42:29.474983 318e0b000 Generated table #410@0: 29 keys, 14555 bytes
+2025/01/23-08:42:29.474996 318e0b000 Compacted 4@0 + 0@1 files => 14555 bytes
+2025/01/23-08:42:29.475132 318e0b000 compacted to: files[ 0 1 0 0 0 0 0 ]

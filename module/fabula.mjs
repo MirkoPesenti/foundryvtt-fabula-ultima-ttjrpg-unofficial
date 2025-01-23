@@ -223,6 +223,7 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 		// Bonus to damages
 		'system.bonus.damage.base',
 		'system.bonus.damage.spell',
+		'system.bonus.damage.type',
 
 		// Bonus to rolls
 		'system.bonus.checks.base',
@@ -250,10 +251,24 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 	];
 	const values = [
 		'true',
+		'false',
+
+		// Affinities
 		'vulnerability',
 		'resistance',
 		'immunity',
 		'absorption',
+		'physical',
+
+		// Damages
+		'air',
+		'bolt',
+		'dark',
+		'earth',
+		'fire',
+		'ice',
+		'light',
+		'poison',
 	];
 
 	const inputList = html.find('.changes-list .key input');

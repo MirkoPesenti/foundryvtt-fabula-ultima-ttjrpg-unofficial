@@ -67,6 +67,13 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 		this.resources.hp.attribute = 'mig';
 		this.resources.mp.attribute = 'wlp';
 
+		if ( this.level.value >= 40 )
+			((this.bonus ??= {}).damage ??= {}).arcana = 20;
+		else if ( this.level.value >= 20 )
+			((this.bonus ??= {}).damage ??= {}).arcana = 10;
+		else
+			((this.bonus ??= {}).damage ??= {}).arcana = 0;
+
 		for ( const bond of this.bond ) {
 			bond.prepareData();
 		}

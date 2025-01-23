@@ -32,7 +32,8 @@
     "sourcebook": {
       "base": "Manuale Base",
       "bonusAce": "Bonus: Pesca la tua Carta!",
-      "bonusNecromancer": "Bonus: Un regalo bello da Morire!",
+      "bonusHalloween": "Speciale Halloween",
+      "bonusArcaneWhispers": "Sussurri Arcani",
       "atlasHighFantasy": "Atlante High Fantasy",
       "atlasTechnoFantasy": "Atlante Techno Fantasy",
       "atlasNaturalFantasy": "Atlante Natural Fantasy"
@@ -165,6 +166,7 @@
       "armor": "Armatura",
       "shield": "Scudo",
       "accessory": "Accessorio",
+      "arcanum": "Arcano",
       "martial": "Marziale"
     },
     "weaponCategories": {
@@ -281,7 +283,9 @@
       "attack": "Effettua un attacco",
       "test": "Effettua un test",
       "castSpell": "Lancia incantesimo",
-      "toggleActive": "Attiva/Disattiva"
+      "toggleActive": "Attiva/Disattiva",
+      "summon": "Evoca",
+      "dismiss": "Congeda"
     }
   }
 }

@@ -247,15 +247,15 @@ select {height:var(--fu-form-field-height);}
 	--fu-sheet-body-bg-right: url(../img/natural-fantasy/bg-class-body-right.png);
 }
 
-.bonusNecromancer {
+.bonusHalloween {
 	--fu-color-primary: #363E52;
 	--fu-color-primary-rgb: 54,62,82;
 	--fu-color-gradient-bg-rgb: 207,198,255;
 	--fu-color-green-rgb: 55,62,82;
 	--fu-sheet-text-color: #9397A2;
-	--fu-sheet-header-bg: url(../img/bonus-necromancer/bg-class-header.png);
-	--fu-sheet-body-bg-left: url(../img/bonus-necromancer/bg-class-body-left.png);
-	--fu-sheet-body-bg-right: url(../img/bonus-necromancer/bg-class-body-right.png);
+	--fu-sheet-header-bg: url(../img/bonus-halloween/bg-class-header.png);
+	--fu-sheet-body-bg-left: url(../img/bonus-halloween/bg-class-body-left.png);
+	--fu-sheet-body-bg-right: url(../img/bonus-halloween/bg-class-body-right.png);
 }
 
 .bonusAce {
@@ -267,6 +267,17 @@ select {height:var(--fu-form-field-height);}
 	--fu-sheet-header-bg: url(../img/bonus-ace/bg-class-header.png);
 	--fu-sheet-body-bg-left: url(../img/bonus-ace/bg-class-body-left.png);
 	--fu-sheet-body-bg-right: url(../img/bonus-ace/bg-class-body-right.png);
+}
+
+.bonusArcaneWhispers {
+	--fu-color-primary: #D3583B;
+	--fu-color-primary-rgb: 211,88,59;
+	--fu-color-gradient-bg-rgb: 252,233,223;
+	--fu-color-green-rgb: 211,88,59;
+	--fu-sheet-text-color: #FFFFFF;
+	--fu-sheet-header-bg: url(../img/arcane-whispers/bg-class-header.png);
+	--fu-sheet-body-bg-left: url(../img/arcane-whispers/bg-class-body-left.png);
+	--fu-sheet-body-bg-right: url(../img/arcane-whispers/bg-class-body-right.png);
 }
 
 /* Icons */
@@ -321,9 +332,9 @@ select {height:var(--fu-form-field-height);}
 .directory .directory-item img {object-fit:contain;}
 
 /* UI > Autocomplete Suggestions */
-.fabula-autocomplete-suggestions {position:absolute;z-index:1000;border:1px solid var(--color-primary);border-radius:3px;overflow:hidden;overflow-y:auto;width:265px;max-height:200px;background-color:var(--color-select-option-bg);}
+.fabula-autocomplete-suggestions {position:absolute;z-index:1000;border:1px solid var(--fu-color-primary);border-radius:3px;overflow:hidden;overflow-y:auto;width:265px;max-height:200px;background-color:var(--color-select-option-bg);}
 .fabula-autocomplete-suggestions .fabula-autocomplete-item {display:block;cursor:pointer;padding:5px 10px;background-color:transparent;}
-.fabula-autocomplete-suggestions .fabula-autocomplete-item:hover {background-color:rgba(var(--color-primary-rgb),.3);}
+.fabula-autocomplete-suggestions .fabula-autocomplete-item:hover {background-color:rgba(var(--fu-color-primary-rgb),.3);}
 
 /* UI > Pause */
 .fabula#pause {background:none;animation:pauseAnimation 3s infinite ease-in-out;}
@@ -458,6 +469,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .editor-content table p {margin:0 !important;}
 
 /* Sheets > General */
+.sheet.fabula {--color-scrollbar:var(--fu-color-primary);--color-checkbox-checked:var(--fu-color-primary);min-width:700px;max-width:700px;min-height:430px;}
 .sheet.fabula .window-content {background-image:none;background-color:var(--fu-window-bg);padding:0;color:var(--fu-color-text);}
 
 .sheet.actor input[type="text"] , .sheet.actor input[type="number"] , .sheet.actor input[type="password"] , .sheet.actor input[type="date"] , .sheet.actor input[type="time"] , .sheet.actor input[type="search"] {background-color:var(--fu-input-bg);color:var(--fu-input-text);}
@@ -469,13 +481,12 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet.bonusAce .class .sheet-header .class-icon {border-color:#CD1719;outline-color:#CD1719;}
 .sheet.bonusAce .class .sheet-body .tab {border-color:#CD1719;outline-color:#CD1719;}
 
-/* Sheets > General */
-.sheet.fabula {--fu-color-scrollbar:var(--fu-color-primary);--fu-color-checkbox-checked:var(--fu-color-primary);min-width:700px;max-width:700px;min-height:430px;}
-
 .sheet.fabula form {max-height:100%;}
 .sheet .editable button:not(.editor button) {width:auto;margin:0;background-color:var(--fu-color-white);border:1px solid var(--fu-color-primary);border-radius:5px;font-size:16px;line-height:1.2;--fu-color-shadow-primary:var(--fu-color-primary);transition:box-shadow .15s ease-in-out;}
-.sheet.fabula .sheet-header {position:relative;min-height:93px;padding:40px 75px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:var(--fu-sheet-header-bg);flex-grow:0;outline:1px solid var(--fu-color-primary);outline-offset:1px;}
+.sheet.fabula .sheet-header {position:relative;z-index:1;min-height:93px;padding:40px 75px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:var(--fu-sheet-header-bg);flex-grow:0;outline:1px solid var(--fu-color-primary);outline-offset:1px;}
+.sheet.fabula.bonusArcaneWhispers .sheet-header {outline-offset:0;}
 .sheet.fabula .sheet-header input {border:0;border-radius:0;width:100%;padding:0;height:auto;color:var(--fu-color-white);text-transform:uppercase;font-family:CreditValley;font-size:50px;}
+.sheet.fabula .equip .sheet-header input {background-color:transparent;}
 .sheet.fabula .sheet-header .icon {position:absolute;bottom:14px;left:35px;width:35px;height:35px;background-repeat:no-repeat;background-position:center center;background-size:contain;}
 .sheet.fabula .sheet-header .martial-icon {position:absolute;bottom:5px;left:35px;font-family:"FnT_BasicShapes1",sans-serif;font-size:35px;color:var(--fu-color-red);}
 .sheet.fabula .sheet-header .class-icon {position:absolute;bottom:0;right:50px;z-index:1;width:54px;height:54px;padding:9px;border:3px solid var(--fu-color-primary);outline:1px solid var(--fu-color-primary);outline-offset:-6px;background-color:var(--fu-color-white);transform:translate(50%, 50%) rotate(45deg);}
@@ -506,14 +517,14 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet.fabula .list-effects {list-style:none;padding:0;}
 .sheet.fabula .list-effects > li {position:relative;padding:0;display:flex;}
 .sheet.fabula .list-effects > li + li {margin-top:10px;padding-top:10px;border-top:1px solid transparent;}
-.sheet.fabula .list-effects > li + li::after {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--color-primary-rgb),0) 0%, rgba(var(--color-primary-rgb),.4) 30%, rgba(var(--color-primary-rgb)) 100%);}
+.sheet.fabula .list-effects > li + li::after {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--fu-color-primary-rgb),0) 0%, rgba(var(--fu-color-primary-rgb),.4) 30%, rgba(var(--fu-color-primary-rgb)) 100%);}
 .sheet.fabula .list-effects > li .btn-container {flex-direction:column;flex-shrink:0;margin:0;gap:5px;width:30px;margin-right:10px;}
 .sheet.fabula .list-effects > li .btn-container button {width:30px;height:30px;display:flex;align-items:center;justify-content:center;padding:0;}
 .sheet.fabula .list-effects > li .btn-container button[disabled] {opacity:.5;cursor:not-allowed;}
 .sheet.fabula .list-effects > li .item-box {flex-grow:1;}
 .sheet.fabula .list-effects > li .item-box .name {margin-bottom:5px;margin-right:5px;}
 .sheet.fabula .list-effects > li .item-box label {float:left;font-weight:700;}
-.sheet.fabula .list-effects > li .item-box label::after {content:"◆";font-size:12px;font-weight:400;margin:0 5px;color:var(--color-primary);}
+.sheet.fabula .list-effects > li .item-box label::after {content:"◆";font-size:12px;font-weight:400;margin:0 5px;color:var(--fu-color-primary);}
 .sheet.fabula .list-effects > li .item-box p {margin-bottom:0;}
 .sheet.fabula .list-effects > li .item-box p:not(p + p) {margin-top:0;}
 .sheet.fabula .list-effects > li .effects-key, .sheet.fabula .list-effects > li .description {margin-top:5px;}
@@ -524,6 +535,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet .title:first-of-type {margin-top:0;}
 .sheet .title::after {content:"";position:absolute;bottom:0;left:0;right:0;width:100%;height:1px;background:linear-gradient(to left, rgba(var(--fu-color-primary-rgb),0) 0%, rgba(var(--fu-color-primary-rgb),.4) 30%, rgba(var(--fu-color-primary-rgb)) 100%);}
 .sheet .title input {margin:0;border-radius:0;border:0;background:transparent;text-transform:uppercase;}
+.sheet .title input:focus {box-shadow:none;}
 .sheet .editable .title input {height:auto;}
 .sheet .editable .title input::placeholder {color:var(--fu-input-placeholder);}
 
@@ -575,23 +587,6 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet .feature-box .feature-body * {user-select:text;}
 .sheet .feature-box .feature-body p {margin:5px 0;}
 .sheet .feature-box .prosemirror menu {border-radius:0;}
-
-/* Sheets > Arcanum Box */
-.sheet .arcanum-box {display:flex;flex-direction:column;}
-.sheet .arcanum-box .arcanum-head {display:flex;}
-.sheet .arcanum-box .arcanum-head > * {flex-grow:1;}
-.sheet .arcanum-box .arcanum-head img {width:70px;height:70px;padding:5px;border-radius:0;border:1px solid var(--fu-color-primary);border-left:0;border-bottom:0;flex-grow:unset;flex-shrink:0;}
-.sheet .arcanum-box .arcanum-head p {padding:0 15px;display:flex;align-items:center;gap:5px;}
-.sheet .arcanum-box .arcanum-head p input, .sheet .arcanum-box .arcanum-body input {background:transparent;border:0;margin:0;padding:0;height:auto;line-height:1.2;}
-.sheet .arcanum-box .arcanum-body {border-top:1px solid var(--fu-color-primary);padding:5px 15px;padding-left:40px;overflow:hidden;position:relative;}
-.sheet .editable .arcanum-box .arcanum-body {padding:0;padding-left:25px;min-height:80px;}
-.sheet .arcanum-box .arcanum-body label {position:absolute;top:0;left:-100%;transform:rotate(-90deg);transform-origin:top right;width:100%;text-align:right;font-size:14px;font-weight:600;text-transform:uppercase;padding:5px 7px 2px;background-color:rgba(var(--fu-color-gradient-bg-rgb));}
-.sheet .arcanum-box .arcanum-body input {padding:5px;box-shadow:none;border-radius:0;}
-.sheet .editable .arcanum-box .arcanum-body input {border-top:1px solid var(--fu-color-primary);}
-.sheet .arcanum-box .arcanum-body .prosemirror menu {border-radius:0;}
-.sheet .arcanum-box .btn-container {margin:5px;}
-.sheet .arcanum-box .p-container p:not(:last-child) {margin-bottom:0;}
-.sheet .arcanum-box .p-container p + p {margin-top:0;}
 
 /* Sheets > Equip */
 .sheet .equip-box {display:flex;flex-direction:column;}
@@ -651,13 +646,40 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet .class .equip-box {transform:translateX(-15px);margin-bottom:15px;}
 .sheet .class .equip-box .equip-head img {height:60px;width:60px;}
 
-/* Sheets > Arcanums */
-.sheet .arcanum .sheet-body .tab {padding:15px 0;}
-
 /* Sheets > Equipment */
 .sheet .equip .sheet-body .tab {padding:15px 0;}
 .sheet .equip .editable-options {padding:0 0 15px;}
 .sheet .equip .editable-options .form-group {padding:0 15px;}
+
+/* Sheets > Equipment > Arcanums */
+.sheet .equip.arcanum table thead {background:linear-gradient(to left, rgba(var(--fu-color-primary-rgb),0) 0%, rgba(var(--fu-color-primary-rgb),.4) 30%, rgba(var(--fu-color-primary-rgb)) 100%);}
+.sheet .equip.arcanum table thead tr th, .sheet .equip.arcanum table tbody tr td {padding-left:15px;padding-right:15px;text-align:left;}
+.sheet .equip.arcanum .equip-box .equip-head {border-bottom:1px solid var(--fu-color-primary);}
+.sheet .equip.arcanum .equip-box .equip-head img {width:98px;height:98px;}
+.sheet .equip.arcanum .equip-box .equip-head table th input {color:var(--fu-color-white);text-transform:uppercase;letter-spacing:1px;font-size:30px;}
+.sheet .equip.arcanum .equip-box .equip-head table .content {display:flex;align-items:center;}
+.sheet .equip.arcanum .equip-box .equip-head table .content strong {flex-shrink:0;margin-right:5px;}
+.sheet .equip.arcanum .equip-box .equip-head table input {width:100%;text-align:left;padding:0;border:0;height:auto;box-shadow:none;background:none;}
+.sheet .equip.arcanum .equip-box .equip-head table tbody tr:last-child td {background-color:var(--fu-window-bg);position:relative;}
+.sheet .equip.arcanum .equip-box .equip-head table tbody tr + tr td {border-top:1px solid var(--fu-window-bg);}
+.sheet .equip.arcanum .equip-box .equip-head table tbody tr + tr td::before {content:"";position:absolute;top:0;left:0;right:0;width:100%;height:1px;transform:translate(0,-100%);background:linear-gradient(to left, rgba(var(--fu-color-primary-rgb), 0) 0%, rgba(var(--fu-color-primary-rgb), .4) 30%, rgba(var(--fu-color-primary-rgb)) 100%);}
+.sheet .arcanum header.sheet-header {padding-left:50px;padding-right:50px;}
+.sheet .arcanum .sheet-header input {font-size:45px;}
+.sheet .equip.arcanum .equip-box .equip-body {padding-top:0;border-top:1px solid var(--fu-color-primary);}
+.sheet .equip.arcanum .equip-box .equip-head + .equip-body {margin-top:5px;}
+.sheet .equip.arcanum .equip-box .equip-body::before {display:none;}
+.sheet .equip.arcanum .equip-box .equip-body .editor {border-bottom:0;}
+.sheet .equip.arcanum.editable .equip-box .equip-body .editor {min-height:180px;}
+.sheet .equip.arcanum .body-title {display:flex;background:linear-gradient(to left, rgba(var(--fu-color-gradient-bg-rgb),0) 0%, rgba(var(--fu-color-gradient-bg-rgb),1) 100%);}
+.sheet .equip.arcanum .body-title label {color:var(--fu-color-white);text-transform:uppercase;letter-spacing:.5px;font-weight:500;font-family:var(--fu-font-secondary);background-color:var(--fu-color-primary);padding:4px 20px 2px;}
+.sheet .equip.arcanum .body-title button {border-radius:0;background-color:transparent;border-top:0;margin-left:auto;}
+.sheet .equip.arcanum .body-title input {height:auto;background-color:transparent;box-shadow:none;border:0;border-radius:0;padding:4px 20px 2px;text-transform:uppercase;letter-spacing:.5px;font-weight:500;font-family:var(--fu-font-secondary);}
+.sheet .equip.arcanum .equip-box .equip-buttons {display:flex;margin-top:5px;}
+.sheet .equip.arcanum .equip-box .equip-buttons button {margin-left:10px;border-radius:5px 5px 0 0;background-color:var(--fu-color-primary);color:var(--fu-color-white);padding-bottom:0;}
+.sheet .equip.arcanum .equip-box .form-dmg {flex:0 0 auto;justify-content:flex-end;padding-right:40px;}
+.sheet .equip.arcanum .equip-box .form-dmg select {flex:0 0 auto;}
+.sheet .equip.arcanum .equip-box .form-dmg input {flex:0 0 auto;margin-right:5px;width:60px;text-align:center;}
+.sheet .equip.arcanum .equip-box .form-dmg p {margin:0;margin-right:5px;flex:0 0 auto;}
 
 /* Sheets > Equipment > Accessories */
 .sheet .equip.accessory table thead tr th .sheet .equip.accessory table tbody tr td {padding-left:15px;padding-right:15px;}
@@ -985,12 +1007,13 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet.actor .equip-container .list {flex-grow:1;padding-left:15px;}
 .sheet.actor .equip-slots {flex-shrink:0;display:flex;flex-direction:column;gap:5px;}
 .sheet.actor .equip-slots .slot {width:40px;height:40px;border:1px solid var(--fu-color-primary);border-radius:5px;margin:0 auto;background-repeat:no-repeat;background-position:center center;background-size:35px;background-color: var(--fu-color-white);}
-.sheet.actor .equip-slots .slot-list {display:flex;align-items:center;gap:5px;}
+.sheet.actor .equip-slots .slot-list {display:flex;justify-content:center;align-items:center;gap:5px;}
 .sheet.actor .equip-slots .slot-list .slot {margin:0;}
 .sheet.actor .equip-slots .slot-list .slot-linked {opacity:0;}
 .sheet.actor .equip-slots .slot-list .slot-linked.show {opacity:1;}
 .sheet.actor .equip-slots .slot.armor {background-image:url(../icons/equip/armor.svg);}
 .sheet.actor .equip-slots .slot.accessory {background-image:url(../icons/equip/accessory.svg);}
+.sheet.actor .equip-slots .slot.arcanum {background-image:url(../icons/equip/arcanum.svg);}
 .sheet.actor .equip-slots .slot.mainHand {background-image:url(../icons/equip/mainHand.svg);}
 .sheet.actor .equip-slots .slot.offHand {background-image:url(../icons/equip/offHand.svg);}
 
@@ -1029,7 +1052,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 	--fu-sheet-body-bg-left: url(../img/natural-fantasy/bg-class-body-left.png);
 	--fu-sheet-body-bg-right: url(../img/natural-fantasy/bg-class-body-right.png);
 }
-.theme-dark .bonusNecromancer {
+.theme-dark .bonusHalloween {
 	--fu-color-primary: #363E52;
 	--fu-color-primary-rgb: 54,62,82;
 	--fu-color-gradient-bg-rgb: 91,59,251;
@@ -1048,6 +1071,16 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 	--fu-sheet-header-bg: url(../img/bonus-ace/bg-class-header.png);
 	--fu-sheet-body-bg-left: url(../img/bonus-ace/bg-class-body-left.png);
 	--fu-sheet-body-bg-right: url(../img/bonus-ace/bg-class-body-right.png);
+}
+.theme-dark .bonusArcaneWhispers {
+	--fu-color-primary: #D3583B;
+	--fu-color-primary-rgb: 211,88,59;
+	--fu-color-gradient-bg-rgb: 252,233,223;
+	--fu-color-green-rgb: 211,88,59;
+	--fu-sheet-text-color: #FFFFFF;
+	--fu-sheet-header-bg: url(../img/arcane-whispers/bg-class-header.png);
+	--fu-sheet-body-bg-left: url(../img/arcane-whispers/bg-class-body-left.png);
+	--fu-sheet-body-bg-right: url(../img/arcane-whispers/bg-class-body-right.png);
 }
 .theme-dark .sheet.actor .npc {--fu-color-primary:#69446a;--fu-color-primary-rgb:105,68,106;--fu-color-gradient-bg-rgb:123,81,137;}
 

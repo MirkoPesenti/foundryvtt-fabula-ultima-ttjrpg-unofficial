@@ -121,8 +121,11 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
-			this._onDropNpc( actor, sourceItem );
-			this._onDropCharacter( actor, sourceItem );
+			await this._onDropNpc( actor, sourceItem );
+			await this._onDropCharacter( actor, sourceItem );
+			
+			console.log(actor);
+			actor.render(true);
 			
 		} else {
 			return super._onDrop(e);
@@ -773,15 +776,19 @@ export class FabulaActorSheet extends ActorSheet {
 				// Add equip/unequip option
 				if ( 'isEquipped' in item.system ) {
 					if ( item.system.isEquipped ) {
+						const unequipLabel = item.type == 'arcanum' ? game.i18n.localize('FU.actions.dismiss') : game.i18n.localize('FU.actions.unequip');
+
 						contextMenuItemSettings.unshift({
-							name: game.i18n.localize('FU.actions.unequip'),
+							name: unequipLabel,
 							icon: '<i class="fa fa-shield-halved"></i>',
 							callback: this._equipItem.bind(this),
 							condition: (el) => !!$(el).data('item'),
 						});
 					} else {
+						const equipLabel = item.type == 'arcanum' ? game.i18n.localize('FU.actions.summon') : game.i18n.localize('FU.actions.equip');
+
 						contextMenuItemSettings.unshift({
-							name: game.i18n.localize('FU.actions.equip'),
+							name: equipLabel,
 							icon: '<i class="fa fa-shield"></i>',
 							callback: this._equipItem.bind(this),
 							condition: (el) => !!$(el).data('item'),
@@ -837,6 +844,7 @@ export class FabulaActorSheet extends ActorSheet {
 		const armors = [];
 		const shields = [];
 		const accessories = [];
+		const arcanums = [];
 		const classes = [];
 		const heroicSkills = [];
 		const spells = [];
@@ -874,6 +882,8 @@ export class FabulaActorSheet extends ActorSheet {
 				shields.push(i);
 			} else if (i.type === 'accessory') {
 				accessories.push(i);
+			} else if (i.type === 'arcanum') {
+				arcanums.push(i);
 			} else if (i.type === 'class') {
 				classes.push(i);
 			} else if (i.type === 'heroicSkill') {
@@ -907,6 +917,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.armors = armors;
 		context.shields = shields;
 		context.accessories = accessories;
+		context.arcanums = arcanums;
 		context.classes = classes;
 		context.heroicSkills = heroicSkills;
 		context.spells = spells;
@@ -1380,6 +1391,8 @@ export class FabulaActorSheet extends ActorSheet {
 				slot = 'armor';
 			} else if ( item.type == 'accessory' ) {
 				slot = 'accessory';
+			} else if ( item.type == 'arcanum' ) {
+				slot = 'arcanum';
 			}
 
 			if ( actor.type == 'character' && item.system?.isMartial?.value ) {
@@ -1396,8 +1409,13 @@ export class FabulaActorSheet extends ActorSheet {
 
 			if ( equippedData[slot] !== null && equippedData[slot] !== item._id ) {
 				const equippedItem = actor.items.get( equippedData[slot] );
-				if ( equippedItem ) {
-					await equippedItem.update({ 'system.isEquipped': false });
+				if ( slot == 'arcanum' ) {
+					ui.notifications.warn(`Non puoi evocare ${item.name} finché sei già fuso con un'altro arcano`);
+					return;
+				} else {
+					if ( equippedItem ) {
+						await equippedItem.update({ 'system.isEquipped': false });
+					}
 				}
 			}
 
@@ -1421,6 +1439,47 @@ export class FabulaActorSheet extends ActorSheet {
 				if ( ( slot == 'offHand' || slot == 'mainHand' ) && equippedData.mainHand === equippedData.offHand ) {
 					equippedData.mainHand = null;
 					equippedData.offHand = null;
+				}
+				if ( slot == 'arcanum' && item.system.dismiss?.length > 0 && item.system.isEquipped ) {
+					if (
+						await Dialog.confirm({
+							title: `Stai congedando ${item.name}`,
+							content: `<p>Vuoi innescare l'effetto di <strong>congedo</strong> di ${item.name}?</p>`,
+							rejectClose: false,
+						})
+					) {
+						let label = `Scegli quale effestto di congeto attivare: <br>`;
+						let options = '';
+						item.system.dismiss.forEach((dismiss, key) => {
+							label += `
+								<span style="margin:5px 0;display:block;">
+									<strong>${dismiss.name}</strong><br>
+									${dismiss.effect}
+								</span>
+							`;
+							options += `<option value="${key}">${dismiss.name}</option>`;
+						});
+						const dismissEffect = await awaitDialogSelect({
+							title: `Stai congedando ${item.name}`,
+							optionsLabel: label,
+							options: options,
+						});
+						if ( dismissEffect === false ) return false;
+
+						const chatData = {
+							user: game.user.id,
+							speaker: ChatMessage.getSpeaker({ actor: this.name }),
+							flavor: `Ha attivato l'effetto di congedo di ${item.name}`,
+							content: `
+								<strong>${item.system.dismiss[dismissEffect].name}</strong><br>
+								${item.system.dismiss[dismissEffect].effect}
+							`,
+							flags: {
+								customClass: 'arcanum-dismiss',
+							},
+						};
+						ChatMessage.create(chatData);
+					}
 				}
 				equippedData[slot] = equippedData[slot] == itemId ? null : itemId;
 			}

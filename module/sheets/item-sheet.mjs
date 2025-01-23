@@ -27,16 +27,16 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'rule' 
 		)
 			options.height = 700;
+		else if (
+			this.object.type == 'arcanum'
+		)
+			options.height = 600;
 		else if ( 
 			this.object.type == 'classFeature' || 
-			this.object.type == 'arcanum' || 
 			this.object.type == 'heroicSkill' || 
 			this.object.type == 'spell' ||
 			this.object.type == 'baseItem' ||
-			this.object.type == 'attack'
-		)
-			options.height = 500;
-		else if ( 
+			this.object.type == 'attack' ||
 			this.object.type == 'weapon' ||
 			this.object.type == 'artifact' ||
 			this.object.type == 'shield' ||
@@ -158,6 +158,22 @@ export class FabulaItemSheet extends ItemSheet {
 				},
 				current: input.value,
 			}).render(true);
+		});
+
+		html.on('click', '.js_removeFromArray', async (ev) => {
+			ev.preventDefault();
+			const item = this.item;
+			const index = ev.currentTarget.dataset.index;
+			const arrayProp = ev.currentTarget.dataset.target;
+
+			if ( index && arrayProp ) {
+				const updateObj = `system.${arrayProp}`;
+				const array = item.system[arrayProp];
+				const newArray = [...array];
+				
+				newArray.splice( index, 1 );
+				await item.update({ [updateObj]: newArray });
+			}
 		});
 
 		html.on('click', '.js_editHeroicSkillReq', async (ev) => {

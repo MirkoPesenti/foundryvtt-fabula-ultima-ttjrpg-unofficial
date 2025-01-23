@@ -27,7 +27,8 @@ FU.ItemTypes = {
 FU.sourcebook = {
 	base: 'FU.sourcebook.base',
 	bonusAce: 'FU.sourcebook.bonusAce',
-	bonusNecromancer: 'FU.sourcebook.bonusNecromancer',
+	bonusHalloween: 'FU.sourcebook.bonusHalloween',
+	bonusArcaneWhispers: 'FU.sourcebook.bonusArcaneWhispers',
 	atlasHighFantasy: 'FU.sourcebook.atlasHighFantasy',
 	atlasTechnoFantasy: 'FU.sourcebook.atlasTechnoFantasy',
 	atlasNaturalFantasy: 'FU.sourcebook.atlasNaturalFantasy',

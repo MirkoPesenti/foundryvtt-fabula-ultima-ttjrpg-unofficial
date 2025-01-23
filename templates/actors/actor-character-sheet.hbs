@@ -212,7 +212,12 @@
 
                         <div class="slot offHand" {{#if system.equip.offHand}}data-tooltip="{{localize 'FU.equipment.offHand'}} <br> {{lookup (getItemByID items system.equip.offHand) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.offHand) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.offHand'}}"{{/if}}></div>
                     </div>
-                    <div class="slot accessory" {{#if system.equip.accessory}}data-tooltip="{{localize 'FU.equipment.accessory'}} <br> {{lookup (getItemByID items system.equip.accessory) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.accessory) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.accessory'}}"{{/if}}></div>
+                    <div class="slot-list">
+                        <div class="slot accessory" {{#if system.equip.accessory}}data-tooltip="{{localize 'FU.equipment.accessory'}} <br> {{lookup (getItemByID items system.equip.accessory) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.accessory) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.accessory'}}"{{/if}}></div>
+                        {{#if arcanums}}
+                            <div class="slot arcanum" {{#if system.equip.arcanum}}data-tooltip="{{localize 'FU.equipment.arcanum'}} <br> {{lookup (getItemByID items system.equip.arcanum) 'name'}}" style="background-size:30px;background-image:url({{lookup (getItemByID items system.equip.arcanum) 'img'}})"{{else}}data-tooltip="{{localize 'FU.equipment.arcanum'}}"{{/if}}></div>
+                        {{/if}}
+                    </div>
                 </div>
                 <ul class="list list-equip">
                     {{#each weapons}}
@@ -233,6 +238,11 @@
                     {{#each accessories}}
                         {{#if this.system.isEquipped}}
                             {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=../actor item=this}}
+                        {{/if}}
+                    {{/each}}
+                    {{#each arcanums}}
+                        {{#if this.system.isEquipped}}
+                            {{> 'systems/fabula/templates/actors/common/arcanum-list-item.hbs' item=this actor=../actor}}
                         {{/if}}
                     {{/each}}
                 </ul>
@@ -259,6 +269,24 @@
                     {{/unless}}
                 {{/each}}
             </ul>
+
+            {{#if arcanums}}
+                <div class="title title-list">
+                    <span>Arcana</span>
+                    {{#if @root.editable}}
+                        <button type="button" class="btn-action-add js_createItem" data-type="arcanum">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    {{/if}}
+                </div>
+                <ul class="list list-arcanum">
+                    {{#each arcanums}}
+                        {{#unless this.system.isEquipped}}
+                            {{> 'systems/fabula/templates/actors/common/arcanum-list-item.hbs' item=this actor=../actor}}
+                        {{/unless}}
+                    {{/each}}
+                </ul>
+            {{/if}}
         </div>
 
         <div class="tab spells" data-group="primary" data-tab="spells">

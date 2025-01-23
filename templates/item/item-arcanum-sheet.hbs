@@ -1,4 +1,4 @@
-<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
 
     <header class="sheet-header">
         {{#if @root.editable}}
@@ -8,69 +8,144 @@
         {{/if}}
     </header>
 
+    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
+        <a class="item" data-tab="base">
+            <span>Base</span>
+        </a>
+        <a class="item" data-tab="effects">
+            <span>Effetti</span>
+        </a>
+    </nav>
+
     <section class="sheet-body">
-        <div class="tab">
-            <div class="arcanum-box">
-                <div class="arcanum-head">
+        <div class="tab base" data-group="primary" data-tab="base">
+            <div class="equip-box">
+                <div class="equip-head">
                     <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-                    <div>
-                        <div class="title">
-                            <input type="text" name="name" value="{{item.name}}">
-                        </div>
-                        <p>
-                            <strong>Domini:</strong>
-                            <input type="text" name="system.domain" value="{{system.domain}}">
-                        </p>
-                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="text" name="name" value="{{item.name}}">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <input type="text" name="system.summary" value="{{system.summary}}">
+                                    {{else}}
+                                        {{#if system.summary}}
+                                            {{system.summary}}
+                                        {{else}}
+                                            &nbsp;
+                                        {{/if}}
+                                    {{/if}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="content">
+                                        <strong>Domini:</strong>
+                                        {{#if @root.editable}}
+                                            <input type="text" name="system.domain" value="{{system.domain}}">
+                                        {{else}}
+                                            {{system.domain}}
+                                        {{/if}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="arcanum-body">
-                    <label>Fusione</label>
+                <div class="equip-body">
+                    <div class="body-title">
+                        <label>Fusione</label>
+                        <input type="text" name="system.mergeName" value="{{system.mergeName}}">
+                    </div>
                     {{#if @root.editable}}
                         {{editor enrichedHtml.description target="system.merge" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                     {{else}}
-                        {{{system.merge}}}
+                        <div class="editor">
+                            {{{system.merge}}}
+                        </div>
+                    {{/if}}
+
+                    {{#if (and (arrayLengthGt system.dismiss 1) (not @root.editable))}}
+                        <div class="editor">
+                            <p>
+                                Quando <strong>congedi</strong> questo Arcanum, scegli tra
+                                {{#each system.dismiss as |dismiss dismissIndex|}}
+                                    {{#unless (eq dismissIndex 0)}}
+                                        e
+                                    {{/unless}}
+                                    <strong>{{dismiss.name}}</strong>
+                                {{/each}}
+                            </p>
+                        </div>
                     {{/if}}
                 </div>
+                {{#if @root.editable}}
+                    <div class="equip-buttons">
+                        <button type="button" class="js_newEntryToArray" data-target="system.dismiss" data-tooltip="Aggiungi effetto di congedo">
+                            <i class="fa fa-plus m-0"></i>
+                        </button>
+                    </div>
+                {{/if}}
                 {{#if (arrayLengthGt system.dismiss 0)}}
-                    <div class="arcanum-body">
-                        <label>Congedo</label>
-                        {{#if @root.editable}}
-                            <div class="btn-container">
-                                <button type="button" class="js_newEntryToArray" data-target="system.dismiss">+</button>
-                                <button type="button" class="js_removeLastToArray" data-target="system.dismiss">-</button>
-                            </div>
-                        {{else}}
-                            {{#if (arrayLengthGt system.dismiss 1)}}
-                                <p>
-                                    Quando <strong>congedi</strong> questo Arcanum, scegli tra
-                                    {{#each system.dismiss as |dismiss dismissIndex|}}
-                                        {{#unless (eq dismissIndex 0)}}
-                                            e
-                                        {{/unless}}
-                                        <strong>{{dismiss.name}}</strong>
-                                    {{/each}}
-                                </p>
-                            {{/if}}
-                        {{/if}}
-                        {{#each system.dismiss as |dismiss dismissIndex|}}
-                            {{#if @root.editable}}
+                    {{#each system.dismiss as |dismiss dismissIndex|}}
+                        <div class="equip-body">
+                            <div class="body-title">
+                                <label>Congedo</label>
                                 <input type="text" name="system.dismiss.{{dismissIndex}}.name" value="{{dismiss.name}}">
+                                {{#if @root.editable}}
+                                    <button type="button" class="js_removeFromArray" data-index="{{dismissIndex}}" data-target="dismiss" data-tooltip="Rimuovi questo effetto">
+                                        <i class="fa fa-minus m-0"></i>
+                                    </button>
+                                {{/if}}
+                            </div>
+                            {{#if @root.editable}}
+                                <div class="flexrow">
+                                    <div class="form-group">
+                                        <input type="checkbox" name="system.dismiss.{{dismissIndex}}.damage.hasDamage.value" id="system.dismiss.{{dismissIndex}}.damage.hasDamage.value" {{checked dismiss.damage.hasDamage.value}}>
+                                        <label for="system.dismiss.{{dismissIndex}}.damage.hasDamage.value">Infligge danno?</label>
+                                    </div>
+
+                                    {{#if dismiss.damage.hasDamage.value}}
+                                        <div class="form-group form-dmg">
+                                            <input type="number" name="system.dismiss.{{dismissIndex}}.damage.value" value="{{dismiss.damage.value}}">
+                                            <p>danni da</p>
+                                            <select name="system.dismiss.{{dismissIndex}}.damage.type.value">
+                                                {{selectOptions ../DamageTypes selected=dismiss.damage.type.value localize=true}}
+                                            </select>
+                                        </div>
+                                    {{/if}}
+                                </div>
                                 {{editor enrichedHtml.description target=(concat "system.dismiss." dismissIndex ".effect") engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                             {{else}}
-                                <div class="p-container">
-                                    <p><strong>{{dismiss.name}}</strong>.</p>
+                                <div class="editor">
                                     {{{dismiss.effect}}}
                                 </div>
                             {{/if}}
-                        {{/each}}
-                    </div>
+                        </div>
+                    {{/each}}
+                {{else}}
+                    {{#if @root.editable}}
+                        <div class="equip-body">
+                            <div class="body-title">
+                                <label>Congedo</label>
+                            </div>
+                        </div>
+                    {{/if}}
                 {{/if}}
             </div>
-            
-            {{#if (or @root.editable (not (eq system.description "")))}}
-                <div class="title">Descrizione</div>
-                {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-            {{/if}}
+        </div>
+
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            {{#each effects as |category catIndex|}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../item}}
+            {{/each}}
         </div>
     </section>
 </form>
