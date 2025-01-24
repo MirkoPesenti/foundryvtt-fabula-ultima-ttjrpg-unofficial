@@ -1033,7 +1033,7 @@ Handlebars.registerHelper('percentage', function( a, b ){
 });
 
 Handlebars.registerHelper('multiply', function( a, b ){
-	return ( a / b );
+	return ( a * b );
 });
 
 Handlebars.registerHelper('divide', function( a, b ){

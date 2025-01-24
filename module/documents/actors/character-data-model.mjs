@@ -5,6 +5,7 @@ import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
 import { StatusesDataModel } from "./common/statuses-data-model.mjs";
 import { EquipDataModel } from "./common/equip-data-model.mjs";
 import { MartialDataModel } from "./common/martial-data-model.mjs";
+import { CharacterRitualDataModel } from "./common/character-ritual-data-model.mjs";
 import { CharacterMigration } from "./migrations/character-migration.mjs";
 import { FU } from "../../helpers/config.mjs";
 
@@ -48,6 +49,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			status: new EmbeddedDataField(StatusesDataModel, {}),
 			equip: new EmbeddedDataField(EquipDataModel, {}),
 			useMartial: new EmbeddedDataField(MartialDataModel, {}),
+			castRitual: new EmbeddedDataField(CharacterRitualDataModel, {}),
 		};
 	}
 
@@ -102,12 +104,19 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			}, { hp: 0, mp: 0, ip: 0 },
 		);
 
-		// Set usabled Martial items
+		// Set usable Martial items and Rital disciplines
 		for ( const item of actorClasses ) {
 			if ( item.system.bonus.weapon.meleeWeapon ) data.useMartial.melee = true;
 			if ( item.system.bonus.weapon.rangedWeapon ) data.useMartial.ranged = true;
 			if ( item.system.bonus.weapon.armor ) data.useMartial.armor = true;
 			if ( item.system.bonus.weapon.shield ) data.useMartial.shield = true;
+
+			if ( item.system.bonus.ritual.arcanism ) data.castRitual.arcanism = true;
+			if ( item.system.bonus.ritual.chimerism ) data.castRitual.chimerism = true;
+			if ( item.system.bonus.ritual.elementalism ) data.castRitual.elementalism = true;
+			if ( item.system.bonus.ritual.entropism ) data.castRitual.entropism = true;
+			if ( item.system.bonus.ritual.ritualism ) data.castRitual.ritualism = true;
+			if ( item.system.bonus.ritual.spiritism ) data.castRitual.spiritism = true;
 		}
 
 		// Set level

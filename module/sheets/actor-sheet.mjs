@@ -3,6 +3,7 @@ import { addClassToActor } from "../helpers/class-helpers.mjs";
 import { rollDiceToChat } from "../helpers/roll-helpers.mjs";
 import { awaitDialogSelect, generateDataLink, returnSortedPack } from "../helpers/helpers.mjs";
 import { incrementSessionResource, initSessionJournal } from "../helpers/journal-helpers.mjs";
+import { createClock, deleteClock } from "../helpers/clock-helpers.mjs";
 import { FU } from "../helpers/config.mjs";
 
 const NPCaccordions = {
@@ -124,7 +125,6 @@ export class FabulaActorSheet extends ActorSheet {
 			await this._onDropNpc( actor, sourceItem );
 			await this._onDropCharacter( actor, sourceItem );
 			
-			console.log(actor);
 			actor.render(true);
 			
 		} else {
@@ -696,7 +696,7 @@ export class FabulaActorSheet extends ActorSheet {
 		// Show Item in Chat
 		html.on('click','.js_showItemInChat', this._showItemInChat.bind(this));
 
-		// Roll spell test
+		// Roll Item test
 		html.on('click','.js_rollActorItem', this._rollActorItem.bind(this));
 
 		// Set NPC skill as free
@@ -840,6 +840,8 @@ export class FabulaActorSheet extends ActorSheet {
 	}
 
 	async _prepareItems(context) {
+		const actor = this.actor;
+
 		const weapons = [];
 		const armors = [];
 		const shields = [];
@@ -853,10 +855,10 @@ export class FabulaActorSheet extends ActorSheet {
 		const baseItems = [];
 		const attacks = [];
 
-		for ( let i of context.items ) {
+		for ( let i of actor.items ) {
 
 			// Enriches description fields
-			for ( let item of context.items ) {
+			for ( let item of actor.items ) {
 				item.enrichedHtml = {
 					description: await TextEditor.enrichHTML( item.system?.description ?? '' ),
 					opportunity: await TextEditor.enrichHTML( item.system?.opportunityEffect ?? '' ),
@@ -1060,7 +1062,6 @@ export class FabulaActorSheet extends ActorSheet {
 
 		const element = event.currentTarget;
 		const itemID = element.dataset.itemid;
-		console.log(itemID);
 		const item = this.actor.items.get( itemID );
 
 		if ( item ) {
@@ -1314,8 +1315,31 @@ export class FabulaActorSheet extends ActorSheet {
 				rollString += `+${actor.system.bonus.checks.attack}`;
 			}
 		}
-		if ( item.type == 'spell' && actor.system.bonus?.checks?.spell > 0 ) {
+		if ( ( item.type == 'spell' || item.type == 'ritual' ) && actor.system.bonus?.checks?.spell > 0 ) {
 			rollString += `+${actor.system.bonus.checks.spell}`;
+		}
+
+		if ( item.type == 'ritual' ) {
+
+			// Check if Actor can exacute the Ritual with specific type
+			if ( actor.system.castRitual[item.system.type] === false ) {
+				ui.notifications.warn(`Non puoi lanciare rituali di tipo ${game.i18n.localize(`FU.MagicDisciplines.${item.system.type}`)}`);
+				return;
+			}
+
+			// Create Clock if needed
+			if ( item.system.clock.active ) {
+
+				if ( item.system.clock.id == '' ) {
+					const clockId = createClock( item.name, item.system.clock.steps );
+					await item.update({ 'system.clock.id': clockId });
+					return;
+				} else {
+					deleteClock( item.system.clock.id );
+					await item.update({ 'system.clock.id': '' });
+				}
+			}
+
 		}
 
 		await rollDiceToChat( actor, rollString, null, templateType, item, template );

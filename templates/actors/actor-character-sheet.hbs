@@ -303,6 +303,22 @@
                     {{> 'systems/fabula/templates/actors/common/spell-list-item.hbs' item=this actor=../system}}
                 {{/each}}
             </ul>
+
+            {{#if (or system.castRitual.arcanism system.castRitual.chimerism system.castRitual.elementalism system.castRitual.entropism system.castRitual.ritualism system.castRitual.spiritism)}}
+                <div class="title title-list">
+                    <span>Rituali</span>
+                    {{#if @root.editable}}
+                        <button type="button" class="btn-action-add js_createItem" data-type="ritual">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    {{/if}}
+                </div>
+                <ul class="list list-spells">
+                    {{#each rituals}}
+                        {{> 'systems/fabula/templates/actors/common/ritual-list-item.hbs' item=this actor=../system}}
+                    {{/each}}
+                </ul>
+            {{/if}}
         </div>
         
         <div class="tab skills" data-group="primary" data-tab="skills">

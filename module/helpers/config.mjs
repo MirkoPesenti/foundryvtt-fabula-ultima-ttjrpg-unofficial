@@ -53,6 +53,11 @@ FU.attributesAbbr = {
 	wlp: 'FU.attributesAbbr.wlp',
 };
 
+FU.attributesAbbrRitualChimerism = {
+	ins: 'FU.attributesAbbr.ins',
+	mig: 'FU.attributesAbbr.mig',
+};
+
 FU.attributesDice = {
 	6: 'FU.D6',
 	8: 'FU.D8',

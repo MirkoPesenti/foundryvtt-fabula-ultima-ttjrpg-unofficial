@@ -486,7 +486,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet.fabula .sheet-header {position:relative;z-index:1;min-height:93px;padding:40px 75px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:var(--fu-sheet-header-bg);flex-grow:0;outline:1px solid var(--fu-color-primary);outline-offset:1px;}
 .sheet.fabula.bonusArcaneWhispers .sheet-header {outline-offset:0;}
 .sheet.fabula .sheet-header input {border:0;border-radius:0;width:100%;padding:0;height:auto;color:var(--fu-color-white);text-transform:uppercase;font-family:CreditValley;font-size:50px;}
-.sheet.fabula .equip .sheet-header input {background-color:transparent;}
+.sheet.fabula .equip .sheet-header input {background-color:transparent;box-shadow:none;}
 .sheet.fabula .sheet-header .icon {position:absolute;bottom:14px;left:35px;width:35px;height:35px;background-repeat:no-repeat;background-position:center center;background-size:contain;}
 .sheet.fabula .sheet-header .martial-icon {position:absolute;bottom:5px;left:35px;font-family:"FnT_BasicShapes1",sans-serif;font-size:35px;color:var(--fu-color-red);}
 .sheet.fabula .sheet-header .class-icon {position:absolute;bottom:0;right:50px;z-index:1;width:54px;height:54px;padding:9px;border:3px solid var(--fu-color-primary);outline:1px solid var(--fu-color-primary);outline-offset:-6px;background-color:var(--fu-color-white);transform:translate(50%, 50%) rotate(45deg);}

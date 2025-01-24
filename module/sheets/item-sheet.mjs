@@ -42,7 +42,8 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'shield' ||
 			this.object.type == 'armor' ||
 			this.object.type == 'accessory' ||
-			this.object.type == 'consumable'
+			this.object.type == 'consumable' ||
+			this.object.type == 'ritual'
 		)
 			options.height = 500;
 		else
@@ -70,11 +71,13 @@ export class FabulaItemSheet extends ItemSheet {
 		context.ItemTypes = CONFIG.FU.ItemTypes;
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
+		context.attributesAbbrRitualChimerism = CONFIG.FU.attributesAbbrRitualChimerism;
 		context.DamageTypes = CONFIG.FU.DamageTypes;
 		context.WeaponRanges = CONFIG.FU.WeaponRanges;
 		context.weaponCategories = CONFIG.FU.weaponCategories;
 		context.SpellDurations = CONFIG.FU.SpellDurations;
 		context.SpellDisciplines = CONFIG.FU.SpellDisciplines;
+		context.MagicDisciplines = CONFIG.FU.MagicDisciplines;
 		context.potencyList = CONFIG.FU.potencyList;
 		context.areaList = CONFIG.FU.areaList;
 		context.usesList = CONFIG.FU.usesList;
@@ -123,6 +126,9 @@ export class FabulaItemSheet extends ItemSheet {
 
 		// html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
 		// html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
+
+		// Debug Item
+		html.on('click','.getItem', () => console.log(this.item));
 
 		// Manage Active Effects
 		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.item));

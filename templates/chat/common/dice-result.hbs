@@ -24,6 +24,9 @@
 		{{/each}}
 	</div>
 	<h4 class="dice-total{{#if crit.success}} success{{/if}}{{#if crit.failure}} failure{{/if}}">{{roll.total}}</h4>
+	{{#if item.system.difficultyLevel.value}}
+		<h4 class="dice-total">LD {{item.system.difficultyLevel.value}}</h4>
+	{{/if}}
 	{{#allTrue (arrayLengthGt roll.data.parent.system.bond 0) (eq roll.data.parent.type 'character') (not reroll)}}
 		<button type="button" class="js_addRollBondBonus btn-roll-bonus-bond" data-actor="{{roll.data.parent._id}}" data-item="{{item._id}}" data-mode="{{checkMode}}" data-formula="{{roll.formula}}" data-primary="{{roll.dice.0.results.0.result}}" data-secondary="{{roll.dice.1.results.0.result}}">
 			<i class="fa fa-link"></i> Aggiungi bonus con un legame

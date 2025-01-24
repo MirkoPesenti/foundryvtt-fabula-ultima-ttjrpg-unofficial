@@ -1,0 +1,45 @@
+<li class="{{item.system.sourcebook}}">
+	<div class="btn-container">
+		{{#if @root.editable}}
+			<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+				<i class="fa fa-ellipsis-vertical m-0"></i>
+			</button>
+		{{/if}}
+	</div>
+	<div class="item-box">
+		<div class="item-box-data">
+			{{#if @root.editable}}
+				<button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
+					<i class="fa fa-comment m-0"></i>
+				</button>
+				<button type="button" class="btn-action-roll name js_rollActorItem" data-itemid="{{item._id}}" data-primary="{{item.system.attributes.primary.value}}" data-secondary="{{item.system.attributes.secondary.value}}" data-tooltip="{{localize 'FU.actions.castRitual'}}">
+					{{item.name}}
+				</button>
+			{{else}}
+				<label>{{item.name}}</label>
+			{{/if}}
+			
+			<strong>
+				【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.bonus.checks.spell 0}}+{{/gt}}
+				{{#unless (eq actor.bonus.checks.spell 0)}}
+					{{actor.bonus.checks.spell}}
+				{{/unless}}
+			</strong>
+			<strong>{{localize (concat 'FU.MagicDisciplines.' item.system.type)}}</strong>
+			<div class="divider-decoration"></div>
+			<strong>
+				{{item.system.MPCost.value}}
+				{{#if item.system.reduction.active}}
+					({{multiply item.system.MPCost.value 2}} / 2)
+				{{/if}}
+				PM
+			</strong>
+			<div class="divider-decoration"></div>
+			<strong>LD {{item.system.difficultyLevel.value}}</strong>
+		</div>
+
+		<div class="item-box-description">
+			{{{item.enrichedHtml.description}}}
+		</div>
+	</div>
+</li>
