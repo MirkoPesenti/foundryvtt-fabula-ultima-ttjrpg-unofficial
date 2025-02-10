@@ -5,6 +5,7 @@ import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
 import { StatusesDataModel } from "./common/statuses-data-model.mjs";
 import { EquipDataModel } from "./common/equip-data-model.mjs";
 import { MartialDataModel } from "./common/martial-data-model.mjs";
+import { CharacterRitualDataModel } from "./common/character-ritual-data-model.mjs";
 import { CharacterMigration } from "./migrations/character-migration.mjs";
 import { FU } from "../../helpers/config.mjs";
 
@@ -13,7 +14,7 @@ import { FU } from "../../helpers/config.mjs";
  */
 export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, HTMLField, StringField, EmbeddedDataField, ArrayField, NumberField } = foundry.data.fields;
+		const { SchemaField, HTMLField, StringField, EmbeddedDataField, ArrayField, NumberField, BooleanField } = foundry.data.fields;
 		return {
 			description: new HTMLField(),
 			features: new SchemaField({
@@ -48,6 +49,8 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			status: new EmbeddedDataField(StatusesDataModel, {}),
 			equip: new EmbeddedDataField(EquipDataModel, {}),
 			useMartial: new EmbeddedDataField(MartialDataModel, {}),
+			castRitual: new EmbeddedDataField(CharacterRitualDataModel, {}),
+			createProject: new BooleanField({ initial: false }),
 		};
 	}
 
@@ -66,6 +69,13 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	prepareBaseData() {
 		this.resources.hp.attribute = 'mig';
 		this.resources.mp.attribute = 'wlp';
+
+		if ( this.level.value >= 40 )
+			((this.bonus ??= {}).damage ??= {}).arcana = 20;
+		else if ( this.level.value >= 20 )
+			((this.bonus ??= {}).damage ??= {}).arcana = 10;
+		else
+			((this.bonus ??= {}).damage ??= {}).arcana = 0;
 
 		for ( const bond of this.bond ) {
 			bond.prepareData();
@@ -95,12 +105,24 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			}, { hp: 0, mp: 0, ip: 0 },
 		);
 
-		// Set usabled Martial items
+		// Set usable Martial items and Rital disciplines
 		for ( const item of actorClasses ) {
 			if ( item.system.bonus.weapon.meleeWeapon ) data.useMartial.melee = true;
 			if ( item.system.bonus.weapon.rangedWeapon ) data.useMartial.ranged = true;
 			if ( item.system.bonus.weapon.armor ) data.useMartial.armor = true;
 			if ( item.system.bonus.weapon.shield ) data.useMartial.shield = true;
+
+			if ( item.system.bonus.ritual.arcanism ) data.castRitual.arcanism = true;
+			if ( item.system.bonus.ritual.chimerism ) data.castRitual.chimerism = true;
+			if ( item.system.bonus.ritual.elementalism ) data.castRitual.elementalism = true;
+			if ( item.system.bonus.ritual.entropism ) data.castRitual.entropism = true;
+			if ( item.system.bonus.ritual.ritualism ) data.castRitual.ritualism = true;
+			if ( item.system.bonus.ritual.spiritism ) data.castRitual.spiritism = true;
+		}
+
+		// Set if character can create a project
+		for ( const item of actorClasses ) {
+			if ( item.system.bonus.projects.value ) data.createProject = true;
 		}
 
 		// Set level

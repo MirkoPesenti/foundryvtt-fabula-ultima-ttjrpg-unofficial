@@ -61,36 +61,33 @@
 
     {{#if (or system.bonus.weapon.meleeWeapon system.bonus.weapon.rangedWeapon system.bonus.weapon.armor system.bonus.weapon.shield)}}
         <li>
-            Puoi equipaggiare le
-            {{#if system.bonus.weapon.meleeWeapon}}
-                <strong>armi da mischia marziali</strong>
-            {{/if}}
-
+            Puoi equipaggiare le&nbsp;
+            {{#if system.bonus.weapon.meleeWeapon}}<strong>armi da mischia marziali</strong>{{/if}}
             {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.rangedWeapon}}
-                e le
+                &nbsp;e le&nbsp;
             {{/allTrue}}
             {{#if system.bonus.weapon.rangedWeapon}}
                 <strong>armi a distanza marziali</strong>
             {{/if}}
 
             {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.armor}}
-                e le
+                &nbsp;e le&nbsp;
             {{/allTrue}}
             {{#allTrue system.bonus.weapon.rangedWeapon system.bonus.weapon.armor}}
-                e le
+                &nbsp;e le&nbsp;
             {{/allTrue}}
             {{#if system.bonus.weapon.armor}}
                 <strong>armature marziali</strong>
             {{/if}}
             
             {{#allTrue system.bonus.weapon.meleeWeapon system.bonus.weapon.shield}}
-                e gli
+                &nbsp;e gli&nbsp;
             {{/allTrue}}
             {{#allTrue system.bonus.weapon.rangedWeapon system.bonus.weapon.shield}}
-                e gli
+                &nbsp;e gli&nbsp;
             {{/allTrue}}
             {{#allTrue system.bonus.weapon.armor system.bonus.weapon.shield}}
-                e gli
+                &nbsp;e gli&nbsp;
             {{/allTrue}}
             {{#if system.bonus.weapon.shield}}
                 <strong>scudi marziali</strong>

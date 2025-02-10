@@ -3,7 +3,7 @@ import { FU } from "../../helpers/config.mjs";
 /**
  * @property {string} sourcebook
  * @property {string} description
- * @property {boolean} isLimited
+ * @property {boolean} isUnlimited
  * @property {boolean} isFree
  * @property {number} level.current
  * @property {number} level.max
@@ -16,7 +16,7 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			origin: new StringField({ initial: '' }),
 			description: new HTMLField(),
-			isLimited: new BooleanField({ initial: false }),
+			isUnlimited: new BooleanField({ initial: false }),
 			isFree: new BooleanField({ initial: false }),
 			level: new SchemaField({ 
 				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false, }),

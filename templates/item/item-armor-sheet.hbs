@@ -3,7 +3,7 @@
     <header class="sheet-header">
         <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
         {{#if system.isMartial.value}}
-            <div class="martial-icon">l</div>
+            <div class="martial-icon" data-tooltip="{{localize 'TYPES.Item.martialItem'}}">l</div>
         {{/if}}
 
         {{#if @root.editable}}
@@ -29,7 +29,7 @@
                     <div class="flexrow">
                         <div class="form-group">
                             <input type="checkbox" name="system.isMartial.value" id="system.isMartial.value" {{checked system.isMartial.value}}>
-                            <label for="system.isMartial.value">Oggetto Marziale:</label>
+                            <label for="system.isMartial.value">{{localize 'TYPES.Item.martialItem'}}:</label>
                         </div>
                         
                         <div class="form-group">
@@ -136,8 +136,9 @@
 
         <div class="tab effects" data-group="primary" data-tab="effects">
             {{#each effects as |category catIndex|}}
-                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../item}}
             {{/each}}
         </div>
     </section>
+    
 </form>

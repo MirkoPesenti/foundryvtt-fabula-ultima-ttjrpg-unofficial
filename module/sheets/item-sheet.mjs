@@ -1,5 +1,5 @@
 import { FU } from "../helpers/config.mjs";
-import { returnSortedPack, changeProjectProgress } from "../helpers/helpers.mjs";
+import { returnSortedPack, setProgress } from "../helpers/helpers.mjs";
 import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
 
 /**
@@ -27,22 +27,23 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'rule' 
 		)
 			options.height = 700;
+		else if (
+			this.object.type == 'arcanum'
+		)
+			options.height = 600;
 		else if ( 
 			this.object.type == 'classFeature' || 
-			this.object.type == 'arcanum' || 
 			this.object.type == 'heroicSkill' || 
 			this.object.type == 'spell' ||
 			this.object.type == 'baseItem' ||
-			this.object.type == 'attack'
-		)
-			options.height = 500;
-		else if ( 
+			this.object.type == 'attack' ||
 			this.object.type == 'weapon' ||
 			this.object.type == 'artifact' ||
 			this.object.type == 'shield' ||
 			this.object.type == 'armor' ||
 			this.object.type == 'accessory' ||
-			this.object.type == 'consumable'
+			this.object.type == 'consumable' ||
+			this.object.type == 'ritual'
 		)
 			options.height = 500;
 		else
@@ -70,11 +71,13 @@ export class FabulaItemSheet extends ItemSheet {
 		context.ItemTypes = CONFIG.FU.ItemTypes;
 		context.attributes = CONFIG.FU.attributes;
 		context.attributesAbbr = CONFIG.FU.attributesAbbr;
+		context.attributesAbbrRitualChimerism = CONFIG.FU.attributesAbbrRitualChimerism;
 		context.DamageTypes = CONFIG.FU.DamageTypes;
 		context.WeaponRanges = CONFIG.FU.WeaponRanges;
 		context.weaponCategories = CONFIG.FU.weaponCategories;
 		context.SpellDurations = CONFIG.FU.SpellDurations;
 		context.SpellDisciplines = CONFIG.FU.SpellDisciplines;
+		context.MagicDisciplines = CONFIG.FU.MagicDisciplines;
 		context.potencyList = CONFIG.FU.potencyList;
 		context.areaList = CONFIG.FU.areaList;
 		context.usesList = CONFIG.FU.usesList;
@@ -98,7 +101,7 @@ export class FabulaItemSheet extends ItemSheet {
 			arcanum: returnSortedPack( 'fabula.arcanum', 'arcanum' ),
 		}
 
-		context.effects = prepareActiveEffect(this.item.effects);
+		context.effects = await prepareActiveEffect(this.item.effects);
 		context.allEffects = [...context.effects.temporary.effects, ...context.effects.passive.effects, ...context.effects.inactive.effects];
 
 		for ( const effect of context.allEffects ) {
@@ -121,14 +124,27 @@ export class FabulaItemSheet extends ItemSheet {
 	activateListeners( html ) {
 		super.activateListeners( html );
 
-		// html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
-		// html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
+		// Debug Item
+		html.on('click','.getItem', () => console.log(this.item));
 
 		// Manage Active Effects
 		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.item));
 
 		html.on('drop', this._onDropItem.bind(this));
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
+
+		// Set Progress current value
+		html.on('click','.js_setProgress', async (e) => {
+			e.preventDefault();
+			const increase = e.currentTarget.dataset.increase;
+			const value = e.currentTarget.dataset.value;
+			if ( value ) {
+				await setProgress( this.item, Number(value) );
+			}
+			if ( increase ) {
+				await setProgress( this.item, null, Number(increase) );
+			}
+		});
 
 		html.on('click', '.js_newEntryToArray', async (ev) => {
 			ev.preventDefault();
@@ -158,6 +174,22 @@ export class FabulaItemSheet extends ItemSheet {
 				},
 				current: input.value,
 			}).render(true);
+		});
+
+		html.on('click', '.js_removeFromArray', async (ev) => {
+			ev.preventDefault();
+			const item = this.item;
+			const index = ev.currentTarget.dataset.index;
+			const arrayProp = ev.currentTarget.dataset.target;
+
+			if ( index && arrayProp ) {
+				const updateObj = `system.${arrayProp}`;
+				const array = item.system[arrayProp];
+				const newArray = [...array];
+				
+				newArray.splice( index, 1 );
+				await item.update({ [updateObj]: newArray });
+			}
 		});
 
 		html.on('click', '.js_editHeroicSkillReq', async (ev) => {

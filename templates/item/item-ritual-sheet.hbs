@@ -1,72 +1,99 @@
-<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <select name="system.type.value">
-                {{selectOptions SpellDisciplines selected=system.type.value sort=true localize=true}}
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
             </select>
-            <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-            <div class="textarea-container">
-                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-            </div>
-        </div>
+        {{/if}}
     </header>
 
-    <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select>
-
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
-        <a class="item" data-tab="details">{{localize 'FU.Sheet.DetailsTab'}}</a>
-    </nav>
-
     <section class="sheet-body">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{localize 'FU.MPabbr'}}</th>
-                    <th>{{localize 'FU.difficultyLevelAbbr'}}</th>
-                    <th>{{localize 'FU.potency'}}</th>
-                    <th>{{localize 'FU.area'}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-						{{#if system.hasReduction.value}}
-							{{multiply system.MPCost.value 2}} / 2 ({{system.MPCost.value}})
-						{{else}}
-							{{system.MPCost.value}}
-						{{/if}}
-					</td>
-                    <td>{{system.difficultyLevel.value}}</td>
-                    <td>
-                        <select name="system.potency.value">
-                            {{selectOptions potencyList selected=system.potency.value localize=true}}
-                        </select>
-                    </td>
-                    <td>
-                        <select name="system.area.value">
-                            {{selectOptions areaList selected=system.area.value localize=true}}
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-		<div class="tab desc" data-group="primary" data-tab="description">
-            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
-		</div>
-		<div class="tab details" data-group="primary" data-tab="details">
-            <div class="form-group">
-                <label for="system.hasReduction.value">{{localize 'FU.ritualReduction'}}?</label>
-                <input type="checkbox" name="system.hasReduction.value" {{checked system.hasReduction.value}}>
+        <div class="tab">
+            {{#if @root.editable}}
+                <div class="editable-options">
+                    <div class="flexrow">
+                        <div class="form-group" data-tooltip="Se crei un Rituale durante una scena di conflitto occorre prima riempire un'orologio">
+                            <input type="checkbox" name="system.clock.active" id="system.clock.active" {{checked system.clock.active}}>
+                            <label for="system.clock.active">
+                                Richiede un orologio?
+                                ({{system.clock.steps}})
+                            </label>
+                        </div>
+
+                        <div class="form-group" data-tooltip="Devi utilizzare degli ingredirenti molto rari o potenti">
+                            <input type="checkbox" name="system.reduction.active" id="system.reduction.active" {{checked system.reduction.active}}>
+                            <label for="system.reduction.active">Dimezzare il costo?</label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Disciplina:</label>
+                            <select name="system.type">
+                                {{selectOptions MagicDisciplines selected=system.type sort=true localize=true}}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+            <div class="equip-box">
+                <div class="equip-head">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{localize 'FU.MPabbr'}}</th>
+                                <th>{{localize 'FU.difficultyLevelAbbr'}}</th>
+                                <th>Test di Magia</th>
+                                <th>{{localize 'FU.potency'}}</th>
+                                <th>{{localize 'FU.area'}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{system.MPCost.value}}
+                                    {{#if system.reduction.active}}
+                                        ({{multiply system.MPCost.value 2}} / 2)
+                                    {{/if}}
+                                </td>
+                                <td>{{system.difficultyLevel.value}}</td>
+                                <td>
+                                    【
+                                    {{#if (eq system.type 'chimerism')}}
+                                        <select name="system.attributes.primary.value">
+                                            {{selectOptions attributesAbbrRitualChimerism selected=system.attributes.primary.value localize=true}}
+                                        </select>
+                                    {{else}}{{localize (concat 'FU.attributesAbbr.' system.attributes.primary.value)}}{{/if}}
+                                    + {{localize (concat 'FU.attributesAbbr.' system.attributes.secondary.value)}}】
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <select name="system.potency.value">
+                                            {{selectOptions potencyList selected=system.potency.value localize=true}}
+                                        </select>
+                                    {{else}}
+                                        {{localize (concat 'FU.potencyList.' system.potency.value)}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <select name="system.area.value">
+                                            {{selectOptions areaList selected=system.area.value localize=true}}
+                                        </select>
+                                    {{else}}
+                                        {{localize (concat 'FU.areaList.' system.area.value)}}
+                                    {{/if}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="equip-body">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                </div>
             </div>
-		</div>
+        </div>
     </section>
+    
 </form>

@@ -1,23 +1,34 @@
 <div class="dice-damage">
-	<div class="damage-type">
+	{{!-- <div class="damage-type">
 		danni da 
 		<strong>
 			{{#unless (eq item.system.damage.type.value '')}}
-				{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}
+				<div class="icon icon-{{item.system.damage.type.value}} icon--inline" data-tooltip="{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}"></div>
 			{{else}}
 				(a scelta)
 			{{/unless}}
 		</strong>
-	</div>
+	</div> --}}
 	<div class="dice-total">
-		{{#if (eq roll.data.parent.type 'npc')}}
-			{{#if (eq item.type 'spell')}}
+		{{#if (eq item.type 'spell')}}
+			<div class="value">
 				{{add highRoll item.system.damage.value roll.data.level.damageBonus roll.data.bonus.damage.spell}}
+			</div>
+			{{#unless (eq item.system.damage.type.value '')}}
+				<div class="icon icon-{{item.system.damage.type.value}} icon--inline" data-tooltip="{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}"></div>
 			{{else}}
-				{{add highRoll item.system.damage.value roll.data.level.damageBonus roll.data.bonus.damage.base}}
-			{{/if}}
+				(a scelta)
+			{{/unless}}
+
 		{{else}}
-			{{add highRoll item.system.damage.value}}
+			<div class="value">
+				{{add highRoll item.system.damage.value roll.data.level.damageBonus roll.data.bonus.damage.base}}
+			</div>
+			{{#unless (eq item.system.damage.type.value '')}}
+				<div class="icon icon-{{item.system.damage.type.value}}" data-tooltip="{{localize (concat 'FU.DamageTypes.' item.system.damage.type.value)}}"></div>
+			{{else}}
+				(a scelta)
+			{{/unless}}
 		{{/if}}
 	</div>
 </div>

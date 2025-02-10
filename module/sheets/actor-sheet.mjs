@@ -1,8 +1,9 @@
 import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
 import { addClassToActor } from "../helpers/class-helpers.mjs";
 import { rollDiceToChat } from "../helpers/roll-helpers.mjs";
-import { awaitDialogSelect, generateDataLink, returnSortedPack } from "../helpers/helpers.mjs";
+import { awaitDialogSelect, generateDataLink, returnSortedPack, setProgress } from "../helpers/helpers.mjs";
 import { incrementSessionResource, initSessionJournal } from "../helpers/journal-helpers.mjs";
+import { createClock, deleteClock } from "../helpers/clock-helpers.mjs";
 import { FU } from "../helpers/config.mjs";
 
 const NPCaccordions = {
@@ -86,7 +87,7 @@ export class FabulaActorSheet extends ActorSheet {
 		
 		context.rollData = context.actor.getRollData();
 
-		context.effects = prepareActiveEffect(Array.from(this.actor.allApplicableEffects()));
+		context.effects = await prepareActiveEffect(Array.from(this.actor.allApplicableEffects()));
 		context.allEffects = [...context.effects.temporary.effects, ...context.effects.passive.effects, ...context.effects.inactive.effects];
 
 		for ( const effect of context.allEffects ) {
@@ -121,8 +122,10 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
-			this._onDropNpc( actor, sourceItem );
-			this._onDropCharacter( actor, sourceItem );
+			await this._onDropNpc( actor, sourceItem );
+			await this._onDropCharacter( actor, sourceItem );
+			
+			actor.render(true);
 			
 		} else {
 			return super._onDrop(e);
@@ -138,14 +141,15 @@ export class FabulaActorSheet extends ActorSheet {
 		} else if ( sourceItem.type == 'classFeature' ) {
 			let maxxedSkill = false;
 			let levelUpSkill = false;
-			const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
+			const classFeatures = actor.items.filter( item => item.type === 'classFeature' ) || [];
 
-			for (let i = 0; i < classFeatures.length; i++) {
-				if ( classFeatures[i]._id == sourceItem._id ) {
-					if ( classFeatures[i].system.level.current == classFeatures[i].system.level.max ) {
+			for ( const feature of classFeatures ) {
+				if ( feature.name == sourceItem.name ) {
+					if ( feature.system.level.current == feature.system.level.max && !feature.system.isUnlimited ) {
 						maxxedSkill = true;
-					} else {
-						classFeatures[i].system.level.current++;
+					} else if ( actor.system.skills.current < actor.system.skills.max ) {
+						const levelUp = feature.system.level.current + 1;
+						await feature.update({ 'system.level.current': levelUp});
 						levelUpSkill = true;
 					}
 					break;
@@ -157,63 +161,66 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
-			if ( levelUpSkill ) {
-				await actor.setFlag('fabula', 'classFeatures', classFeatures);
+			if ( levelUpSkill && actor.system.skills.current <= actor.system.skills.max ) {
 				ui.notifications.info(`${actor.name} ha aumentato il livello dell'abilità ${sourceItem.name}!`);
 				return true;
 			}
 
-			if ( sourceItem.system.isLimited ) {
-				new Dialog({
-					title: `Stai aggiungendo l'abilità ${sourceItem.name}`,
-					content: `
-						<p>L'abilità <strong>${sourceItem.name}</strong> è limitiata! Sei sicuro di volerla aggiungere?</p>
-					`,
-					buttons: {
-						no: {
-							label: 'No',
-						},
-						yes: {
-							label: 'Si',
-							callback: async () => {
-								const skillCount = actor.system.skills.current + 1;
-
-								if ( skillCount <= actor.system.skills.max ) {
-									await actor.update({ 'system.skills.current': skillCount });
-									const newItemData = sourceItem.toObject();
-									newItemData.system.level.current++;
-									const flags = actor.getFlag('fabula', 'classFeatures') || [];
-									flags.push(newItemData);
-									await actor.setFlag('fabula', 'classFeatures', flags);
-									return true;
-								} else {
-									ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
-									return false;
-								}
-							},
-						},
-					}
-				}).render(true);
+			if ( actor.system.skills.current <= actor.system.skills.max ) {
+				const newItemData = sourceItem.toObject();
+				newItemData.system.level.current++;
+				await actor.createEmbeddedDocuments("Item", [newItemData]);
+				return true;
 			} else {
-				const skillCount = actor.system.skills.current + 1;
-
-				if ( skillCount <= actor.system.skills.max ) {
-					await actor.update({ 'system.skills.current': skillCount });
-					const newItemData = sourceItem.toObject();
-					newItemData.system.level.current++;
-					const flags = actor.getFlag('fabula', 'classFeatures') || [];
-					flags.push(newItemData);
-					await actor.setFlag('fabula', 'classFeatures', flags);
-					return true;
-				} else {
-					ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
-					return false;
-				}
+				ui.notifications.warn('Hai raggiunto il limite di abilità acquistabili!');
+				return false;
 			}
 		} else if ( sourceItem.type == 'weapon' || sourceItem.type == 'armor' || sourceItem.type == 'accessory' || sourceItem.type == 'shield' ) {
 			if ( actor.system.equippable ) {
-				actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+				const newItem = await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+
+				const equippedData = foundry.utils.deepClone(actor.system.equip);
+				let slot;
+				if ( newItem[0].type == 'weapon' ) {
+					slot = 'mainHand';
+				} else if ( newItem[0].type == 'shield' ) {
+					slot = 'offHand';
+				} else if ( newItem[0].type == 'armor' ) {
+					slot = 'armor';
+				} else if ( newItem[0].type == 'accessory' ) {
+					slot = 'accessory';
+				}
+
+				if ( equippedData[slot] !== null && equippedData[slot] !== newItem[0]._id ) {
+					const equippedItem = actor.items.get( equippedData[slot] );
+					if ( equippedItem ) {
+						await equippedItem.update({ 'system.isEquipped': false });
+					}
+				}
+
+				if ( ( slot == 'offHand' || slot == 'mainHand' ) && equippedData.mainHand === equippedData.offHand ) {
+					equippedData.mainHand = null;
+					equippedData.offHand = null;
+				}
+				equippedData[slot] = equippedData[slot] == newItem[0]._id ? null : newItem[0]._id;
+				
+				const embeddedItem = actor.items.find( item => item.name == FU.UnarmedStrike.name );
+				if ( embeddedItem ) {
+					if ( !equippedData.mainHand ) {
+						equippedData.mainHand = embeddedItem._id;
+						await embeddedItem.update({ 'system.isEquipped': true });
+					} else if ( !equippedData.offHand ) {
+						equippedData.offHand = embeddedItem._id;
+						await embeddedItem.update({ 'system.isEquipped': true });
+					}
+				}
+
+				if ( newItem[0].name !== embeddedItem.name ) {
+					await newItem[0].update({ 'system.isEquipped': !newItem[0].system.isEquipped});
+				}
+				await actor.update({ 'system.equip': equippedData });
 				ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
+
 			} else {
 				ui.notifications.warn(`${actor.name} non ha l'abilità di equipaggiare oggetti`);
 			}
@@ -233,11 +240,11 @@ export class FabulaActorSheet extends ActorSheet {
 			new Dialog({
 				title: `Stai aggiungendo l'oggetto ${sourceItem.name}`,
 				content: `
-					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost}z, vuoi pagarne il costo?</p>
+					<p>L'oggetto ${sourceItem.name} costa ${sourceItem.system.cost} Zenit <i class="fa fa-fw fa-coins"></i></p>
 				`,
 				buttons: {
 					no: {
-						label: 'No',
+						label: 'Aggiungi gratuitamente',
 						callback: async () => {
 							const newItemData = sourceItem.toObject();
 							await actor.createEmbeddedDocuments("Item", [newItemData]);
@@ -245,7 +252,7 @@ export class FabulaActorSheet extends ActorSheet {
 						},
 					},
 					yes: {
-						label: 'Si',
+						label: 'Paga il costo',
 						callback: async () => {
 							const actorZenits = actor.system.resources.zenit;
 							if ( actorZenits < sourceItem.system.cost ) {
@@ -406,6 +413,17 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 		} else if ( sourceItem.type == 'classFeature' ) {
+			
+			if (
+				await Dialog.confirm({
+					title: `Stai acquisendo l'abilità ${sourceItem.name}`,
+					content: `<p>Sei sicuro di voler acquisire un livello nella classe ${sourceItem.folder.name} per ottenere l'abilità ${sourceItem.name}?</p>`,
+					rejectClose: false,
+				})
+			) {
+				await addClassToActor( actor, sourceItem, true );
+			}
+
 		} else if ( sourceItem.type == 'heroicSkill' ) {
 
 			const classes = actor.items.filter( item => item.type == 'class' && item.system.level.value == 10 );
@@ -614,7 +632,7 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click', '.js_setAttrValue', this._setAttrValue.bind(this));
 
 		// Equip Item
-		html.on('click','.js_equipItem', this._equipItem.bind(this));
+		html.on('click','.js_equipItem', (event) => this._equipItem( $(event.currentTarget) ));
 
 		// Remove Item from Actor
 		html.on('click','.js_removeItem', async (e) => {
@@ -670,25 +688,25 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click','.js_createItem', this._createItem.bind(this));
 
 		// Edit Item
-		html.on('click','.js_editItem', this._editItem.bind(this));
+		html.on('click','.js_editItem', (event) => this._editItem( $(event.currentTarget) ));
 
 		// Delete Item
-		html.on('click','.js_deleteItem', this._deleteItem.bind(this));
+		html.on('click','.js_deleteItem', (event) => this._deleteItem( $(event.currentTarget) ));
 		
 		// Show Item in Chat
 		html.on('click','.js_showItemInChat', this._showItemInChat.bind(this));
 
-		// Roll spell test
+		// Roll Item test
 		html.on('click','.js_rollActorItem', this._rollActorItem.bind(this));
-		
-		// Remove skill from NPC
-		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
 
 		// Set NPC skill as free
 		html.on('click', '.js_setFreeFeature', this._setFreeFeature.bind(this));
 
+		// Set Progress of Projects
+		html.on('click','.js_setProgress', this._setProgress.bind(this));
+
 		// Manage Active Effects
-		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.actor));
+		html.on('click','.js_manageActiveEffect', async (e) => manageActiveEffect(e, this.actor));
 
 		// Add new bond
 		html.on('click', '.js_addNewBond', async (ev) => {
@@ -714,6 +732,99 @@ export class FabulaActorSheet extends ActorSheet {
 		// Level up Character
 		html.on('click', '.js_levelUpCharacter', this._levelUpCharacter.bind(this));
 
+		// ContextMenu item settings menu items
+		const contextMenuItemSettings = [
+			{
+				name: game.i18n.localize('FU.actions.edit'),
+				icon: '<i class="fa fa-pencil"></i>',
+				callback: this._editItem.bind(this),
+				condition: (el) => !!$(el).data('item'),
+			},
+			{
+				name: game.i18n.localize('FU.actions.delete'),
+				icon: '<i class="fa fa-trash"></i>',
+				callback: this._deleteItem.bind(this),
+				condition: (el) => !!$(el).data('item'),
+			},
+		];
+
+		// Edit ContextMenu item settings menu items
+		html.on('click','.btn-action-options', (event) => {
+			const actor = this.actor;
+
+			const itemId = event.currentTarget.dataset.item;
+			const item = actor.items.get( itemId );
+			if ( item ) {
+				contextMenuItemSettings.splice( 0, contextMenuItemSettings.length );
+
+				// Add edit option if doesn't exist
+				if ( !contextMenuItemSettings.some( opt => opt.name === game.i18n.localize('FU.actions.edit') ) ) {
+					contextMenuItemSettings.push({
+						name: game.i18n.localize('FU.actions.edit'),
+						icon: '<i class="fa fa-pencil"></i>',
+						callback: this._editItem.bind(this),
+						condition: (el) => !!$(el).data('item'),
+					});
+				}
+				// Add delete option if doesn't exist
+				if ( !contextMenuItemSettings.some( opt => opt.name === game.i18n.localize('FU.actions.delete') ) ) {
+					contextMenuItemSettings.push({
+						name: game.i18n.localize('FU.actions.delete'),
+						icon: '<i class="fa fa-trash"></i>',
+						callback: this._deleteItem.bind(this),
+						condition: (el) => !!$(el).data('item'),
+					});
+				}
+
+				// Add equip/unequip option
+				if ( 'isEquipped' in item.system ) {
+					if ( item.system.isEquipped ) {
+						const unequipLabel = item.type == 'arcanum' ? game.i18n.localize('FU.actions.dismiss') : game.i18n.localize('FU.actions.unequip');
+
+						contextMenuItemSettings.unshift({
+							name: unequipLabel,
+							icon: '<i class="fa fa-shield-halved"></i>',
+							callback: this._equipItem.bind(this),
+							condition: (el) => !!$(el).data('item'),
+						});
+					} else {
+						const equipLabel = item.type == 'arcanum' ? game.i18n.localize('FU.actions.summon') : game.i18n.localize('FU.actions.equip');
+
+						contextMenuItemSettings.unshift({
+							name: equipLabel,
+							icon: '<i class="fa fa-shield"></i>',
+							callback: this._equipItem.bind(this),
+							condition: (el) => !!$(el).data('item'),
+						});
+					}
+				}
+
+				// Remove not wanted options for Unarmed Strike item
+				if ( item.name === FU.UnarmedStrike.name ) {
+					let optIndex;
+					optIndex = contextMenuItemSettings.findIndex( opt => opt.name === game.i18n.localize('FU.actions.edit') );
+					contextMenuItemSettings.splice( optIndex, 1 );
+					
+					optIndex = contextMenuItemSettings.findIndex( opt => opt.name === game.i18n.localize('FU.actions.delete') );
+					contextMenuItemSettings.splice( optIndex, 1 );
+
+					optIndex = contextMenuItemSettings.findIndex( opt => opt.name === game.i18n.localize('FU.actions.unequip') );
+					contextMenuItemSettings.splice( optIndex, 1 );
+				}
+			}
+		});
+
+		// Init ContextMenu item settings
+		new ContextMenu(html, '.btn-action-options', contextMenuItemSettings, {
+			eventName: 'click',
+			onOpen: (menu) => {
+				setTimeout(() => {
+					menu.querySelector('nav#context-menu')?.classList.add('context-menu-options');
+				}, 1);
+			},
+			onClose: () => {},
+		});
+
 		if (!this.isEditable) return;
 	}
 
@@ -732,10 +843,13 @@ export class FabulaActorSheet extends ActorSheet {
 	}
 
 	async _prepareItems(context) {
+		const actor = this.actor;
+
 		const weapons = [];
 		const armors = [];
 		const shields = [];
 		const accessories = [];
+		const arcanums = [];
 		const classes = [];
 		const heroicSkills = [];
 		const spells = [];
@@ -743,12 +857,11 @@ export class FabulaActorSheet extends ActorSheet {
 		const rituals = [];
 		const baseItems = [];
 		const attacks = [];
-		const effects = [];
 
-		for ( let i of context.items ) {
+		for ( let i of actor.items ) {
 
 			// Enriches description fields
-			for ( let item of context.items ) {
+			for ( let item of actor.items ) {
 				item.enrichedHtml = {
 					description: await TextEditor.enrichHTML( item.system?.description ?? '' ),
 					opportunity: await TextEditor.enrichHTML( item.system?.opportunityEffect ?? '' ),
@@ -774,6 +887,8 @@ export class FabulaActorSheet extends ActorSheet {
 				shields.push(i);
 			} else if (i.type === 'accessory') {
 				accessories.push(i);
+			} else if (i.type === 'arcanum') {
+				arcanums.push(i);
 			} else if (i.type === 'class') {
 				classes.push(i);
 			} else if (i.type === 'heroicSkill') {
@@ -788,15 +903,26 @@ export class FabulaActorSheet extends ActorSheet {
 				baseItems.push(i);
 			} else if (i.type === 'attack') {
 				attacks.push(i);
-			} else if (i.type === 'effect') {
-				effects.push(i);
 			}
 		}
+
+		// Sort Weapons and Attacks by range
+		weapons.sort((a, b) => {
+			if ( a.system.range == 'melee' && b.system.range == 'ranged' ) return -1;
+			if ( a.system.range == 'ranged' && b.system.range == 'melee' ) return 1;
+			return a.name.localeCompare( b.name );
+		});
+		attacks.sort((a, b) => {
+			if ( a.system.range == 'melee' && b.system.range == 'ranged' ) return -1;
+			if ( a.system.range == 'ranged' && b.system.range == 'melee' ) return 1;
+			return a.name.localeCompare( b.name );
+		});
 
 		context.weapons = weapons;
 		context.armors = armors;
 		context.shields = shields;
 		context.accessories = accessories;
+		context.arcanums = arcanums;
 		context.classes = classes;
 		context.heroicSkills = heroicSkills;
 		context.spells = spells;
@@ -804,7 +930,6 @@ export class FabulaActorSheet extends ActorSheet {
 		context.rituals = rituals;
 		context.baseItems = baseItems;
 		context.attacks = attacks;
-		context.effects = effects;
 		context.classFeature = {};
 
 		for (const item of this.actor.itemTypes.classFeature) {
@@ -934,66 +1059,83 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
-	async _removeClassFeature(event) {
+	async _setFreeFeature(event) {
 		event.preventDefault();
-		const actor = this.actor;
-		if ( actor.type == 'character' ) return;
+		if ( this.actor.type != 'npc' ) return;
 
-		const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
-		const itemToBeRemoved = event.currentTarget.getAttribute('data-id');
-		let removed = false;
-		for (let i = 0; i < classFeatures.length; i++) {
-			if ( classFeatures[i]._id == itemToBeRemoved ) {
-				classFeatures.splice(i, 1);
-				removed = true;
-				break;
-			}
-		}
-		
-		await actor.setFlag('fabula', 'classFeatures', classFeatures);
+		const element = event.currentTarget;
+		const itemID = element.dataset.itemid;
+		const item = this.actor.items.get( itemID );
 
-		if ( removed ) {
-			const skillCount = actor.system.skills.current - 1;
-			await actor.update({ 'system.skills.current': skillCount });
-			ui.notifications.info(`L'elemento è stato eliminato.`);
-		} else {
-			ui.notifications.error(`Non è stato possibili completare l'azione.`);
+		if ( item ) {
+			await item.update({ 'system.isFree': !item.system.isFree });
 		}
 	}
 
-	async _setFreeFeature(event) {
-		event.preventDefault();
-		const actor = this.actor;
-		if ( actor.type == 'character' ) return;
+	async _setProgress(event) {
+		event.preventDefault()
+		const element = event.currentTarget;
+		const increase = element.dataset.increase;
+		const itemID = element.dataset.itemid;
+		const item = this.actor.items.get( itemID );
 
-		let skillCount = actor.system.skills.current;
-		const classFeatures = actor.getFlag('fabula', 'classFeatures') || [];
-		const itemID = event.currentTarget.getAttribute('data-id');
-		let skillLevel = 1;
-
-		for (let i = 0; i < classFeatures.length; i++) {
-			if ( classFeatures[i]._id == itemID ) {
-				classFeatures[i].system.isFree = !classFeatures[i].system.isFree;
-				if ( classFeatures[i].system.level.current > 1 ) skillLevel = classFeatures[i].system.level.current;
-				break;
-			}
+		if ( item && increase ) {
+			await setProgress( item, null, Number(increase) );
 		}
-
-		if ( $(event.currentTarget).hasClass('active') ) {
-			skillCount += skillLevel;
-			$(event.currentTarget).removeClass('active');
-		} else {
-			skillCount -= skillLevel;
-			$(event.currentTarget).addClass('active');
-		}
-		
-		await actor.setFlag('fabula', 'classFeatures', classFeatures);
-		await actor.update({ 'system.skills.current': skillCount });
 	}
 
 	async _rollActorTest(event) {
 		event.preventDefault();
 		const actor = this.actor;
+
+		let contentString = `
+			<div class="flexcolumn">
+				<div class="title">Primaria</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckPrimary" id="attrPrimary_dex" value="dex" />
+					<label for="attrPrimary_dex">Destrezza</label>
+				</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckPrimary" id="attrPrimary_ins" value="ins" />
+					<label for="attrPrimary_ins">Intuito</label>
+				</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckPrimary" id="attrPrimary_mig" value="mig" />
+					<label for="attrPrimary_mig">Vigore</label>
+				</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckPrimary" id="attrPrimary_wlp" value="wlp" />
+					<label for="attrPrimary_wlp">Volontà</label>
+				</div>
+			</div>
+			<div class="flexcolumn">
+				<div class="title">Secondaria</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckSecondary" id="attrSecondary_dex" value="dex" />
+					<label for="attrSecondary_dex">Destrezza</label>
+				</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckSecondary" id="attrSecondary_ins" value="ins" />
+					<label for="attrSecondary_ins">Intuito</label>
+				</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckSecondary" id="attrSecondary_mig" value="mig" />
+					<label for="attrSecondary_mig">Vigore</label>
+				</div>
+				<div class="form-group">
+					<input type="radio" name="formCheckSecondary" id="attrSecondary_wlp" value="wlp" />
+					<label for="attrSecondary_wlp">Volontà</label>
+				</div>
+			</div>
+		`;
+		if ( actor.system.bonus?.checks?.base > 0 ) {
+			contentString += `
+				<div class="form-group">
+					<input type="checkbox" name="formBonusCheck" id="formBonusCheck" />
+					<label for="formBonusCheck">Applicare bonus ai Test Contrapposti? (+${actor.system.bonus?.checks?.base})</label>
+				</div>
+			`;
+		}
 
 		new Dialog({
 			title: 'Effettua un test',
@@ -1001,48 +1143,7 @@ export class FabulaActorSheet extends ActorSheet {
 				<div class="skill-test">
 					<div class="flexrow">
 						<h4>Scegli le caratteristiche</h4>
-						<div class="flexcolumn">
-							<div class="title">Primaria</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckPrimary" id="attrPrimary_dex" value="dex" />
-								<label for="attrPrimary_dex">Destrezza</label>
-							</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckPrimary" id="attrPrimary_ins" value="ins" />
-								<label for="attrPrimary_ins">Intuito</label>
-							</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckPrimary" id="attrPrimary_mig" value="mig" />
-								<label for="attrPrimary_mig">Vigore</label>
-							</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckPrimary" id="attrPrimary_wlp" value="wlp" />
-								<label for="attrPrimary_wlp">Volontà</label>
-							</div>
-						</div>
-						<div class="flexcolumn">
-							<div class="title">Secondaria</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckSecondary" id="attrSecondary_dex" value="dex" />
-								<label for="attrSecondary_dex">Destrezza</label>
-							</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckSecondary" id="attrSecondary_ins" value="ins" />
-								<label for="attrSecondary_ins">Intuito</label>
-							</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckSecondary" id="attrSecondary_mig" value="mig" />
-								<label for="attrSecondary_mig">Vigore</label>
-							</div>
-							<div class="form-group">
-								<input type="radio" name="formCheckSecondary" id="attrSecondary_wlp" value="wlp" />
-								<label for="attrSecondary_wlp">Volontà</label>
-							</div>
-						</div>
-						<div class="form-group" style="${actor.type != 'npc' ? 'display:none' : ''}">
-							<input type="checkbox" name="formBonusCheck" id="formBonusCheck" ${actor.system.level?.checkBonus?.checks <= 0 ? 'disabled' : ''} />
-							<label for="formBonusCheck">Applicare bonus ai Test Contrapposti? ${actor.system.level?.checkBonus?.checks > 0 ? '(+' + actor.system.level?.checkBonus?.checks + ')' : ''}</label>
-						</div>
+						${contentString}
 					</div>
 				</div>
 			`,
@@ -1065,7 +1166,7 @@ export class FabulaActorSheet extends ActorSheet {
 							rollString += `d${primary}+d${secondary}`;
 							
 							if ( bonusCheck ) {
-								rollString += `+${actor.system.level.checkBonus.checks}`;
+								rollString += `+${actor.system.bonus.checks.base}`;
 							}
 
 							await rollDiceToChat( actor, rollString );
@@ -1097,22 +1198,19 @@ export class FabulaActorSheet extends ActorSheet {
 		};
 		delete itemData.system['type'];
 
-		return await Item.create(itemData, { parent: this.actor });
+		const createdItem = await Item.create(itemData, { parent: this.actor });
+		createdItem.sheet.render(true);
 	}
 
-	async _editItem(event) {
-		const element = event.currentTarget;
-		const itemID = element.dataset.itemid;
-
-		const item = this.actor.items.get( itemID );
+	async _editItem(el) {
+		const itemId = $(el).data('item');
+		const item = this.actor.items.get( itemId );
 		if ( item ) item.sheet.render(true);
 	}
 
-	async _deleteItem(event) {
-		const element = event.currentTarget;
-		const itemID = element.dataset.itemid;
-
-		const item = this.actor.items.get( itemID );
+	async _deleteItem(el) {
+		const itemId = $(el).data('item');
+		const item = this.actor.items.get( itemId );
 
 		if ( item.name == FU.UnarmedStrike.name ) {
 			ui.notifications.warn(`Non puoi eliminare l'Item ${FU.UnarmedStrike.name}`);
@@ -1228,12 +1326,35 @@ export class FabulaActorSheet extends ActorSheet {
 				rollString += `+${item.system.precisionBonus}`;
 			}
 
-			if ( actor.system.level?.checkBonus?.test > 0 ) {
-				rollString += `+${actor.system.level.checkBonus.test}`;
+			if ( actor.system.bonus?.checks?.attack > 0 ) {
+				rollString += `+${actor.system.bonus.checks.attack}`;
 			}
 		}
-		if ( item.type == 'spell' && actor.system.level?.checkBonus?.spell > 0 ) {
-			rollString += `+${actor.system.level.checkBonus.spell}`;
+		if ( ( item.type == 'spell' || item.type == 'ritual' ) && actor.system.bonus?.checks?.spell > 0 ) {
+			rollString += `+${actor.system.bonus.checks.spell}`;
+		}
+
+		if ( item.type == 'ritual' ) {
+
+			// Check if Actor can exacute the Ritual with specific type
+			if ( actor.system.castRitual[item.system.type] === false ) {
+				ui.notifications.warn(`Non puoi lanciare rituali di tipo ${game.i18n.localize(`FU.MagicDisciplines.${item.system.type}`)}`);
+				return;
+			}
+
+			// Create Clock if needed
+			if ( item.system.clock.active ) {
+
+				if ( item.system.clock.id == '' ) {
+					const clockId = createClock( item.name, item.system.clock.steps );
+					await item.update({ 'system.clock.id': clockId });
+					return;
+				} else {
+					deleteClock( item.system.clock.id );
+					await item.update({ 'system.clock.id': '' });
+				}
+			}
+
 		}
 
 		await rollDiceToChat( actor, rollString, null, templateType, item, template );
@@ -1293,16 +1414,13 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
-	async _equipItem(event) {
-		event.preventDefault();
-		const element = event.currentTarget;
-		const itemID = element.dataset.itemid;
-
-		const item = this.actor.items.get( itemID );
+	async _equipItem(el) {
+		const actor = this.actor;
+		const itemId = $(el).data('item');
+		const item = actor.items.get( itemId );
 
 		if ( item ) {
-
-			const equippedData = foundry.utils.deepClone(this.actor.system.equip);
+			const equippedData = foundry.utils.deepClone(actor.system.equip);
 			let slot;
 			if ( item.type == 'weapon' ) {
 				slot = 'mainHand';
@@ -1312,52 +1430,100 @@ export class FabulaActorSheet extends ActorSheet {
 				slot = 'armor';
 			} else if ( item.type == 'accessory' ) {
 				slot = 'accessory';
+			} else if ( item.type == 'arcanum' ) {
+				slot = 'arcanum';
 			}
 
-			if ( this.actor.type == 'character' && item.system.isMartial.value ) {
+			if ( actor.type == 'character' && item.system?.isMartial?.value ) {
 				let martialSlot = slot;
 				if ( item.type == 'weapon' ) {
 					martialSlot = item.system.range;
 				}
 
-				if ( !this.actor.system.useMartial[martialSlot] ) {
+				if ( !actor.system.useMartial[martialSlot] ) {
 					ui.notifications.warn(`Non puoi equipaggiare ${item.name} perché è un'equipaggiamento Marziale`);
 					return false;
 				}
 			}
 
 			if ( equippedData[slot] !== null && equippedData[slot] !== item._id ) {
-				const equippedItem = this.actor.items.get( equippedData[slot] );
-				if ( equippedItem ) {
-					await equippedItem.update({ 'system.isEquipped': false });
+				const equippedItem = actor.items.get( equippedData[slot] );
+				if ( slot == 'arcanum' ) {
+					ui.notifications.warn(`Non puoi evocare ${item.name} finché sei già fuso con un'altro arcano`);
+					return;
+				} else {
+					if ( equippedItem ) {
+						await equippedItem.update({ 'system.isEquipped': false });
+					}
 				}
 			}
 
 			if ( item.system.needTwoHands ) {
-				if ( equippedData.mainHand !== null && equippedData.mainHand !== itemID ) {
-					const mainHandItem = this.actor.items.find( item => item._id == equippedData.mainHand );
+				if ( equippedData.mainHand !== null && equippedData.mainHand !== itemId ) {
+					const mainHandItem = actor.items.find( item => item._id == equippedData.mainHand );
 					if ( mainHandItem.system.isEquipped ) {
 						await mainHandItem.update({ 'system.isEquipped': false });
 					}
 				}
-				if ( equippedData.offHand !== null && equippedData.offHand !== itemID ) {
-					const offHandItem = this.actor.items.find( item => item._id == equippedData.offHand );
+				if ( equippedData.offHand !== null && equippedData.offHand !== itemId ) {
+					const offHandItem = actor.items.find( item => item._id == equippedData.offHand );
 					if ( offHandItem.system.isEquipped ) {
 						await offHandItem.update({ 'system.isEquipped': false });
 					}
 				}
 
-				equippedData.mainHand = equippedData.mainHand == itemID ? null : itemID;
-				equippedData.offHand = equippedData.offHand == itemID ? null : itemID;
+				equippedData.mainHand = equippedData.mainHand == itemId ? null : itemId;
+				equippedData.offHand = equippedData.offHand == itemId ? null : itemId;
 			} else {
 				if ( ( slot == 'offHand' || slot == 'mainHand' ) && equippedData.mainHand === equippedData.offHand ) {
 					equippedData.mainHand = null;
 					equippedData.offHand = null;
 				}
-				equippedData[slot] = equippedData[slot] == itemID ? null : itemID;
+				if ( slot == 'arcanum' && item.system.dismiss?.length > 0 && item.system.isEquipped ) {
+					if (
+						await Dialog.confirm({
+							title: `Stai congedando ${item.name}`,
+							content: `<p>Vuoi innescare l'effetto di <strong>congedo</strong> di ${item.name}?</p>`,
+							rejectClose: false,
+						})
+					) {
+						let label = `Scegli quale effestto di congeto attivare: <br>`;
+						let options = '';
+						item.system.dismiss.forEach((dismiss, key) => {
+							label += `
+								<span style="margin:5px 0;display:block;">
+									<strong>${dismiss.name}</strong><br>
+									${dismiss.effect}
+								</span>
+							`;
+							options += `<option value="${key}">${dismiss.name}</option>`;
+						});
+						const dismissEffect = await awaitDialogSelect({
+							title: `Stai congedando ${item.name}`,
+							optionsLabel: label,
+							options: options,
+						});
+						if ( dismissEffect === false ) return false;
+
+						const chatData = {
+							user: game.user.id,
+							speaker: ChatMessage.getSpeaker({ actor: this.name }),
+							flavor: `Ha attivato l'effetto di congedo di ${item.name}`,
+							content: `
+								<strong>${item.system.dismiss[dismissEffect].name}</strong><br>
+								${item.system.dismiss[dismissEffect].effect}
+							`,
+							flags: {
+								customClass: 'arcanum-dismiss',
+							},
+						};
+						ChatMessage.create(chatData);
+					}
+				}
+				equippedData[slot] = equippedData[slot] == itemId ? null : itemId;
 			}
 			
-			const embeddedItem = this.actor.items.find( item => item.name == FU.UnarmedStrike.name );
+			const embeddedItem = actor.items.find( item => item.name == FU.UnarmedStrike.name );
 			if ( embeddedItem ) {
 				if ( !equippedData.mainHand ) {
 					equippedData.mainHand = embeddedItem._id;
@@ -1371,8 +1537,9 @@ export class FabulaActorSheet extends ActorSheet {
 			if ( item.name !== embeddedItem.name ) {
 				await item.update({ 'system.isEquipped': !item.system.isEquipped});
 			}
-			await this.actor.update({ 'system.equip': equippedData });
-
+			await actor.update({ 'system.equip': equippedData });
+			const context = await this.getData();
+			actor.render(true);
 		}
 	}
 

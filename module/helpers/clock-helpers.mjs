@@ -1,5 +1,5 @@
 
-export function openClockDialog() {
+export function openClockDialog( name,  ) {
 	new Dialog({
 		title: 'Stai creando un nuovo Orologio',
 		content: `
@@ -30,7 +30,7 @@ export function openClockDialog() {
 	}).render(true);
 }
 
-function createClock( name, sections = 4, visibility = false ) {
+export function createClock( name, sections = 4, visibility = false ) {
 	const clock = {
 		id: foundry.utils.randomID(),
 		name: name || 'Nuovo orologio',
@@ -39,6 +39,7 @@ function createClock( name, sections = 4, visibility = false ) {
 	};
 
 	renderClock( clock );
+	return clock.id;
 }
 
 export function renderClock( clock ) {
@@ -133,11 +134,11 @@ export function renderClock( clock ) {
 	}
 }
 
-function deleteClock( clock ) {
-	if ( $(`[data-clock-id="${clock.id}"]`).length > 0 ) {
-		$(`[data-clock-id="${clock.id}"]`).remove();
+export function deleteClock( clockId ) {
+	if ( $(`[data-clock-id="${clockId}"]`).length > 0 ) {
+		$(`[data-clock-id="${clockId}"]`).remove();
 	} else {
-		ui.notifications.error(`L'orologio con id: ${clock.id} non è stato trovato!`);
+		ui.notifications.error(`L'orologio con id: ${clockId} non è stato trovato!`);
 	}
 }
 
@@ -201,7 +202,7 @@ export async function addSectionToClock( clock, amount = 1 ) {
 				customClass: 'clock-alert',
 			},
 		};
-		deleteClock( clock );
+		deleteClock( clock.id );
 	} else {
 		clock.sections = sections;
 		renderClock( clock );

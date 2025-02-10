@@ -1,43 +1,40 @@
 <li class="{{item.system.sourcebook}}">
 	<div class="btn-container">
 		{{#if @root.editable}}
-			<button type="button" class="js_deleteItem" data-itemid="{{item._id}}" data-tooltip="Elimina">
-				<i class="fa fa-trash m-0"></i>
-			</button>
-
-			<button type="button" class="js_editItem" data-itemid="{{item._id}}" data-tooltip="Modifica">
-				<i class="fa fa-pencil m-0"></i>
+			<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+				<i class="fa fa-ellipsis-vertical m-0"></i>
 			</button>
 		{{/if}}
 	</div>
 	<div class="item-box">
-		{{#if @root.editable}}
-			<button type="button" class="js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="Mostra in Chat">
-				<i class="fa fa-comment m-0"></i>
-			</button>
-			<button type="button" class="name js_rollActorItem" data-itemid="{{item._id}}" data-primary="{{item.system.attributes.primary.value}}" data-secondary="{{item.system.attributes.secondary.value}}" data-tooltip="Lancia l'incantesimo">
-				{{item.name}}
-				{{#if item.system.isOffensive.value}}
-					<div class="icon icon-offensive"></div>
-				{{/if}}
-			</button>
-		{{else}}
-			<label>
-				{{item.name}}
-				{{#if item.system.isOffensive.value}}
-					<div class="icon icon-offensive"></div>
-				{{/if}}
-			</label>
-		{{/if}}
-		<p>
+		<div class="item-box-data">
+			{{#if @root.editable}}
+				<button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
+					<i class="fa fa-comment m-0"></i>
+				</button>
+				<button type="button" class="btn-action-roll name js_rollActorItem" data-itemid="{{item._id}}" data-primary="{{item.system.attributes.primary.value}}" data-secondary="{{item.system.attributes.secondary.value}}" data-tooltip="{{localize 'FU.actions.castSpell'}}">
+					{{item.name}}
+					{{#if item.system.isOffensive.value}}
+						<div class="icon icon-offensive"></div>
+					{{/if}}
+				</button>
+			{{else}}
+				<label>
+					{{item.name}}
+					{{#if item.system.isOffensive.value}}
+						<div class="icon icon-offensive"></div>
+					{{/if}}
+				</label>
+			{{/if}}
+			
 			{{#if item.system.isOffensive.value}}
-				<strong class="ml-0">
-					【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.level.checkBonus.spell 0}}+{{/gt}}
-					{{#unless (eq actor.level.checkBonus.spell 0)}}
-						{{actor.level.checkBonus.spell}}
+				<strong>
+					【{{localize (concat 'FU.attributesAbbr.' item.system.attributes.primary.value)}} + {{localize (concat 'FU.attributesAbbr.' item.system.attributes.secondary.value)}}】{{#gt actor.bonus.checks.spell 0}}+{{/gt}}
+					{{#unless (eq actor.bonus.checks.spell 0)}}
+						{{actor.bonus.checks.spell}}
 					{{/unless}}
 				</strong>
-				<small class="{{#if (eq actor.level.checkBonus.spell 0)}}ml-0{{/if}}">◆</small>
+				<div class="divider-decoration{{#if (eq actor.bonus.checks.spell 0)}}m-0{{/if}}"></div>
 			{{/if}}
 			<strong>
 				{{#if item.system.MPCost.upTo}}
@@ -48,20 +45,20 @@
 					x B
 				{{/gt}}
 			</strong>
-			<small>◆</small>
+			<div class="divider-decoration"></div>
 			<strong>{{item.system.target.value}}</strong>
-			<small>◆</small>
+			<div class="divider-decoration"></div>
 			<strong>{{localize (concat 'FU.SpellDurations.' item.system.duration.value)}}</strong>
-		</p>
+		</div>
 
-		<div class="description">
+		<div class="item-box-description">
 			{{{item.enrichedHtml.description}}}
 		</div>
 		
-		{{#if item.enrichedHtml.opportunity.value}}
+		{{#if item.enrichedHtml.opportunity}}
 			<div class="opportunity">
 				<strong>Opportunità:</strong>
-				{{{item.enrichedHtml.opportunityEffect}}}
+				{{{item.enrichedHtml.opportunity}}}
 			</div>
 		{{/if}}
 	</div>

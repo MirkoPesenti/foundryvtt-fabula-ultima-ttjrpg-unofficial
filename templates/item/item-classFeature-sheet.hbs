@@ -1,9 +1,11 @@
 <form class="{{cssClass}} {{item.type}} is-feature flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="class-icon">
-            <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-        </div>
+        {{#if (or @root.editable (not (eq item.img 'systems/fabula/assets/icons/default-classFeature.svg')))}}
+            <div class="class-icon">
+                <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+            </div>
+        {{/if}}
 
         {{#if @root.editable}}
             <select class="select-source" name="system.sourcebook">
@@ -16,9 +18,9 @@
         <a class="item" data-tab="base">
             <span>Base</span>
         </a>
-        {{!-- <a class="item" data-tab="effects">
+        <a class="item" data-tab="effects">
             <span>Effetti</span>
-        </a> --}}
+        </a>
     </nav>
 
     <section class="sheet-body">
@@ -27,15 +29,18 @@
                 <div class="feature-head">
                     {{#if @root.editable}}
                         <input name="name" type="text" value="{{item.name}}" />
-                        <input type="checkbox" name="system.isLimited" data-tooltip="Abilità limitata" {{checked system.isLimited}}>
+                        <div class="form-group ml-auto">
+                            <label for="system.isUnlimited" class="mr-05">Illimitata</label>
+                            <input type="checkbox" name="system.isUnlimited" id="system.isUnlimited" data-tooltip="Abilità Illimitata" {{checked system.isUnlimited}}>
+                        </div>
                         <span>
                             (<span>l</span><input name="system.level.max" type="number" value="{{system.level.max}}">)
                         </span>
                     {{else}}
                         {{item.name}}
                         <span>
-                            {{#if system.isLimited}}
-                                (<span class="font-yanone">LIMITATA</span>)
+                            {{#if system.isUnlimited}}
+                                (<span class="font-yanone">ILLIMITATA</span>)
                             {{else}}
                                 (<span>l</span>{{this.system.level.max}})
                             {{/if}}
@@ -98,7 +103,7 @@
                             {{else}}
                                 Una mano
                             {{/if}}
-                            <span class="diamond-char">◆</span>
+                            <div class="divider-decoration"></div>
                             {{localize (concat 'FU.WeaponRanges.' this.system.range)}}
                         </div>
                         <div class="desc-container">
@@ -109,10 +114,11 @@
             {{/each}}
         </div>
 
-        {{!-- <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="tab effects" data-group="primary" data-tab="effects">
             {{#each effects as |category catIndex|}}
-                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../item}}
             {{/each}}
-        </div> --}}
+        </div>
     </section>
+    
 </form>

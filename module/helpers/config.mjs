@@ -27,7 +27,8 @@ FU.ItemTypes = {
 FU.sourcebook = {
 	base: 'FU.sourcebook.base',
 	bonusAce: 'FU.sourcebook.bonusAce',
-	bonusNecromancer: 'FU.sourcebook.bonusNecromancer',
+	bonusHalloween: 'FU.sourcebook.bonusHalloween',
+	bonusArcaneWhispers: 'FU.sourcebook.bonusArcaneWhispers',
 	atlasHighFantasy: 'FU.sourcebook.atlasHighFantasy',
 	atlasTechnoFantasy: 'FU.sourcebook.atlasTechnoFantasy',
 	atlasNaturalFantasy: 'FU.sourcebook.atlasNaturalFantasy',
@@ -50,6 +51,11 @@ FU.attributesAbbr = {
 	ins: 'FU.attributesAbbr.ins',
 	mig: 'FU.attributesAbbr.mig',
 	wlp: 'FU.attributesAbbr.wlp',
+};
+
+FU.attributesAbbrRitualChimerism = {
+	ins: 'FU.attributesAbbr.ins',
+	mig: 'FU.attributesAbbr.mig',
 };
 
 FU.attributesDice = {

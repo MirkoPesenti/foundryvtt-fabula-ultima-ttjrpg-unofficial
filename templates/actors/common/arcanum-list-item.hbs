@@ -1,0 +1,57 @@
+<li class="{{item.system.sourcebook}}">
+	{{#if @root.editable}}
+		<div class="btn-container">
+			{{#if item.system.isEquipped}}
+				<button type="button" class="btn-action-dismiss js_equipItem" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.dismiss'}}">
+					<i class="fa fa-circle-down m-0"></i>
+				</button>
+			{{else}}
+				<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+					<i class="fa fa-ellipsis-vertical m-0"></i>
+				</button>
+			{{/if}}
+		</div>
+	{{/if}}
+	<div class="item-box">
+		<div class="item-box-data">
+			{{#if @root.editable}}
+				<button type="button" class="btn-action-showchat name js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
+					{{item.name}}
+				</button>
+			{{else}}
+				<label>{{item.name}}</label>
+			{{/if}}
+			
+			<div class="divider-decoration"></div>
+
+			<div class="box-domain">
+				<strong>Domini:</strong> {{item.system.domain}}
+			</div>
+		</div>
+
+		{{#if item.system.merge}}
+			<div class="item-box-description">
+				<p><strong>FUSIONE</strong></p>
+				{{{item.system.merge}}}
+			</div>
+		{{/if}}
+
+		{{#if item.system.dismiss}}
+			<div class="item-box-description">
+				<p><strong>CONGEDO</strong></p>
+				<ul style="padding:0;">
+					{{#each item.system.dismiss}}
+						<li style="display:block;padding:0;">
+							<p style="padding:0;"><strong>{{this.name}}</strong></p>
+							{{{this.effect}}}
+						</li>
+					{{/each}}
+				</ul>
+			</div>
+		{{/if}}
+
+		<div class="item-box-description">
+			{{{item.enrichedHtml.description}}}
+		</div>
+	</div>
+</li>

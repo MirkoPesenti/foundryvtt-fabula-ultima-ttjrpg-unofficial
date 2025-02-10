@@ -16,29 +16,40 @@
 				<li>
 					<div class="btn-container">
 						{{#if @root.editable}}
-							<button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="toggle" data-tooltip="Abilita / Disattiva">
-								{{#if effect.disabled}}
-									<i class="far fa-circle-check m-0"></i>
-								{{else}}
-									<i class="fa fa-circle-check m-0"></i>
-								{{/if}}
-							</button>
+							{{#if (not effect.parent.isEmbedded)}}
+								<button type="button" class="btn-action-toggle js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="toggle" data-tooltip="{{localize 'FU.actions.toggleActive'}}">
+									{{#if effect.disabled}}
+										<i class="far fa-circle-check m-0"></i>
+									{{else}}
+										<i class="fa fa-circle-check m-0"></i>
+									{{/if}}
+								</button>
+							{{/if}}
 
-							<button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="remove" data-tooltip="Elimina">
-								<i class="fa fa-trash m-0"></i>
-							</button>
-
-							<button type="button" class="js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="open" data-tooltip="Modifica">
+							<button type="button" class="btn-action-edit js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="open" data-tooltip="{{localize 'FU.actions.edit'}}">
 								<i class="fa fa-pencil m-0"></i>
 							</button>
+
+							{{#if (not effect.parent.isEmbedded)}}
+								<button type="button" class="btn-action-delete js_manageActiveEffect" data-effectid="{{effect.id}}" data-action="remove" data-tooltip="{{localize 'FU.actions.delete'}}">
+									<i class="fa fa-trash m-0"></i>
+								</button>
+							{{/if}}
 						{{/if}}
 					</div>
 					<div class="item-box">
 						<label>{{effect.name}}</label>
 						<p>
-							{{effect.sourceName}}
+							{{#if (eq ../element.name effect.parent.name)}}
+								{{../element.name}}
+							{{else}}
+								<a class="content-link" draggable="true" data-link data-uuid="{{effect.parent.uuid}}" data-id="{{effect.parent._id}}" data-type="Item" data-tooltip="Apri {{effect.parent.name}}">
+									<i class="fa fa-suitcase"></i>
+									{{effect.parent.name}}
+								</a>
+							{{/if}}
 							{{#if effect.duration.name}}
-								<small>◆</small>
+								<span class="divider-decoration"></span>
 								{{effect.duration.name}}
 							{{/if}}
 						</p>
@@ -50,7 +61,13 @@
 						{{/if}}
 
 						{{#each effect.changes}}
-							<p>{{this.key}} <small>◆</small> {{localize (concat 'FU.activeEffectsModes.' this.mode)}} <small>◆</small> {{this.value}}</p>
+							<p>
+								{{this.key}}
+								<span class="divider-decoration"></span>
+								{{localize (concat 'FU.activeEffectsModes.' this.mode)}}
+								<span class="divider-decoration"></span>
+								{{this.value}}
+							</p>
 						{{/each}}
 					</div>
 				</li>

@@ -124,6 +124,18 @@
       "flags": {}
     },
     {
+      "name": "projects",
+      "label": "Progetti",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/projects",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "npcFeatures",
       "label": "Abilità",
       "type": "Item",
@@ -175,7 +187,8 @@
       "packs": [
         "consumable",
         "equipment",
-        "artifacts"
+        "artifacts",
+        "projects"
       ],
       "folders": []
     },

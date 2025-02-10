@@ -1,81 +1,110 @@
-<form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
+<form class="{{cssClass}} {{item.type}} equip flexcol" autocomplete="off">
 
     <header class="sheet-header">
-        <div class="profile-container">
-            <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-        </div>
-        <div class="header-fields">
-            <h1 class="charname">
-                <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-            </h1>
-            <div class="textarea-container">
-                <textarea name="system.summary.value" cols="3">{{system.summary.value}}</textarea>
-            </div>
-        </div>
+        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
+
+        {{#if @root.editable}}
+            <select class="select-source is-top-right" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
     </header>
 
-    <select name="system.sourcebook">
-        {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-    </select>
-
-    <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">{{localize 'FU.Sheet.DescriptionTab'}}</a>
-        <a class="item" data-tab="details">{{localize 'FU.Sheet.DetailsTab'}}</a>
-    </nav>
-
     <section class="sheet-body">
-        <table>
-            <thead>
-                <tr>
-                    <th>{{localize 'FU.ZenitPL'}}</th>
-                    <th>{{localize 'FU.potency'}}</th>
-                    <th>{{localize 'FU.area'}}</th>
-                    <th>{{localize 'FU.uses'}}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        {{system.ZCost.value}} {{localize 'FU.ZenitAbbr'}}
-						{{#if system.hasFlaw.value}}
-							(- 25%)
-						{{/if}}
-					</td>
-                    <td>
-                        <select name="system.potency.value">
-                            {{selectOptions potencyList selected=system.potency.value localize=true}}
-                        </select>
-                    </td>
-                    <td>
-                        <select name="system.area.value">
-                            {{selectOptions areaList selected=system.area.value localize=true}}
-                        </select>
-                    </td>
-                    <td>
-                        <select name="system.uses.value">
-                            {{selectOptions usesList selected=system.uses.value localize=true}}
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="project-progressbar">
-            <button type="button" class="projectProgressBtnMinus" {{#sm_e system.progress.current 0}}disabled{{/sm_e}}>-</button>
-            <div class="progressbar">
-                <div class="progress" style="width:{{percentage system.progress.current system.progress.max}}%">
-                    {{system.progress.current}} / {{system.progress.max}}
+        <div class="tab">
+            <div class="equip-box">
+                <div class="equip-head">
+                    <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Costo</th>
+                                <th>Difetto</th>
+                                <th>Potenza</th>
+                                <th>Area</th>
+                                <th>Uso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{system.ZCost.value}}z
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <div class="form-group justify-content-center">
+                                            <input type="checkbox" name="system.flaw.active" id="system.flaw.active" {{checked system.flaw.active}}>
+                                            <label class="flex-auto" for="system.flaw.active">-25% z</label>
+                                        </div>
+                                    {{else}}
+                                        {{#if system.flaw.active}}
+                                            Si
+                                        {{else}}
+                                            No
+                                        {{/if}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <div class="form-group">
+                                            <select name="system.potency.value" id="system.potency.value">
+                                                {{selectOptions potencyList selected=system.potency.value localize=true}}
+                                            </select>
+                                        </div>
+                                    {{else}}
+                                        {{localize (concat 'FU.potencyList.' system.potency.value)}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <div class="form-group">
+                                            <select name="system.area.value" id="system.area.value">
+                                                {{selectOptions areaList selected=system.area.value localize=true}}
+                                            </select>
+                                        </div>
+                                    {{else}}
+                                        {{localize (concat 'FU.areaList.' system.area.value)}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{#if @root.editable}}
+                                        <div class="form-group">
+                                            <select name="system.uses.value" id="system.uses.value">
+                                                {{selectOptions usesList selected=system.uses.value localize=true}}
+                                            </select>
+                                        </div>
+                                    {{else}}
+                                        {{localize (concat 'FU.usesList.' system.uses.value)}}
+                                    {{/if}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="equip-body">
+                    {{#if @root.editable}}
+                        <div class="project-progressbar">
+                            <button type="button" class="js_setProgress" data-increase="-{{system.progress.step}}" data-tooltip="Rimuovi 1 progresso" {{#sm_e system.progress.current 0}}disabled{{/sm_e}}>
+                                <i class="fa fa-minus m-0"></i>
+                            </button>
+                            <div class="progressbar">
+                                <div class="progress" style="width:{{percentage system.progress.current system.progress.max}}%">
+                                    {{system.progress.current}} / {{system.progress.max}}
+                                </div>
+                            </div>
+                            <button type="button" class="js_setProgress" data-increase="{{system.progress.step}}" data-tooltip="Aggiungi 1 progresso" {{#gt_e system.progress.current system.progress.max}}disabled{{/gt_e}}>
+                                <i class="fa fa-plus m-0"></i>
+                            </button>
+                        </div>
+                    {{else}}
+                        <div class="editor">
+                            <p><strong>Progresso richiesto:</strong> {{system.progress.max}}</p>
+                        </div>
+                    {{/if}}
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                 </div>
             </div>
-            <button type="button" class="projectProgressBtnPlus" {{#gt_e system.progress.current system.progress.max}}disabled{{/gt_e}}>+</button>
         </div>
-		<div class="tab desc" data-group="primary" data-tab="description">
-            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=true owner=owner editable=editable }}
-		</div>
-		<div class="tab details" data-group="primary" data-tab="details">
-            <div class="form-group">
-                <label for="system.hasFlaw.value">{{localize 'FU.projectFlaw'}}?</label>
-                <input type="checkbox" name="system.hasFlaw.value" {{checked system.hasFlaw.value}}>
-            </div>
-		</div>
     </section>
+    
 </form>

@@ -35,7 +35,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			}),
 			params: new EmbeddedDataField(DefencesDataModel, {}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
-			skills: new SchemaField({ current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }) }),
 			bonus: new SchemaField({
 				damage: new SchemaField({
 					base: new NumberField({ initial: 0, integer: true, nullable: false }),
@@ -69,10 +68,10 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.rank.replacedSoldiers = 1;
 
 		// Checks and Damage Bonus
-		this.level.checkBonus = {};
-		this.level.checkBonus.test = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0;
-		this.level.checkBonus.spell = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0
-		this.level.checkBonus.checks = 0;
+		this.bonus.checks = {};
+		this.bonus.checks.attack = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0;
+		this.bonus.checks.spell = Math.floor( this.level.value / 10 ) > 0 ? Math.floor( this.level.value / 10 ) : 0
+		this.bonus.checks.base = 0;
 
 		if ( this.level.value == 60 )
 			this.level.damageBonus = 15;
@@ -84,6 +83,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			this.level.damageBonus = 0;
 
 		// Max Skills
+		this.skills = {};
 		if ( this.species.value == 'beast' )
 			this.skills.max = 4;
 		else if ( this.species.value == 'construct' )
@@ -128,11 +128,11 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 		if ( this.rank.value == 'elite' ) {
 			this.skills.max += 1;
 			this.combat.turns = 2;
-			this.params.init.current += 1;
+			this.params.init.value += 1;
 		} else if ( this.rank.value == 'champion' ) {
 			this.skills.max += this.rank.replacedSoldiers;
 			this.combat.turns = this.rank.replacedSoldiers;
-			this.params.init.current += this.rank.replacedSoldiers;
+			this.params.init.value += this.rank.replacedSoldiers;
 		}
 
 		// Set Ultima Points
@@ -259,6 +259,24 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 			set( newVal ) {
 				delete this.max;
 				this.max = newVal;
+			}
+		});
+
+		// Set Current Skill count
+		Object.defineProperty(this.skills, 'current', {
+			configurable: true,
+			enumerable: true,
+			get() {
+				let skillCount = 0;
+				const classFeatures = data.actor.items.filter(item => item.type == 'classFeature' && item.system.isFree === false) || [];
+				for ( const feature of classFeatures ) {
+					skillCount += feature.system.level.current;
+				}
+				return skillCount;
+			},
+			set( newVal ) {
+				delete this.current;
+				this.current = newVal;
 			}
 		});
 	}

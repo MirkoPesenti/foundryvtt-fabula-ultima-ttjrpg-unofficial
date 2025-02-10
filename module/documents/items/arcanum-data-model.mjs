@@ -1,4 +1,5 @@
 import { FU } from '../../helpers/config.mjs';
+import { DamageDataModel } from './common/damage-data-model.mjs';
 
 /**
  * @property {string} sourcebook
@@ -11,20 +12,23 @@ import { FU } from '../../helpers/config.mjs';
 
 export class ArcanumDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { StringField, HTMLField, ArrayField, SchemaField } = foundry.data.fields;
+		const { StringField, HTMLField, ArrayField, SchemaField, BooleanField, EmbeddedDataField } = foundry.data.fields;
 		return {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
-			description: new HTMLField(),
+			summary: new StringField(),
+			isEquipped: new BooleanField({ initial: false }),
 			domain: new StringField({ initial: '' }),
 			merge: new HTMLField(),
+			mergeName: new StringField({ initial: '' }),
 			dismiss: new ArrayField(new SchemaField({
 				name: new StringField({ initial: '' }),
 				effect: new HTMLField(),
+				damage: new EmbeddedDataField(DamageDataModel, {}),
 			})),
 		};
 	}
 
 	transferEffects() {
-		return this.item?.isEquipped ?? false;
+		return this.parent.isEquipped;
 	}
 }
