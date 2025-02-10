@@ -1,0 +1,55 @@
+<li class="{{item.system.sourcebook}}">
+	<div class="btn-container">
+		{{#if @root.editable}}
+			<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+				<i class="fa fa-ellipsis-vertical m-0"></i>
+			</button>
+		{{/if}}
+	</div>
+	<div class="item-box">
+		<div class="item-box-data">
+			{{#if @root.editable}}
+				<button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{item._id}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
+					<i class="fa fa-comment m-0"></i>
+				</button>
+				<button type="button" class="btn-action-roll name" data-itemid="{{item._id}}">
+					{{item.name}}
+				</button>
+			{{else}}
+				<label>{{item.name}}</label>
+			{{/if}}
+
+			<strong>
+				{{item.system.ZCost.value}}
+				{{#if item.system.flaw.active}}
+					(-25%)
+				{{/if}}
+				z
+			</strong>
+			<div class="divider-decoration"></div>
+			<strong>{{localize (concat 'FU.potencyList.' item.system.potency.value)}}</strong>
+			<div class="divider-decoration"></div>
+			<strong>{{localize (concat 'FU.areaList.' item.system.area.value)}}</strong>
+			<div class="divider-decoration"></div>
+			<strong>{{localize (concat 'FU.usesList.' item.system.uses.value)}}</strong>
+		</div>
+
+		<div class="project-progressbar">
+			<button type="button" class="js_setProgress" data-itemid="{{item._id}}" data-increase="-{{item.system.progress.step}}" data-tooltip="Rimuovi 1 progresso" {{#sm_e item.system.progress.current 0}}disabled{{/sm_e}}>
+				<i class="fa fa-minus m-0"></i>
+			</button>
+			<div class="progressbar">
+				<div class="progress" style="width:{{percentage item.system.progress.current item.system.progress.max}}%">
+					{{item.system.progress.current}} / {{item.system.progress.max}}
+				</div>
+			</div>
+			<button type="button" class="js_setProgress" data-itemid="{{item._id}}" data-increase="{{item.system.progress.step}}" data-tooltip="Aggiungi 1 progresso" {{#gt_e item.system.progress.current item.system.progress.max}}disabled{{/gt_e}}>
+				<i class="fa fa-plus m-0"></i>
+			</button>
+		</div>
+
+		<div class="item-box-description">
+			{{{item.enrichedHtml.description}}}
+		</div>
+	</div>
+</li>

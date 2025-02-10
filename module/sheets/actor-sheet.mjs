@@ -1,7 +1,7 @@
 import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
 import { addClassToActor } from "../helpers/class-helpers.mjs";
 import { rollDiceToChat } from "../helpers/roll-helpers.mjs";
-import { awaitDialogSelect, generateDataLink, returnSortedPack } from "../helpers/helpers.mjs";
+import { awaitDialogSelect, generateDataLink, returnSortedPack, setProgress } from "../helpers/helpers.mjs";
 import { incrementSessionResource, initSessionJournal } from "../helpers/journal-helpers.mjs";
 import { createClock, deleteClock } from "../helpers/clock-helpers.mjs";
 import { FU } from "../helpers/config.mjs";
@@ -702,6 +702,9 @@ export class FabulaActorSheet extends ActorSheet {
 		// Set NPC skill as free
 		html.on('click', '.js_setFreeFeature', this._setFreeFeature.bind(this));
 
+		// Set Progress of Projects
+		html.on('click','.js_setProgress', this._setProgress.bind(this));
+
 		// Manage Active Effects
 		html.on('click','.js_manageActiveEffect', async (e) => manageActiveEffect(e, this.actor));
 
@@ -1066,6 +1069,18 @@ export class FabulaActorSheet extends ActorSheet {
 
 		if ( item ) {
 			await item.update({ 'system.isFree': !item.system.isFree });
+		}
+	}
+
+	async _setProgress(event) {
+		event.preventDefault()
+		const element = event.currentTarget;
+		const increase = element.dataset.increase;
+		const itemID = element.dataset.itemid;
+		const item = this.actor.items.get( itemID );
+
+		if ( item && increase ) {
+			await setProgress( item, null, Number(increase) );
 		}
 	}
 

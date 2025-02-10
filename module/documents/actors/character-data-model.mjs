@@ -14,7 +14,7 @@ import { FU } from "../../helpers/config.mjs";
  */
 export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, HTMLField, StringField, EmbeddedDataField, ArrayField, NumberField } = foundry.data.fields;
+		const { SchemaField, HTMLField, StringField, EmbeddedDataField, ArrayField, NumberField, BooleanField } = foundry.data.fields;
 		return {
 			description: new HTMLField(),
 			features: new SchemaField({
@@ -50,6 +50,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			equip: new EmbeddedDataField(EquipDataModel, {}),
 			useMartial: new EmbeddedDataField(MartialDataModel, {}),
 			castRitual: new EmbeddedDataField(CharacterRitualDataModel, {}),
+			createProject: new BooleanField({ initial: false }),
 		};
 	}
 
@@ -117,6 +118,11 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			if ( item.system.bonus.ritual.entropism ) data.castRitual.entropism = true;
 			if ( item.system.bonus.ritual.ritualism ) data.castRitual.ritualism = true;
 			if ( item.system.bonus.ritual.spiritism ) data.castRitual.spiritism = true;
+		}
+
+		// Set if character can create a project
+		for ( const item of actorClasses ) {
+			if ( item.system.bonus.projects.value ) data.createProject = true;
 		}
 
 		// Set level

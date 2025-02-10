@@ -1,5 +1,4 @@
 import { AttributesDataModel } from './common/attributes-data-model.mjs';
-import { ProgressDataModel } from './common/progress-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
 /**
@@ -14,7 +13,6 @@ import { FU } from '../../helpers/config.mjs';
  * @property {number} difficultyLevel.value
  * @property {boolean} hasReduction.value
  * @property {boolean} hasClock.value
- * @property {ProgressDataModel} progress
  */
 
 export class RitualDataModel extends foundry.abstract.TypeDataModel {
@@ -45,7 +43,7 @@ export class RitualDataModel extends foundry.abstract.TypeDataModel {
 
 		let MPCost = potencyCost[this.potency.value] * areaCost[this.area.value];
 		if ( this.reduction.active ) {
-			MPCost = MPCost / 2;
+			MPCost = Math.floor( MPCost / 2 );
 		}
 		const difficultyLevel = potencyDifficulty[this.potency.value];
 		const steps = potencyClock[this.potency.value];

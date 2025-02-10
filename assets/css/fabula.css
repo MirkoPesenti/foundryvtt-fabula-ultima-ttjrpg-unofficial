@@ -211,6 +211,10 @@ body {
 .text-center {text-align:center;}
 .text-right {text-align:right;}
 .font-yanone {font-family:"Yanone Kaffeesatz", sans-serif !important;}
+.justify-content-start {justify-content:flex-start;}
+.justify-content-center {justify-content:center;}
+.justify-content-end {justify-content:flex-end;}
+.flex-auto {flex:0 0 auto !important;}
 select {height:var(--fu-form-field-height);}
 
 /* Globals > Variables */
@@ -743,6 +747,13 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet .spell.locked .body-container .title {margin-top:0;}
 .sheet .spell.locked .body-container .editor {min-height:unset;}
 .sheet .spell.locked .body-container .editor + .editor {padding-top:0;}
+
+/* Sheets > Projects */
+.sheet .project .sheet-header input {font-size:45px;}
+.project-progressbar {display:flex;align-items:center;gap:10px;margin:5px;}
+.project-progressbar button {flex-shrink:0;}
+.project-progressbar .progressbar {flex-grow:1;height:20px;border-radius:10px;background-color:var(--fu-box-bg);border:1px solid var(--fu-color-primary);position:relative;overflow:hidden;}
+.project-progressbar .progressbar .progress {position:absolute;top:0;left:0;bottom:0;display:flex;align-items:center;justify-content:center;color:var(--fu-color-white);background-color:var(--fu-color-primary);max-width:100%;min-width:70px;}
 
 /* Sheets > Actors */
 .sheet.actor form {padding:0 50px;background-repeat:repeat-y;background-position:top left, top right;background-size:50px 600px;background-image:var(--fu-sheet-body-bg-left), var(--fu-sheet-body-bg-right);}

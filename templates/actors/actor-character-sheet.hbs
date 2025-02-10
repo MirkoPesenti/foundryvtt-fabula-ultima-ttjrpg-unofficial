@@ -319,6 +319,22 @@
                     {{/each}}
                 </ul>
             {{/if}}
+
+            {{#if system.createProject}}
+                <div class="title title-list">
+                    <span>Progetti</span>
+                    {{#if @root.editable}}
+                        <button type="button" class="btn-action-add js_createItem" data-type="project">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    {{/if}}
+                </div>
+                <ul class="list list-spells">
+                    {{#each projects}}
+                        {{> 'systems/fabula/templates/actors/common/project-list-item.hbs' item=this actor=../system}}
+                    {{/each}}
+                </ul>
+            {{/if}}
         </div>
         
         <div class="tab skills" data-group="primary" data-tab="skills">

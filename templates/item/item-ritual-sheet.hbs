@@ -68,14 +68,22 @@
                                     + {{localize (concat 'FU.attributesAbbr.' system.attributes.secondary.value)}}】
                                 </td>
                                 <td>
-                                    <select name="system.potency.value">
-                                        {{selectOptions potencyList selected=system.potency.value localize=true}}
-                                    </select>
+                                    {{#if @root.editable}}
+                                        <select name="system.potency.value">
+                                            {{selectOptions potencyList selected=system.potency.value localize=true}}
+                                        </select>
+                                    {{else}}
+                                        {{localize (concat 'FU.potencyList.' system.potency.value)}}
+                                    {{/if}}
                                 </td>
                                 <td>
-                                    <select name="system.area.value">
-                                        {{selectOptions areaList selected=system.area.value localize=true}}
-                                    </select>
+                                    {{#if @root.editable}}
+                                        <select name="system.area.value">
+                                            {{selectOptions areaList selected=system.area.value localize=true}}
+                                        </select>
+                                    {{else}}
+                                        {{localize (concat 'FU.areaList.' system.area.value)}}
+                                    {{/if}}
                                 </td>
                             </tr>
                         </tbody>

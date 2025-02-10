@@ -1,5 +1,5 @@
 import { FU } from "../helpers/config.mjs";
-import { returnSortedPack, changeProjectProgress } from "../helpers/helpers.mjs";
+import { returnSortedPack, setProgress } from "../helpers/helpers.mjs";
 import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
 
 /**
@@ -124,9 +124,6 @@ export class FabulaItemSheet extends ItemSheet {
 	activateListeners( html ) {
 		super.activateListeners( html );
 
-		// html.on('click', '.projectProgressBtnMinus', (e) => changeProjectProgress( e, this.object, false ));
-		// html.on('click', '.projectProgressBtnPlus', (e) => changeProjectProgress( e, this.object ));
-
 		// Debug Item
 		html.on('click','.getItem', () => console.log(this.item));
 
@@ -135,6 +132,19 @@ export class FabulaItemSheet extends ItemSheet {
 
 		html.on('drop', this._onDropItem.bind(this));
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
+
+		// Set Progress current value
+		html.on('click','.js_setProgress', async (e) => {
+			e.preventDefault();
+			const increase = e.currentTarget.dataset.increase;
+			const value = e.currentTarget.dataset.value;
+			if ( value ) {
+				await setProgress( this.item, Number(value) );
+			}
+			if ( increase ) {
+				await setProgress( this.item, null, Number(increase) );
+			}
+		});
 
 		html.on('click', '.js_newEntryToArray', async (ev) => {
 			ev.preventDefault();

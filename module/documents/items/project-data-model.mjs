@@ -1,4 +1,3 @@
-import { ProgressDataModel } from './common/progress-data-model.mjs';
 import { FU } from '../../helpers/config.mjs';
 
 /**
@@ -11,21 +10,23 @@ import { FU } from '../../helpers/config.mjs';
  * @property {number} difficultyLevel.value
  * @property {boolean} hasReduction.value
  * @property {boolean} hasClock.value
- * @property {ProgressDataModel} progress
  */
 
 export class ProjectDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, StringField, HTMLField, BooleanField, EmbeddedDataField } = foundry.data.fields;
+		const { SchemaField, StringField, HTMLField, BooleanField, NumberField } = foundry.data.fields;
 		return {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
-			summary: new SchemaField({ value: new StringField() }),
 			description: new HTMLField(),
 			potency: new SchemaField({ value: new StringField({ initial: 'minor', choices: Object.keys(FU.potencyList) }) }),
 			area: new SchemaField({ value: new StringField({ initial: 'individual', choices: Object.keys(FU.areaList) }) }),
 			uses: new SchemaField({ value: new StringField({ initial: 'consumable', choices: Object.keys(FU.usesList) }) }),
-			hasFlaw: new SchemaField({ value: new BooleanField({ initial: false }) }),
-			progress: new EmbeddedDataField(ProgressDataModel, { initial: { current: 0, step: 1, max: 1 } }),
+			flaw: new SchemaField({ active: new BooleanField({ initial: false }), }),
+			progress: new SchemaField({
+				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+				step: new NumberField({ initial: 1, min: 1, integer: true, nullable: false }),
+				max: new NumberField({ initial: 6, min: 0, integer: true, nullable: false }),
+			}),
 		};
 	}
 
@@ -35,11 +36,11 @@ export class ProjectDataModel extends foundry.abstract.TypeDataModel {
 		const usesCost = { consumable: 1, permanent: 5 };
 		
 		let ZCost = potencyCost[this.potency.value] * areaCost[this.area.value] * usesCost[this.uses.value];
-		if ( this.hasFlaw.value ) {
-			ZCost = ZCost - ( ZCost / 4 );
+		if ( this.flaw.active ) {
+			ZCost = ZCost - Math.floor( ZCost / 4 );
 		}
 
 		(this.ZCost ??= {}).value = ZCost;
-		(this.progress ??= {}).max = ZCost / 100;
+		(this.progress ??= {}).max = Math.floor( ZCost / 100 );
 	}
 }
