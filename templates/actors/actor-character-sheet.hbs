@@ -145,10 +145,10 @@
         <div class="attributes-container">
             <div class="attr status">
                 <label>Status</label>
-                {{#each system.status as |status statusIndex|}}
+                {{#each system.immunity as |status statusIndex|}}
                     <div data-tooltip="{{localize (concat 'FU.Status.' statusIndex)}}">
-                        <button type="button" class="js_setStatus{{#if status.immunity}} is-immune{{/if}}" data-status="{{statusIndex}}">
-                            <div class="icon icon-{{statusIndex}} {{#unless status.active}}disabled{{/unless}}"></div>
+                        <button type="button" class="js_setStatus{{#if status}} is-immune{{/if}}" data-status="{{statusIndex}}">
+                            <div class="icon icon-{{statusIndex}}"></div>
                         </button>
                     </div>
                 {{/each}}
@@ -338,73 +338,12 @@
         </div>
         
         <div class="tab skills" data-group="primary" data-tab="skills">
-            {{!-- <div class="title title-list">
-                <span>Equipaggiabili</span>
-            </div>
-            <div class="flexrow martial">
-                <div class="form-group">
-                    <input type="checkbox" name="system.useMartial.melee" id="system.useMartial.melee" {{checked system.useMartial.melee}} disabled>
-                    <label for="system.useMartial.melee">Armi da Mischia Marziali</label>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" name="system.useMartial.ranged" id="system.useMartial.ranged" {{checked system.useMartial.ranged}} disabled>
-                    <label for="system.useMartial.ranged">Armi a Distanza Marziali</label>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" name="system.useMartial.shield" id="system.useMartial.shield" {{checked system.useMartial.shield}} disabled>
-                    <label for="system.useMartial.shield">Scudi Marziali</label>
-                </div>
-                <div class="form-group">
-                    <input type="checkbox" name="system.useMartial.armor" id="system.useMartial.armor" {{checked system.useMartial.armor}} disabled>
-                    <label for="system.useMartial.armor">Armature Marziali</label>
-                </div>
-            </div> --}}
-
             <div class="title title-list">
                 <span>Classi</span>
             </div>
             <ul class="list list-classes">
                 {{#each classes}}
-                    <li class="{{this.system.sourcebook}}">
-                        <div class="btn-container">
-                            {{#if @root.editable}}
-                                {{#unless this.system.isEquipped}}
-                                    <button type="button" class="btn-action-options" data-item="{{this._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
-                                        <i class="fa fa-ellipsis-vertical m-0"></i>
-                                    </button>
-                                {{/unless}}
-                            {{/if}}
-                        </div>
-                        <div class="item-box">
-                            <div class="title">
-                                {{this.name}}
-                                <span>Livello. {{this.system.level.value}}</span>
-                            </div>
-                            <div class="benefits">
-                                {{> 'systems/fabula/templates/common/class/free-benefits.hbs'}}
-                            </div>
-                            {{#each this.flags.fabula.subItems as |feature featureIndex|}}
-                                {{#gt feature.system.level.current 0}}
-                                    <div class="feature-box">
-                                        <div class="feature-head">                                            
-                                            <button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{../this._id}}" data-flag="{{featureIndex}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
-                                                <i class="fa fa-comment m-0"></i>
-                                            </button>
-                                            {{feature.name}}
-                                            {{#gt feature.system.level.max 1}}
-                                                <span>
-                                                    (<span>l</span>{{feature.system.level.current}} / {{feature.system.level.max}})
-                                                </span>
-                                            {{/gt}}
-                                        </div>
-                                        <div class="feature-body">
-                                            {{{feature.enrichedHtml.description}}}
-                                        </div>
-                                    </div>
-                                {{/gt}}
-                            {{/each}}
-                        </div>
-                    </li>
+                    {{> 'systems/fabula/templates/actors/common/class-list-item.hbs' item=this actor=../system flags=../flags}}
                 {{/each}}
             </ul>
         </div>

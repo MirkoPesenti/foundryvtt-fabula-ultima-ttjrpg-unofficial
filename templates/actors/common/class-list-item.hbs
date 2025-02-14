@@ -1,0 +1,45 @@
+<li class="{{item.system.sourcebook}}">
+	<div class="btn-container">
+		{{#if @root.editable}}
+			{{#unless item.system.isEquipped}}
+				<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+					<i class="fa fa-ellipsis-vertical m-0"></i>
+				</button>
+			{{/unless}}
+		{{/if}}
+	</div>
+	<div class="item-box">
+		<div class="title">
+			{{item.name}}
+			<span>Livello. {{item.system.level.value}}</span>
+		</div>
+		<div class="benefits">
+			{{> 'systems/fabula/templates/common/class/free-benefits.hbs'}}
+		</div>
+
+		{{#if (eq item.name 'Artefice')}}
+			{{> 'systems/fabula/templates/common/class/technologies.hbs'}}
+		{{/if}}
+
+		{{#each item.flags.fabula.subItems as |feature featureIndex|}}
+			{{#gt feature.system.level.current 0}}
+				<div class="feature-box">
+					<div class="feature-head">                                            
+						<button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{../item._id}}" data-flag="{{featureIndex}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
+							<i class="fa fa-comment m-0"></i>
+						</button>
+						{{feature.name}}
+						{{#gt feature.system.level.max 1}}
+							<span>
+								(<span>l</span>{{feature.system.level.current}} / {{feature.system.level.max}})
+							</span>
+						{{/gt}}
+					</div>
+					<div class="feature-body">
+						{{{feature.enrichedHtml.description}}}
+					</div>
+				</div>
+			{{/gt}}
+		{{/each}}
+	</div>
+</li>

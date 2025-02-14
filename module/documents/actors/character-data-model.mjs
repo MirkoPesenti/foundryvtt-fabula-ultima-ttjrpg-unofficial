@@ -2,7 +2,7 @@ import { AttributesDataModel } from "./common/attributes-data-model.mjs";
 import { DefencesDataModel } from "./common/defences-data-model.mjs";
 import { BondDataModel } from "./common/bond-data-model.mjs";
 import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
-import { StatusesDataModel } from "./common/statuses-data-model.mjs";
+import { ImmunitiesDataModel } from "./common/immunities-data-model.mjs";
 import { EquipDataModel } from "./common/equip-data-model.mjs";
 import { MartialDataModel } from "./common/martial-data-model.mjs";
 import { CharacterRitualDataModel } from "./common/character-ritual-data-model.mjs";
@@ -46,7 +46,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			bond: new ArrayField(new EmbeddedDataField(BondDataModel, {})),
 			params: new EmbeddedDataField(DefencesDataModel, {}),
 			affinity: new EmbeddedDataField(AffinitiesDataModel, {}),
-			status: new EmbeddedDataField(StatusesDataModel, {}),
+			immunity: new EmbeddedDataField(ImmunitiesDataModel, {}),
 			equip: new EmbeddedDataField(EquipDataModel, {}),
 			useMartial: new EmbeddedDataField(MartialDataModel, {}),
 			castRitual: new EmbeddedDataField(CharacterRitualDataModel, {}),
@@ -85,7 +85,6 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	prepareEmbeddedData() {
 
 		this.#prepareBasicData();
-		this.status.prepareData();
 		this.params.prepareData();
 
 	}

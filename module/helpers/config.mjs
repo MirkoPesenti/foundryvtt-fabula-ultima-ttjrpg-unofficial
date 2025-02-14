@@ -111,6 +111,15 @@ FU.statusses = {
 	poisoned: 'FU.Status.poisoned',
 };
 
+FU.statusEffects = {
+	slow: 'FU.Status.slow',
+	dazed: 'FU.Status.dazed',
+	weak: 'FU.Status.weak',
+	shaken: 'FU.Status.shaken',
+	enraged: 'FU.Status.enraged',
+	poisoned: 'FU.Status.poisoned',
+};
+
 /**
  * @typedef {"arcanism", "chimerism", "elementalism", "entropism", "ritualism", "spiritism"} MagicDisciplines
  * @type {Object<MagicDisciplines, string}
@@ -261,4 +270,10 @@ FU.species = {
 	plant: 'FU.species.plant',
 	undead: 'FU.species.undead',
 	humanoid: 'FU.species.humanoid',
+};
+
+FU.technologies = {
+	alchemy: "FU.technologies.alchemy",
+	infusions: "FU.technologies.infusions",
+	magitech: "FU.technologies.magitech",
 };

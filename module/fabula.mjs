@@ -14,6 +14,7 @@ import { preloadPartialTemplates } from './helpers/templates.mjs';
 import { rollDiceToChat } from './helpers/roll-helpers.mjs';
 import { openClockDialog, renderClock } from './helpers/clock-helpers.mjs';
 import { addNewPageToJournal, initSessionJournal, incrementSessionResource } from './helpers/journal-helpers.mjs';
+import { statusEffects } from './helpers/status-helpers.mjs';
 import { checkParams, addClassToActor } from './helpers/class-helpers.mjs';
 
 // Actors Data Models
@@ -83,6 +84,17 @@ Hooks.once('init', async () => {
 
 	// Custom Combat classes
 	CONFIG.Combat.documentClass = FabulaCombat;
+
+	// Register status effects
+	CONFIG.ActiveEffect.legacyTransferral = false;
+	statusEffects.sort((a, b) => {
+		if ( a.id < b.id ) return -1;
+		if ( a.id > b.id ) return 1;
+		return 0;
+	});
+	
+	CONFIG.statusEffects = statusEffects;
+	CONFIG.specialStatusEffects.DEFEATED = 'defeated';
 
 	// Register Sheets
 	Actors.unregisterSheet('core', ActorSheet);
@@ -231,12 +243,12 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 		'system.bonus.checks.spell',
 
 		// Immunity to statusses
-		'system.status.slow.immunity',
-		'system.status.dazed.immunity',
-		'system.status.weak.immunity',
-		'system.status.shaken.immunity',
-		'system.status.enraged.immunity',
-		'system.status.poisoned.immunity',
+		'system.immunity.slow',
+		'system.immunity.dazed',
+		'system.immunity.weak',
+		'system.immunity.shaken',
+		'system.immunity.enraged',
+		'system.immunity.poisoned',
 		
 		// Affinity to damages
 		'system.affinity.physical',
@@ -449,6 +461,24 @@ Hooks.on('preUpdateActor', async (actor, updateData, options, userId) => {
 	if ( Object.keys(updates).length > 0 ) {
 		await actor.update( updates );
 	}
+});
+
+// Check if actor is immune to status
+Hooks.on('preCreateActiveEffect', (effect, options, userId) => {
+	const actor = effect.parent;
+	if ( !actor || !actor.system || !actor.system.immunity ) return;
+
+	const statusID = CONFIG.statusEffects.find( (e) => effect.statuses.has( e.id ) )?.id;
+	if ( statusID ) {
+
+		const immunity = actor.system.immunity[statusID];
+		if ( immunity ) {
+			ui.notifications.info(`${actor.name} è immune allo status ${game.i18n.localize(`FU.Status.${statusID}`)}`);
+			return false;		
+		}
+	}
+
+	return true;
 });
 
 // let characterCreationOpen = false;
@@ -985,6 +1015,243 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 				await rollDiceToChat( actor, rollFormula, roll, rollMode, item, rollTemplate );
 			} else {
 				ui.notifications.warn(`Non puoi ritirare i dadi perché non hai ${game.i18n.localize(`FU.${resource}`)} da spendere`);
+			}
+		}
+	});
+
+	// Create Alchemy Mix
+	html.on('click', '.js_rollAlchemyMix', async (e) => {
+		e.preventDefault();
+		const element = e.currentTarget;
+		const actorID = element.dataset.actor;
+		const actor = game.actors.get( actorID );
+		const messageID = $(html).data('message-id');
+		const message = game.messages.get(messageID);
+		let newMessageContent = message.content;
+
+		let awaitDialogTitle = 'Stai creando una Pozione';
+
+		// Choose mix option
+		let mix = await awaitDialogSelect({
+			title: awaitDialogTitle,
+			optionsLabel: 'Scegli quale mix usare (cambierà il costo in PI e il numero di d20 da lanciare):',
+			options: `
+				<option value="base">PI: 3 - 2d20 - Base</option>
+				<option value="advanced">PI: 4 - 3d20 - Avanzato</option>
+				<option value="superior">PI: 5 - 4d20 - Superiore</option>
+			`,
+		});
+		if ( mix == false ) return false;
+
+		let dices, cost;
+		if ( mix == 'base' ) {
+			dices = 2;
+			cost = 3;
+		} else if ( mix == 'advanced' ) {
+			dices = 3;
+			cost = 4;
+		} else if ( mix == 'superior' ) {
+			dices = 4;
+			cost = 5;
+		}
+
+		// Check if actor has enough IP
+		if ( actor.system.resources.ip.current < cost ) {
+			ui.notifications.warn(`Non hai abbastanza PI per creare questa pozione`);
+			return false;
+		} else {
+			const newIP = actor.system.resources.ip.current - cost;
+			await actor.update({ 'system.resources.ip.current': newIP });
+		}
+
+		// Roll dices
+		let roll = new Roll( `${dices}d20` );
+		await roll.evaluate();
+		roll.toMessage();
+
+		let results = [];
+		let areaOptions = '';
+		for ( const result of roll.terms[0].results ) {
+			results.push(result.result);
+			areaOptions += `<option value="${result.result}">${result.result}</option>`;
+		}
+		
+		// Choose area
+		let area = await awaitDialogSelect({
+			title: awaitDialogTitle,
+			optionsLabel: `Assegna uno dei risultati all'<strong>area</strong>`,
+			options: areaOptions,
+		});
+		if ( area == false ) return false;
+		
+		let areaValue = '';
+		let areaDesc = game.i18n.localize('FU.alchemyAreas.base');
+		if ( Number(area) >= 1 && Number(area) <= 6 ) {
+			areaValue = '1-6';
+		} else if ( Number(area) >= 7 && Number(area) <= 11 ) {
+			areaValue = '7-11';
+		} else if ( Number(area) >= 12 && Number(area) <= 16 ) {
+			areaValue = '12-16';
+		} else if ( Number(area) >= 17 && Number(area) <= 20 ) {
+			areaValue = '17-20';
+		}
+		areaDesc += game.i18n.localize(`FU.alchemyAreas.${areaValue}`);
+
+		newMessageContent = newMessageContent.replace('<td class="area_desc"></td>', `<td class="area_desc">${area} <i class="fa fa-circle-info" data-tooltip="${areaDesc}"></i></td>`);
+		newMessageContent = newMessageContent.replace('data-apply-area',`data-area="${areaValue}">`);
+
+		await message.update({ 'content': newMessageContent });
+
+		let index = results.indexOf( Number(area) );
+		if ( index >= 0 ) {
+			results.splice( index, 1 );
+		}
+
+		// Choose effect
+		let effectOptions = '';
+		for ( const result of results ) {
+			effectOptions += `<option value="${result}">${result}</option>`;
+		}
+		let effect = await awaitDialogSelect({
+			title: awaitDialogTitle,
+			optionsLabel: `Assegna uno dei risultati all'<strong>effetto</strong>`,
+			options: effectOptions,
+		});
+		if ( effect == false ) return false;
+
+		// Choose if replace the effect
+		let replaceEffectOptions = `
+			<option value="any-1">${game.i18n.localize('FU.alchemyEffects.any-1')}</option>
+			<option value="any-2">${game.i18n.localize('FU.alchemyEffects.any-2')}</option>
+		`;
+		if ( effect == "16" || effect == "17" ) {
+			replaceEffectOptions += `
+				<option value="16-17">${game.i18n.localize('FU.alchemyEffects.16-17')}</option>
+			`;
+		} else {
+			replaceEffectOptions += `
+				<option value="${effect}">${game.i18n.localize(`FU.alchemyEffects.${effect}`)}</option>
+			`;
+		}
+		let replacedEffect = await awaitDialogSelect({
+			title: awaitDialogTitle,
+			optionsLabel: `Vuoi utilizzare l'effetto predefinito del risultato o usare un'altra opzione?`,
+			options: replaceEffectOptions,
+		});
+		if ( replacedEffect == false ) return false;
+
+		let effectDesc = game.i18n.localize('FU.alchemyEffects.base') + game.i18n.localize(`FU.alchemyEffects.${replacedEffect}`);
+		newMessageContent = newMessageContent.replace('<td class="effect_desc"></td>', `<td class="effect_desc">${effect} <i class="fa fa-circle-info" data-tooltip="${effectDesc}"></i></td>`);
+		newMessageContent = newMessageContent.replace('data-apply-effect',`data-effect="${replacedEffect}">`);
+		newMessageContent = newMessageContent.replace('class="js_applyAlchemyMix" disabled','class="js_applyAlchemyMix"');
+
+		newMessageContent = newMessageContent.replace('<p class="alchemy_effect"></p>', `<p class="alchemy_effect">${areaDesc}<br>${effectDesc}</p>`);
+
+		await message.update({ 'content': newMessageContent });
+	});
+
+	// Apply Alchemy Mix effect
+	html.on('click', '.js_applyAlchemyMix', async (e) => {
+		e.preventDefault();
+		const element = e.currentTarget;
+		const area = element.dataset.area;
+		const effect = element.dataset.effect;
+		const actorID = element.dataset.actor;
+		const actor = game.actors.get( actorID );
+
+		if ( area && effect ) {
+			let selectedTokens = [];
+
+			// Get selected tokens
+			if ( game.user.targets.ids.length > 0 ) {
+				let actorIDs = [...game.user.targets.ids];
+
+				for ( const id of actorIDs ) {
+					let token = canvas.tokens.get( id );
+					if ( token ) {
+						selectedTokens.push( token );
+					}
+				}
+			} else {
+				ui.notifications.warn('Devi selezionare almeno un bersaglio');
+				return false;
+			}
+
+			let damageValue = 0;
+			let damageType = '';
+			let healValue = 0;
+			let properties = [];
+
+			// Get effect to apply
+			switch ( effect ) {
+				case '1':
+				case '2':
+					break;
+
+				case 'any-1':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+					damageValue = 20;
+					if ( effect !== 'any-1' ) {
+						if ( actor.system?.level?.value >= 40 ) damageValue = 40;
+						else if ( actor.system?.level?.value >= 20 ) damageValue = 30;
+					}
+					if ( effect == 'any-1' ) damageType = 'poison';
+					else if ( effect == '3' ) damageType = 'air';
+					else if ( effect == '4' ) damageType = 'bolt';
+					else if ( effect == '5' ) damageType = 'dark';
+					else if ( effect == '6' ) damageType = 'earth';
+					else if ( effect == '7' ) damageType = 'fire';
+					else if ( effect == '8' ) damageType = 'ice';
+					properties.push( 'system.resources.hp.current' );
+					break;
+
+				case '9':
+				case '10':
+				case '11':
+					break;
+					
+				case '12':
+				case '13':
+				case '14':
+					break;
+
+				case '15':
+					break;
+
+				case 'any-2':
+				case '18':
+					if ( effect == 'any-2' ) healValue = 30;
+					else if ( effect == '18' ) healValue = 100;
+					properties.push( 'system.resources.hp.current' );
+					break;
+
+				case '19':
+					healValue = 100;
+					properties.push( 'system.resources.mp.current' );
+					break;
+
+				case '16-17':
+				case '20':
+					if ( effect == '16-17' ) healValue = 50;
+					else if ( effect == '18' ) healValue = 100;
+					properties.push( 'system.resources.hp.current' );
+					properties.push( 'system.resources.mp.current' );
+					break;
+			}
+
+			for ( const token of selectedTokens ) {
+				if ( !token.actor ) continue;
+
+				const actor = token.actor;
+				let currentHP = foundry.utils.getProperty( actor, 'system.resources.hp.current' ) || 0;
+				let newHP = Math.max( 0, currentHP - 20 );
+
+				await actor.update({ 'system.resources.hp.current': newHP });
 			}
 		}
 	});

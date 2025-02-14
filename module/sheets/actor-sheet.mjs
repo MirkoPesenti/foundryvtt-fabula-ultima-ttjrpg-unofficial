@@ -71,6 +71,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.enemyRanks = CONFIG.FU.enemyRanks;
 		context.species = CONFIG.FU.species;
 		context.NPCactionTypes = CONFIG.FU.NPCactionTypes;
+		context.technologies = CONFIG.FU.technologies;
 
 		// Add list of items sorted by packs to CONFIG data
 		context.itemLists = {
@@ -273,7 +274,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 			if ( actor.system.resources.ip.current >= sourceItem.system.IPCost ) {
 
-				let messageTitle = `Ha usato ${generateDataLink( soruceItem, null, null, null, 'ml-05 mr-05' )}`;
+				let messageTitle = `Ha usato ${generateDataLink( sourceItem, null, null, null, 'ml-05 mr-05' )}`;
 				let messageContent = '';
 
 				// Recover HP or MP
@@ -337,23 +338,23 @@ export class FabulaActorSheet extends ActorSheet {
 					} else {
 						status = sourceItem.system.status.value;
 					}
-
-					const recoverKey = `system.status.${status}.active`;
-
-					if ( !actor.system.status[status].active ) {
+					
+					if ( actor.statuses.has( status ) === true ) {
 						ui.notifications.warn(`Non sei afflitto dallo status ${game.i18n.localize(FU.statusses[status])}!`);
 						return false;
 					}
 
-					await actor.update({ [recoverKey]: false });
+					const statusID = CONFIG.statusEffects.find( (e) => e.id == status )?.id;
+					actor.toggleStatusEffect( statusID );
+
 					messageTitle += `per guarire dallo status <strong>${game.i18n.localize(FU.statusses[status])}</strong>`;
 				}
 
 				// Inflict damage
-				if ( sourceItem.system.damage.hasDamage ) {
+				if ( sourceItem.system.damage.hasDamage.value ) {
 
 					let damageType = '';
-					if ( sourceItem.system.status.value == '' ) {
+					if ( sourceItem.system.damage.type.value == '' ) {
 
 						damageType = await awaitDialogSelect({
 							title: `Stai usando ${sourceItem.name}`,
@@ -518,51 +519,51 @@ export class FabulaActorSheet extends ActorSheet {
 		html.on('click','.getActor', () => console.log(this.actor));
 
 		// Abilitate operations inside HP / MP / IP inputs
-		html.on('change',"input[name='system.resources.hp.current']", async (event) => {
-			const operators = [ '-', '+' ];
-			const currentHP = this.actor.system.resources.hp.current;
-			const stringVal = $(event.currentTarget).val();
-			const inputVal = parseFloat( $(event.currentTarget).val() );
+		// html.on('change',"input[name='system.resources.hp.current']", async (event) => {
+		// 	const operators = [ '-', '+' ];
+		// 	const currentHP = this.actor.system.resources.hp.current;
+		// 	const stringVal = $(event.currentTarget).val();
+		// 	const inputVal = parseFloat( $(event.currentTarget).val() );
 			
-			if ( operators.includes( stringVal[0] ) ) {
-				if ( !isNaN(inputVal) ) {
-					const newHP = currentHP + inputVal;
-					await this.actor.update({ 'system.resources.hp.current': newHP });
-				}
-			} else if ( isNaN(inputVal) ) {
-				await this.actor.update({ 'system.resources.hp.current': currentHP });
-			}
-		});
-		html.on('change',"input[name='system.resources.mp.current']", async (event) => {
-			const operators = [ '-', '+' ];
-			const currentMP = this.actor.system.resources.mp.current;
-			const stringVal = $(event.currentTarget).val();
-			const inputVal = parseFloat( $(event.currentTarget).val() );
+		// 	if ( operators.includes( stringVal[0] ) ) {
+		// 		if ( !isNaN(inputVal) ) {
+		// 			const newHP = currentHP + inputVal;
+		// 			await this.actor.update({ 'system.resources.hp.current': newHP });
+		// 		}
+		// 	} else if ( isNaN(inputVal) ) {
+		// 		await this.actor.update({ 'system.resources.hp.current': currentHP });
+		// 	}
+		// });
+		// html.on('change',"input[name='system.resources.mp.current']", async (event) => {
+		// 	const operators = [ '-', '+' ];
+		// 	const currentMP = this.actor.system.resources.mp.current;
+		// 	const stringVal = $(event.currentTarget).val();
+		// 	const inputVal = parseFloat( $(event.currentTarget).val() );
 			
-			if ( operators.includes( stringVal[0] ) ) {
-				if ( !isNaN(inputVal) ) {
-					const newMP = currentMP + inputVal;
-					await this.actor.update({ 'system.resources.mp.current': newMP });
-				}
-			} else if ( isNaN(inputVal) ) {
-				await this.actor.update({ 'system.resources.mp.current': currentMP });
-			}
-		});
-		html.on('change',"input[name='system.resources.ip.current']", async (event) => {
-			const operators = [ '-', '+' ];
-			const currentIP = this.actor.system.resources.ip.current;
-			const stringVal = $(event.currentTarget).val();
-			const inputVal = parseFloat( $(event.currentTarget).val() );
+		// 	if ( operators.includes( stringVal[0] ) ) {
+		// 		if ( !isNaN(inputVal) ) {
+		// 			const newMP = currentMP + inputVal;
+		// 			await this.actor.update({ 'system.resources.mp.current': newMP });
+		// 		}
+		// 	} else if ( isNaN(inputVal) ) {
+		// 		await this.actor.update({ 'system.resources.mp.current': currentMP });
+		// 	}
+		// });
+		// html.on('change',"input[name='system.resources.ip.current']", async (event) => {
+		// 	const operators = [ '-', '+' ];
+		// 	const currentIP = this.actor.system.resources.ip.current;
+		// 	const stringVal = $(event.currentTarget).val();
+		// 	const inputVal = parseFloat( $(event.currentTarget).val() );
 			
-			if ( operators.includes( stringVal[0] ) ) {
-				if ( !isNaN(inputVal) ) {
-					const newIP = currentIP + inputVal;
-					await this.actor.update({ 'system.resources.ip.current': newIP });
-				}
-			} else if ( isNaN(inputVal) ) {
-				await this.actor.update({ 'system.resources.ip.current': currentIP });
-			}
-		});
+		// 	if ( operators.includes( stringVal[0] ) ) {
+		// 		if ( !isNaN(inputVal) ) {
+		// 			const newIP = currentIP + inputVal;
+		// 			await this.actor.update({ 'system.resources.ip.current': newIP });
+		// 		}
+		// 	} else if ( isNaN(inputVal) ) {
+		// 		await this.actor.update({ 'system.resources.ip.current': currentIP });
+		// 	}
+		// });
 
 		// Toggle collapse on Sheet open
 		$(html).find('.content-collapse').each((index, element) => {
@@ -731,6 +732,15 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Level up Character
 		html.on('click', '.js_levelUpCharacter', this._levelUpCharacter.bind(this));
+		
+		// Artefice - Add new Technology Type
+		html.on('click', '.js_addTechnologyType', this._addTechnologyType.bind(this));
+		
+		// Artefice - Remove Technology Type
+		html.on('click', '.js_removeTechnologyType', this._removeTechnologyType.bind(this));
+		
+		// Artefice - Roll Technology
+		html.on('click', '.js_rollTechnology', this._rollTechnology.bind(this));
 
 		// ContextMenu item settings menu items
 		const contextMenuItemSettings = [
@@ -1005,8 +1015,8 @@ export class FabulaActorSheet extends ActorSheet {
 						if ( selectedClass != '' ) {
 							const entry = compendium.index.find(e => e.name === selectedClass);
 							if (entry) {
-								const soruceItem = await compendium.getDocument(entry._id);
-								await addClassToActor( actor, soruceItem );
+								const sourceItem = await compendium.getDocument(entry._id);
+								await addClassToActor( actor, sourceItem );
 								return true;
 							}
 						} else {
@@ -1390,27 +1400,14 @@ export class FabulaActorSheet extends ActorSheet {
 		const element = event.currentTarget;
 		const status = element.dataset.status;
 		if ( status ) {
+			const statusID = CONFIG.statusEffects.find( (e) => e.id == status )?.id;
+			actor.toggleStatusEffect( statusID );
 
-			const property = `system.status.${status}.active`;
-			const currentStatus = actor.system.status[status].active;
-
-			if ( currentStatus !== true ) {
-
-				// Check immunity
-				if ( actor.system.status[status].immunity === true ) {
-					if (
-						!await Dialog.confirm({
-							title: `Sei immune allo status ${game.i18n.localize(`FU.Status.${status}`)}!`,
-							content: `<p>Sei sicuro di volere continuare?</p>`,
-							rejectClose: false,
-						})
-					) {
-						return;
-					}
-				}
+			if ( actor.statuses.has( statusID ) === true ) {
+				$(element).find('.icon').addClass('active');
+			} else {
+				$(element).find('.icon').removeClass('active');
 			}
-
-			await actor.update({ [property]: !currentStatus });
 		}
 	}
 
@@ -1573,6 +1570,111 @@ export class FabulaActorSheet extends ActorSheet {
 			};
 			await incrementSessionResource( resource, journal, chatData );
 			await actor.update({ 'system.resources.fp.current': newResource });
+
+		}
+	}
+
+	async _addTechnologyType(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const actorTechnologies = actor.getFlag('fabula', 'technologies') || [];
+
+		let type = await awaitDialogSelect({
+			title: `Stai aggiungendo un nuovo tipo di Tecnologia`,
+			optionsLabel: 'Scegli quale status aggiungere:',
+			options: `
+				<option value="alchemy">${game.i18n.localize(FU.technologies['alchemy'])}</option>
+				<option value="infusions">${game.i18n.localize(FU.technologies['infusions'])}</option>
+				<option value="magitech">${game.i18n.localize(FU.technologies['magitech'])}</option>
+			`,
+		});
+
+		if ( type == false ) return false;
+
+		if ( actorTechnologies.includes(type) ) {
+			ui.notifications.warn(`Il tipo di Tecnologia ${game.i18n.localize(FU.technologies[type])} è già presente`);
+			return false;
+		}
+
+		actorTechnologies.push(type);
+		await actor.setFlag('fabula', 'technologies', actorTechnologies);
+	}
+
+	async _removeTechnologyType(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const element = event.currentTarget;
+		const type = element.dataset.type;
+		const actorTechnologies = actor.getFlag('fabula', 'technologies') || [];
+
+		if ( type ) {
+			if ( actorTechnologies.includes(type) ) {
+				const newTechnologies = actorTechnologies.filter( item => item !== type );
+				await actor.setFlag('fabula', 'technologies', newTechnologies);
+			}
+		}
+
+	}
+
+	async _rollTechnology(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const element = event.currentTarget;
+		const type = element.dataset.type;
+
+		if ( type ) {
+
+			let messageTitle = '';
+			let messageContent = '';
+			
+			if ( type == 'alchemy' ) {
+
+				messageTitle = 'Sta creando una <strong>pozione</strong>';
+				messageContent = `
+					<table>
+						<tbody>
+							<tr>
+								<th>Mix</th>
+								<td style="width:50%;">
+									<button type="button" class="js_rollAlchemyMix" data-actor="${actor._id}">
+										<i class="fa fa-dice-d20"></i>
+									</button>
+								</td>
+							</tr>
+							<tr>
+								<th>Area</th>
+								<td class="area_desc"></td>
+							</tr>
+							<tr>
+								<th>Effetto</th>
+								<td class="effect_desc"></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p class="alchemy_effect"></p>
+
+					<button type="button" class="js_applyAlchemyMix" disabled data-apply-area data-apply-effect data-actor="${actor._id}">
+						Applica effetti
+					</button>
+				`;
+
+			} else if ( type == 'magitech' ) {
+			} else if ( type == 'infusions' ) {
+				ui.notifications.warn('Puoi creare un\'infusione quando colpisci uno o più bersagli con un attacco');
+				return false;
+			}
+
+			const chatData = {
+				user: game.user.id,
+				speaker: ChatMessage.getSpeaker({ actor: actor.name }),
+				flavor: messageTitle,
+				content: messageContent,
+				flags: {
+					customClass: 'technology',
+				},
+			};
+			ChatMessage.create(chatData);
 
 		}
 	}

@@ -62,6 +62,8 @@
     "fp": "Punti Fabula",
     "up": "Punti Ultima",
     "exp": "Punti Esperienza",
+    "defeated": "Sconfitto",
+    "crisis": "Crisi",
     "IPabbr": "PI",
     "Zenit": "Zenit",
     "ZenitPL": "Zenit",
@@ -287,6 +289,42 @@
       "toggleActive": "Attiva/Disattiva",
       "summon": "Evoca",
       "dismiss": "Congeda"
+    },
+    "technologies": {
+      "alchemy": "Alchimia",
+      "infusions": "Infusioni",
+      "magitech": "Magitech"
+    },
+    "alchemyAreas": {
+      "base": "La pozione ha effetto su ",
+      "1-6": "di te <strong>oppure</strong> un alleato a te visibile presente nella scena.",
+      "7-11": "un nemico a te visibile presente nella scena.",
+      "12-16": "di te e ciascun alleato presente nella scena.",
+      "17-20": "ciascun nemico presente nella scena."
+    },
+    "alchemyEffects": {
+      "base": "Ciascuna creatura affetta dalla pozione ",
+      "any-1": "subisce 20 danni da <strong>veleno</strong>.",
+      "any-2": "recupera 30 Punti Vita.",
+      "1": "considera i suoi dadi di <strong>Destrezza</strong> e <strong>Vigore</strong> incrementati di una taglia (massimo <strong>d12</strong>) fino al termine del tuo prossimo turno.",
+      "2": "considera i suoi dadi di <strong>Intuito</strong> e <strong>Volontà</strong> incrementati di una taglia (massimo <strong>d12</strong>) fino al termine del tuo prossimo turno.",
+      "3": "subisce 20 danni da <strong>aria</strong>. Questo ammontare aumenta a 30 danni se sei di <strong>livello 20 o superiore</strong>, oppure 40 danni se sei di <strong>livello 40 o superiore</strong>.",
+      "4": "subisce 20 danni da <strong>fulmine</strong>. Questo ammontare aumenta a 30 danni se sei di <strong>livello 20 o superiore</strong>, oppure 40 danni se sei di <strong>livello 40 o superiore</strong>.",
+      "5": "subisce 20 danni da <strong>ombra</strong>. Questo ammontare aumenta a 30 danni se sei di <strong>livello 20 o superiore</strong>, oppure 40 danni se sei di <strong>livello 40 o superiore</strong>.",
+      "6": "subisce 20 danni da <strong>terra</strong>. Questo ammontare aumenta a 30 danni se sei di <strong>livello 20 o superiore</strong>, oppure 40 danni se sei di <strong>livello 40 o superiore</strong>.",
+      "7": "subisce 20 danni da <strong>fuoco</strong>. Questo ammontare aumenta a 30 danni se sei di <strong>livello 20 o superiore</strong>, oppure 40 danni se sei di <strong>livello 40 o superiore</strong>.",
+      "8": "subisce 20 danni da <strong>ghiaccio</strong>. Questo ammontare aumenta a 30 danni se sei di <strong>livello 20 o superiore</strong>, oppure 40 danni se sei di <strong>livello 40 o superiore</strong>.",
+      "9": "ottiene Resistenza ai danni da <strong>aria</strong> e <strong>fuoco</strong> fino al termine della scena.",
+      "10": "ottiene Resistenza ai danni da <strong>fulmine</strong> e <strong>ghiaccio</strong> fino al termine della scena.",
+      "11": "ottiene Resistenza ai danni da <strong>ombra</strong> e <strong>terra</strong> fino al termine della scena.",
+      "12": "subisce lo status <strong>furente</strong>.",
+      "13": "subisce lo status <strong>avvelenato</strong>.",
+      "14": "subisce lo status <strong>confuso, debole, lento</strong> e <strong>scosso</strong>.",
+      "15": "guarisce da tutti gli status.",
+      "16-17": "recupera 50 Punti Vita e 50 Punti Mente.",
+      "18": "recupera 100 Punti Vita.",
+      "19": "recupera 100 Punti Mente.",
+      "20": "recupera 100 Punti Vita e 100 Punti Mente."
     }
   }
 }

@@ -300,17 +300,17 @@ select {height:var(--fu-form-field-height);}
 
 /* Icons > Statusses */
 .icon-slow {background-image:url(../icons/status/icon-slow.svg);}
-.icon-slow.disabled {background-image:url(../icons/status/icon-slow-disabled.svg);}
+.icon-slow.active {background-image:url(../icons/status/icon-slow-color.svg);}
 .icon-dazed {background-image:url(../icons/status/icon-dazed.svg);}
-.icon-dazed.disabled {background-image:url(../icons/status/icon-dazed-disabled.svg);}
+.icon-dazed.active {background-image:url(../icons/status/icon-dazed-color.svg);}
 .icon-weak {background-image:url(../icons/status/icon-weak.svg);}
-.icon-weak.disabled {background-image:url(../icons/status/icon-weak-disabled.svg);}
+.icon-weak.active {background-image:url(../icons/status/icon-weak-color.svg);}
 .icon-shaken {background-image:url(../icons/status/icon-shaken.svg);}
-.icon-shaken.disabled {background-image:url(../icons/status/icon-shaken-disabled.svg);}
+.icon-shaken.active {background-image:url(../icons/status/icon-shaken-color.svg);}
 .icon-enraged {background-image:url(../icons/status/icon-enraged.svg);}
-.icon-enraged.disabled {background-image:url(../icons/status/icon-enraged-disabled.svg);}
+.icon-enraged.active {background-image:url(../icons/status/icon-enraged-color.svg);}
 .icon-poisoned {background-image:url(../icons/status/icon-poisoned.svg);}
-.icon-poisoned.disabled {background-image:url(../icons/status/icon-poisoned-disabled.svg);}
+.icon-poisoned.active {background-image:url(../icons/status/icon-poisoned-color.svg);}
 
 /* Icons > Damages */
 .icon-physical {background-image:url(../icons/damages/icon-physical.svg);}

@@ -86,6 +86,47 @@ export class FabulaActor extends Actor {
 		}
 	}
 
+	async _preUpdate( changes, options, userId ) {
+
+		// Check hp values
+		const newHP = changes.system?.resources?.hp;
+		const currentHP = this.system.resources.hp;
+		const newMP = changes.system?.resources?.mp;
+		const currentMP = this.system.resources.mp;
+		
+		if ( newMP ) {
+			console.log( newMP.current );
+		}
+
+		// if ( newHP ) {
+		// 	console.log( newHP, currentHP );
+		// }
+
+		await super._preUpdate( changes, options, userId );
+	}
+
+	async _onUpdate( changed, options, userId ) {
+
+		const hp = this.system.resources?.hp;
+		if ( hp && userId === game.userId ) {
+
+			// Auto set crisis status
+			const crisis = Math.floor( hp.max / 2 );
+			const isCrisis = hp.current <= crisis;
+			if ( isCrisis !== this.statuses.has( 'crisis' ) ) {
+				await this.toggleStatusEffect( 'crisis' );
+			}
+
+			// Auto set defeated status
+			const isDefeated = hp.current === 0;
+			if ( isDefeated !== this.statuses.has( 'defeated' ) ) {
+				await this.toggleStatusEffect( 'defeated' );
+			}
+		}
+
+		super._onUpdate( changed, options, userId );
+	}
+
 	getRollData() {
 		const data = super.getRollData();
 	  
@@ -106,12 +147,12 @@ export class FabulaActor extends Actor {
 	async fullRest() {
 		this.update({ 'system.resources.hp.current': this.system.resources.hp.max });
 		this.update({ 'system.resources.mp.current': this.system.resources.mp.max });
-		this.update({ 'system.status.slow.active': false });
-		this.update({ 'system.status.dazed.active': false });
-		this.update({ 'system.status.weak.active': false });
-		this.update({ 'system.status.shaken.active': false });
-		this.update({ 'system.status.enraged.active': false });
-		this.update({ 'system.status.poisoned.active': false });
+		if ( this.statuses.has( 'slow' ) === true ) this.toggleStatusEffect( 'slow' );
+		if ( this.statuses.has( 'dazed' ) === true ) this.toggleStatusEffect( 'dazed' );
+		if ( this.statuses.has( 'weak' ) === true ) this.toggleStatusEffect( 'weak' );
+		if ( this.statuses.has( 'shaken' ) === true ) this.toggleStatusEffect( 'shaken' );
+		if ( this.statuses.has( 'enraged' ) === true ) this.toggleStatusEffect( 'enraged' );
+		if ( this.statuses.has( 'poisoned' ) === true ) this.toggleStatusEffect( 'poisoned' );
 	}
 
 }

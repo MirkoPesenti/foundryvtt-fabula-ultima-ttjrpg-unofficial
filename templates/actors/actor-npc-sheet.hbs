@@ -141,10 +141,10 @@
 
                 <div class="container-right">
                     <div class="attr status">
-                        {{#each system.status as |status statusIndex|}}
+                        {{#each system.immunity as |status statusIndex|}}
                             <div data-tooltip="{{localize (concat 'FU.Status.' statusIndex)}}">
-                                <button type="button" class="js_setStatus{{#if status.immunity}} is-immune{{/if}}" data-status="{{statusIndex}}">
-                                    <div class="icon icon-{{statusIndex}} {{#unless status.active}}disabled{{/unless}}"></div>
+                                <button type="button" class="js_setStatus{{#if status}} is-immune{{/if}}" data-status="{{statusIndex}}">
+                                    <div class="icon icon-{{statusIndex}}"></div>
                                 </button>
                             </div>
                         {{/each}}

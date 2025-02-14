@@ -1,7 +1,7 @@
 import { AttributesDataModel } from "./common/attributes-data-model.mjs";
 import { DefencesDataModel } from "./common/defences-data-model.mjs";
 import { AffinitiesDataModel } from "./common/affinities-data-model.mjs";
-import { StatusesDataModel } from "./common/statuses-data-model.mjs";
+import { ImmunitiesDataModel } from "./common/immunities-data-model.mjs";
 import { EquipDataModel } from "./common/equip-data-model.mjs";
 import { FU } from '../../helpers/config.mjs';
 
@@ -41,7 +41,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 					spell: new NumberField({ initial: 0, integer: true, nullable: false }),
 				}),
 			}),
-			status: new EmbeddedDataField(StatusesDataModel, {}),
+			immunity: new EmbeddedDataField(ImmunitiesDataModel, {}),
 			equip: new EmbeddedDataField(EquipDataModel, {}),
 			equippable: new BooleanField({ initial: false }),
 		};
@@ -212,7 +212,6 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 	prepareEmbeddedData() {
 
 		this.#prepareBasicData();
-		this.status.prepareData();
 		this.params.prepareData();
 
 	}
