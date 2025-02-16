@@ -130,7 +130,7 @@ async function addInfusion( actor ) {
 		
 		effect = await awaitDialogSelect({
 			title: `Stai applicando un'infusione all'attacco`,
-			optionsLabel: `Scegli uno dei seguenti <strong>effetti:</strong>`,
+			optionsLabel: `<p>Scegli uno dei seguenti <strong>effetti:</strong></p>`,
 			options: effectOptions,
 		});
 		if ( effect == false ) return false;

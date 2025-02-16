@@ -325,3 +325,70 @@ FU.infusionsSuperior = {
 	vampire: "FU.infusions.vampire",
 	venom: "FU.infusions.venom",
 };
+
+FU.verses = {
+	volume: {
+		low: 'FU.verses.volume.low',
+		medium: 'FU.verses.volume.medium',
+		high: 'FU.verses.volume.high',
+	},
+	key: {
+		flame: {
+			type: 'FU.DamageTypes.fire',
+			status: 'FU.Status.shaken',
+			attribute: 'FU.attributes.mig',
+			recover: 'FU.HP',
+		},
+		iron: {
+			type: 'FU.DamageTypes.physical',
+			status: 'FU.Status.slow',
+			attribute: 'FU.attributes.wlp',
+			recover: 'FU.MP',
+		},
+		frost: {
+			type: 'FU.DamageTypes.ice',
+			status: 'FU.Status.weak',
+			attribute: 'FU.attributes.wlp',
+			recover: 'FU.MP',
+		},
+		stone: {
+			type: 'FU.DamageTypes.earth',
+			status: 'FU.Status.dazed',
+			attribute: 'FU.attributes.mig',
+			recover: 'FU.HP',
+		},
+		star: {
+			type: 'FU.DamageTypes.light',
+			status: 'FU.Status.dazed',
+			attribute: 'FU.attributes.ins',
+			recover: 'FU.HP',
+		},
+		darkness: {
+			type: 'FU.DamageTypes.dark',
+			status: 'FU.Status.weak',
+			attribute: 'FU.attributes.dex',
+			recover: 'FU.MP',
+		},
+		thunder: {
+			type: 'FU.DamageTypes.bolt',
+			status: 'FU.Status.shaken',
+			attribute: 'FU.attributes.dex',
+			recover: 'FU.HP',
+		},
+		wind: {
+			type: 'FU.DamageTypes.air',
+			status: 'FU.Status.slow',
+			attribute: 'FU.attributes.ins',
+			recover: 'FU.MP',
+		},
+	},
+	tone: {
+		calm: "FU.verses.tone.calm",
+		energetic: "FU.verses.tone.energetic",
+		frenetic: "FU.verses.tone.frenetic",
+		unsettling: "FU.verses.tone.unsettling",
+		threatening: "FU.verses.tone.threatening",
+		solemn: "FU.verses.tone.solemn",
+		lively: "FU.verses.tone.lively",
+	},
+};

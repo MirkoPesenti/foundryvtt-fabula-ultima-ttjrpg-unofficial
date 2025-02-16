@@ -1,7 +1,7 @@
 <p>
     <strong>Tecnologie:</strong>
     {{#unless (eq (arrayLength flags.fabula.technologies) 3)}}
-        <button type="button" class="js_addTechnologyType">
+        <button type="button" class="js_addSkillType" data-type="technologies">
             <i class="fa fa-plus"></i>
         </button>
     {{/unless}}
@@ -11,7 +11,7 @@
         <button type="button" class="js_rollTechnology" data-type="{{technology}}">
             {{localize (concat 'FU.technologies.' technology)}}
         </button>
-        <button type="button" class="js_removeTechnologyType" data-type="{{technology}}">
+        <button type="button" class="js_removeSkillType" data-skill="technologies" data-type="{{technology}}">
             <i class="fa fa-trash"></i>
         </button>
     </div>

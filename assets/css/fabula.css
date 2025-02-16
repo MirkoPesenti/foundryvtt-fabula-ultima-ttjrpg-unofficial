@@ -204,6 +204,7 @@ body {
 .mr-auto {margin-right:auto !important;}
 .mb-auto {margin-bottom:auto !important;}
 .ml-auto {margin-left:auto !important;}
+.d-none {display:none !important;}
 .list-base {list-style:diamonds;padding-left:12px;}
 .list-base > li::marker {font-size:12px;color:var(--fu-color-primary);}
 .list-base > li {padding-left:5px;}
@@ -712,6 +713,8 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet .rule .editor-content {padding:15px;}
 .sheet .rule .editor-content h2 {transform:translateX(-15px);}
 .sheet .rule .list-content {padding:0 0 15px;}
+.sheet .rule .editor-full {display:flex;flex-direction:column;}
+.sheet .rule .editor-full .editor {flex-grow:1;flex-shrink:0;}
 
 /* Sheets > Base Items */
 .sheet .baseItem .editor-full .editor {height:100%;}

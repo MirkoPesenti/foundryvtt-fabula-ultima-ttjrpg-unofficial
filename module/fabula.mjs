@@ -856,7 +856,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 
 				bondBonus = await awaitDialogSelect({
 					title: 'Stai invando un legame',
-					optionsLabel: 'Scegli uno dei tuoi legami da invocare',
+					optionsLabel: '<p>Scegli uno dei tuoi legami da invocare</p>',
 					options: selectOptions,
 				});
 
@@ -938,7 +938,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 				let rerollDice = '';
 				rerollDice = await awaitDialogSelect({
 					title: `Stai invocando un tratto`,
-					optionsLabel: 'Scegli il dado che vuoi ritirare',
+					optionsLabel: '<p>Scegli il dado che vuoi ritirare</p>',
 					options: `
 						<option value="primary">
 							${rollPrimary}: valore attuale - ${resultPrimary}
@@ -957,7 +957,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 				if ( actor.type == 'character' ) {
 					trait = await awaitDialogSelect({
 						title: `Stai invocando un tratto`,
-						optionsLabel: 'Scegli il tratto da invocare',
+						optionsLabel: '<p>Scegli il tratto da invocare</p>',
 						options: `
 							<option value="identity">
 								IDENTITÀ: ${actor.system.features.identity}
@@ -1031,7 +1031,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		// Choose mix option
 		let mix = await awaitDialogSelect({
 			title: awaitDialogTitle,
-			optionsLabel: 'Scegli quale mix usare (cambierà il costo in PI e il numero di d20 da lanciare):',
+			optionsLabel: '<p>Scegli quale mix usare (cambierà il costo in PI e il numero di d20 da lanciare):</p>',
 			options: `
 				<optgroup label="${game.i18n.localize('FU.alchemyTypes.basic')}">
 					<option value="basic">PI: 3 - 2d20</option>
@@ -1041,7 +1041,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 				</optgroup>
 				<optgroup label="${game.i18n.localize('FU.alchemyTypes.superior')}">
 					<option value="superior">PI: 5 - 4d20</option>
-				</optgroup
+				</optgroup>
 			`,
 		});
 		if ( mix == false ) return false;
@@ -1056,15 +1056,6 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		} else if ( mix == 'superior' ) {
 			dices = 4;
 			cost = 5;
-		}
-
-		// Check if actor has enough IP
-		if ( actor.system.resources.ip.current < cost ) {
-			ui.notifications.warn(`Non hai abbastanza PI per creare questa pozione`);
-			return false;
-		} else {
-			const newIP = actor.system.resources.ip.current - cost;
-			await actor.update({ 'system.resources.ip.current': newIP });
 		}
 
 		// Roll dices
@@ -1082,7 +1073,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		// Choose area
 		let area = await awaitDialogSelect({
 			title: awaitDialogTitle,
-			optionsLabel: `Assegna uno dei risultati all'<strong>area</strong>`,
+			optionsLabel: `<p>Assegna uno dei risultati all'<strong>area</strong></p>`,
 			options: areaOptions,
 		});
 		if ( area == false ) return false;
@@ -1101,9 +1092,6 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		areaDesc += game.i18n.localize(`FU.alchemyAreas.${areaValue}`);
 
 		newMessageContent = newMessageContent.replace('<td class="area_desc"></td>', `<td class="area_desc">${area} <i class="fa fa-circle-info" data-tooltip="${areaDesc}"></i></td>`);
-		newMessageContent = newMessageContent.replace('data-apply-area',`data-area="${areaValue}"`);
-
-		await message.update({ 'content': newMessageContent });
 
 		let index = results.indexOf( Number(area) );
 		if ( index >= 0 ) {
@@ -1117,7 +1105,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		}
 		let effect = await awaitDialogSelect({
 			title: awaitDialogTitle,
-			optionsLabel: `Assegna uno dei risultati all'<strong>effetto</strong>`,
+			optionsLabel: `<p>Assegna uno dei risultati all'<strong>effetto</strong></p>`,
 			options: effectOptions,
 		});
 		if ( effect == false ) return false;
@@ -1147,17 +1135,18 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		
 		let replacedEffect = await awaitDialogSelect({
 			title: awaitDialogTitle,
-			optionsLabel: `Vuoi utilizzare l'effetto predefinito del risultato o usare un'altra opzione?`,
+			optionsLabel: `<p>Vuoi utilizzare l'effetto predefinito del risultato o usare un'altra opzione?</p>`,
 			options: replaceEffectOptions,
 		});
 		if ( replacedEffect == false ) return false;
 
 		let effectDesc = game.i18n.localize('FU.alchemyEffects.base') + game.i18n.localize(`FU.alchemyEffects.${replacedEffect}`);
 		newMessageContent = newMessageContent.replace('<td class="effect_desc"></td>', `<td class="effect_desc">${effect} <i class="fa fa-circle-info" data-tooltip="${effectDesc}"></i></td>`);
-		newMessageContent = newMessageContent.replace('data-apply-effect',`data-effect="${replacedEffect}"`);
-		newMessageContent = newMessageContent.replace('class="js_applyAlchemyMix" disabled','class="js_applyAlchemyMix"');
 
-		newMessageContent = newMessageContent.replace('<p class="alchemy_effect"></p>', `<p class="alchemy_effect">${areaDesc}<br>${effectDesc}</p>`);
+		newMessageContent = newMessageContent.replace('<p class="alchemy_effect"></p>', `
+			<p class="alchemy_effect">${areaDesc}<br>${effectDesc}</p>
+			<button type="button" class="js_applyAlchemyMix" data-area="${areaValue}" data-effect="${replacedEffect}"  data-actor="${actor._id}">Applica effetti</button>
+		`);
 
 		await message.update({ 'content': newMessageContent });
 	});
@@ -1169,7 +1158,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		const area = element.dataset.area;
 		const effect = element.dataset.effect;
 		const actorID = element.dataset.actor;
-		const actor = game.actors.get( actorID );
+		const caster = game.actors.get( actorID );
 
 		if ( area && effect ) {
 			let selectedTokens = [];
@@ -1209,7 +1198,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 					case '1':
 						await actor.createEmbeddedDocuments('ActiveEffect', [{
 							label: 'Effetto alchimia',
-							origin: actor.uuid,
+							origin: caster.uuid,
 							'duration.rounds': 1,
 							disabled: false,
 							changes: [
@@ -1231,7 +1220,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 					case '2':
 						await actor.createEmbeddedDocuments('ActiveEffect', [{
 							label: 'Effetto alchimia',
-							origin: actor.uuid,
+							origin: caster.uuid,
 							'duration.rounds': 1,
 							disabled: false,
 							changes: [
@@ -1264,8 +1253,8 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 						else if ( effect == '7' ) damageType = 'fire';
 						else if ( effect == '8' ) damageType = 'ice';
 
-						if ( actor.system.level.value >= 40 ) damage = 40;
-						else if ( actor.system.level.value >= 20 ) damage = 30;
+						if ( caster.system.level.value >= 40 ) damage = 40;
+						else if ( caster.system.level.value >= 20 ) damage = 30;
 						else damage = 20;
 
 						await actor.applyDamage( damage, damageType );
@@ -1275,7 +1264,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 					case '9':
 						await actor.createEmbeddedDocuments('ActiveEffect', [{
 							label: 'Effetto alchimia',
-							origin: actor.uuid,
+							origin: caster.uuid,
 							disabled: false,
 							changes: [
 								{
@@ -1296,7 +1285,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 					case '10':
 						await actor.createEmbeddedDocuments('ActiveEffect', [{
 							label: 'Effetto alchimia',
-							origin: actor.uuid,
+							origin: caster.uuid,
 							disabled: false,
 							changes: [
 								{
@@ -1317,7 +1306,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 					case '11':
 						await actor.createEmbeddedDocuments('ActiveEffect', [{
 							label: 'Effetto alchimia',
-							origin: actor.uuid,
+							origin: caster.uuid,
 							disabled: false,
 							changes: [
 								{
@@ -1387,6 +1376,184 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 						await actor.update({ 'system.resources.hp.current': newHP });
 						newMP = currentMP + 100;
 						await actor.update({ 'system.resources.mp.current': newMP });
+						break;
+				}
+			}
+		}
+	});
+
+	// Compose Verse
+	html.on('click', '.js_createVerse', async (e) => {
+		e.preventDefault();
+		const element = e.currentTarget;
+		const tone = element.dataset.tone;
+		const actorID = element.dataset.actor;
+		const actor = game.actors.get( actorID );
+		const messageID = $(html).data('message-id');
+		const message = game.messages.get(messageID);
+		let newMessageContent = message.content;
+		let awaitDialogTitle = 'Stai formando un Verso';
+
+		// Choose volume option
+		let volumeOptions = '';
+		const volumes = actor.getFlag('fabula', 'verses.volume') || [];
+		for ( const vol of volumes ) {
+			volumeOptions += `
+				<option value="${vol}">${game.i18n.localize(`FU.verses.volume.${vol}`)} | PM: ${game.i18n.localize(`FU.verses.volumeCost.${vol}`)}</option>
+			`;
+		}
+		let volume = await awaitDialogSelect({
+			title: awaitDialogTitle,
+			optionsLabel: '<p>Scegli quale Volume usare (cambierà il costo in PI e i bersagli del Verso):</p>',
+			options: volumeOptions,
+		});
+		if ( volume == false ) return false;
+		newMessageContent = newMessageContent.replace('<td class="volume_desc"></td>', `<td class="volume_desc">${game.i18n.localize(`FU.verses.volume.${volume}`)} (${game.i18n.localize(`FU.verses.volumeCost.${volume}`)} PM)</td>`);
+
+		// Choose key option
+		let keyOptions = '';
+		const keys = actor.getFlag('fabula', 'verses.key') || [];
+		for ( const key in keys ) {
+			keyOptions += `
+				<option value="${key}">${game.i18n.localize(`FU.verses.key.${key}`)}</option>
+			`;
+		}
+		let key = await awaitDialogSelect({
+			title: awaitDialogTitle,
+			optionsLabel: '<p>Scegli quale chiave usare:</p>',
+			options: keyOptions,
+		});
+		if ( key == false ) return false;
+		console.log(FU.verses.key[key]);
+		newMessageContent = newMessageContent.replace('<td class="key_desc"></td>', `<td class="key_desc">${game.i18n.localize(`FU.verses.key.${key}`)}</td>`);
+
+		let verseDescription = game.i18n.localize(`FU.verses.volumeEffect.${volume}`);
+		if ( tone ) {
+			verseDescription += '<br /><br />';
+			verseDescription += game.i18n.format(`FU.verses.toneEffect.${tone}`, {
+				recover: game.i18n.localize( FU.verses.key[key].recover ),
+				attribute: game.i18n.localize( FU.verses.key[key].attribute ),
+				type: game.i18n.localize( FU.verses.key[key].type ),
+				status: game.i18n.localize( FU.verses.key[key].status ),
+			});
+		}
+		newMessageContent = newMessageContent.replace('<p class="tone_effect"></p>', `<p class="tone_effect">${verseDescription}</p>
+		<button type="button" class="js_applyVerseEffects ${tone == 'threatening' || tone == 'energetic' ? 'd-none' : ''}" data-key="${key}" data-tone="${tone}" data-actor="${actor._id}">Applica effetti</button>
+		`);
+
+		await message.update({ 'content': newMessageContent });
+	});
+
+	// Apply Verse effects
+	html.on('click', '.js_applyVerseEffects', async (e) => {
+		e.preventDefault();
+		const element = e.currentTarget;
+		const key = element.dataset.key;
+		const tone = element.dataset.tone;
+		const actorID = element.dataset.actor;
+		const caster = game.actors.get( actorID );
+
+		if ( key && tone ) {
+			const keyData = FU.verses.key[key];
+			
+			// Get selected tokens
+			let selectedTokens = [];
+			if ( canvas.tokens.controlled.length > 0 ) {
+				selectedTokens = [ ...canvas.tokens.controlled ];
+			} else {
+				ui.notifications.warn('Devi selezionare almeno un bersaglio');
+				return false;
+			}
+
+			for ( const token of selectedTokens ) {
+				const actor = token.actor;
+				if ( !actor ) continue;
+				
+				let status = keyData.status.replace( 'FU.Status.', '' );
+				let type = keyData.type.replace( 'FU.DamageTypes.', '' );
+				let attribute = keyData.attribute.replace( 'FU.attributes.', '' );
+				let recover = keyData.recover.replace( 'FU.', '' ).toLowerCase();
+				let damage = 0;
+
+				switch ( tone ) {
+					case 'calm':
+						if ( recover == 'mp' && actor._id == caster._id ) {
+							ui.notifications.warn('Non puoi recuperare PM con questo verso!');
+							break;
+						}
+						const currentResource = foundry.utils.getProperty( actor, `system.resources.${recover}.current` ) || 0;
+						const currentResourceKey = `system.resources.${recover}.current`;
+						let resourceNewVal = currentResource + 10 + ( caster.system.attributes.wlp.current * 2 );
+						if ( caster.system.level.value >= 40 ) resourceNewVal += 20;
+						else if ( caster.system.level.value >= 20 ) resourceNewVal += 10;
+						
+						await actor.update({ [currentResourceKey]: resourceNewVal });
+						break;
+
+					// case 'energetic':
+					// 	break;
+
+					case 'frenetic':
+						damage = caster.system.attributes.wlp.current * 2;
+						if ( caster.system.level.value >= 40 ) damage += 20;
+						else if ( caster.system.level.value >= 20 ) damage += 10;
+
+						await actor.applyDamage( damage, type );
+						break;
+
+					case 'unsettling':
+						if ( actor.statuses.has( status ) === false ) actor.toggleStatusEffect( status );
+						if ( actor.system.affinity[type] == 'resistance' ) {
+							await actor.createEmbeddedDocuments('ActiveEffect', [{
+								label: 'Effetto verso',
+								origin: caster.uuid,
+								'duration.rounds': 1,
+								disabled: false,
+								changes: [
+									{
+										key: `system.affinity.${type}`,
+										mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+										value: '',
+									}
+								],
+							}]);
+						}
+						break;
+						
+					// case 'threatening':
+					// 	break;
+
+					case 'solemn':
+						if ( actor.statuses.has( status ) === true ) actor.toggleStatusEffect( status );
+						await actor.createEmbeddedDocuments('ActiveEffect', [{
+							label: 'Effetto verso',
+							origin: caster.uuid,
+							'duration.rounds': 1,
+							disabled: false,
+							changes: [
+								{
+									key: `system.affinity.${type}`,
+									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+									value: 'resistance',
+								}
+							],
+						}]);
+						break;
+
+					case 'lively':
+						await actor.createEmbeddedDocuments('ActiveEffect', [{
+							label: 'Effetto verso',
+							origin: caster.uuid,
+							'duration.rounds': 1,
+							disabled: false,
+							changes: [
+								{
+									key: `system.attributes.${attribute}.current`,
+									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+									value: '2',
+								}
+							],
+						}]);
 						break;
 				}
 			}

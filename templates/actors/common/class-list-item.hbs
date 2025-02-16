@@ -28,6 +28,10 @@
 			</ul>
 		{{/if}}
 
+		{{#if (eq item.name 'Cantore')}}
+			{{> 'systems/fabula/templates/common/class/verses.hbs'}}
+		{{/if}}
+
 		{{#each item.flags.fabula.subItems as |feature featureIndex|}}
 			{{#gt feature.system.level.current 0}}
 				<div class="feature-box">

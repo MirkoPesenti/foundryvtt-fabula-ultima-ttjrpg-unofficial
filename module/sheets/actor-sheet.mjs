@@ -330,7 +330,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 						status = await awaitDialogSelect({
 							title: `Stai usando ${sourceItem.name}`,
-							optionsLabel: 'Scegli da quale status vuoi essere guarito',
+							optionsLabel: '<p>Scegli da quale status vuoi essere guarito</p>',
 							options: `
 								<option value="slow">${game.i18n.localize(FU.statusses['slow'])}</option>
 								<option value="dazed">${game.i18n.localize(FU.statusses['dazed'])}</option>
@@ -366,7 +366,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 						damageType = await awaitDialogSelect({
 							title: `Stai usando ${sourceItem.name}`,
-							optionsLabel: 'Scegli da il tipo di danno:',
+							optionsLabel: '<p>Scegli da il tipo di danno:</p>',
 							options: `
 								<option value="air">${game.i18n.localize(FU.DamageTypes['air'])}</option>
 								<option value="bolt">${game.i18n.localize(FU.DamageTypes['bolt'])}</option>
@@ -754,14 +754,17 @@ export class FabulaActorSheet extends ActorSheet {
 		// Level up Character
 		html.on('click', '.js_levelUpCharacter', this._levelUpCharacter.bind(this));
 		
-		// Artefice - Add new Technology Type
-		html.on('click', '.js_addTechnologyType', this._addTechnologyType.bind(this));
+		// Artefice - Add new Skill Type
+		html.on('click', '.js_addSkillType', this._addSkillType.bind(this));
 		
-		// Artefice - Remove Technology Type
-		html.on('click', '.js_removeTechnologyType', this._removeTechnologyType.bind(this));
+		// Artefice - Remove Skill Type
+		html.on('click', '.js_removeSkillType', this._removeSkillType.bind(this));
 		
 		// Artefice - Roll Technology
 		html.on('click', '.js_rollTechnology', this._rollTechnology.bind(this));
+		
+		// Artefice - Roll Verse
+		html.on('click', '.js_rollVerse', this._rollVerse.bind(this));
 
 		// ContextMenu item settings menu items
 		const contextMenuItemSettings = [
@@ -1534,7 +1537,7 @@ export class FabulaActorSheet extends ActorSheet {
 							rejectClose: false,
 						})
 					) {
-						let label = `Scegli quale effestto di congeto attivare: <br>`;
+						let label = `<p>Scegli quale effetto di congeto attivare: <br>`;
 						let options = '';
 						item.system.dismiss.forEach((dismiss, key) => {
 							label += `
@@ -1545,6 +1548,7 @@ export class FabulaActorSheet extends ActorSheet {
 							`;
 							options += `<option value="${key}">${dismiss.name}</option>`;
 						});
+						label += `</p>`;
 						const dismissEffect = await awaitDialogSelect({
 							title: `Stai congedando ${item.name}`,
 							optionsLabel: label,
@@ -1624,43 +1628,67 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
-	async _addTechnologyType(event) {
+	async _addSkillType(event) {
 		event.preventDefault();
+		const element = event.currentTarget;
+		const skill = element.dataset.type;
 		const actor = this.actor;
-		const actorTechnologies = actor.getFlag('fabula', 'technologies') || [];
+		
+		if ( skill ) {
+			const skillObject = skill.split('.').reduce((o, i) => o[i], FU);
+			if ( !skillObject ) return false;
 
-		let type = await awaitDialogSelect({
-			title: `Stai aggiungendo un nuovo tipo di Tecnologia`,
-			optionsLabel: 'Scegli quale status aggiungere:',
-			options: `
-				<option value="alchemy">${game.i18n.localize(FU.technologies['alchemy'])}</option>
-				<option value="infusions">${game.i18n.localize(FU.technologies['infusions'])}</option>
-				<option value="magitech">${game.i18n.localize(FU.technologies['magitech'])}</option>
-			`,
-		});
+			// Add volumes and keys to verses
+			if ( skill == 'verses.tone' ) {
+				const volumes = actor.getFlag('fabula', 'verses.volume') || [];
+				if ( volumes.length == 0 ) {
+					const defaultVolumes = [ 'low', 'medium', 'high' ];
+					await actor.setFlag('fabula', 'verses.volume', defaultVolumes);
+				}
 
-		if ( type == false ) return false;
+				const keys = actor.getFlag('fabula', 'verses.key') || [];
+				if ( keys.length == 0 ) {
+					await actor.setFlag('fabula', 'verses.key', FU.verses.key);
+				}
+			}
 
-		if ( actorTechnologies.includes(type) ) {
-			ui.notifications.warn(`Il tipo di Tecnologia ${game.i18n.localize(FU.technologies[type])} è già presente`);
-			return false;
+			const actorSkill = actor.getFlag('fabula', skill) || [];
+			let optionsList = '';
+			Object.keys( skillObject ).forEach( type => {
+				optionsList += `<option value="${type}">${game.i18n.localize(skillObject[type])}</option>`;
+			});
+
+			let type = await awaitDialogSelect({
+				title: `Stai aggiungendo un nuovo tipo di ${game.i18n.localize(`FU.skills.${skill}`)}`,
+				optionsLabel: '<p>Scegli quale di queste opzioni aggiungere:</p>',
+				options: optionsList,
+			});
+
+			if ( type == false ) return false;
+
+			if ( actorSkill.includes(type) ) {
+				ui.notifications.warn(`${game.i18n.localize(skillObject[type])} è già presente`);
+				return false;
+			}
+
+			actorSkill.push(type);
+			await actor.setFlag('fabula', skill, actorSkill);
 		}
-
-		actorTechnologies.push(type);
-		await actor.setFlag('fabula', 'technologies', actorTechnologies);
 	}
 
-	async _removeTechnologyType(event) {
+	async _removeSkillType(event) {
 		event.preventDefault();
 		const actor = this.actor;
 		const element = event.currentTarget;
+		const skill = element.dataset.skill;
 		const type = element.dataset.type;
-		const actorTechnologies = actor.getFlag('fabula', 'technologies') || [];
 
-		if ( type ) {
-			if ( actorTechnologies.includes(type) ) {
-				const newTechnologies = actorTechnologies.filter( item => item !== type );
-				await actor.setFlag('fabula', 'technologies', newTechnologies);
+		if ( skill && type ) {
+			const actorSkill = actor.getFlag('fabula', skill) || [];
+
+			if ( actorSkill.includes(type) ) {
+				const newSkills = actorSkill.filter( item => item !== type );
+				await actor.setFlag('fabula', skill, newSkills);
 			}
 		}
 
@@ -1703,18 +1731,19 @@ export class FabulaActorSheet extends ActorSheet {
 					</table>
 
 					<p class="alchemy_effect"></p>
-
-					<button type="button" class="js_applyAlchemyMix" disabled data-apply-area data-apply-effect data-actor="${actor._id}">
-						Applica effetti
-					</button>
 				`;
 
 			} else if ( type == 'magitech' ) {
-				const pack = game.packs.get('fabula.technologies');
-				if ( pack ) {
-					pack.render(true);
-				} else {
-					ui.notifications.error('Il compendio delle Tecnologie non è stato trovato');
+				const classFeaturesCompendium = game.packs.get('fabula.classfeatures');
+				const ruleID = '0TVNmvxkwfyua8G5';
+
+				if ( classFeaturesCompendium ) {
+					classFeaturesCompendium.getDocument( ruleID ).then(item => {
+						if ( item )
+							item.sheet.render(true);
+						else
+							console.error(`L'Item con ID: ${ruleID} non è stato trovato!`);
+					});
 				}
 				return;
 			} else if ( type == 'infusions' ) {
@@ -1733,6 +1762,49 @@ export class FabulaActorSheet extends ActorSheet {
 			};
 			ChatMessage.create(chatData);
 
+		}
+	}
+
+	async _rollVerse(event) {
+		event.preventDefault();
+		const actor = this.actor;
+		const element = event.currentTarget;
+		const tone = element.dataset.tone;
+
+		if ( tone ) {
+			const chatData = {
+				user: game.user.id,
+				speaker: ChatMessage.getSpeaker({ actor: actor.name }),
+				flavor: 'Stai cantando un <strong>verso</strong>',
+				content: `
+					<table>
+						<tbody>
+							<tr>
+								<th>Verso</th>
+								<td style="width:50%;">
+									<button type="button" class="js_createVerse" data-actor="${actor._id}" data-tone="${tone}">
+										<i class="fa fa-gear"></i>
+									</button>
+								</td>
+							</tr>
+							<tr>
+								<th>Volume</th>
+								<td class="volume_desc"></td>
+							</tr>
+							<tr>
+								<th>Chiave</th>
+								<td class="key_desc"></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<p class="tone_effect"></p>
+				`,
+				flags: {
+					customClass: 'verse',
+				},
+			};
+			ChatMessage.create(chatData);
 		}
 	}
 }

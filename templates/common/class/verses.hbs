@@ -1,0 +1,76 @@
+<p>
+    <strong>Toni imparati:</strong>
+    {{#unless (eq (arrayLength flags.fabula.technologies) 3)}}
+        <button type="button" class="js_addSkillType" data-type="verses.tone">
+            <i class="fa fa-plus"></i>
+        </button>
+    {{/unless}}
+</p>
+
+{{#gt (arrayLength flags.fabula.verses.tone) 0}}
+    <table class="table-list">
+        <thead>
+            <tr>
+                <td>Volume</td>
+                <td>PM</td>
+                <td>Bersagli</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each flags.fabula.verses.volume as |volume volumeIndex|}}
+                <tr>
+                    <td>{{localize (concat 'FU.verses.volume.' volume)}}</td>
+                    <td>{{localize (concat 'FU.verses.volumeCost.' volume)}}</td>
+                    <td>{{{localize (concat 'FU.verses.volumeEffect.' volume)}}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <table class="table-list">
+        <thead>
+            <tr>
+                <td>Chiave</td>
+                <td>Tipo</td>
+                <td>Status</td>
+                <td>Caratteristica</td>
+                <td>Recupero</td>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each flags.fabula.verses.key as |key keyIndex|}}
+                <tr>
+                    <td>{{localize (concat 'FU.verses.key.' keyIndex)}}</td>
+                    <td>{{localize key.type}}</td>
+                    <td>{{localize key.status}}</td>
+                    <td>{{localize key.attribute}}</td>
+                    <td>{{localize key.recover}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    <ul class="list">
+    {{#each flags.fabula.verses.tone as |tone toneIndex|}}
+        <li>
+            <div class="btn-container">
+                <button type="button" class="_removeSkillType" data-skill="verses.tone" data-type="{{tone}}">
+                    <i class="fa fa-trash"></i>
+                </button>
+            </div>
+            <div class="item-box">
+                <button type="button" class="js_rollVerse" data-tone="{{tone}}">
+                    {{localize (concat 'FU.verses.tone.' tone)}}
+                </button>
+                <p>{{{
+                    localize (concat 'FU.verses.toneEffect.' tone) 
+                        recover=(localize 'FU.verses.tonePlaceholders.recover') 
+                        attribute=(localize 'FU.verses.tonePlaceholders.attribute') 
+                        type=(localize 'FU.verses.tonePlaceholders.type') 
+                        status=(localize 'FU.verses.tonePlaceholders.status')
+                }}}</p>
+            </div>
+        </li>
+    {{/each}}
+    </ul>
+{{/gt}}

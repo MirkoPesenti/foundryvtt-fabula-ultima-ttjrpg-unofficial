@@ -166,6 +166,9 @@
                     <a class="item" data-tab="effects">
                         <span>Effetti</span>
                     </a>
+                    <a class="item" data-tab="settings" style="flex:0;">
+                        <span><i class="fa fa-fw fa-sliders"></i></span>
+                    </a>
                 </nav>
 
                 <div class="tab inner-tab" data-group="secondary" data-tab="base">
@@ -309,6 +312,87 @@
                     {{#each effects as |category catIndex|}}
                         {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../actor}}
                     {{/each}}
+                </div>
+
+                <div class="tab inner-tab" data-group="secondary" data-tab="settings">
+                    <div class="title title-list">
+                        <span>Tracciamento risorse</span>
+                        {{#if @root.editable}}
+                            <button type="button" class="js_addNewResource">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        {{/if}}
+                    </div>
+                    <ul class="list">
+                        {{#each system.minsResources as |resource resourceIndex|}}
+                            <li>
+                                <div class="btn-container">
+                                    {{#if @root.editable}}
+                                        <button type="button" class="btn-action-delete js_deleteResource" data-index="{{resourceIndex}}" data-tooltip="{{localize 'FU.actions.delete'}}">
+                                            <i class="fa fa-trash m-0"></i>
+                                        </button>
+                                    {{/if}}
+                                </div>
+                                <div class="item-box">
+                                    <div class="flexrow">
+                                        <div class="title title-list">
+                                            <input type="text" name="system.minsResources.{{resourceIndex}}.name" value="{{resource.name}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="system.minsResources.{{resourceIndex}}.value">Quantità</label>
+                                            <input type="number" name="system.minsResources.{{resourceIndex}}.value" id="system.minsResources.{{resourceIndex}}.value" value="{{resource.value}}" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ul>
+
+                    <div class="title title-list">
+                        <span>Immunità agli status</span>
+                    </div>
+                    <div class="flexrow">
+                        {{#each system.immunity as |immunity immunityIndex|}}
+                            <div class="form-group">
+                                <input type="checkbox" name="system.immunity.{{immunityIndex}}" id="system.immunity.{{immunityIndex}}" {{checked immunity}}>
+                                <label for="system.immunity.{{immunityIndex}}">
+                                    {{localize (concat 'FU.Status.' immunityIndex)}}
+                                </label>
+                            </div>
+                        {{/each}}
+                    </div>
+
+                    <div class="title title-list">
+                        <span>Attributi bonus</span>
+                    </div>
+                    <div class="flexrow">
+                        <div class="form-group">
+                            <label for="system.resources.hp.bonus">Punti Vita</label>
+                            <input type="number" name="system.resources.hp.bonus" id="system.resources.hp.bonus" value="{{system.resources.hp.bonus}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="system.resources.mp.bonus">Punti Mente</label>
+                            <input type="number" name="system.resources.mp.bonus" id="system.resources.mp.bonus" value="{{system.resources.mp.bonus}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="system.resources.ip.bonus">Punti Inventario</label>
+                            <input type="number" name="system.resources.ip.bonus" id="system.resources.ip.bonus" value="{{system.resources.ip.bonus}}">
+                        </div>
+                    </div>
+                    <div class="flexrow">
+                        <div class="form-group">
+                            <label for="system.params.def.bonus">Difesa</label>
+                            <input type="number" name="system.params.def.bonus" id="system.params.def.bonus" value="{{system.params.def.bonus}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="system.params.mdef.bonus">Difesa Magica</label>
+                            <input type="number" name="system.params.mdef.bonus" id="system.params.mdef.bonus" value="{{system.params.mdef.bonus}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="system.params.init.bonus">Iniziativa</label>
+                            <input type="number" name="system.params.init.bonus" id="system.params.init.bonus" value="{{system.params.init.bonus}}">
+                        </div>
+                    </div>
                 </div>
             </div>
 

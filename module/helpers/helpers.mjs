@@ -4,7 +4,7 @@ export function awaitDialogSelect( data ) {
             title: data.title || '',
 			content: `
 				<div class="form-group">
-					<label>${data.optionsLabel}</label>
+					${data.optionsLabel}
 					<select id="formDialogSelect">
 						${data.options}
 					</select>

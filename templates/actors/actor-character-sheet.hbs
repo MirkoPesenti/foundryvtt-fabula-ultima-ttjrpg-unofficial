@@ -506,6 +506,20 @@
             </div>
 
             <div class="title title-list">
+                <span>Rituali eseguibili</span>
+            </div>
+            <div class="flexrow">
+                {{#each system.castRitual as |ritual ritualIndex|}}
+                    <div class="form-group">
+                        <input type="checkbox" name="system.castRitual.{{ritualIndex}}" id="system.castRitual.{{ritualIndex}}" {{checked ritual}}>
+                        <label for="system.castRitual.{{ritualIndex}}">
+                            {{localize (concat 'FU.MagicDisciplines.' ritualIndex)}}
+                        </label>
+                    </div>
+                {{/each}}
+            </div>
+
+            <div class="title title-list">
                 <span>Attributi bonus</span>
             </div>
             <div class="flexrow">
