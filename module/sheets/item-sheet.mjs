@@ -268,14 +268,15 @@ export class FabulaItemSheet extends ItemSheet {
 										<option value="">Nessuna</option>`;
 							
 							for ( let i = 0; i < inputs.length; i++ ) {
-								featureOptions += '<option disabled>──────────</option>';
 								const document = await pack.getDocument( $(inputs[i]).attr('id') );
 								const features = document.flags.fabula.subItems;
-
+								
+								featureOptions += `<optgroup label="${document.name}">`;
 								for ( let a = 0; a < features.length; a++ ) {
 									const selected = context.item.system.requirements.classFeature.includes( features[a].name );
 									featureOptions += `<option value="${features[a].name}" ${selected ? 'selected' : ''}>${features[a].name}</option>`;
 								}
+								featureOptions += '</optgroup>';
 							}
 							featureOptions += `
 									</select>

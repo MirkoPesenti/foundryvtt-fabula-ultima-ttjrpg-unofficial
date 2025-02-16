@@ -50,7 +50,12 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			equip: new EmbeddedDataField(EquipDataModel, {}),
 			useMartial: new EmbeddedDataField(MartialDataModel, {}),
 			castRitual: new EmbeddedDataField(CharacterRitualDataModel, {}),
+			dualWield: new BooleanField({ initial: false }),
 			createProject: new BooleanField({ initial: false }),
+			genericResource: new ArrayField(new SchemaField({
+				name: new StringField({ initial: '' }),
+				value: new NumberField({ initial: 0, min: 0, integer: true, nullable: false }),
+			})),
 		};
 	}
 
@@ -91,6 +96,26 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 
 	#prepareBasicData() {
 		const data = this;
+
+		// Set level
+		Object.defineProperty(this.level, 'value', {
+			configurable: true,
+			enumerable: true,
+			get() {
+				const level = actorClasses.reduce(
+					( add, curr ) => {
+						add.value += curr.system.level.value;
+						return add;
+					}, { value: 0 },
+				);
+				return level.value;
+			},
+			set( newVal ) {
+				delete this.value;
+				this.value = newVal;
+			}
+		});
+
 		const actorClasses = this.parent.items.filter( item => item.type == 'class' ) ?? [];
 		const freeBenefits = actorClasses.reduce(
 			( add, curr ) => {
@@ -100,6 +125,18 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 					add.mp += 5;
 				if ( curr.system.bonus.ip == true )
 					add.ip += 2;
+				return add;
+			}, { hp: 0, mp: 0, ip: 0 },
+		);
+		const actorHeroics = this.parent.items.filter( item => item.type == 'heroicSkill' ) ?? [];
+		const heroicBenefits = actorHeroics.reduce(
+			( add, curr ) => {
+				if ( curr.system.bonus.hp == true )
+					add.hp += data.level.value >= 40 ? 20 : 10;
+				if ( curr.system.bonus.mp == true )
+					add.mp += data.level.value >= 40 ? 20 : 10;
+				if ( curr.system.bonus.ip == true )
+					add.ip += 4;
 				return add;
 			}, { hp: 0, mp: 0, ip: 0 },
 		);
@@ -124,24 +161,10 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			if ( item.system.bonus.projects.value ) data.createProject = true;
 		}
 
-		// Set level
-		Object.defineProperty(this.level, 'value', {
-			configurable: true,
-			enumerable: true,
-			get() {
-				const level = actorClasses.reduce(
-					( add, curr ) => {
-						add.value += curr.system.level.value;
-						return add;
-					}, { value: 0 },
-				);
-				return level.value;
-			},
-			set( newVal ) {
-				delete this.value;
-				this.value = newVal;
-			}
-		});
+		// Set if character can dual wield
+		for ( const item of actorHeroics ) {
+			if ( item.system.bonus.dualWield ) data.dualWield = true;
+		}
 
 		// Max HP
 		Object.defineProperty(this.resources.hp, 'max', {
@@ -149,7 +172,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			enumerable: true,
 			get() {
 				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].base : data.attributes.mig.base;
-				return ( baseAttr * 5 ) + data.level.value + this.bonus + freeBenefits.hp;
+				return ( baseAttr * 5 ) + data.level.value + this.bonus + freeBenefits.hp + heroicBenefits.hp;
 			},
 			set( newVal ) {
 				delete this.max;
@@ -178,7 +201,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			enumerable: true,
 			get() {
 				const baseAttr = Object.keys(FU.attributes).includes(this.attribute) ? data.attributes[this.attribute].base : data.attributes.wlp.base;
-				return ( baseAttr * 5 ) + data.level.value + this.bonus + freeBenefits.mp;
+				return ( baseAttr * 5 ) + data.level.value + this.bonus + freeBenefits.mp + heroicBenefits.mp;
 			},
 			set( newVal ) {
 				delete this.max;
@@ -193,7 +216,7 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			configurable: true,
 			enumerable: true,
 			get() {
-				return 6 + this.bonus + freeBenefits.ip;
+				return 6 + this.bonus + freeBenefits.ip + heroicBenefits.ip;
 			},
 			set( newVal ) {
 				delete this.max;

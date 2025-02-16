@@ -1136,6 +1136,15 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 				<option value="${effect}">${game.i18n.localize(`FU.alchemyEffects.${effect}`)}</option>
 			`;
 		}
+		replaceEffectOptions += `<optgroup label="Se possiedi l'Abilità Eroica 'Segreto del Gran calderone'">`;
+		if ( effect != "13" ) {
+			replaceEffectOptions += `<option value="13">${game.i18n.localize('FU.alchemyEffects.13')}</option>`;
+		}
+		if ( effect != "16" || effect != "17" ) {
+			replaceEffectOptions += `<option value="16-17">${game.i18n.localize('FU.alchemyEffects.16-17')}</option>`;
+		}	
+		replaceEffectOptions += `</optgroup>`;
+		
 		let replacedEffect = await awaitDialogSelect({
 			title: awaitDialogTitle,
 			optionsLabel: `Vuoi utilizzare l'effetto predefinito del risultato o usare un'altra opzione?`,

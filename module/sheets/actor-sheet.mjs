@@ -15,6 +15,15 @@ const NPCaccordions = {
 
 let lastOpennedInnerTab = 'base';
 
+function isDualWieldable( actor, item ) {
+	let result = false;
+	if ( actor.system.dualWield === true && ( item.system.type == 'flail' || item.system.type == 'spear' || item.system.type == 'heavy' || item.system.type == 'sword' ) ) {
+		result = true;
+	}
+
+	return result;
+}
+
 /**
  * Extend basic ActorSheet
  * @extends {ActorSheet}
@@ -226,7 +235,7 @@ export class FabulaActorSheet extends ActorSheet {
 				ui.notifications.warn(`${actor.name} non ha l'abilità di equipaggiare oggetti`);
 			}
 		} else {
-			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
 			ui.notifications.info(`${sourceItem.name} aggiunto all'Actor ${actor.name}`);
 		}
 
@@ -268,7 +277,6 @@ export class FabulaActorSheet extends ActorSheet {
 					},
 				}
 			}).render(true);
-			return true;
 
 		} else if ( sourceItem.type == 'consumable' ) {
 
@@ -431,11 +439,24 @@ export class FabulaActorSheet extends ActorSheet {
 			const heroics = actor.items.filter( item => item.type == 'heroicSkill' );
 			if ( classes.length - heroics.length > 0) {
 
-				let obtainSkill = false;
+				let obtainSkill = true;
+
+				// Check if Heroic Skill is already owned
+				if ( obtainSkill === true && heroics.some( item => item.name == sourceItem.name ) ) {
+					const ownedSkill = heroics.find( item => item.name == sourceItem.name );
+					if ( ownedSkill.system.level.current == ownedSkill.system.level.max ) {
+						ui.notifications.warn(`Non puoi ottenere di nuovo l'Abilità Eroica ${sourceItem.name}!`);
+						return false;
+					} else {
+						const newLevel = ownedSkill.system.level.current + 1;
+						await ownedSkill.update({ 'system.level.current': newLevel });
+						ui.notifications.info(`Abilità Eroica ${sourceItem.name} aumentata di livello!`);
+						return true;
+					}
+				}
 
 				// Check Class
-				if ( sourceItem.system.requirements.class.length > 0 ) {
-					
+				if ( obtainSkill === true && sourceItem.system.requirements.class.length > 0 ) {
 					if ( sourceItem.system.requirements.multiClass ) {
 						const checkClasses = classes.filter( item => item.type == 'class' && sourceItem.system.requirements.class.includes( item.name ) );
 						if ( checkClasses.length >= 2 )
@@ -451,7 +472,7 @@ export class FabulaActorSheet extends ActorSheet {
 				}
 
 				// Check Class Feature
-				if ( sourceItem.system.requirements.classFeature.length > 0 ) {
+				if ( obtainSkill === true && sourceItem.system.requirements.classFeature.length > 0 ) {
 					const allClasses = actor.items.filter( item => item.type == 'class' );
 					if ( !(allClasses.some( (item) => {
 						let checked = false;
@@ -479,25 +500,27 @@ export class FabulaActorSheet extends ActorSheet {
 				}
 
 				// Check Actor level
-				if ( sourceItem.system.requirements.level > 0 ) {
+				if ( obtainSkill === true && sourceItem.system.requirements.level > 0 ) {
 					if ( !(actor.system.level.value >= sourceItem.system.requirements.level) ) obtainSkill = false;
 				}
 
 				// Check Spells
-				if ( sourceItem.system.requirements.spell.length > 0 ) {
+				if ( obtainSkill === true && sourceItem.system.requirements.spell.length > 0 ) {
 					const spells = actor.items.filter( item => item.type == 'spell' );
 					if ( !(sourceItem.system.requirements.spell.every( str => spells.some( item => item.name == str ) )) ) obtainSkill = false;
 				}
 
 				// Check Offensive Spells
-				if ( sourceItem.system.requirements.offensiveSpells > 0 ) {
+				if ( obtainSkill === true && sourceItem.system.requirements.offensiveSpells > 0 ) {
 					const offensiveSpells = actor.items.filter( item => item.type == 'spell' && item.system.isOffensive.value === true );
 					if ( !(offensiveSpells.length >= sourceItem.system.requirements.offensiveSpells) ) obtainSkill = false;
 				}
 
-				if ( obtainSkill ) {
-					actor.createEmbeddedDocuments( 'Item', [sourceItem] );
-					ui.notifications.info(`Abilità Eroica ${sourceItem.name} aggiunta!`);
+				if ( obtainSkill === true ) {
+					const newHeroicSkill = sourceItem.toObject();
+					newHeroicSkill.system.level.current++;
+					await actor.createEmbeddedDocuments( 'Item', [newHeroicSkill] );
+					ui.notifications.info(`Abilità Eroica ${newHeroicSkill.name} aggiunta!`);
 				} else {
 					ui.notifications.warn(`Non possiedi i requisiti necessari per ottenere l'Abilità Eroica ${sourceItem.name}!`);
 				}
@@ -522,7 +545,7 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
-			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
 			
 			// Add weapons to the actor
 			for ( const subItem of sourceItem.flags.fabula?.subItems ) {
@@ -530,9 +553,8 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 		} else {
-			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
 		}
-
 	}
 
 	activateListeners( html ) {
@@ -708,6 +730,27 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 		});
 
+		// Add new resource
+		html.on('click', '.js_addNewResource', async (ev) => {
+			ev.preventDefault();
+			const array = this.actor.system.genericResource;
+			const resources = [...array];
+			resources.push({});
+			await this.actor.update({ 'system.genericResource': resources });
+		});
+
+		// Remove resource by index
+		html.on('click', '.js_deleteResource', async (ev) => {
+			ev.preventDefault();
+			const index = ev.currentTarget.dataset.index;
+			const array = this.actor.system.genericResource;
+			const resources = [...array];
+			if ( index ) {
+				resources.splice( index, 1 );
+				await this.actor.update({ 'system.genericResource': resources });
+			}
+		});
+
 		// Level up Character
 		html.on('click', '.js_levelUpCharacter', this._levelUpCharacter.bind(this));
 		
@@ -833,6 +876,7 @@ export class FabulaActorSheet extends ActorSheet {
 	async _prepareItems(context) {
 		const actor = this.actor;
 
+		context.obtainHeroicSkill = 0;
 		const weapons = [];
 		const armors = [];
 		const shields = [];
@@ -880,8 +924,12 @@ export class FabulaActorSheet extends ActorSheet {
 				arcanums.push(i);
 			} else if (i.type === 'class') {
 				classes.push(i);
+				if ( i.system.level.value >= 10 ) {
+					context.obtainHeroicSkill += 1;
+				}
 			} else if (i.type === 'heroicSkill') {
 				heroicSkills.push(i);
+				context.obtainHeroicSkill -= i.system.level.current;
 			} else if (i.type === 'spell') {
 				spells.push(i);
 			} else if (i.type === 'project') {
@@ -923,6 +971,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.attacks = attacks;
 		context.skills = skills;
 		context.classFeature = {};
+		
 
 		for (const item of this.actor.itemTypes.classFeature) {
 			const featureType = (context.classFeature[item.system.featureType] ??= {
@@ -1400,16 +1449,36 @@ export class FabulaActorSheet extends ActorSheet {
 		if ( item ) {
 			const equippedData = foundry.utils.deepClone(actor.system.equip);
 			let slot;
-			if ( item.type == 'weapon' ) {
-				slot = 'mainHand';
-			} else if ( item.type == 'shield' ) {
-				slot = 'offHand';
-			} else if ( item.type == 'armor' ) {
-				slot = 'armor';
-			} else if ( item.type == 'accessory' ) {
-				slot = 'accessory';
-			} else if ( item.type == 'arcanum' ) {
-				slot = 'arcanum';
+			if ( item.system.isEquipped === false ) {
+				if ( item.type == 'weapon' ) {
+					slot = 'mainHand';
+					if ( !item.system.needTwoHands || isDualWieldable( actor, item ) ) {
+						if (
+							await Dialog.confirm({
+								title: `Stai equipaggiando ${item.name}`,
+								content: `<p>Vuoi equipaggiare questa arma nella Mano Secondaria?</p>`,
+								rejectClose: false,
+							})
+						) {
+							slot = 'offHand';
+						}
+					}
+				} else if ( item.type == 'shield' ) {
+					slot = 'offHand';
+				} else if ( item.type == 'armor' ) {
+					slot = 'armor';
+				} else if ( item.type == 'accessory' ) {
+					slot = 'accessory';
+				} else if ( item.type == 'arcanum' ) {
+					slot = 'arcanum';
+				}
+			} else {
+				for ( const key in equippedData ) {
+					if ( equippedData[key] == itemId ) {
+						slot = key;
+						break;
+					}
+				}
 			}
 
 			if ( actor.type == 'character' && item.system?.isMartial?.value ) {
@@ -1436,7 +1505,7 @@ export class FabulaActorSheet extends ActorSheet {
 				}
 			}
 
-			if ( item.system.needTwoHands ) {
+			if ( item.system.needTwoHands && !isDualWieldable( actor, item ) ) {
 				if ( equippedData.mainHand !== null && equippedData.mainHand !== itemId ) {
 					const mainHandItem = actor.items.find( item => item._id == equippedData.mainHand );
 					if ( mainHandItem.system.isEquipped ) {

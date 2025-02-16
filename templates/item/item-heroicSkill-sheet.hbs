@@ -13,12 +13,9 @@
             <a class="item" data-tab="description">
                 <span>Contenuto</span>
             </a>
-            <a class="item" data-tab="summary">
-                <span>Descrizione</span>
+            <a class="item" data-tab="other">
+                <span>Altro</span>
             </a>
-            {{!-- <a class="item" data-tab="effects">
-                <span>Effetti</span>
-            </a> --}}
         </nav>
     {{/if}}
 
@@ -28,14 +25,25 @@
                 <div class="feature-head">
                     {{#if @root.editable}}
                         <input name="name" type="text" value="{{item.name}}" />
+                        <span>
+                            (<span>l</span><input name="system.level.max" type="number" value="{{system.level.max}}">)
+                        </span>
                     {{else}}
                         {{item.name}}
+                        {{#gt system.level.max 1}}
+                            <span>
+                                (<span>l</span>{{system.level.max}})
+                            </span>
+                        {{/gt}}
                     {{/if}}
                 </div>
                 {{#if (or @root.editable (arrayLengthGt system.requirements.class 0))}}
                     <div class="feature-sub">
                         {{#if @root.editable}}
-                            <button type="button" class="js_editHeroicSkillReq">Modifica</button>
+                            <div class="flexrow">
+                                <button type="button" class="js_editHeroicSkillReq">Modifica</button>
+                                <input type="text" name="system.requirements.other" value="{{system.requirements.other}}" placeholder="Altro..." />
+                            </div>
                         {{/if}}
                         <p>
                             <strong>Requisiti:</strong> {{{system.requirements.desc}}}
@@ -89,16 +97,30 @@
             </div>
         </div>
         
-		<div class="tab summary" data-group="primary" data-tab="summary">
+		<div class="tab other" data-group="primary" data-tab="other">
             <div class="title">Descrizione breve</div>
             {{editor enrichedHtml.summary target="system.summary" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-        </div>
 
-        {{!-- <div class="tab effects" data-group="primary" data-tab="effects">
-            {{#each effects as |category catIndex|}}
-                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../item}}
-            {{/each}}
-        </div> --}}
+            <div class="title">Bonus addizionali</div>
+            <div class="flexrow">
+                <div class="form-group">
+                    <input type="checkbox" name="system.bonus.hp" id="system.bonus.hp" {{checked system.bonus.hp}} />
+                    <label for="system.bonus.hp">Punti Vita</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="system.bonus.mp" id="system.bonus.mp" {{checked system.bonus.mp}} />
+                    <label for="system.bonus.mp">Punti Mente</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="system.bonus.ip" id="system.bonus.ip" {{checked system.bonus.ip}} />
+                    <label for="system.bonus.ip">Punti Inventario</label>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" name="system.bonus.dualWield" id="system.bonus.dualWield" {{checked system.bonus.dualWield}} />
+                    <label for="system.bonus.dualWield" data-tooltip="Permette di equipaggiare alcune armi a due mani in un solo slot">Due armi</label>
+                </div>
+            </div>
+        </div>
     </section>
     
 </form>

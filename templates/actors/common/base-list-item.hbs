@@ -1,13 +1,11 @@
 <li class="{{item.system.sourcebook}}">
-	{{#if (or (eq actor.type 'npc') (and (not item.system.isEquipped) (eq actor.type 'character')))}}
-		<div class="btn-container">
-			{{#if @root.editable}}
-				<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
-					<i class="fa fa-ellipsis-vertical m-0"></i>
-				</button>
-			{{/if}}
-		</div>
-	{{/if}}
+	<div class="btn-container">
+		{{#if @root.editable}}
+			<button type="button" class="btn-action-options" data-item="{{item._id}}" data-tooltip="{{localize 'FU.actions.settings'}}">
+				<i class="fa fa-ellipsis-vertical m-0"></i>
+			</button>
+		{{/if}}
+	</div>
 	<div class="item-box">
 		<div class="item-box-data">
 			{{#if @root.editable}}
@@ -19,6 +17,15 @@
 				</button>
 			{{else}}
 				<label>{{item.name}}</label>
+			{{/if}}
+			
+			
+			{{#if (eq item.type 'heroicSkill')}}
+				{{#gt item.system.level.max 1}}
+					<span class="level-tracker">
+						(<span>l</span>{{item.system.level.current}} / {{item.system.level.max}})
+					</span>
+				{{/gt}}
 			{{/if}}
 
 			{{#if (eq item.type 'weapon')}}

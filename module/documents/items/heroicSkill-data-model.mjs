@@ -14,6 +14,10 @@ export class HeroicSkillDataModel extends foundry.abstract.TypeDataModel {
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new StringField(),
 			description: new HTMLField(),
+			level: new SchemaField({ 
+				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false, }),
+				max: new NumberField({ initial: 1, min: 1, integer: true, nullable: false, }),
+			}),
 			requirements: new SchemaField({
 				class: new ArrayField( new StringField() ),
 				multiClass: new BooleanField({ initial: false }),
@@ -23,6 +27,13 @@ export class HeroicSkillDataModel extends foundry.abstract.TypeDataModel {
 				level: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }),
 				offensiveSpells: new NumberField({ initial: 0, min: 0, integer: true, nullable: true }),
 				spell: new ArrayField( new StringField() ),
+				other: new StringField({ initial: '' }),
+			}),
+			bonus: new SchemaField({
+				hp: new BooleanField({ initial: false }),
+				mp: new BooleanField({ initial: false }),
+				ip: new BooleanField({ initial: false }),
+				dualWield: new BooleanField({ initial: false }),
 			}),
 		};
 	}
@@ -99,6 +110,8 @@ export class HeroicSkillDataModel extends foundry.abstract.TypeDataModel {
 					req += ` <strong>${el}</strong>`
 				});
 			}
+			if ( this.requirements.other != '' )
+				req += ` ${this.requirements.other}`;
 
 			req += '.';
 		}
