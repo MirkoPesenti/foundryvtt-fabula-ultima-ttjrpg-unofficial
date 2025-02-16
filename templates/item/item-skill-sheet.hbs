@@ -1,0 +1,43 @@
+<form class="{{cssClass}} {{item.type}} is-feature flexcol" autocomplete="off">
+
+    <header class="sheet-header">
+        {{#if @root.editable}}
+            <select class="select-source" name="system.sourcebook">
+                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
+            </select>
+        {{/if}}
+    </header>
+
+    <section class="sheet-body">
+        <div class="tab">
+            {{#if @root.editable}}
+                <div class="flexrow">
+                    <div class="form-group">
+                        <label for="system.class">Classe di origine:</label>
+                        <select name="system.class" id="system.class">
+                            {{selectOptions classes selected=system.class localize=true}}
+                        </select>
+                    </div>
+                </div>
+            {{/if}}
+
+            <div class="feature-box">
+                <div class="feature-head">
+                    {{#if @root.editable}}
+                        <input name="name" type="text" value="{{item.name}}" />
+                    {{else}}
+                        {{item.name}}
+                    {{/if}}
+                </div>
+                <div class="feature-body">
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData owner=owner editable=editable }}
+                </div>
+            </div>
+            
+            {{#each subItems}}
+                {{> 'systems/fabula/templates/item/common/weapons.hbs' }}
+            {{/each}}
+        </div>
+    </section>
+    
+</form>

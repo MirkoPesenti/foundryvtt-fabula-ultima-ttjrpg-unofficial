@@ -88,6 +88,18 @@
       "flags": {}
     },
     {
+      "name": "technologies",
+      "label": "Tecnologie",
+      "type": "Item",
+      "system": "fabula",
+      "path": "packs/technologies",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "flags": {}
+    },
+    {
       "name": "consumable",
       "label": "Consumabili",
       "type": "Item",
@@ -201,7 +213,8 @@
         "classfeatures",
         "spells",
         "heroicskill",
-        "arcanum"
+        "arcanum",
+        "technologies"
       ],
       "folders": []
     },

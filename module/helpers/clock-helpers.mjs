@@ -1,5 +1,5 @@
 
-export function openClockDialog( name,  ) {
+export function openClockDialog( name ) {
 	new Dialog({
 		title: 'Stai creando un nuovo Orologio',
 		content: `

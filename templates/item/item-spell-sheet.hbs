@@ -34,6 +34,9 @@
                         <th>{{localize 'FU.MPabbr'}}</th>
                         <th>{{localize 'FU.target'}}</th>
                         <th>{{localize 'FU.duration'}}</th>
+                        {{#if @root.editable}}
+                            <th>Magisfera</th>
+                        {{/if}}
                     </tr>
                 </thead>
                 <tbody>
@@ -69,6 +72,11 @@
                                 {{selectOptions SpellDurations selected=system.duration.value sort=true localize=true}}
                             </select>
                         </td>
+                        {{#if @root.editable}}
+                            <td>
+                                <input type="checkbox" name="system.isMagisphere.value" id="system.isMagisphere.value" {{checked system.isMagisphere.value}}>
+                            </td>
+                        {{/if}}
                     </tr>
                 </tbody>
             </table>

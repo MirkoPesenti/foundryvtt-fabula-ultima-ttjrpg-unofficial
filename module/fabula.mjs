@@ -35,6 +35,7 @@ import { ProjectDataModel } from './documents/items/project-data-model.mjs';
 import { RitualDataModel } from './documents/items/ritual-data-model.mjs';
 import { RuleDataModel } from './documents/items/rule-data-model.mjs';
 import { ShieldDataModel } from './documents/items/shield-data-model.mjs';
+import { SkillDataModel } from './documents/items/skill-data-model.mjs';
 import { SpellDataModel } from './documents/items/spell-data-model.mjs';
 import { WeaponDataModel } from './documents/items/weapon-data-model.mjs';
 
@@ -76,6 +77,7 @@ Hooks.once('init', async () => {
 		ritual: RitualDataModel,
 		rule: RuleDataModel,
 		shield: ShieldDataModel,
+		skill: SkillDataModel,
 		spell: SpellDataModel,
 		weapon: WeaponDataModel,
 	};
@@ -829,14 +831,9 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		const itemID = element.dataset.item;
 		const actorID = element.dataset.actor;
 		const actor = game.actors.get( actorID );
-		let item;
-		let rollTemplate = 'systems/fabula/templates/chat/check-base.hbs';
-		if ( itemID == '' ) {
-			item = null;
-		} else {
+		let item = null;
+		if ( itemID != '' ) {
 			item = actor.items.get( itemID );
-			if ( item.type == 'weapon' )
-				rollTemplate = 'systems/fabula/templates/chat/check-attack.hbs';
 		}
 
 		if ( actor ) {
@@ -896,7 +893,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 						}
 					}
 					
-					await rollDiceToChat( actor, rollFormula, roll, rollMode, item, rollTemplate );
+					await rollDiceToChat( actor, rollFormula, roll, rollMode, item );
 
 				} else {
 					ui.notifications.warn('Non puoi invocare un legame perché non hai abbastanza Punti Fabula');
@@ -1036,15 +1033,21 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 			title: awaitDialogTitle,
 			optionsLabel: 'Scegli quale mix usare (cambierà il costo in PI e il numero di d20 da lanciare):',
 			options: `
-				<option value="base">PI: 3 - 2d20 - Base</option>
-				<option value="advanced">PI: 4 - 3d20 - Avanzato</option>
-				<option value="superior">PI: 5 - 4d20 - Superiore</option>
+				<optgroup label="${game.i18n.localize('FU.alchemyTypes.basic')}">
+					<option value="basic">PI: 3 - 2d20</option>
+				</optgroup>
+				<optgroup label="${game.i18n.localize('FU.alchemyTypes.advanced')}">
+					<option value="advanced">PI: 4 - 3d20</option>
+				</optgroup>
+				<optgroup label="${game.i18n.localize('FU.alchemyTypes.superior')}">
+					<option value="superior">PI: 5 - 4d20</option>
+				</optgroup
 			`,
 		});
 		if ( mix == false ) return false;
 
 		let dices, cost;
-		if ( mix == 'base' ) {
+		if ( mix == 'basic' ) {
 			dices = 2;
 			cost = 3;
 		} else if ( mix == 'advanced' ) {
@@ -1098,7 +1101,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		areaDesc += game.i18n.localize(`FU.alchemyAreas.${areaValue}`);
 
 		newMessageContent = newMessageContent.replace('<td class="area_desc"></td>', `<td class="area_desc">${area} <i class="fa fa-circle-info" data-tooltip="${areaDesc}"></i></td>`);
-		newMessageContent = newMessageContent.replace('data-apply-area',`data-area="${areaValue}">`);
+		newMessageContent = newMessageContent.replace('data-apply-area',`data-area="${areaValue}"`);
 
 		await message.update({ 'content': newMessageContent });
 
@@ -1142,7 +1145,7 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 
 		let effectDesc = game.i18n.localize('FU.alchemyEffects.base') + game.i18n.localize(`FU.alchemyEffects.${replacedEffect}`);
 		newMessageContent = newMessageContent.replace('<td class="effect_desc"></td>', `<td class="effect_desc">${effect} <i class="fa fa-circle-info" data-tooltip="${effectDesc}"></i></td>`);
-		newMessageContent = newMessageContent.replace('data-apply-effect',`data-effect="${replacedEffect}">`);
+		newMessageContent = newMessageContent.replace('data-apply-effect',`data-effect="${replacedEffect}"`);
 		newMessageContent = newMessageContent.replace('class="js_applyAlchemyMix" disabled','class="js_applyAlchemyMix"');
 
 		newMessageContent = newMessageContent.replace('<p class="alchemy_effect"></p>', `<p class="alchemy_effect">${areaDesc}<br>${effectDesc}</p>`);
@@ -1163,95 +1166,220 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 			let selectedTokens = [];
 
 			// Get selected tokens
-			if ( game.user.targets.ids.length > 0 ) {
-				let actorIDs = [...game.user.targets.ids];
-
-				for ( const id of actorIDs ) {
-					let token = canvas.tokens.get( id );
-					if ( token ) {
-						selectedTokens.push( token );
-					}
-				}
+			if ( canvas.tokens.controlled.length > 0 ) {
+				selectedTokens = [ ...canvas.tokens.controlled ];
 			} else {
 				ui.notifications.warn('Devi selezionare almeno un bersaglio');
 				return false;
 			}
 
-			let damageValue = 0;
-			let damageType = '';
-			let healValue = 0;
-			let properties = [];
-
-			// Get effect to apply
-			switch ( effect ) {
-				case '1':
-				case '2':
-					break;
-
-				case 'any-1':
-				case '3':
-				case '4':
-				case '5':
-				case '6':
-				case '7':
-				case '8':
-					damageValue = 20;
-					if ( effect !== 'any-1' ) {
-						if ( actor.system?.level?.value >= 40 ) damageValue = 40;
-						else if ( actor.system?.level?.value >= 20 ) damageValue = 30;
-					}
-					if ( effect == 'any-1' ) damageType = 'poison';
-					else if ( effect == '3' ) damageType = 'air';
-					else if ( effect == '4' ) damageType = 'bolt';
-					else if ( effect == '5' ) damageType = 'dark';
-					else if ( effect == '6' ) damageType = 'earth';
-					else if ( effect == '7' ) damageType = 'fire';
-					else if ( effect == '8' ) damageType = 'ice';
-					properties.push( 'system.resources.hp.current' );
-					break;
-
-				case '9':
-				case '10':
-				case '11':
-					break;
-					
-				case '12':
-				case '13':
-				case '14':
-					break;
-
-				case '15':
-					break;
-
-				case 'any-2':
-				case '18':
-					if ( effect == 'any-2' ) healValue = 30;
-					else if ( effect == '18' ) healValue = 100;
-					properties.push( 'system.resources.hp.current' );
-					break;
-
-				case '19':
-					healValue = 100;
-					properties.push( 'system.resources.mp.current' );
-					break;
-
-				case '16-17':
-				case '20':
-					if ( effect == '16-17' ) healValue = 50;
-					else if ( effect == '18' ) healValue = 100;
-					properties.push( 'system.resources.hp.current' );
-					properties.push( 'system.resources.mp.current' );
-					break;
-			}
-
 			for ( const token of selectedTokens ) {
-				if ( !token.actor ) continue;
-
 				const actor = token.actor;
-				let currentHP = foundry.utils.getProperty( actor, 'system.resources.hp.current' ) || 0;
-				let newHP = Math.max( 0, currentHP - 20 );
+				if ( !actor ) continue;
 
-				await actor.update({ 'system.resources.hp.current': newHP });
+				let damage = 0;
+				let newHP = 0;
+				const currentHP = foundry.utils.getProperty( actor, 'system.resources.hp.current' ) || 0;
+				let newMP = 0;
+				const currentMP = foundry.utils.getProperty( actor, 'system.resources.mp.current' ) || 0;
+
+				// Apply effect
+				switch ( effect ) {
+					// 20 Poison damage
+					case 'any-1':
+						await actor.applyDamage( 20, 'poison' );
+						break;
+
+					// Heal 20 HP
+					case 'any-2':
+						newHP = currentHP + 30;
+						await actor.update({ 'system.resources.hp.current': newHP });
+						break;
+
+					// DEX and MIG are upgrated
+					case '1':
+						await actor.createEmbeddedDocuments('ActiveEffect', [{
+							label: 'Effetto alchimia',
+							origin: actor.uuid,
+							'duration.rounds': 1,
+							disabled: false,
+							changes: [
+								{
+									key: 'system.attributes.dex.current',
+									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+									value: '2',
+								},
+								{
+									key: 'system.attributes.mig.current',
+									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+									value: '2',
+								}
+							],
+						}]);
+						break;
+						
+					// INS and WLP are upgrated
+					case '2':
+						await actor.createEmbeddedDocuments('ActiveEffect', [{
+							label: 'Effetto alchimia',
+							origin: actor.uuid,
+							'duration.rounds': 1,
+							disabled: false,
+							changes: [
+								{
+									key: 'system.attributes.ins.current',
+									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+									value: '2',
+								},
+								{
+									key: 'system.attributes.wlp.current',
+									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+									value: '2',
+								}
+							],
+						}]);
+						break;
+
+					// Level based damage
+					case '3':
+					case '4':
+					case '5':
+					case '6':
+					case '7':
+					case '8':
+						let damageType = '';
+						if ( effect == '3' ) damageType = 'air';
+						else if ( effect == '4' ) damageType = 'bolt';
+						else if ( effect == '5' ) damageType = 'dark';
+						else if ( effect == '6' ) damageType = 'earth';
+						else if ( effect == '7' ) damageType = 'fire';
+						else if ( effect == '8' ) damageType = 'ice';
+
+						if ( actor.system.level.value >= 40 ) damage = 40;
+						else if ( actor.system.level.value >= 20 ) damage = 30;
+						else damage = 20;
+
+						await actor.applyDamage( damage, damageType );
+						break;
+
+					// Resistance to air and fire damage
+					case '9':
+						await actor.createEmbeddedDocuments('ActiveEffect', [{
+							label: 'Effetto alchimia',
+							origin: actor.uuid,
+							disabled: false,
+							changes: [
+								{
+									key: 'system.affinity.air',
+									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+									value: 'resistance',
+								},
+								{
+									key: 'system.affinity.fire',
+									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+									value: 'resistance',
+								}
+							],
+						}]);
+						break;
+
+					// Resistance to bolt and ice damage
+					case '10':
+						await actor.createEmbeddedDocuments('ActiveEffect', [{
+							label: 'Effetto alchimia',
+							origin: actor.uuid,
+							disabled: false,
+							changes: [
+								{
+									key: 'system.affinity.bolt',
+									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+									value: 'resistance',
+								},
+								{
+									key: 'system.affinity.ice',
+									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+									value: 'resistance',
+								}
+							],
+						}]);
+						break;
+
+					// Resistance to dark and earth damage
+					case '11':
+						await actor.createEmbeddedDocuments('ActiveEffect', [{
+							label: 'Effetto alchimia',
+							origin: actor.uuid,
+							disabled: false,
+							changes: [
+								{
+									key: 'system.affinity.dark',
+									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+									value: 'resistance',
+								},
+								{
+									key: 'system.affinity.earth',
+									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
+									value: 'resistance',
+								}
+							],
+						}]);
+						break;
+
+					// Get enraged status
+					case '12':
+						if ( actor.statuses.has( 'enraged' ) === false ) actor.toggleStatusEffect( 'enraged' );
+						break;
+
+					// Get poisoned status
+					case '13':
+						if ( actor.statuses.has( 'poisoned' ) === false ) actor.toggleStatusEffect( 'poisoned' );
+						break;
+						
+					// Get slow, dazed, weak and shaken statuses
+					case '14':
+						if ( actor.statuses.has( 'slow' ) === false ) actor.toggleStatusEffect( 'slow' );
+						if ( actor.statuses.has( 'dazed' ) === false ) actor.toggleStatusEffect( 'dazed' );
+						if ( actor.statuses.has( 'weak' ) === false ) actor.toggleStatusEffect( 'weak' );
+						if ( actor.statuses.has( 'shaken' ) === false ) actor.toggleStatusEffect( 'shaken' );
+
+					// Remove all statuses
+					case '15':
+						if ( actor.statuses.has( 'slow' ) === true ) actor.toggleStatusEffect( 'slow' );
+						if ( actor.statuses.has( 'dazed' ) === true ) actor.toggleStatusEffect( 'dazed' );
+						if ( actor.statuses.has( 'weak' ) === true ) actor.toggleStatusEffect( 'weak' );
+						if ( actor.statuses.has( 'shaken' ) === true ) actor.toggleStatusEffect( 'shaken' );
+						if ( actor.statuses.has( 'enraged' ) === true ) actor.toggleStatusEffect( 'enraged' );
+						if ( actor.statuses.has( 'poisoned' ) === true ) actor.toggleStatusEffect( 'poisoned' );
+						break;
+
+					// Heal 50 HP and PM
+					case '16-17':
+						newHP = currentHP + 50;
+						await actor.update({ 'system.resources.hp.current': newHP });
+						newMP = currentMP + 50;
+						await actor.update({ 'system.resources.mp.current': newMP });
+						break;
+
+					// Heal 100 HP
+					case '18':
+						newHP = currentHP + 100;
+						await actor.update({ 'system.resources.hp.current': newHP });
+						break;
+
+					// Heal 100 MP
+					case '19':
+						newMP = currentMP + 100;
+						await actor.update({ 'system.resources.mp.current': newMP });
+						break;
+
+					// Heal 100 HP and PM
+					case '20':
+						newHP = currentHP + 100;
+						await actor.update({ 'system.resources.hp.current': newHP });
+						newMP = currentMP + 100;
+						await actor.update({ 'system.resources.mp.current': newMP });
+						break;
+				}
 			}
 		}
 	});

@@ -14,6 +14,9 @@
 				</button>
 				<button type="button" class="btn-action-roll name js_rollActorItem" data-itemid="{{item._id}}" data-primary="{{item.system.attributes.primary.value}}" data-secondary="{{item.system.attributes.secondary.value}}" data-tooltip="{{localize 'FU.actions.castSpell'}}">
 					{{item.name}}
+					{{#if system.isMagisphere.value}}
+						({{localize 'FU.magisphere'}})
+					{{/if}}
 					{{#if item.system.isOffensive.value}}
 						<div class="icon icon-offensive"></div>
 					{{/if}}
@@ -21,6 +24,9 @@
 			{{else}}
 				<label>
 					{{item.name}}
+					{{#if system.isMagisphere.value}}
+						({{localize 'FU.magisphere'}})
+					{{/if}}
 					{{#if item.system.isOffensive.value}}
 						<div class="icon icon-offensive"></div>
 					{{/if}}

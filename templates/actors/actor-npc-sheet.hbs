@@ -103,7 +103,7 @@
                                 <div class="progress-bar{{#sm_e system.resources.hp.current system.resources.hp.crisis}} is-crisis-alert{{/sm_e}}">
                                     <div class="bar" style="width:{{percentage system.resources.hp.current system.resources.hp.max}}%"></div>
                                 </div>
-                                <input type="number" min="0" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
+                                <input type="text" class="autoselect" name="system.resources.hp.current" value="{{system.resources.hp.current}}">
                                 <button type="button" class="crisis js_setAttrValue" data-attr="hp" data-value="{{system.resources.hp.crisis}}">
                                     {{system.resources.hp.crisis}}
                                 </button>
@@ -116,7 +116,7 @@
                                 <div class="progress-bar">
                                     <div class="bar" style="width:{{percentage system.resources.mp.current system.resources.mp.max}}%"></div>
                                 </div>
-                                <input type="number" min="0" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
+                                <input type="text" class="autoselect" name="system.resources.mp.current" value="{{system.resources.mp.current}}">
                                 <div class="crisis"></div>
                                 <button type="button" class="max js_setAttrValue" data-attr="mp">{{system.resources.mp.max}}</button>
                             </div>
@@ -144,7 +144,7 @@
                         {{#each system.immunity as |status statusIndex|}}
                             <div data-tooltip="{{localize (concat 'FU.Status.' statusIndex)}}">
                                 <button type="button" class="js_setStatus{{#if status}} is-immune{{/if}}" data-status="{{statusIndex}}">
-                                    <div class="icon icon-{{statusIndex}}"></div>
+                                    <div class="icon icon-{{statusIndex}} active"></div>
                                 </button>
                             </div>
                         {{/each}}

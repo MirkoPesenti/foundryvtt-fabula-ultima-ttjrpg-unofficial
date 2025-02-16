@@ -19,6 +19,13 @@
 
 		{{#if (eq item.name 'Artefice')}}
 			{{> 'systems/fabula/templates/common/class/technologies.hbs'}}
+			<ul class="list">
+				{{#each skills}}
+					{{#if (eq this.system.class 'tinkerer')}}
+						{{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=actor item=this}}
+					{{/if}}
+				{{/each}}
+			</ul>
 		{{/if}}
 
 		{{#each item.flags.fabula.subItems as |feature featureIndex|}}

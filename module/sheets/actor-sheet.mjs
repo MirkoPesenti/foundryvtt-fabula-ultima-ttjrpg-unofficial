@@ -506,6 +506,29 @@ export class FabulaActorSheet extends ActorSheet {
 				ui.notifications.warn(`Non puoi acquisire l'Abilità Eroica ${sourceItem.name} finché non padroneggi un'altra classe!`);
 			}
 
+		} else if ( sourceItem.type == 'skill' ) {
+
+			// Check if actor already has the skill
+			const actorSkills = actor.items.filter( item => item.type == 'skill' && item.name == sourceItem.name );
+			if ( actorSkills.length > 0 ) {
+				ui.notifications.warn(`Non puoi acquisire l'abilità ${sourceItem.name} perché la possiedi già`);
+				return false;
+			}
+
+			// Check if actor has the required class
+			const actorClasses = actor.items.filter( item => item.type === 'class' && item.name == game.i18n.localize(`FU.classes.${sourceItem.system.class}`) );
+			if ( actorClasses.length == 0 ) {
+				ui.notifications.warn(`Non puoi acquisire l'abilità ${sourceItem.name} senza la classe ${game.i18n.localize(`FU.classes.${sourceItem.system.class}`)}`);
+				return false;
+			}
+
+			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			
+			// Add weapons to the actor
+			for ( const subItem of sourceItem.flags.fabula?.subItems ) {
+				await actor.createEmbeddedDocuments("Item", [subItem]);
+			}
+
 		} else {
 			actor.createEmbeddedDocuments( 'Item', [sourceItem] );
 		}
@@ -517,53 +540,6 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Debug Actor
 		html.on('click','.getActor', () => console.log(this.actor));
-
-		// Abilitate operations inside HP / MP / IP inputs
-		// html.on('change',"input[name='system.resources.hp.current']", async (event) => {
-		// 	const operators = [ '-', '+' ];
-		// 	const currentHP = this.actor.system.resources.hp.current;
-		// 	const stringVal = $(event.currentTarget).val();
-		// 	const inputVal = parseFloat( $(event.currentTarget).val() );
-			
-		// 	if ( operators.includes( stringVal[0] ) ) {
-		// 		if ( !isNaN(inputVal) ) {
-		// 			const newHP = currentHP + inputVal;
-		// 			await this.actor.update({ 'system.resources.hp.current': newHP });
-		// 		}
-		// 	} else if ( isNaN(inputVal) ) {
-		// 		await this.actor.update({ 'system.resources.hp.current': currentHP });
-		// 	}
-		// });
-		// html.on('change',"input[name='system.resources.mp.current']", async (event) => {
-		// 	const operators = [ '-', '+' ];
-		// 	const currentMP = this.actor.system.resources.mp.current;
-		// 	const stringVal = $(event.currentTarget).val();
-		// 	const inputVal = parseFloat( $(event.currentTarget).val() );
-			
-		// 	if ( operators.includes( stringVal[0] ) ) {
-		// 		if ( !isNaN(inputVal) ) {
-		// 			const newMP = currentMP + inputVal;
-		// 			await this.actor.update({ 'system.resources.mp.current': newMP });
-		// 		}
-		// 	} else if ( isNaN(inputVal) ) {
-		// 		await this.actor.update({ 'system.resources.mp.current': currentMP });
-		// 	}
-		// });
-		// html.on('change',"input[name='system.resources.ip.current']", async (event) => {
-		// 	const operators = [ '-', '+' ];
-		// 	const currentIP = this.actor.system.resources.ip.current;
-		// 	const stringVal = $(event.currentTarget).val();
-		// 	const inputVal = parseFloat( $(event.currentTarget).val() );
-			
-		// 	if ( operators.includes( stringVal[0] ) ) {
-		// 		if ( !isNaN(inputVal) ) {
-		// 			const newIP = currentIP + inputVal;
-		// 			await this.actor.update({ 'system.resources.ip.current': newIP });
-		// 		}
-		// 	} else if ( isNaN(inputVal) ) {
-		// 		await this.actor.update({ 'system.resources.ip.current': currentIP });
-		// 	}
-		// });
 
 		// Toggle collapse on Sheet open
 		$(html).find('.content-collapse').each((index, element) => {
@@ -616,6 +592,8 @@ export class FabulaActorSheet extends ActorSheet {
 
 			}
 		});
+
+		html.on('click', 'input.autoselect', (e) => e.currentTarget.select() );
 
 		// Open Compendium
 		html.on('click', '.js_openCompendium', this._openCompendium.bind(this));
@@ -867,6 +845,7 @@ export class FabulaActorSheet extends ActorSheet {
 		const rituals = [];
 		const baseItems = [];
 		const attacks = [];
+		const skills = [];
 
 		for ( let i of actor.items ) {
 
@@ -913,6 +892,8 @@ export class FabulaActorSheet extends ActorSheet {
 				baseItems.push(i);
 			} else if (i.type === 'attack') {
 				attacks.push(i);
+			} else if (i.type === 'skill') {
+				skills.push(i);
 			}
 		}
 
@@ -940,6 +921,7 @@ export class FabulaActorSheet extends ActorSheet {
 		context.rituals = rituals;
 		context.baseItems = baseItems;
 		context.attacks = attacks;
+		context.skills = skills;
 		context.classFeature = {};
 
 		for (const item of this.actor.itemTypes.classFeature) {
@@ -1317,11 +1299,10 @@ export class FabulaActorSheet extends ActorSheet {
 		const itemID = element.dataset.itemid;
 		const attrPrimary = element.dataset.primary;
 		const attrSecondary = element.dataset.secondary;
-
+		
 		const item = actor.items.get( itemID );
 		let templateType = item.type;
 		if ( item.type == 'weapon' ) templateType = 'attack';
-		const template = `systems/fabula/templates/chat/check-${templateType}.hbs`;
 
 		let rollString = '';
 		if ( attrPrimary ) {
@@ -1367,7 +1348,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 		}
 
-		await rollDiceToChat( actor, rollString, null, templateType, item, template );
+		await rollDiceToChat( actor, rollString, null, templateType, item );
 	}
 
 	async _setAffinity(event) {
@@ -1660,6 +1641,13 @@ export class FabulaActorSheet extends ActorSheet {
 				`;
 
 			} else if ( type == 'magitech' ) {
+				const pack = game.packs.get('fabula.technologies');
+				if ( pack ) {
+					pack.render(true);
+				} else {
+					ui.notifications.error('Il compendio delle Tecnologie non è stato trovato');
+				}
+				return;
 			} else if ( type == 'infusions' ) {
 				ui.notifications.warn('Puoi creare un\'infusione quando colpisci uno o più bersagli con un attacco');
 				return false;

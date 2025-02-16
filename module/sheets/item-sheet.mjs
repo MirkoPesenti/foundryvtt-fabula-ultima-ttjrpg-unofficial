@@ -43,7 +43,8 @@ export class FabulaItemSheet extends ItemSheet {
 			this.object.type == 'armor' ||
 			this.object.type == 'accessory' ||
 			this.object.type == 'consumable' ||
-			this.object.type == 'ritual'
+			this.object.type == 'ritual' ||
+			this.object.type == 'skill' 
 		)
 			options.height = 500;
 		else
@@ -85,6 +86,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.consumableType = CONFIG.FU.consumableType;
 		context.recoverResources = CONFIG.FU.recoverResources;
 		context.statusses = CONFIG.FU.statusses;
+		context.classes = CONFIG.FU.classes;
 
 		context.enrichedHtml = {
 			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
@@ -443,7 +445,6 @@ export class FabulaItemSheet extends ItemSheet {
 			context.features = features;
 			context.spells = spells;
 			context.subItems = subItems;
-
 		}
 	}
 
@@ -504,7 +505,7 @@ export class FabulaItemSheet extends ItemSheet {
 			await targetItem.setFlag('fabula', 'subItems', subItems);
 			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
 
-		} else if ( targetItem.type == 'classFeature' ) {
+		} else if ( targetItem.type == 'classFeature' || targetItem.type == 'skill' ) {
 
 			// Check if dropped element is Item
 			if ( data.type !== 'Item' ) {

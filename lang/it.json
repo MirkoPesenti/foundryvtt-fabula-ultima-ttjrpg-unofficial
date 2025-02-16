@@ -20,6 +20,7 @@
       "rule": "Regola",
       "spell": "Incantesimo",
       "shield": "Scudo",
+      "skill": "Abilità generica",
       "weapon": "Arma",
       "martialItem": "Oggetto Marziale"
     }
@@ -38,6 +39,36 @@
       "atlasTechnoFantasy": "Atlante Techno Fantasy",
       "atlasNaturalFantasy": "Atlante Natural Fantasy"
     },
+    "classes": {
+      "arcanist": "Arcanista",
+      "chimerist": "Chimerista",
+      "darkblade": "Lama Oscura",
+      "elementalist": "Elementalista",
+      "entropist": "Entropista",
+      "fury": "Furia",
+      "guardian": "Guardiano",
+      "loremaster": "Sapiente",
+      "orator": "Oratore",
+      "rogue": "Canaglia",
+      "sharpshooter": "Tiratore",
+      "spiritist": "Spiritista",
+      "tinkerer": "Artefice",
+      "wayfarer": "Viandante",
+      "weaponmaster": "Maestro d'Armi",
+      "commander": "Comandante",
+      "dancer": "Danzatore",
+      "singer": "Cantore",
+      "symbolist": "Simbolista",
+      "esper": "Esper",
+      "mutant": "Mutante",
+      "pilot": "Pilota",
+      "florist": "Floralista",
+      "gourmet": "Gourmet",
+      "merchant": "Mercante",
+      "summoner": "Invocatore",
+      "cardAce": "Asso delle carte",
+      "necromancer": "Necromante"
+    },
     "attributes": {
       "dex": "Destrezza",
       "ins": "Intuito",
@@ -50,6 +81,14 @@
       "mig": "VIG",
       "wlp": "VOL"
     },
+    "DEXup": "DES sù",
+    "DEXdown": "DES giù",
+    "INSup": "INT sù",
+    "INSdown": "INT giù",
+    "MIGup": "VIG sù",
+    "MIGdown": "VIG giù",
+    "WLPup": "VOL sù",
+    "WLPdown": "VOL giù",
     "D6": "d6",
     "D8": "d8",
     "D10": "d10",
@@ -92,6 +131,7 @@
     "identity": "Identità",
     "theme": "Tema",
     "origin": "Origine",
+    "magisphere": "Magisfera",
     "DamageTypes": {
       "physical": "Fisico",
       "air": "Aria",
@@ -295,6 +335,11 @@
       "infusions": "Infusioni",
       "magitech": "Magitech"
     },
+    "alchemyTypes": {
+      "basic": "Mix Base",
+      "advanced": "Mix Avanzato",
+      "superior": "Mix Superiore"
+    },
     "alchemyAreas": {
       "base": "La pozione ha effetto su ",
       "1-6": "di te <strong>oppure</strong> un alleato a te visibile presente nella scena.",
@@ -325,6 +370,33 @@
       "18": "recupera 100 Punti Vita.",
       "19": "recupera 100 Punti Mente.",
       "20": "recupera 100 Punti Vita e 100 Punti Mente."
+    },
+    "infusions": {
+      "cryo": "Cryo",
+      "pyro": "Pyro",
+      "volt": "Volt",
+      "cyclone": "Ciclone",
+      "exorcism": "Esorcismo",
+      "seismic": "Sisma",
+      "shadow": "Tenebra",
+      "vampire": "Vampiro",
+      "venom": "Tossina"
+    },
+    "infusionsTypes": {
+      "basic": "Infusioni Base",
+      "advanced": "Infusioni Avanzate",
+      "superior": "Infusioni Superiori"
+    },
+    "infusionsEffects": {
+      "cryo": "L'attacco infligge 5 danni extra e tutto il danno diventa da <strong>ghiaccio</strong>.",
+      "pyro": "L'attacco infligge 5 danni extra e tutto il danno diventa da <strong>fuoco</strong>.",
+      "volt": "L'attacco infligge 5 danni extra e tutto il danno diventa da <strong>fulmine</strong>.",
+      "cyclone": "L'attacco infligge 5 danni extra e tutto il danno diventa da <strong>aria</strong>.",
+      "exorcism": "L'attacco infligge 5 danni extra e tutto il danno diventa da <strong>luce</strong>.",
+      "seismic": "L'attacco infligge 5 danni extra e tutto il danno diventa da <strong>terra</strong>.",
+      "shadow": "L'attacco infligge 5 danni extra e tutto il danno diventa da <strong>ombra</strong>.",
+      "vampire": "Scegli un'opzione: recuperi un ammontare di Punti Vita pari a metà dei PV persi dal bersaglio dell'attacco; <strong>oppure</strong> recuperi un'ammontare di Punti Mente pari a metà dei PV persi dal bersaglio dell'attacco.<br /><br />Questa infusione può essere applicata solo ad attacchi che hanno un <strong>singolo</strong> bersaglio.",
+      "venom": "L'attacco infligge 5 danni extra, tutto il danno diventa da <strong>veleno</strong> e ciascuna creatura colpita subisce lo status <strong>avvelenato</strong>."
     }
   }
 }

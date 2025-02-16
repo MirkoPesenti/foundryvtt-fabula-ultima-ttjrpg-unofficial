@@ -20,6 +20,7 @@ FU.ItemTypes = {
 	ritual: 'TYPES.Item.ritual',
 	rule: 'TYPES.Item.rule',
 	shield: 'TYPES.Item.shield',
+	skill: 'TYPES.Item.skill',
 	spell: 'TYPES.Item.spell',
 	weapon: 'TYPES.Item.weapon',
 };
@@ -33,6 +34,37 @@ FU.sourcebook = {
 	atlasTechnoFantasy: 'FU.sourcebook.atlasTechnoFantasy',
 	atlasNaturalFantasy: 'FU.sourcebook.atlasNaturalFantasy',
 }
+
+FU.classes = {
+	arcanist: 'FU.classes.arcanist',
+	chimerist: 'FU.classes.chimerist',
+	darkblade: 'FU.classes.darkblade',
+	elementalist: 'FU.classes.elementalist',
+	entropist: 'FU.classes.entropist',
+	fury: 'FU.classes.fury',
+	guardian: 'FU.classes.guardian',
+	loremaster: 'FU.classes.loremaster',
+	orator: 'FU.classes.orator',
+	rogue: 'FU.classes.rogue',
+	sharpshooter: 'FU.classes.sharpshooter',
+	spiritist: 'FU.classes.spiritist',
+	tinkerer: 'FU.classes.tinkerer',
+	wayfarer: 'FU.classes.wayfarer',
+	weaponmaster: 'FU.classes.weaponmaster',
+	commander: 'FU.classes.commander',
+	dancer: 'FU.classes.dancer',
+	singer: 'FU.classes.singer',
+	symbolist: 'FU.classes.symbolist',
+	esper: 'FU.classes.esper',
+	mutant: 'FU.classes.mutant',
+	pilot: 'FU.classes.pilot',
+	florist: 'FU.classes.florist',
+	gourmet: 'FU.classes.gourmet',
+	merchant: 'FU.classes.merchant',
+	summoner: 'FU.classes.summoner',
+	cardAce: 'FU.classes.cardAce',
+	necromancer: 'FU.classes.necromancer',
+};
 
 /**
  * Ability scores used in the system
@@ -276,4 +308,20 @@ FU.technologies = {
 	alchemy: "FU.technologies.alchemy",
 	infusions: "FU.technologies.infusions",
 	magitech: "FU.technologies.magitech",
+};
+
+FU.infusionsBasic = {
+	cryo: "FU.infusions.cryo",
+	pyro: "FU.infusions.pyro",
+	volt: "FU.infusions.volt",
+};
+FU.infusionsAdvanced = {
+	cyclone: "FU.infusions.cyclone",
+	exorcism: "FU.infusions.exorcism",
+	seismic: "FU.infusions.seismic",
+	shadow: "FU.infusions.shadow",
+};
+FU.infusionsSuperior = {
+	vampire: "FU.infusions.vampire",
+	venom: "FU.infusions.venom",
 };

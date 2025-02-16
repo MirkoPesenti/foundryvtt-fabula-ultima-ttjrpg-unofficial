@@ -26,6 +26,7 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 			type: new SchemaField({ value: new StringField({ initial: '', blank: true, choices: Object.keys(FU.SpellDisciplines) }) }),
 			description: new HTMLField(),
 			isOffensive: new SchemaField({ value: new BooleanField({ initial: false }) }),
+			isMagisphere: new SchemaField({ value: new BooleanField({ initial: false }) }),
 			attributes: new EmbeddedDataField(AttributesDataModel, { initial: { primary: { value: 'ins' }, secondary: { value: 'wlp' } } }),
 			damage: new EmbeddedDataField(DamageDataModel, {}),
 			MPCost: new SchemaField({ 
