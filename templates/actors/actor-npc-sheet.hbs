@@ -324,7 +324,7 @@
                         {{/if}}
                     </div>
                     <ul class="list">
-                        {{#each system.minsResources as |resource resourceIndex|}}
+                        {{#each system.genericResource as |resource resourceIndex|}}
                             <li>
                                 <div class="btn-container">
                                     {{#if @root.editable}}
@@ -336,11 +336,11 @@
                                 <div class="item-box">
                                     <div class="flexrow">
                                         <div class="title title-list">
-                                            <input type="text" name="system.minsResources.{{resourceIndex}}.name" value="{{resource.name}}">
+                                            <input type="text" name="system.genericResource.{{resourceIndex}}.name" value="{{resource.name}}">
                                         </div>
                                         <div class="form-group">
-                                            <label for="system.minsResources.{{resourceIndex}}.value">Quantità</label>
-                                            <input type="number" name="system.minsResources.{{resourceIndex}}.value" id="system.minsResources.{{resourceIndex}}.value" value="{{resource.value}}" min="0">
+                                            <label for="system.genericResource.{{resourceIndex}}.value">Quantità</label>
+                                            <input type="number" name="system.genericResource.{{resourceIndex}}.value" id="system.genericResource.{{resourceIndex}}.value" value="{{resource.value}}" min="0">
                                         </div>
                                     </div>
                                 </div>

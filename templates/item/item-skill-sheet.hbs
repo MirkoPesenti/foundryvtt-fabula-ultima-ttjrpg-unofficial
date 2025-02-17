@@ -19,6 +19,13 @@
                             {{selectOptions classes selected=system.class localize=true}}
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="system.specialSkill">Abilità speciale:</label>
+                        <select name="system.specialSkill" id="system.specialSkill">
+                            {{selectOptions specialSkills selected=system.specialSkill localize=true}}
+                        </select>
+                    </div>
                 </div>
             {{/if}}
 
@@ -26,8 +33,12 @@
                 <div class="feature-head">
                     {{#if @root.editable}}
                         <input name="name" type="text" value="{{item.name}}" />
+                        <input name="system.duration" type="text" class="ml-1" value="{{system.duration}}" />
                     {{else}}
                         {{item.name}}
+                        {{#unless (eq system.duration '')}}
+                            <div class="ml-auto">{{system.duration}}</div>
+                        {{/unless}}
                     {{/if}}
                 </div>
                 <div class="feature-body">

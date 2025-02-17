@@ -548,8 +548,10 @@ export class FabulaActorSheet extends ActorSheet {
 			await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
 			
 			// Add weapons to the actor
-			for ( const subItem of sourceItem.flags.fabula?.subItems ) {
-				await actor.createEmbeddedDocuments("Item", [subItem]);
+			if ( sourceItem.flags?.fabula?.subItems ) {
+				for ( const subItem of sourceItem.flags.fabula?.subItems ) {
+					await actor.createEmbeddedDocuments("Item", [subItem]);
+				}
 			}
 
 		} else {

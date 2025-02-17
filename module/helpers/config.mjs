@@ -304,6 +304,14 @@ FU.species = {
 	humanoid: 'FU.species.humanoid',
 };
 
+FU.specialSkills = {
+	"": "FU.selectOption",
+	alchemy: "FU.technologies.alchemy",
+	infusions: "FU.technologies.infusions",
+	magitech: "FU.technologies.magitech",
+	verses: 'FU.verses.label',
+}
+
 FU.technologies = {
 	alchemy: "FU.technologies.alchemy",
 	infusions: "FU.technologies.infusions",

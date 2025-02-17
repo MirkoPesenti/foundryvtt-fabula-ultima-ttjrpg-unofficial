@@ -331,6 +331,7 @@
       "dismiss": "Congeda"
     },
     "technologies": {
+      "label": "Tecnologie",
       "alchemy": "Alchimia",
       "infusions": "Infusioni",
       "magitech": "Magitech"
@@ -399,6 +400,7 @@
       "venom": "L'attacco infligge 5 danni extra, tutto il danno diventa da <b>veleno</b> e ciascuna creatura colpita subisce lo status <b>avvelenato</b>."
     },
     "verses": {
+      "label": "Versi",
       "volume": {
         "low": "Basso",
         "medium": "Medio",

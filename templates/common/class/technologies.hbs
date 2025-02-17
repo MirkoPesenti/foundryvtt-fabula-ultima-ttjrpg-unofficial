@@ -6,6 +6,7 @@
         </button>
     {{/unless}}
 </p>
+
 {{#each flags.fabula.technologies as |technology technologyIndex|}}
     <div style="margin-right:20px;display:inline-block;">
         <button type="button" class="js_rollTechnology" data-type="{{technology}}">
@@ -16,3 +17,13 @@
         </button>
     </div>
 {{/each}}
+
+{{#gt (arrayLength skills) 0}}
+    <ul class="list">
+        {{#each skills}}
+            {{#if (eq this.system.class 'tinkerer')}}
+                {{> 'systems/fabula/templates/actors/common/base-list-item.hbs' actor=actor item=this}}
+            {{/if}}
+        {{/each}}
+    </ul>
+{{/gt}}

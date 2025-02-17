@@ -360,7 +360,7 @@ Hooks.on("preCreateItem", (item, options, userId) => {
 		}
 	} else if ( item.type == "heroicSkill" ) {
 		if (!item.img || item.img === "icons/svg/item-bag.svg") {
-			item.updateSource({ img: "systems/fabula/assets/icons/default-skill.png" });
+			item.updateSource({ img: "systems/fabula/assets/icons/default-heroicSkill.svg" });
 		}
 	}
 });
