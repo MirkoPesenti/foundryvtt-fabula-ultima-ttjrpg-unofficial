@@ -9,6 +9,12 @@ import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs"
 
 export class FabulaItemSheet extends ItemSheet {
 
+	static MODES = {
+		PLAY: 1,
+		EDIT: 2,
+	};
+	_mode = null;
+
 	static get defaultOptions() {
 		return foundry.utils.mergeObject(super.defaultOptions, {
 			classes: ['fabula', 'sheet', 'item'],
@@ -21,7 +27,18 @@ export class FabulaItemSheet extends ItemSheet {
 		});
 	}
 
-	render( force = false, options = {} ) {
+	async _render( force = false, { mode, ...options } = {} ) {
+		if ( mode === undefined && options.renderContext === 'createItem' ) {
+			mode = this.constructor.MODES.EDIT;
+		}
+		// this._mode = mode ?? this._mode ?? this.constructor.MODES.PLAY;
+		this._mode = mode ?? this._mode ?? this.constructor.MODES.EDIT
+		if ( this.rendered ) {
+			const toggler = this.element[0].querySelector('.window-header .editable-slider');
+			toggler.checked = this._mode === this.constructor.MODES.EDIT;
+		}
+
+		// Set the default sheet height
 		if ( 
 			this.object.type == 'class' || 
 			this.object.type == 'rule' 
@@ -50,7 +67,58 @@ export class FabulaItemSheet extends ItemSheet {
 		else
 			options.height = 300;
 
-		super.render(force, options);
+		return super._render(force, options);
+	}
+
+	async _renderOuter() {
+		const html = await super._renderOuter();
+		const header = html[0].querySelector('.window-header');
+
+		// Edit header buttons
+		header.querySelectorAll('.header-button').forEach(button => {
+			const label = button.querySelector(':scope > i').nextSibling;
+			button.dataset.tooltip = label.textContent;
+			button.setAttribute('aria-label', label.textContent);
+			button.addEventListener('dblclick', e => e.stopPropagation());
+			label.remove();
+		});
+
+		// Add edit toggle
+		if ( this.isEditable ) {
+			const toggler = document.createElement('input');
+			toggler.type = 'checkbox';
+			toggler.checked = this._mode === this.constructor.MODES.EDIT;
+			toggler.classList.add('editable-slider');
+			toggler.dataset.tooltip = 'FU.HP';
+			toggler.setAttribute('aria-label', game.i18n.localize('FU.HP'));
+			toggler.addEventListener('click', this._onToggleEditable.bind(this));
+			toggler.addEventListener('dblclick', e => e.stopPropagation());
+			header.insertAdjacentElement('afterbegin', toggler);
+		}
+		
+
+		// Add UUID Link
+		const firstButton = header.querySelector('.header-button');
+		const UUIDlink = header.querySelector('.document-id-link');
+		if (  UUIDlink ) {
+			firstButton?.insertAdjacentElement('beforebegin', UUIDlink);
+			UUIDlink.classList.add('pseudo-header-button');
+			UUIDlink.dataset.tooltipDirection = 'DOWN';
+		}
+		
+		return html;
+	}
+
+	async _onToggleEditable(event) {
+		const { MODES } = this.constructor;
+		const toggler = event.currentTarget;
+		const label = game.i18n.localize('FU.MP');
+		toggler.dataset.tooltip = label;
+		toggler.setAttribute('aria-label', label);
+		this._mode = toggler.checked ? MODES.EDIT : MODES.PLAY;
+
+		await this.submit();
+		this.render();
 	}
 
 	get template() {
@@ -62,11 +130,14 @@ export class FabulaItemSheet extends ItemSheet {
 		const context = super.getData();
 		const itemData = context.item;
 
+		context.editable = this.isEditable && this._mode === this.constructor.MODES.EDIT;
+		context.cssClass = context.editable ? 'editable' : ( this.editable ? 'interactable' : 'locked' );
+
 		context.system = itemData.system;
 		context.flags = itemData.flags;
 
 		await this._prepareFlags(context);
-
+		
 		// Add required CONFIG data
 		context.sourcebook = CONFIG.FU.sourcebook;
 		context.ItemTypes = CONFIG.FU.ItemTypes;
@@ -112,14 +183,6 @@ export class FabulaItemSheet extends ItemSheet {
 		}
 
 		context.FU = FU;
-
-		// Add class to Sheet based of Item sourcebook
-		const sourcebookClass = context.item.system.sourcebook;
-		if ( sourcebookClass ) {
-			itemData._sheet.options.classes.splice(-1);
-			itemData._sheet.options.classes.push(sourcebookClass);
-			itemData._sheet.render(true);
-		}
 
 		return context;
 	}

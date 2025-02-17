@@ -1,7 +1,5 @@
-2025/02/16-20:22:14.388 1bbc Recovering log #303
-2025/02/16-20:22:14.395 1bbc Delete type=0 #303
-2025/02/16-20:22:14.395 1bbc Delete type=3 #301
-2025/02/16-23:23:20.317 2df4 Level-0 table #308: started
-2025/02/16-23:23:20.317 2df4 Level-0 table #308: 0 bytes OK
-2025/02/16-23:23:20.319 2df4 Delete type=0 #306
-2025/02/16-23:23:20.323 2df4 Manual compaction at level-0 from '!folders!0A9jhP3SrTyOtqee' @ 72057594037927935 : 1 .. '!items.effects!uCRVkaH5Ax5sTEoH.jfr4YExMT4lXiwyc' @ 0 : 0; will stop at (end)
+2025/02/17-20:05:54.708 59c Log #310: 0 ops saved to Table #311 OK
+2025/02/17-20:05:54.709 59c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures/000310.log: OK
+2025/02/17-20:05:54.709 59c Table #300: 39 entries OK
+2025/02/17-20:05:54.714 59c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures/MANIFEST-000309: OK
+2025/02/17-20:05:54.717 59c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\npcFeatures; recovered 1 files; 16996 bytes. Some data may have been lost. ****

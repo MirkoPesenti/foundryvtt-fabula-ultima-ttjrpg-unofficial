@@ -14,6 +14,7 @@ export class ArcanumDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { StringField, HTMLField, ArrayField, SchemaField, BooleanField, EmbeddedDataField } = foundry.data.fields;
 		return {
+			identifier: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new StringField(),
 			isEquipped: new BooleanField({ initial: false }),

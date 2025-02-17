@@ -11,6 +11,7 @@ export class AccessoryDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, NumberField, BooleanField } = foundry.data.fields;
 		return {
+			identifier: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			description: new HTMLField(),
 			rarity: new StringField({ initial: 'rare', choices: Object.keys(FU.rarityList) }),

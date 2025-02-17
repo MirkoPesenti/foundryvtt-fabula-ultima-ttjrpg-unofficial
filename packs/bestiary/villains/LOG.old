@@ -1,7 +1,5 @@
-2025/02/16-20:22:14.399 24cc Recovering log #296
-2025/02/16-20:22:14.406 24cc Delete type=0 #296
-2025/02/16-20:22:14.406 24cc Delete type=3 #294
-2025/02/16-23:23:20.320 2df4 Level-0 table #301: started
-2025/02/16-23:23:20.320 2df4 Level-0 table #301: 0 bytes OK
-2025/02/16-23:23:20.323 2df4 Delete type=0 #299
-2025/02/16-23:23:20.323 2df4 Manual compaction at level-0 from '!actors!TONtHhB5kAUyCk2O' @ 72057594037927935 : 1 .. '!folders!mks826wxbmJVNQKC' @ 0 : 0; will stop at (end)
+2025/02/17-20:05:54.729 a00 Log #303: 0 ops saved to Table #304 OK
+2025/02/17-20:05:54.729 a00 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/000303.log: OK
+2025/02/17-20:05:54.729 a00 Table #293: 43 entries OK
+2025/02/17-20:05:54.733 a00 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains/MANIFEST-000302: OK
+2025/02/17-20:05:54.737 a00 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\bestiary\villains; recovered 1 files; 24330 bytes. Some data may have been lost. ****

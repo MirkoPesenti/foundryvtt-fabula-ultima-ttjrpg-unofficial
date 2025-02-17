@@ -12,6 +12,7 @@ export class NpcDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, EmbeddedDataField, HTMLField, NumberField, BooleanField } = foundry.data.fields;
 		return {
+			identifier: new StringField(),
 			description: new HTMLField(),
 			traits: new StringField(),
 			level: new SchemaField({ value: new NumberField({ initial: 5, min: 5, max: 60, integer: true, nullable: false }) }),

@@ -12,6 +12,7 @@ export class ConsumableDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { StringField, HTMLField, NumberField, EmbeddedDataField, SchemaField, BooleanField } = foundry.data.fields;
 		return {
+			identifier: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			type: new StringField({ initial: 'potion', choices: Object.keys(FU.consumableType) }),
 			description: new HTMLField(),

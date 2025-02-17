@@ -1,7 +1,5 @@
-2025/02/16-20:22:14.353 24cc Recovering log #363
-2025/02/16-20:22:14.359 24cc Delete type=0 #363
-2025/02/16-20:22:14.359 24cc Delete type=3 #361
-2025/02/16-23:23:20.305 2df4 Level-0 table #368: started
-2025/02/16-23:23:20.306 2df4 Level-0 table #368: 0 bytes OK
-2025/02/16-23:23:20.308 2df4 Delete type=0 #366
-2025/02/16-23:23:20.311 2df4 Manual compaction at level-0 from '!folders!07TSPQhwHm5R6N2R' @ 72057594037927935 : 1 .. '!items.effects!yMTq4SCt7iPtZTGX.UXUSWGvHsoKXmwN0' @ 0 : 0; will stop at (end)
+2025/02/17-20:05:54.644 59c Log #370: 0 ops saved to Table #371 OK
+2025/02/17-20:05:54.645 59c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment/000370.log: OK
+2025/02/17-20:05:54.646 59c Table #360: 448 entries OK
+2025/02/17-20:05:54.650 59c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment/MANIFEST-000369: OK
+2025/02/17-20:05:54.654 59c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\equipment; recovered 1 files; 139217 bytes. Some data may have been lost. ****

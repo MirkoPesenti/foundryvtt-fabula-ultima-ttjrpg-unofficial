@@ -10,6 +10,7 @@ export class ShieldDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { StringField, HTMLField } = foundry.data.fields;
 		return {
+			identifier: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new StringField(),
 			description: new HTMLField(),

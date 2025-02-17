@@ -13,6 +13,7 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, HTMLField, NumberField, StringField, BooleanField } = foundry.data.fields;
 		return {
+			identifier: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			origin: new StringField({ initial: '' }),
 			description: new HTMLField(),

@@ -9,6 +9,7 @@ import { FabulaItemSheet } from './sheets/item-sheet.mjs';
 
 // Helpers
 import { FU, SYSTEM } from './helpers/config.mjs';
+import { slugify } from './utilities.mjs';
 import { awaitDialogSelect, generateDataLink } from './helpers/helpers.mjs';
 import { preloadPartialTemplates } from './helpers/templates.mjs';
 import { rollDiceToChat } from './helpers/roll-helpers.mjs';
@@ -54,6 +55,9 @@ Hooks.once('init', async () => {
 	game.fabula = {
 		FabulaActor,
 		FabulaItem,
+		utils: {
+			slugify,
+		},
 	};
 
 	// Custom document classes
@@ -128,7 +132,8 @@ Hooks.once('ready', async function () {
 
 });
 
-Hooks.on("renderPause", (app, [html]) => {
+Hooks.on('renderPause', (app, [html]) => {
+	// Change pause image
 	html.classList.add("fabula");
 	const img = html.querySelector("img");
 	img.src = "systems/fabula/assets/icons/icon-fabula.svg";
@@ -136,6 +141,7 @@ Hooks.on("renderPause", (app, [html]) => {
 });
 
 Hooks.on('getSceneControlButtons', (controls) => {
+	// Add clock button
 	controls.push({
 		name: 'clock',
 		title: 'CONTROLS.GroupClock',
@@ -157,6 +163,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 
 Hooks.on('renderJournalPageSheet', async (app, html, data) => {
 
+	// Render journal tracker
 	const journal = await initSessionJournal();
 	if ( journal._id === data.document.parent._id ) {
 		html.on('click', '.js_giveExperienceSessionEnd', async (e) => {
@@ -354,89 +361,51 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 });
 
 Hooks.on("preCreateItem", (item, options, userId) => {
-	if ( item.type == "rule" ) {
-		if (!item.img || item.img === "icons/svg/item-bag.svg") {
-			item.updateSource({ img: "systems/fabula/assets/icons/default-rule.png" });
-		}
-	} else if ( item.type == "heroicSkill" ) {
-		if (!item.img || item.img === "icons/svg/item-bag.svg") {
-			item.updateSource({ img: "systems/fabula/assets/icons/default-heroicSkill.svg" });
-		}
-	}
-});
 
-Hooks.on('updateItem', async ( item, updateData, options, userId ) => {
-	if ( item.type === 'project' && item.system.progress.current > item.system.progress.max ) {
-		await item.update({ 'system.progress.current': item.system.progress.max });
+	// Generate identifier
+	if ( !item.system.identifier && item.name )  {
+		const id = game.fabula.utils.slugify( item.name );
+		if ( id ) {
+			item.updateSource({ 'system.identifier': id });
+		} else {
+			console.error(`IDENTIFIER generation failed on Item: ${item.name}`);
+		}
 	}
+
+	// Set default image
+	if ( !item.img || item.img === "icons/svg/item-bag.svg" ) {
+		if ( item.type == 'rule' ) {
+			item.updateSource({ img: 'systems/fabula/assets/icons/default-rule.png' });
+		} else {
+			item.updateSource({ img: `systems/fabula/assets/icons/default-${item.type}.svg` });
+		}
+	}
+
 });
 
 Hooks.on('renderItemSheet', (sheet, html, data) => {
 	const item = sheet.item;
 
-	if ( item.type == 'rule' ) {
-		const heroicSkillReq = document.querySelectorAll('#js_heroicSkillRequirements');
-		heroicSkillReq.forEach(async element => {
+	// Change sheet theme based on sourcebook
+	if ( item.system.sourcebook && sheet.options.classes ) {
+		for ( const key in FU.sourcebook ) {
+			html[0].classList.remove( key );
+		}
+		html[0].classList.add( item.system.sourcebook );
+	}
 
-			const uuid = $(element).data('uuid');
-			if ( uuid ) {
-				const itemData = await fromUuid( uuid );
-				if ( itemData.system.requirements.class.length > 0 ) {
+});
 
-					let template = '<strong>';
-					if ( itemData.system.requirements.multiClass )
-						template += 'Due tra ';
+Hooks.on("preCreateActor", (actor, options, userId) => {
 
-					for ( let i = 0; i < itemData.system.requirements.class.length; i++ ) {
-						if ( i > 0 ) {
-							if ( i == itemData.system.requirements.class.length - 1 ) {
-								if ( itemData.system.requirements.multiClass )
-									template += ' e ';
-								else
-									template += ' o ';
-							} else {
-								template += ', ';
-							}
-						}
-						template += itemData.system.requirements.class[i];
-					}
-					template += '</strong>';
-					$(element).html( template );
-
-				}
-			}
-
-		});
-
-		const heroicSkillSum = document.querySelectorAll('#js_heroicSkillSummary');
-		heroicSkillSum.forEach(async element => {
-
-			const uuid = $(element).data('uuid');
-			if ( uuid ) {
-				const itemData = await fromUuid( uuid );
-				if ( itemData.system.summary ) {
-					$(element).html( itemData.system.summary );
-				} else {
-					$(element).prev().attr('colspan','2');
-					$(element).remove();
-				}
-			}
-
-		});
-
-		const arcanumDomain = document.querySelectorAll('#js_arcanumDomain');
-		arcanumDomain.forEach(async element => {
-
-			const uuid = $(element).data('uuid');
-			if ( uuid ) {
-				const itemData = await fromUuid( uuid );
-				if ( itemData.system.domain ) {
-					$(element).attr('style','text-align:center');
-					$(element).html( '<strong>Domini:</strong> ' + itemData.system.domain );
-				}
-			}
-
-		});
+	// Generate identifier
+	if ( !actor.system.identifier && actor.name )  {
+		const id = game.fabula.utils.slugify( actor.name );
+		if ( id ) {
+			actor.updateSource({ 'system.identifier': id });
+		} else {
+			console.error(`IDENTIFIER generation failed on Actor: ${actor.name}`);
+		}
 	}
 
 });
@@ -465,8 +434,8 @@ Hooks.on('preUpdateActor', async (actor, updateData, options, userId) => {
 	}
 });
 
-// Check if actor is immune to status
 Hooks.on('preCreateActiveEffect', (effect, options, userId) => {
+	// Check if actor is immune to status
 	const actor = effect.parent;
 	if ( !actor || !actor.system || !actor.system.immunity ) return;
 
@@ -482,314 +451,6 @@ Hooks.on('preCreateActiveEffect', (effect, options, userId) => {
 
 	return true;
 });
-
-// let characterCreationOpen = false;
-// Hooks.on('renderActorSheet', (sheet, html, data)  => {
-// 	const actor = sheet.actor;
-
-// 	if ( characterCreationOpen ) return;
-
-// 	characterCreationOpen = true;
-
-// 	// Continue only if Actor is character
-// 	if ( actor.type != 'character' ) return;
-
-// 	// Continue only if Actor is level 5 or above
-// 	if ( actor.system.level.value >= 5 ) return;
-
-// 	let currentStep = 0;
-
-// 	// Prepare classes options
-// 	const pack = game.packs.get('fabula.classes');
-// 	const sortedPack = pack.index.contents.sort( ( a, b ) => a.name.localeCompare(b.name) );
-// 	const actorClasses = actor.getFlag('fabula', 'classes') || [];
-// 	const actorClassFeatures = actor.getFlag('fabula', 'classFeatures') || [];
-// 	let classOptions = '';
-// 	sortedPack.forEach((value, key) => {
-// 		classOptions += `
-// 			<div class="form-group">
-// 				<label for="class_${value.name}">${value.name}</label>
-// 				<input type="radio" name="formClass" id="class_${value.name}" value="${value._id}" />
-// 			</div>
-// 		`;
-// 	});
-
-// 	const steps = [
-// 		{
-// 			title: 'Crea l\'Identità',
-// 			content: `
-// 				<p>Crea l'<strong>Identità</strong> del personaggio: una breve frase che descrive con poche parole come vede sé stesso in questo momento.</p>
-// 				<input type="text" name="formIdentity" placeholder="Identità" value="${actor.system.features.identity}" />
-// 			`,
-// 			validate: async (html) => {
-// 				const identity = html.find('[name="formIdentity"]').val();
-// 				if ( !identity ) {
-// 					ui.notifications.warn(`Devi inserire un'Identità`);
-// 					return false;
-// 				}
-// 				await actor.update({ 'system.features.identity': identity });
-// 				return true;
-// 			}
-// 		},
-// 		{
-// 			title: 'Scegli o crea il Tema',
-// 			content: `
-// 				<p>Scegli o crea il <strong>Tema</strong> del personaggio: un ideale, un'emozione o un sentimento che ne domina le azioni.</p>
-// 				<input type="text" name="formTheme" placeholder="Tema" value="${actor.system.features.theme}" />
-// 			`,
-// 			validate: async (html) => {
-// 				const theme = html.find('[name="formTheme"]').val();
-// 				if ( !theme ) {
-// 					ui.notifications.warn(`Devi inserire un Tema`);
-// 					return false;
-// 				}
-// 				await actor.update({ 'system.features.theme': theme });
-// 				return true;
-// 			}
-// 		},
-// 		{
-// 			title: 'Scegli o crea l\'Origine',
-// 			content: `
-// 				<p>Scegli o crea l'<strong>Origine</strong> del personaggio: il luogo da cui proviene. Puoi usare uno di quelli già presenti sulla <strong>scheda del mondo</strong> o crearne uno nuovo.</p>
-// 				<input type="text" name="formOrigin" placeholder="Origine" value="${actor.system.features.origin}" />
-				
-// 			`,
-// 			validate: async (html) => {
-// 				const origin = html.find('[name="formOrigin"]').val();
-// 				if ( !origin ) {
-// 					ui.notifications.warn(`Devi inserire un'Origine`);
-// 					return false;
-// 				}
-// 				await actor.update({ 'system.features.origin': origin });
-// 				return true;
-// 			}
-// 		},
-// 		{
-// 			title: 'Opzione di livello 1 (1/5)',
-// 			content: `
-// 				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
-// 				${classOptions}
-// 			`,
-// 			validate: async (html) => {
-// 				const classID = html.find('[name="formClass"]:checked').val();
-// 				if ( !classID ) {
-// 					ui.notifications.warn('Devi scegliere una classe');
-// 					return false;
-// 				}
-// 				actorClasses.splice( 0, actorClasses.length );
-// 				if ( actorClassFeatures.length > 0 ) {
-// 					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-// 						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-// 					else 
-// 						actorClassFeatures.splice( 0, actorClassFeatures.length );
-// 				}
-// 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
-// 			}
-// 		},
-// 		{
-// 			title: 'Opzione di livello 2 (2/5)',
-// 			content: `
-// 				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
-// 				${classOptions}
-// 			`,
-// 			validate: async (html) => {
-// 				const classID = html.find('[name="formClass"]:checked').val();
-// 				if ( !classID ) {
-// 					ui.notifications.warn('Devi scegliere una classe');
-// 					return false;
-// 				}
-// 				actorClasses.splice( 1, actorClasses.length - 1 );
-// 				if ( actorClassFeatures.length > 0 ) {
-// 					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-// 						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-// 					else 
-// 						actorClassFeatures.splice( 1, actorClassFeatures.length - 1 );
-// 				}
-// 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
-// 			}
-// 		},
-// 		{
-// 			title: 'Opzione di livello 3 (3/5)',
-// 			content: `
-// 				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
-// 				${classOptions}
-// 			`,
-// 			validate: async (html) => {
-// 				const classID = html.find('[name="formClass"]:checked').val();
-// 				if ( !classID ) {
-// 					ui.notifications.warn('Devi scegliere una classe');
-// 					return false;
-// 				}
-// 				actorClasses.splice( 2, actorClasses.length - 2 );
-// 				if ( actorClassFeatures.length > 0 ) {
-// 					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-// 						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-// 					else 
-// 						actorClassFeatures.splice( 2, actorClassFeatures.length - 2 );
-// 				}
-// 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
-// 			}
-// 		},
-// 		{
-// 			title: 'Opzione di livello 4 (4/5)',
-// 			content: `
-// 				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
-// 				${classOptions}
-// 			`,
-// 			validate: async (html) => {
-// 				const classID = html.find('[name="formClass"]:checked').val();
-// 				if ( !classID ) {
-// 					ui.notifications.warn('Devi scegliere una classe');
-// 					return false;
-// 				}
-// 				actorClasses.splice( 3, actorClasses.length - 3 );
-// 				if ( actorClassFeatures.length > 0 ) {
-// 					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-// 						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-// 					else 
-// 						actorClassFeatures.splice( 3, actorClassFeatures.length - 3 );
-// 				}
-// 				return await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
-// 			}
-// 		},
-// 		{
-// 			title: 'Opzione di livello 5 (5/5)',
-// 			content: `
-// 				<p>Scegli due o tre <strong>Classi</strong> e distribuisci tra loro i cinque livelli iniziali. Annota i <strong>benefici gratuiti</strong> e le <strong>Abilità</strong> così ottenuti.</p>
-// 				${classOptions}
-// 			`,
-// 			validate: async (html) => {
-// 				const classID = html.find('[name="formClass"]:checked').val();
-// 				if ( !classID ) {
-// 					ui.notifications.warn('Devi scegliere una classe');
-// 					return false;
-// 				}
-// 				actorClasses.splice( 4, actorClasses.length - 4 );
-// 				if ( actorClassFeatures.length > 0 ) {
-// 					if ( actorClassFeatures[actorClassFeatures.length - 1].system.level.current > 1 )
-// 						actorClassFeatures[actorClassFeatures.length - 1].system.level.current--;
-// 					else 
-// 						actorClassFeatures.splice( 4, actorClassFeatures.length - 4 );
-// 				}
-// 				let classResult = await addClassToActor( classID, actorClasses, actorClassFeatures, actor );
-// 				if ( actorClasses.length < 2 ) {
-// 					ui.notifications.warn('Devi scegliere almeno due classi');
-// 					return false;
-// 				}
-// 				return classResult;
-// 			}
-// 		},
-// 		{
-// 			title: 'Determina la Taglia di Dado base delle caratteristiche',
-// 			content: `
-// 				<p>Determina la taglia di dado base delle quattro <strong>Caratteristiche</strong> del personaggio: <strong>Destrezza, Intuito, Vigore</strong> e <strong>Volontà</strong>.</p>
-// 				<p>
-// 					Taglie possibili: <br>
-// 					Tuttofare - D8, D8, D8, D8 <br>
-// 					Nemma media - D10, D8, D8, D6 <br>
-// 					Specializzato - D10, D10, D6, D6
-// 				</p>
-// 				<div class="form-group">
-// 					<label>Destrezza (DES)</label>
-// 					<select id="dex">
-// 						<option value="6" ${actor.system.attributes.dex.value == 6 ? 'selected' : ''}>D6</option>
-// 						<option value="8" ${actor.system.attributes.dex.value == 8 ? 'selected' : ''}>D8</option>
-// 						<option value="10" ${actor.system.attributes.dex.value == 10 ? 'selected' : ''}>D10</option>
-// 					</select>
-// 				</div>
-// 				<div class="form-group">
-// 					<label>Intuito (INT)</label>
-// 					<select id="ins">
-// 						<option value="6" ${actor.system.attributes.ins.value == 6 ? 'selected' : ''}>D6</option>
-// 						<option value="8" ${actor.system.attributes.ins.value == 8 ? 'selected' : ''}>D8</option>
-// 						<option value="10" ${actor.system.attributes.ins.value == 10 ? 'selected' : ''}>D10</option>
-// 					</select>
-// 				</div>
-// 				<div class="form-group">
-// 					<label>Vigore (VIG)</label>
-// 					<select id="mig">
-// 						<option value="6" ${actor.system.attributes.mig.value == 6 ? 'selected' : ''}>D6</option>
-// 						<option value="8" ${actor.system.attributes.mig.value == 8 ? 'selected' : ''}>D8</option>
-// 						<option value="10" ${actor.system.attributes.mig.value == 10 ? 'selected' : ''}>D10</option>
-// 					</select>
-// 				</div>
-// 				<div class="form-group">
-// 					<label>Volontà (VOL)</label>
-// 					<select id="wlp">
-// 						<option value="6" ${actor.system.attributes.wlp.value == 6 ? 'selected' : ''}>D6</option>
-// 						<option value="8" ${actor.system.attributes.wlp.value == 8 ? 'selected' : ''}>D8</option>
-// 						<option value="10" ${actor.system.attributes.wlp.value == 10 ? 'selected' : ''}>D10</option>
-// 					</select>
-// 				</div>
-// 			`,
-// 			validate: async (html) => {
-// 				const params = { 
-// 					dex: html.find('#dex').val(),
-// 					ins: html.find('#ins').val(),
-// 					mig: html.find('#mig').val(),
-// 					wlp: html.find('#wlp').val(),
-// 				};
-// 				if ( checkParams( params ) ) {
-// 					await actor.update({ 'system.attributes.dex.value': params.dex });
-// 					await actor.update({ 'system.attributes.ins.value': params.ins });
-// 					await actor.update({ 'system.attributes.mig.value': params.mig });
-// 					await actor.update({ 'system.attributes.wlp.value': params.wlp });
-// 					return true;
-// 				} else {
-// 					ui.notifications.warn('Devi selezionare una combinazione di attrivuti accettabili');
-// 					return false;
-// 				}
-// 			}
-// 		}
-// 	];
-
-// 	function updateDialog() {
-// 		const step = steps[currentStep];
-// 		new Dialog({
-// 			title: step.title,
-// 			content: step.content,
-// 			buttons: {
-// 				back: {
-// 					label: currentStep === 0 ? 'Annulla' : 'Indietro',
-// 					callback: () => {
-// 						if ( currentStep > 0 ) {
-// 							currentStep--;
-// 							updateDialog();
-// 						}
-// 					},
-// 				},
-// 				next: {
-// 					label: currentStep === steps.length - 1 ? 'Conferma' : 'Avanti',
-// 					callback: async (html) => {
-// 						const result = await step.validate(html);
-// 						if ( result ) {
-// 							if ( currentStep < steps.length - 1 ) {
-// 								currentStep++;
-// 								updateDialog();
-// 							} else {
-// 								characterCreationOpen = false;
-// 								ui.notifications.info('Personaggio creato con successo');
-// 							}
-// 						} else {
-// 							updateDialog();
-// 						}
-// 					},
-// 				}
-// 			},
-// 			close: (html) => {
-// 				if ( currentStep === steps.length ) {
-// 					characterCreationOpen = false;
-// 				} else {
-// 					const isNext = html.find('.dialog-button.next').is(':focus');
-// 					if ( !isNext )
-// 						characterCreationOpen = false;
-// 				}
-// 			}
-// 		}).render(true);
-// 	}
-
-// 	updateDialog();
-// });
 
 Hooks.on('renderChatMessage', (message, html, data) => {
 	const customClass = message.flags.customClass;
