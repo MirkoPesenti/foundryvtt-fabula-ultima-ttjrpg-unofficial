@@ -10,7 +10,7 @@ export class BaseDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { StringField, HTMLField, BooleanField } = foundry.data.fields;
 		return {
-			identifier: new StringField(),
+			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			description: new HTMLField(),
 			rule: new BooleanField({ initial: false }),

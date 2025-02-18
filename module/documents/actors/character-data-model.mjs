@@ -16,7 +16,6 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, HTMLField, StringField, EmbeddedDataField, ArrayField, NumberField, BooleanField } = foundry.data.fields;
 		return {
-			identifier: new StringField(),
 			description: new HTMLField(),
 			features: new SchemaField({
 				pronouns: new StringField({ initial: '' }),

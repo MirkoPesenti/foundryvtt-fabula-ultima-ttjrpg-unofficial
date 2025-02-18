@@ -84,8 +84,8 @@ export class FabulaActorSheet extends ActorSheet {
 			toggler.type = 'checkbox';
 			toggler.checked = this._mode === this.constructor.MODES.EDIT;
 			toggler.classList.add('editable-slider');
-			toggler.dataset.tooltip = 'FU.HP';
-			toggler.setAttribute('aria-label', game.i18n.localize('FU.HP'));
+			toggler.dataset.tooltip = 'FU.SheetModePlay';
+			toggler.setAttribute('aria-label', game.i18n.localize('FU.SheetModePlay'));
 			toggler.addEventListener('click', this._onToggleEditable.bind(this));
 			toggler.addEventListener('dblclick', e => e.stopPropagation());
 			header.insertAdjacentElement('afterbegin', toggler);
@@ -107,7 +107,7 @@ export class FabulaActorSheet extends ActorSheet {
 	async _onToggleEditable(event) {
 		const { MODES } = this.constructor;
 		const toggler = event.currentTarget;
-		const label = game.i18n.localize('FU.MP');
+		const label = game.i18n.localize('FU.SheetModeEdit');
 		toggler.dataset.tooltip = label;
 		toggler.setAttribute('aria-label', label);
 		this._mode = toggler.checked ? MODES.EDIT : MODES.PLAY;

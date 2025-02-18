@@ -11,7 +11,7 @@ export class HeroicSkillDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, ArrayField, NumberField, BooleanField } = foundry.data.fields;
 		return {
-			identifier: new StringField(),
+			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			summary: new StringField(),
 			description: new HTMLField(),

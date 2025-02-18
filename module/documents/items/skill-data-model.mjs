@@ -7,7 +7,7 @@ export class SkillDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { StringField, HTMLField } = foundry.data.fields;
 		return {
-			identifier: new StringField(),
+			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			description: new HTMLField(),
 			class: new StringField({ initial: 'arcanist', choices: Object.keys(FU.classes) }),

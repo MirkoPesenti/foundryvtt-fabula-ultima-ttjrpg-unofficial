@@ -29,7 +29,7 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, ArrayField, BooleanField, NumberField } = foundry.data.fields;
 		return {
-			identifier: new StringField(),
+			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			art: new SchemaField({ src: new StringField() }),
 			summary: new SchemaField({ value: new StringField() }),

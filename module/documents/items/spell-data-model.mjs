@@ -22,7 +22,7 @@ export class SpellDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
 		const { SchemaField, StringField, HTMLField, BooleanField, NumberField, EmbeddedDataField } = foundry.data.fields;
 		return {
-			identifier: new StringField(),
+			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			type: new SchemaField({ value: new StringField({ initial: '', blank: true, choices: Object.keys(FU.SpellDisciplines) }) }),
 			description: new HTMLField(),

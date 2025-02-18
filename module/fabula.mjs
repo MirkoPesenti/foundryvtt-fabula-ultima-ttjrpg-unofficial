@@ -362,13 +362,13 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 
 Hooks.on("preCreateItem", (item, options, userId) => {
 
-	// Generate identifier
-	if ( !item.system.identifier && item.name )  {
+	// Generate Fabula ID
+	if ( !item.system.fabulaID && item.name )  {
 		const id = game.fabula.utils.slugify( item.name );
 		if ( id ) {
-			item.updateSource({ 'system.identifier': id });
+			item.updateSource({ 'system.fabulaID': id });
 		} else {
-			console.error(`IDENTIFIER generation failed on Item: ${item.name}`);
+			console.error(`Fabula ID generation failed on Item: ${item.name}`);
 		}
 	}
 
@@ -392,20 +392,6 @@ Hooks.on('renderItemSheet', (sheet, html, data) => {
 			html[0].classList.remove( key );
 		}
 		html[0].classList.add( item.system.sourcebook );
-	}
-
-});
-
-Hooks.on("preCreateActor", (actor, options, userId) => {
-
-	// Generate identifier
-	if ( !actor.system.identifier && actor.name )  {
-		const id = game.fabula.utils.slugify( actor.name );
-		if ( id ) {
-			actor.updateSource({ 'system.identifier': id });
-		} else {
-			console.error(`IDENTIFIER generation failed on Actor: ${actor.name}`);
-		}
 	}
 
 });

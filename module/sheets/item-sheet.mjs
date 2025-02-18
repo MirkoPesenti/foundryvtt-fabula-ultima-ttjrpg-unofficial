@@ -89,8 +89,8 @@ export class FabulaItemSheet extends ItemSheet {
 			toggler.type = 'checkbox';
 			toggler.checked = this._mode === this.constructor.MODES.EDIT;
 			toggler.classList.add('editable-slider');
-			toggler.dataset.tooltip = 'FU.HP';
-			toggler.setAttribute('aria-label', game.i18n.localize('FU.HP'));
+			toggler.dataset.tooltip = 'FU.SheetModePlay';
+			toggler.setAttribute('aria-label', game.i18n.localize('FU.SheetModePlay'));
 			toggler.addEventListener('click', this._onToggleEditable.bind(this));
 			toggler.addEventListener('dblclick', e => e.stopPropagation());
 			header.insertAdjacentElement('afterbegin', toggler);
@@ -112,7 +112,7 @@ export class FabulaItemSheet extends ItemSheet {
 	async _onToggleEditable(event) {
 		const { MODES } = this.constructor;
 		const toggler = event.currentTarget;
-		const label = game.i18n.localize('FU.MP');
+		const label = game.i18n.localize('FU.SheetModeEdit');
 		toggler.dataset.tooltip = label;
 		toggler.setAttribute('aria-label', label);
 		this._mode = toggler.checked ? MODES.EDIT : MODES.PLAY;
@@ -192,6 +192,15 @@ export class FabulaItemSheet extends ItemSheet {
 
 		// Debug Item
 		html.on('click','.getItem', () => console.log(this.item));
+
+		// Regenerate Fabula ID
+		html.on('click', '.js_regenerateFabulaID', async (ev) => {
+			ev.preventDefault();
+			const newID = await this.item.regenerateFabulaID();
+			if ( newID ) {
+				this.render();
+			}
+		});
 
 		// Manage Active Effects
 		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.item));

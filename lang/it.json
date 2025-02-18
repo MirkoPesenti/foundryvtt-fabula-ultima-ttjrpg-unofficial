@@ -81,6 +81,11 @@
       "mig": "VIG",
       "wlp": "VOL"
     },
+    "fabulaID": {
+      "regenerate": "Rigenera Fabula ID",
+      "regenerateWarning": "Cambiare il Fabula ID di un Item potrebbe corrompere i riferimenti a quell'Item! Questa azione non può essere annullata.",
+      "proceed": "Sei sicuro di voler procedere?"
+    },
     "DEXup": "DES sù",
     "DEXdown": "DES giù",
     "INSup": "INT sù",
@@ -132,6 +137,8 @@
     "theme": "Tema",
     "origin": "Origine",
     "magisphere": "Magisfera",
+    "SheetModePlay": "Gioca",
+    "SheetModeEdit": "Modifica",
     "DamageTypes": {
       "physical": "Fisico",
       "air": "Aria",

@@ -217,6 +217,12 @@ body {
 .justify-content-end {justify-content:flex-end;}
 .flex-auto {flex:0 0 auto !important;}
 select {height:var(--fu-form-field-height);}
+button > i.fa-fw {margin:0;}
+
+/* Inputs > Group */
+.input-group {position:relative;display:flex;flex-wrap:wrap;align-items:stretch;width:100%;}
+.input-group > input {border-top-right-radius:0;border-bottom-right-radius:0;position:relative;flex:1 1 auto;width:1%;min-width:0;}
+.input-group > button {margin-left:-1px !important;border-top-left-radius:0 !important;border-bottom-left-radius:0 !important;position:relative;z-index:2;}
 
 /* Globals > Variables */
 .atlasHighFantasy {

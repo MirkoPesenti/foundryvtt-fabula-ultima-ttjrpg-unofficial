@@ -1,6 +1,1 @@
-2025/02/17-20:05:54.535 59c Log #653: 96 ops saved to Table #654 OK
-2025/02/17-20:05:54.535 59c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures/000653.log: OK
-2025/02/17-20:05:54.535 59c Table #643: 181 entries OK
-2025/02/17-20:05:54.535 59c Table #654: 96 entries OK
-2025/02/17-20:05:54.538 59c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures/MANIFEST-000652: OK
-2025/02/17-20:05:54.542 59c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\classfeatures; recovered 2 files; 96709 bytes. Some data may have been lost. ****
+2025/02/17-20:05:54.552 59c Delete type=3 #1

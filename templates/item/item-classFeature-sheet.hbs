@@ -60,7 +60,15 @@
         </div>
 
         <div class="tab details" data-group="primary" data-tab="details">
-            <input type="text" name="system.identifier" value="{{system.identifier}}" readonly />
+            <div class="form-group">
+                <label>Fabula ID</label>
+                <div class="input-group">
+                    <input type="text" name="system.fabulaID" value="{{system.fabulaID}}" readonly />
+                    <button type="button" class="js_regenerateFabulaID" data-tooltip="{{localize 'FU.fabulaID.regenerate'}}">
+                        <i class="fa fa-fw fa-rotate"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
     

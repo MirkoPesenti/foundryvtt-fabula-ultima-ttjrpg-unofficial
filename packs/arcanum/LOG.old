@@ -1,5 +1,1 @@
-2025/02/17-20:05:54.603 53e8 Log #493: 0 ops saved to Table #494 OK
-2025/02/17-20:05:54.603 53e8 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\arcanum/000493.log: OK
-2025/02/17-20:05:54.604 53e8 Table #483: 40 entries OK
-2025/02/17-20:05:54.607 53e8 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\arcanum/MANIFEST-000492: OK
-2025/02/17-20:05:54.613 53e8 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\arcanum; recovered 1 files; 22785 bytes. Some data may have been lost. ****
+2025/02/17-20:05:54.620 a00 Delete type=3 #1

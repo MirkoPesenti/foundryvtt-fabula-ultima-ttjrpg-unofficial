@@ -3,6 +3,8 @@
  * @extends {Item}
  */
 
+import { slugify } from "../../utilities.mjs";
+
 export class FabulaItem extends Item {
 
 	overrides = this.overrides ?? {};
@@ -46,6 +48,26 @@ export class FabulaItem extends Item {
 				yield effect;
 			}
 		}
+	}
+
+	async regenerateFabulaID() {
+
+		if ( !await Dialog.confirm({
+			title: game.i18n.localize('FU.fabulaID.regenerate'),
+			content: `
+				<div class="warning">
+					<p>${game.i18n.localize('FU.fabulaID.regenerateWarning')}</p>
+					<p>${game.i18n.localize('FU.fabulaID.proceed')}</p>
+				</div>
+			`,
+			defaultYes: true,
+			rejectClose: false,
+		}) ) return;
+
+		const id = slugify( this.name );
+		await this.update({ 'system.fabulaID': id });
+
+		return id;
 	}
 
 }
