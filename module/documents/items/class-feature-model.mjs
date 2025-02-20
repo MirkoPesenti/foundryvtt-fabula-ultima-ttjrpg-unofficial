@@ -15,13 +15,12 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 		return {
 			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
-			origin: new StringField({ initial: '' }),
+			subtype: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.featureSubtype) }),
+			origin: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.classes) }),
 			description: new HTMLField(),
-			isUnlimited: new BooleanField({ initial: false }),
-			isFree: new BooleanField({ initial: false }),
 			level: new SchemaField({ 
 				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false, }),
-				max: new NumberField({ initial: 1, min: 1, integer: true, nullable: false, }),
+				max: new NumberField({ initial: undefined, min: 0, nullable: true, }),
 			}),
 		};
 	}

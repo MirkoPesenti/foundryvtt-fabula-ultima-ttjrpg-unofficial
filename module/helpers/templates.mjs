@@ -16,6 +16,8 @@ export const preloadPartialTemplates = async function() {
         'systems/fabula/templates/actors/common/spell-list-item.hbs',
 
         // Items
+        'systems/fabula/templates/item/common/sheet-header.hbs',
+        'systems/fabula/templates/item/common/tab-settings.hbs',
         'systems/fabula/templates/item/common/weapons.hbs',
 
         // Commons

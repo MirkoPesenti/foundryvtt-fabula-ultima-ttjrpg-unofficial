@@ -66,6 +66,13 @@ FU.classes = {
 	necromancer: 'FU.classes.necromancer',
 };
 
+FU.featureSubtype = {
+	alchemy: "FU.technologies.alchemy",
+	infusions: "FU.technologies.infusions",
+	magitech: "FU.technologies.magitech",
+	verses: 'FU.verses.label',
+};
+
 /**
  * Ability scores used in the system
  * @type {Object}
@@ -303,14 +310,6 @@ FU.species = {
 	undead: 'FU.species.undead',
 	humanoid: 'FU.species.humanoid',
 };
-
-FU.specialSkills = {
-	"": "FU.selectOption",
-	alchemy: "FU.technologies.alchemy",
-	infusions: "FU.technologies.infusions",
-	magitech: "FU.technologies.magitech",
-	verses: 'FU.verses.label',
-}
 
 FU.technologies = {
 	alchemy: "FU.technologies.alchemy",

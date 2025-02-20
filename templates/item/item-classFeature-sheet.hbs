@@ -1,27 +1,14 @@
 <form class="{{cssClass}} {{item.type}} is-feature flexcol" autocomplete="off">
 
-    <button type="button" class="getItem" style="width:auto;margin:0;background-color:#fff;border:1px solid #000;border-radius:5px;font-size:16px;position:absolute;left:5px;top:35px;z-index:99999;">log</button>
-
-    <header class="sheet-header">
-        {{#if (or @root.editable (not (eq item.img 'systems/fabula/assets/icons/default-classFeature.svg')))}}
-            <div class="class-icon">
-                <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-            </div>
-        {{/if}}
-
-        {{#if @root.editable}}
-            <select class="select-source" name="system.sourcebook">
-                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-            </select>
-        {{/if}}
-    </header>
+    {{!-- Sheet Header --}}
+    {{> 'systems/fabula/templates/item/common/sheet-header.hbs' showClassImage=true }}
 
     <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
         <a class="item" data-tab="base">
             <span>Descrizione</span>
         </a>
-        <a class="item" data-tab="details">
-            <span>Dettagli</span>
+        <a class="item" data-tab="settings">
+            <span>Opzioni</span>
         </a>
     </nav>
 
@@ -30,21 +17,21 @@
             <div class="feature-box">
                 <div class="feature-head">
                     {{#if @root.editable}}
-                        <input name="name" type="text" value="{{item.name}}" />
-                        <div class="form-group ml-auto">
+                        {{!-- <input name="name" type="text" value="{{item.name}}" /> --}}
+                        {{!-- <div class="form-group ml-auto">
                             <label for="system.isUnlimited" class="mr-05">Illimitata</label>
                             <input type="checkbox" name="system.isUnlimited" id="system.isUnlimited" data-tooltip="Abilità Illimitata" {{checked system.isUnlimited}}>
-                        </div>
+                        </div> --}}
                         <span>
                             (<span>l</span><input name="system.level.max" type="number" value="{{system.level.max}}">)
                         </span>
                     {{else}}
                         {{item.name}}
                         <span>
-                            {{#if system.isUnlimited}}
-                                (<span class="font-yanone">ILLIMITATA</span>)
-                            {{else}}
+                            {{#if this.system.level.max}}
                                 (<span>l</span>{{this.system.level.max}})
+                            {{else}}
+                                (<span class="font-yanone">ILLIMITATA</span>)
                             {{/if}}
                         </span>
                     {{/if}}
@@ -59,16 +46,41 @@
             {{/each}}
         </div>
 
-        <div class="tab details" data-group="primary" data-tab="details">
-            <div class="form-group">
-                <label>Fabula ID</label>
-                <div class="input-group">
-                    <input type="text" name="system.fabulaID" value="{{system.fabulaID}}" readonly />
-                    <button type="button" class="js_regenerateFabulaID" data-tooltip="{{localize 'FU.fabulaID.regenerate'}}">
-                        <i class="fa fa-fw fa-rotate"></i>
-                    </button>
+        <div class="tab settings" data-group="primary" data-tab="settings">
+            <fieldset>
+                <legend>Generali</legend>
+                
+                <div class="form-group">
+                    <label>Fabula ID</label>
+                    <div class="input-group">
+                        <input type="text" name="system.fabulaID" value="{{system.fabulaID}}" readonly />
+                        <button type="button" class="js_regenerateFabulaID" data-tooltip="{{localize 'FU.fabulaID.regenerate'}}">
+                            <i class="fa fa-fw fa-rotate"></i>
+                        </button>
+                    </div>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <label>Origine</label>
+                    <select name="system.origin">
+                        {{selectOptions classes selected=system.origin blank='' localize=true}}
+                    </select>
+                </div>
+
+                {{#if system.origin}}
+                    <div class="form-group">
+                        <label>Tipologia</label>
+                        <select name="system.subtype">
+                            {{selectOptions featureSubtype selected=system.subtype blank='' localize=true}}
+                        </select>
+                    </div>
+                {{/if}}
+
+                <div class="form-group">
+                    <label>Livello massimo</label>
+                    <input name="system.level.max" type="number" value="{{system.level.max}}">
+                </div>
+            </fieldset>
         </div>
     </section>
     

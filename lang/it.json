@@ -338,7 +338,8 @@
       "dismiss": "Congeda"
     },
     "technologies": {
-      "label": "Tecnologie",
+      "label": "Tecnologia",
+      "labelPL": "Tecnologie",
       "alchemy": "Alchimia",
       "infusions": "Infusioni",
       "magitech": "Magitech"
