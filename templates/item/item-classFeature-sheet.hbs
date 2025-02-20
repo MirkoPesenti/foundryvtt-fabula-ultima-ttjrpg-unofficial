@@ -3,9 +3,13 @@
     {{!-- Sheet Header --}}
     {{> 'systems/fabula/templates/item/common/sheet-header.hbs' showClassImage=true }}
 
+    {{!-- Sheet Tabs --}}
     <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
         <a class="item" data-tab="base">
             <span>Descrizione</span>
+        </a>
+        <a class="item" data-tab="effects">
+            <span>Effetti</span>
         </a>
         <a class="item" data-tab="settings">
             <span>Opzioni</span>
@@ -13,40 +17,110 @@
     </nav>
 
     <section class="sheet-body">
+        {{!-- Tab Base --}}
         <div class="tab base" data-group="primary" data-tab="base">
             <div class="feature-box">
                 <div class="feature-head">
-                    {{#if @root.editable}}
-                        {{!-- <input name="name" type="text" value="{{item.name}}" /> --}}
-                        {{!-- <div class="form-group ml-auto">
-                            <label for="system.isUnlimited" class="mr-05">Illimitata</label>
-                            <input type="checkbox" name="system.isUnlimited" id="system.isUnlimited" data-tooltip="Abilità Illimitata" {{checked system.isUnlimited}}>
-                        </div> --}}
-                        <span>
-                            (<span>l</span><input name="system.level.max" type="number" value="{{system.level.max}}">)
-                        </span>
-                    {{else}}
-                        {{item.name}}
-                        <span>
-                            {{#if this.system.level.max}}
-                                (<span>l</span>{{this.system.level.max}})
-                            {{else}}
-                                (<span class="font-yanone">ILLIMITATA</span>)
-                            {{/if}}
-                        </span>
+                    {{#if system.level.max}}
+                        <input type="number" name="system.level.current" min="0" max="{{system.level.max}}" value="{{system.level.current}}">
                     {{/if}}
+
+                    <span>
+                        {{#if system.level.max}}
+                            (<span>l</span>{{system.level.max}})
+                        {{else}}
+                            (<span class="font-yanone">ILLIMITATA</span>)
+                        {{/if}}
+                    </span>
                 </div>
                 <div class="feature-body">
-                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData owner=owner editable=editable }}
+                    {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData owner=owner editable=editable button=true }}
                 </div>
             </div>
-            
-            {{#each subItems}}
-                {{> 'systems/fabula/templates/item/common/weapons.hbs' }}
+        </div>
+
+        {{!-- Tab Effects --}}
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            <fieldset>
+                <legend>Rituali</legend>
+
+                <div class="form-group">
+                    <label for="system.ritual.value">Permette di effettuare rituali</label>
+                    <input type="checkbox" name="system.ritual.value" id="system.ritual.value" {{checked system.ritual.value}} {{#if system.test.value}}disabled{{/if}} />
+                </div>
+
+                {{#if system.ritual.value}}
+                    <div class="form-group">
+                        <label>Tipologia</label>
+                        <select name="system.ritual.type">
+                            {{selectOptions MagicDisciplines selected=system.ritual.type blank='' sort=true localize=true}}
+                        </select>
+                    </div>
+                {{/if}}
+            </fieldset>
+
+            <fieldset>
+                <legend>Test</legend>
+                
+                <div class="form-group">
+                    <label for="system.test.value">Richiede un Test</label>
+                    <input type="checkbox" name="system.test.value" id="system.test.value" {{checked system.test.value}} {{#if system.ritual.value}}disabled{{/if}} />
+                </div>
+
+                {{#if (or system.test.value system.ritual.value)}}
+                    <div class="form-group">
+                        <label>Caratteristiche</label>
+                        <select name="system.test.attributes.primary.value">
+                            {{selectOptions attributesAbbr selected=system.test.attributes.primary.value sort=true localize=true}}
+                        </select>
+                        <select name="system.test.attributes.secondary.value">
+                            {{selectOptions attributesAbbr selected=system.test.attributes.secondary.value sort=true localize=true}}
+                        </select>
+                        <div class="form-group">
+                            <label style="width:100%;flex:unset;">Bonus</label>
+                            <input type="text" name="system.test.bonus" value="{{system.test.bonus}}">
+                        </div>
+                    </div>
+                {{/if}}
+            </fieldset>
+
+            <fieldset>
+                <legend>Recupero</legend>
+
+                <div class="form-group">
+                    <label>Punti Vita</label>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Formula</label>
+                        <input type="text" name="system.recovery.hp.formula" value="{{system.recovery.hp.formula}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Punti Mente</label>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Formula</label>
+                        <input type="text" name="system.recovery.mp.formula" value="{{system.recovery.mp.formula}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Punti Inventario</label>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Formula</label>
+                        <input type="text" name="system.recovery.ip.formula" value="{{system.recovery.ip.formula}}">
+                    </div>
+                </div>
+            </fieldset>
+
+            {{!-- Active Effects --}}
+            {{#each effects as |category catIndex|}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../item}}
             {{/each}}
         </div>
 
+        {{!-- Tab Settings --}}
         <div class="tab settings" data-group="primary" data-tab="settings">
+            {{!-- General --}}
             <fieldset>
                 <legend>Generali</legend>
                 
@@ -63,7 +137,7 @@
                 <div class="form-group">
                     <label>Origine</label>
                     <select name="system.origin">
-                        {{selectOptions classes selected=system.origin blank='' localize=true}}
+                        {{selectGroupedOptions groupedClasses selected=system.origin blank=true sort=true localize=true}}
                     </select>
                 </div>
 
@@ -71,7 +145,7 @@
                     <div class="form-group">
                         <label>Tipologia</label>
                         <select name="system.subtype">
-                            {{selectOptions featureSubtype selected=system.subtype blank='' localize=true}}
+                            {{selectOptions featureSubtype selected=system.subtype blank='' sort=true localize=true}}
                         </select>
                     </div>
                 {{/if}}
@@ -79,6 +153,36 @@
                 <div class="form-group">
                     <label>Livello massimo</label>
                     <input name="system.level.max" type="number" value="{{system.level.max}}">
+                    <p style="width:100%;flex:unset;text-align:right;">Lasciare vuoto se può essere acquisita un numero illimiato di volte</p>
+                </div>
+            </fieldset>
+
+            {{!-- Uses --}}
+            <fieldset>
+                <legend>Utilizzi</legend>
+
+                <div class="form-group">
+                    <label>Attivo durante lo status</label>
+                    <select name="system.uses.status">
+                        {{selectOptions statusEffects selected=system.uses.status blank='' sort=true localize=true}}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Durata</label>
+                    <input name="system.uses.duration" type="text" value="{{system.uses.duration}}">
+                </div>
+
+                <div class="form-group">
+                    <label>Utilizzi</label>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Spesi</label>
+                        <input name="system.uses.spent" type="number" min="0" max="{{system.uses.max}}" value="{{system.uses.spent}}">
+                    </div>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Massimi</label>
+                        <input name="system.uses.max" type="number" value="{{system.uses.max}}">
+                    </div>
                 </div>
             </fieldset>
         </div>

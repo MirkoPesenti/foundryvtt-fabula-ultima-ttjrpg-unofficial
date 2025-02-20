@@ -1,3 +1,5 @@
+import { statusEffects } from "./status-helpers.mjs";
+
 export const SYSTEM = 'Fabula Ultima';
 
 export const FU = {};
@@ -62,8 +64,57 @@ FU.classes = {
 	gourmet: 'FU.classes.gourmet',
 	merchant: 'FU.classes.merchant',
 	summoner: 'FU.classes.summoner',
-	cardAce: 'FU.classes.cardAce',
+	ace: 'FU.classes.ace',
 	necromancer: 'FU.classes.necromancer',
+};
+
+FU.groupedClasses = {
+	base: {
+		groupLabel: 'FU.sourcebook.base',
+		arcanist: 'FU.classes.arcanist',
+		chimerist: 'FU.classes.chimerist',
+		darkblade: 'FU.classes.darkblade',
+		elementalist: 'FU.classes.elementalist',
+		entropist: 'FU.classes.entropist',
+		fury: 'FU.classes.fury',
+		guardian: 'FU.classes.guardian',
+		loremaster: 'FU.classes.loremaster',
+		orator: 'FU.classes.orator',
+		rogue: 'FU.classes.rogue',
+		sharpshooter: 'FU.classes.sharpshooter',
+		spiritist: 'FU.classes.spiritist',
+		tinkerer: 'FU.classes.tinkerer',
+		wayfarer: 'FU.classes.wayfarer',
+		weaponmaster: 'FU.classes.weaponmaster',
+	},
+	atlasHighFantasy: {
+		groupLabel: 'FU.sourcebook.atlasHighFantasy',
+		commander: 'FU.classes.commander',
+		dancer: 'FU.classes.dancer',
+		singer: 'FU.classes.singer',
+		symbolist: 'FU.classes.symbolist',
+	},
+	atlasTechnoFantasy: {
+		groupLabel: 'FU.sourcebook.atlasTechnoFantasy',
+		esper: 'FU.classes.esper',
+		mutant: 'FU.classes.mutant',
+		pilot: 'FU.classes.pilot',
+	},
+	atlasNaturalFantasy: {
+		groupLabel: 'FU.sourcebook.atlasNaturalFantasy',
+		florist: 'FU.classes.florist',
+		gourmet: 'FU.classes.gourmet',
+		merchant: 'FU.classes.merchant',
+		summoner: 'FU.classes.summoner',
+	},
+	bonusAce: {
+		groupLabel: 'FU.sourcebook.bonusAce',
+		ace: 'FU.classes.ace',
+	},
+	bonusHalloween: {
+		groupLabel: 'FU.sourcebook.bonusHalloween',
+		necromancer: 'FU.classes.necromancer',
+	},
 };
 
 FU.featureSubtype = {
@@ -141,7 +192,6 @@ FU.DamageTypes = {
 };
 
 FU.statusses = {
-	"": "FU.selectType",
 	slow: 'FU.Status.slow',
 	dazed: 'FU.Status.dazed',
 	weak: 'FU.Status.weak',
@@ -150,14 +200,10 @@ FU.statusses = {
 	poisoned: 'FU.Status.poisoned',
 };
 
-FU.statusEffects = {
-	slow: 'FU.Status.slow',
-	dazed: 'FU.Status.dazed',
-	weak: 'FU.Status.weak',
-	shaken: 'FU.Status.shaken',
-	enraged: 'FU.Status.enraged',
-	poisoned: 'FU.Status.poisoned',
-};
+FU.statusEffects = statusEffects.reduce(( acc, item ) => {
+	acc[item.id] = item.name;
+	return acc;
+}, {});
 
 /**
  * @typedef {"arcanism", "chimerism", "elementalism", "entropism", "ritualism", "spiritism"} MagicDisciplines

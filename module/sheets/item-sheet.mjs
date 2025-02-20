@@ -157,8 +157,10 @@ export class FabulaItemSheet extends ItemSheet {
 		context.consumableType = CONFIG.FU.consumableType;
 		context.recoverResources = CONFIG.FU.recoverResources;
 		context.statusses = CONFIG.FU.statusses;
-		context.classes = CONFIG.FU.classes;
+		context.groupedClasses = CONFIG.FU.groupedClasses;
 		context.featureSubtype = CONFIG.FU.featureSubtype;
+		context.statusEffects = CONFIG.FU.statusEffects;
+		
 
 		context.enrichedHtml = {
 			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),

@@ -18,7 +18,6 @@ export const preloadPartialTemplates = async function() {
         // Items
         'systems/fabula/templates/item/common/sheet-header.hbs',
         'systems/fabula/templates/item/common/tab-settings.hbs',
-        'systems/fabula/templates/item/common/weapons.hbs',
 
         // Commons
         'systems/fabula/templates/common/active-effects.hbs',

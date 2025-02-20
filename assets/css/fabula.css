@@ -494,7 +494,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 
 .sheet.fabula form {max-height:100%;}
 .sheet .editable button:not(.editor button) {width:auto;margin:0;background-color:var(--fu-color-white);border:1px solid var(--fu-color-primary);border-radius:5px;font-size:16px;line-height:1.2;--fu-color-shadow-primary:var(--fu-color-primary);transition:box-shadow .15s ease-in-out;}
-.sheet.fabula .sheet-header {position:relative;z-index:1;min-height:93px;padding:40px 75px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:var(--fu-sheet-header-bg);flex-grow:0;outline:1px solid var(--fu-color-primary);outline-offset:1px;}
+.sheet.fabula .sheet-header {position:relative;z-index:5;min-height:93px;padding:40px 75px 5px;background-repeat:no-repeat;background-position:center center;background-size:cover;background-image:var(--fu-sheet-header-bg);flex-grow:0;outline:1px solid var(--fu-color-primary);outline-offset:1px;}
 .sheet.fabula.bonusArcaneWhispers .sheet-header {outline-offset:0;}
 .sheet.fabula .sheet-header input {border:0;border-radius:0;width:100%;padding:0;height:auto;color:var(--fu-color-white);font-family:CreditValley;font-size:40px;box-shadow:none;}
 .sheet.fabula .equip .sheet-header input {background-color:transparent;box-shadow:none;}

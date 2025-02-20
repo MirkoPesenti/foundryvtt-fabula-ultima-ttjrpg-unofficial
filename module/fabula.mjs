@@ -383,6 +383,26 @@ Hooks.on("preCreateItem", (item, options, userId) => {
 
 });
 
+Hooks.on('preUpdateItem', async (item, updateData, options, userId) => {
+	const updates = {};
+	
+	if ( item.type == 'classFeature' ) {
+		const classOrigin = foundry.utils.getProperty(updateData, 'system.origin');
+		if ( !classOrigin ) return;
+		
+		const itemImage = foundry.utils.getProperty(updateData, 'img');
+		if ( !itemImage ) return;
+
+		if ( itemImage == `systems/fabula/assets/icons/default-${item.type}.svg` || ( item.system?.origin != '' && itemImage == `systems/fabula/assets/icons/classes/${item.system.origin}.png` ) ) {
+			updates['img'] = `systems/fabula/assets/icons/classes/${classOrigin}.png`;
+		}
+	}
+
+	if ( Object.keys(updates).length > 0 ) {
+		await item.update( updates );
+	}
+});
+
 Hooks.on('renderItemSheet', (sheet, html, data) => {
 	const item = sheet.item;
 
@@ -1303,6 +1323,38 @@ Handlebars.registerHelper('sm', function( a, b ) {
 Handlebars.registerHelper('sm_e', function( a, b ) {
 	var next =  arguments[arguments.length-1];
 	return (a <= b) ? next.fn(this) : next.inverse(this);
+});
+
+Handlebars.registerHelper('selectGroupedOptions', function( groups, options ) {
+	let html = '';
+	if ( options.hash.blank ) html += `<option value="" ${options.hash.selected === '' ? 'selected' : ''}></option>`;
+	
+	for ( let group in groups )  {
+		let label = group;
+		if ( options.hash.localize && groups[group].groupLabel ) label = game.i18n.localize(groups[group].groupLabel);
+		html += `<optgroup label="${label}">`;
+
+		let list = groups[group];
+		if ( options.hash.sort ) list = Object.entries(list).sort((a, b) => {
+			if ( options.hash.localize ) {
+				const localizedA = game.i18n.localize(a[1]);
+				const localizedB = game.i18n.localize(b[1]);
+				return localizedA.localeCompare(localizedB);
+			}
+			return a[1].localeCompare(b[1]);
+		});
+
+		list.forEach(([key, value]) => {
+			if ( key == 'groupLabel' ) return;
+
+			let optLabel = value;
+			if ( options.hash.localize ) optLabel = game.i18n.localize(value);
+			html += `<option value="${key}" ${options.hash.selected == key ? 'selected' : ''}>${optLabel}</option>`;
+		});
+		html += '</optgroup>';
+	}
+
+	return new Handlebars.SafeString(html);
 });
 
 Handlebars.registerHelper("renderItemList", function(obj, key) {
