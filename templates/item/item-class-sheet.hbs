@@ -1,24 +1,18 @@
 <form class="{{cssClass}} {{item.type}} flexcol" autocomplete="off">
 
-    <header class="sheet-header">
-        <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'FU.Sheet.Name'}}"/>
-        <div class="class-icon">
-            <img src="{{item.img}}" data-edit="img" title="{{item.name}}" />
-        </div>
-        
-        {{#if @root.editable}}
-            <select class="select-source is-top-right" name="system.sourcebook">
-                {{selectOptions sourcebook selected=system.sourcebook localize=true}}
-            </select>
-        {{/if}}
-    </header>
+    {{!-- Sheet Header --}}
+    {{> 'systems/fabula/templates/item/common/sheet-header.hbs' showClassImage=true }}
 
+    {{!-- Sheet Tabs --}}
     <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
         <a class="item" data-tab="description">
             <span>Descrizione</span>
         </a>
-        <a class="item" data-tab="benefits">
-            <span>Benefici</span>
+        <a class="item" data-tab="skills">
+            <span>Abilità</span>
+        </a>
+        <a class="item" data-tab="settings">
+            <span>Opzioni</span>
         </a>
     </nav>
 
@@ -30,9 +24,6 @@
             </div>
 
             <img src="{{system.art.src}}" class="img-class-primary">
-            {{#if @root.editable}}
-                <button type="button" class="js_changeImage">Cambia immagine</button>
-            {{/if}}
 
             <div class="summary-container">
                 {{#if @root.editable}}
@@ -68,104 +59,29 @@
             </div>
         </div>
 
-		<div class="tab benefits" data-group="primary" data-tab="benefits">
-            {{#if @root.editable}}
-                <div class="title">Aumento punti caratteristica</div>
-                <div class="flexrow">
-                    <div class="form-group">
-                        <input name="system.bonus.hp" type="checkbox" {{checked system.bonus.hp}}>
-                        <label>Punti vita (PV)</label>
-                    </div>
-                    <div class="form-group">
-                        <input name="system.bonus.mp" type="checkbox" {{checked system.bonus.mp}}>
-                        <label>Punti mente (PM)</label>
-                    </div>
-                    <div class="form-group">
-                        <input name="system.bonus.ip" type="checkbox" {{checked system.bonus.ip}}>
-                        <label>Punti inventario (PI)</label>
-                    </div>
-                </div>
-                
-                <div class="title">Rituali</div>
-                <div class="flexrow">
-                    <div class="form-group">
-                        <input name="system.bonus.ritual.arcanism" type="checkbox" {{checked system.bonus.ritual.arcanism}}>
-                        <label>Arcanismo</label>
-                    </div>
-                    <div class="form-group">
-                        <input name="system.bonus.ritual.chimerism" type="checkbox" {{checked system.bonus.ritual.chimerism}}>
-                        <label>Chimerismo</label>
-                    </div>
-                    <div class="form-group">
-                        <input name="system.bonus.ritual.elementalism" type="checkbox" {{checked system.bonus.ritual.elementalism}}>
-                        <label>Elementalismo</label>
-                    </div>
-                    <div class="form-group">
-                        <input name="system.bonus.ritual.entropism" type="checkbox" {{checked system.bonus.ritual.entropism}}>
-                        <label>Entropismo</label>
-                    </div>
-                    <div class="form-group">
-                        <input name="system.bonus.ritual.ritualism" type="checkbox" {{checked system.bonus.ritual.ritualism}}>
-                        <label>Ritualismo</label>
-                    </div>
-                    <div class="form-group">
-                        <input name="system.bonus.ritual.spiritism" type="checkbox" {{checked system.bonus.ritual.spiritism}}>
-                        <label>Spiritismo</label>
-                    </div>
-                </div>
-                
-                <div class="title">Equipaggiamenti</div>
-                <div class="flexrow">
-                    <div class="form-group w-50">
-                        <input name="system.bonus.weapon.meleeWeapon" type="checkbox" {{checked system.bonus.weapon.meleeWeapon}}>
-                        <label>Arma da mischia marziale</label>
-                    </div>
-                    <div class="form-group w-50">
-                        <input name="system.bonus.weapon.rangedWeapon" type="checkbox" {{checked system.bonus.weapon.rangedWeapon}}>
-                        <label>Arma a distanza marziale</label>
-                    </div>
-                    <div class="form-group w-50">
-                        <input name="system.bonus.weapon.armor" type="checkbox" {{checked system.bonus.weapon.armor}}>
-                        <label>Armatura marziale</label>
-                    </div>
-                    <div class="form-group w-50">
-                        <input name="system.bonus.weapon.shield" type="checkbox" {{checked system.bonus.weapon.shield}}>
-                        <label>Scudo marziale</label>
-                    </div>
-                </div>
-                
-                <div class="title">Progetti</div>
-                <div class="form-group">
-                    <input name="system.bonus.projects.value" type="checkbox" {{checked system.bonus.projects.value}}>
-                    <label>Può avviare i Progetti</label>
-                </div>
-                {{#if system.bonus.projects.value}}
-                    {{editor enrichedHtml.projectCondition target="system.bonus.projects.condition" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
-                {{/if}}
-            {{else}}
-                <div class="title">Benefici gratuiti</div>
-                {{> 'systems/fabula/templates/common/class/free-benefits.hbs'}}
-            {{/if}}
-            
+		<div class="tab skills" data-group="primary" data-tab="skills">
             <div class="title">Abilità di classe</div>
-            {{#each features}}
+
+            {{#each (getItemsByFabulaID system.features) as |feature featureIndex|}}
                 <div class="feature-box">
                     <div class="feature-head">
-                        {{#if @root.editable}}
-                            <button type="button" class="removeFeature" data-id="{{this._id}}">Rimuovi</button>
-                        {{/if}}
+                        <button type="button" class="js_removeFromArray" data-prop="system.features" data-index="{{featureIndex}}
+                        ">Rimuovi</button>
                         
-                        {{this.name}}
-                        {{#gt this.system.level.max 1}}
+                        {{feature.name}}
+                        {{#gt feature.system.level.max 1}}
                             <span>
-                                (<span>l</span>{{this.system.level.max}})
+                                (<span>l</span>{{feature.system.level.max}})
                             </span>
                         {{/gt}}
                     </div>
                     <div class="feature-body">
-                        {{{this.enrichedHtml.description}}}
+                        {{{feature.enrichedHtml.description}}}
                     </div>
                 </div>
+            {{/each}}
+            
+            {{#each features}}
                 {{#each this.flags.fabula.subItems}}
                     <div class="equip-box">
                         <div class="equip-head">
@@ -228,6 +144,99 @@
                 {{/each}}
             {{/each}}
         </div>
+
+        {{!-- Tab Settings --}}
+        <div class="tab settings" data-group="primary" data-tab="settings">
+
+            {{!-- General Fields --}}
+            <fieldset>
+                <legend>Generali</legend>
+                
+                <div class="form-group">
+                    <label>Fabula ID</label>
+                    <div class="input-group">
+                        <input type="text" name="system.fabulaID" value="{{system.fabulaID}}" readonly />
+                        <button type="button" class="js_regenerateFabulaID" data-tooltip="{{localize 'FU.fabulaID.regenerate'}}">
+                            <i class="fa fa-fw fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Artwork</label>
+                    <div class="input-group">
+                        <input type="text" name="system.art.src" value="{{system.art.src}}" readonly />
+                        <button type="button" class="js_changeImage">
+                            <i class="fa fa-fw fa-file-import"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Livello attuale</label>
+                    <input name="system.level.value" type="number" value="{{system.level.value}}" min="0" max="10">
+                </div>
+            </fieldset>
+
+            {{!-- Benefits FIelds --}}
+            <fieldset>
+                <legend>Benefici gratuiti</legend>
+
+                <div class="form-group">
+                    <label>Bonus</label>
+                    <div class="form-group">
+                        <input name="system.bonus.hp" id="system.bonus.hp" type="checkbox" {{checked system.bonus.hp}}>
+                        <label for="system.bonus.hp">PV</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.mp" id="system.bonus.mp" type="checkbox" {{checked system.bonus.mp}}>
+                        <label for="system.bonus.mp">PM</label>
+                    </div>
+                    <div class="form-group">
+                        <input name="system.bonus.ip" id="system.bonus.ip" type="checkbox" {{checked system.bonus.ip}}>
+                        <label for="system.bonus.ip">PI</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Equipaggiamenti</label>
+                    <div class="form-group" data-tooltip="Arma da mischia marziale">
+                        <input name="system.bonus.weapon.meleeWeapon" id="system.bonus.weapon.meleeWeapon" type="checkbox" {{checked system.bonus.weapon.meleeWeapon}}>
+                        <label for="system.bonus.weapon.meleeWeapon" class="icon icon-melee"></label>
+                    </div>
+                    <div class="form-group" data-tooltip="Arma a distanza marziale">
+                        <input name="system.bonus.weapon.rangedWeapon" id="system.bonus.weapon.rangedWeapon" type="checkbox" {{checked system.bonus.weapon.rangedWeapon}}>
+                        <label for="system.bonus.weapon.rangedWeapon" class="icon icon-ranged"></label>
+                    </div>
+                    <div class="form-group" data-tooltip="Armatura marziale">
+                        <input name="system.bonus.weapon.armor" id="system.bonus.weapon.armor" type="checkbox" {{checked system.bonus.weapon.armor}}>
+                        <label for="system.bonus.weapon.armor" class="icon icon-armor" style="filter:brightness(0);"></label>
+                    </div>
+                    <div class="form-group" data-tooltip="Scudo marziale">
+                        <input name="system.bonus.weapon.shield" id="system.bonus.weapon.shield" type="checkbox" {{checked system.bonus.weapon.shield}}>
+                        <label for="system.bonus.weapon.shield" class="icon icon-shield" style="filter:brightness(0);"></label>
+                    </div>
+                </div>
+            </fieldset>
+
+            {{!-- Projects Fields --}}
+            <fieldset>
+                <legend>Progetti</legend>
+
+                <div class="form-group">
+                    <label for="system.bonus.projects.value">Permette di avviare Progetti</label>
+                    <input name="system.bonus.projects.value" id="system.bonus.projects.value" type="checkbox" {{checked system.bonus.projects.value}}>
+                </div>
+
+                {{#if system.bonus.projects.value}}
+                    <div class="form-group">
+                        <label>Condizione</label>
+                        <div style="width:100%;flex:unset;">
+                            {{editor enrichedHtml.projectCondition target="system.bonus.projects.condition" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                        </div>
+                    </div>
+                {{/if}}
+            </fieldset>
+        </div>
     </section>
-    
 </form>

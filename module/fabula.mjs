@@ -1325,6 +1325,11 @@ Handlebars.registerHelper('sm_e', function( a, b ) {
 	return (a <= b) ? next.fn(this) : next.inverse(this);
 });
 
+Handlebars.registerHelper("getItemsByFabulaID", function(array, options) {
+	const items = array.map( id => game.items.get(id) );
+	return Array.isArray(items) ? items : undefined;
+});
+
 Handlebars.registerHelper('selectGroupedOptions', function( groups, options ) {
 	let html = '';
 	if ( options.hash.blank ) html += `<option value="" ${options.hash.selected === '' ? 'selected' : ''}></option>`;

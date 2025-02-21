@@ -207,6 +207,21 @@ export class FabulaItemSheet extends ItemSheet {
 		// Manage Active Effects
 		html.on('click','.js_manageActiveEffect', (e) => manageActiveEffect(e, this.item));
 
+		// Remove element from array by index
+		html.on('click', '.js_removeFromArray', async (ev) => {
+			ev.preventDefault();
+			const item = this.item;
+			const index = ev.currentTarget.dataset.index;
+			const property = ev.currentTarget.dataset.prop;
+			
+			if ( index && property ) {
+				const array = foundry.utils.getProperty( item, property );
+				const newArray = [...array];
+				newArray.splice( index, 1 );
+				await item.update({ [property]: newArray });
+			}
+		});
+
 		html.on('drop', this._onDropItem.bind(this));
 		html.on('click', '.removeFeature', this._removeClassFeature.bind(this));
 
@@ -551,65 +566,61 @@ export class FabulaItemSheet extends ItemSheet {
 			}
 
 			// Check if Class has already 5 features
-			const subItems = targetItem.getFlag('fabula', 'subItems') || [];
-			if ( subItems.length == 5 ) {
+			if ( targetItem.system.features.length == 5 ) {
 				ui.notifications.warn('Il numero massimo è già stato raggiunto.');
 				return;
 			}
 
 			// Check if Class featured is duplicated
 			let alreadyExist = false;
-			for (let i = 0; i < subItems.length; i++) {
-				if ( subItems[i]._id == sourceItem._id ) {
+			for (let i = 0; i < targetItem.system.features.length; i++) {
+				const item = game.items.get( targetItem.system.features[i] );
+				if ( item.system.fabulaID == sourceItem.system.fabulaID ) {
 					alreadyExist = true;
 					break;
 				}
 			}
 			if ( alreadyExist ) {
-				ui.notifications.error(`L'item ${sourceItem.name} è già allegato all'item ${targetItem.name}!`);
+				ui.notifications.error(`L'abilità ${sourceItem.name} ha lo stesso Fabula ID di un'altra abilità della classe ${targetItem.name}!`);
 				return;
 			}
 
-			await sourceItem.update({ 'system.origin': targetItem._id });
-
 			// Update Class
-			subItems.push(sourceItem.toObject());
-			subItems.sort((a, b) => {
-				return a.name.localeCompare(b.name);
-			});
+			const newFeatures = targetItem.system.features || [];
+			newFeatures.push( sourceItem._id );
 
-			await targetItem.setFlag('fabula', 'subItems', subItems);
-			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
+			await targetItem.update({ 'system.features': newFeatures });
+			ui.notifications.info(`Abilità ${sourceItem.name} aggiunta alla classe ${targetItem.name}.`);
 
 		} else if ( targetItem.type == 'classFeature' || targetItem.type == 'skill' ) {
 
-			// Check if dropped element is Item
-			if ( data.type !== 'Item' ) {
-				ui.notifications.warn('Puoi trascinare solo oggetti.');
-				return;
-			}
+			// // Check if dropped element is Item
+			// if ( data.type !== 'Item' ) {
+			// 	ui.notifications.warn('Puoi trascinare solo oggetti.');
+			// 	return;
+			// }
 
-			// Check if Item is found
-			const sourceItem = await fromUuid(data.uuid);
-			if ( !sourceItem ) {
-				ui.notifications.error("Impossibile trovare l'oggetto trascinato.");
-				return;
-			}
+			// // Check if Item is found
+			// const sourceItem = await fromUuid(data.uuid);
+			// if ( !sourceItem ) {
+			// 	ui.notifications.error("Impossibile trovare l'oggetto trascinato.");
+			// 	return;
+			// }
 
-			// Check if item is a Weapon
-			if ( sourceItem.type != 'weapon' ) {
-				ui.notifications.error("Puoi trascinare solo armi.");
-				return;
-			}
+			// // Check if item is a Weapon
+			// if ( sourceItem.type != 'weapon' ) {
+			// 	ui.notifications.error("Puoi trascinare solo armi.");
+			// 	return;
+			// }
 
-			const items = [];
-			await sourceItem.update({ 'system.origin': targetItem._id });
+			// const items = [];
+			// await sourceItem.update({ 'system.origin': targetItem._id });
 
-			// Update Class Feature
-			items.push(sourceItem.toObject());
+			// // Update Class Feature
+			// items.push(sourceItem.toObject());
 
-			await targetItem.setFlag('fabula', 'subItems', items);
-			ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
+			// await targetItem.setFlag('fabula', 'subItems', items);
+			// ui.notifications.info(`Oggetto ${sourceItem.name} aggiunto a ${targetItem.name}.`);
 
 		} else if ( targetItem.type == 'heroicSkill' ) {
 

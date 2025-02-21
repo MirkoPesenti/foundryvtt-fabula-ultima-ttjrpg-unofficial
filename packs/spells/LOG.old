@@ -1,5 +1,1 @@
-2025/02/20-19:44:21.090 508c Log #428: 0 ops saved to Table #429 OK
-2025/02/20-19:44:21.091 508c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells/000428.log: OK
-2025/02/20-19:44:21.092 508c Table #411: 39 entries OK
-2025/02/20-19:44:21.096 508c Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells/MANIFEST-000427: OK
-2025/02/20-19:44:21.099 508c **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells; recovered 1 files; 19072 bytes. Some data may have been lost. ****
+2025/02/20-19:44:21.109 508c Delete type=3 #1

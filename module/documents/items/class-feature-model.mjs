@@ -2,12 +2,27 @@ import { AttributesDataModel } from "./common/attributes-data-model.mjs";
 import { FU } from "../../helpers/config.mjs";
 
 /**
+ * @property {string} fabulaID
  * @property {string} sourcebook
+ * @property {string} origin
+ * @property {string} subtype
  * @property {string} description
- * @property {boolean} isUnlimited
- * @property {boolean} isFree
  * @property {number} level.current
  * @property {number} level.max
+ * @property {string} uses.duration
+ * @property {number} uses.spent
+ * @property {number} uses.max
+ * @property {number} uses.current
+ * @property {string} uses.status
+ * @property {boolean} test.value
+ * @property {string} test.attributes.primary.value
+ * @property {string} test.attributes.secondary.value
+ * @property {string} test.bonus
+ * @property {boolean} ritual.value
+ * @property {string} ritual.type
+ * @property {string} recovery.hp.formula
+ * @property {string} recovery.mp.formula
+ * @property {string} recovery.ip.formula
  */
 
 export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
@@ -16,8 +31,8 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 		return {
 			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
-			subtype: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.featureSubtype) }),
 			origin: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.classes) }),
+			subtype: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.featureSubtype) }),
 			description: new HTMLField(),
 			level: new SchemaField({ 
 				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false, }),

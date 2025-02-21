@@ -41,14 +41,6 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 				hp: new BooleanField({ initial: false }),
 				mp: new BooleanField({ initial: false }),
 				ip: new BooleanField({ initial: false }),
-				ritual: new SchemaField({
-					arcanism: new BooleanField({ initial: false }),
-					chimerism: new BooleanField({ initial: false }),
-					elementalism: new BooleanField({ initial: false }),
-					entropism: new BooleanField({ initial: false }),
-					ritualism: new BooleanField({ initial: false }),
-					spiritism: new BooleanField({ initial: false }),
-				}),
 				weapon: new SchemaField({
 					meleeWeapon: new BooleanField({ initial: false }),
 					rangedWeapon: new BooleanField({ initial: false }),
@@ -60,6 +52,7 @@ export class CLassDataModel extends foundry.abstract.TypeDataModel {
 					condition: new StringField(),
 				}),
 			}),
+			features: new ArrayField( new StringField() ),
 		};
 	}
 }
