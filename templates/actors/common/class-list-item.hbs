@@ -17,26 +17,28 @@
 			{{> 'systems/fabula/templates/common/class/free-benefits.hbs'}}
 		</div>
 
-		{{#if (eq item.name 'Artefice')}}
-			{{> 'systems/fabula/templates/common/class/technologies.hbs'}}
-		{{/if}}
-
-		{{#if (eq item.name 'Cantore')}}
-			{{> 'systems/fabula/templates/common/class/verses.hbs'}}
-		{{/if}}
-
-		{{#if (eq item.name 'Danzatore')}}
-			{{> 'systems/fabula/templates/common/class/dances.hbs'}}
-		{{/if}}
-
-		{{#each item.flags.fabula.subItems as |feature featureIndex|}}
-			{{#gt feature.system.level.current 0}}
-				<div class="feature-box">
-					<div class="feature-head">                                            
-						<button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{../item._id}}" data-flag="{{featureIndex}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
+		{{#each features as |feature featureIndex|}}
+			{{#if (eq (localize (concat 'FU.classes.' feature.system.origin)) ../item.name)}}
+				<div class="feature-box collapsable {{#unless feature.flags.fabula.ctx.collapsed}}open{{/unless}}">
+					<div class="feature-head">
+						<button type="button" class="btn-action-showchat js_showItemInChat" data-itemid="{{feature._id}}" data-tooltip="{{localize 'FU.actions.showInChat'}}">
 							<i class="fa fa-comment m-0"></i>
 						</button>
-						{{feature.name}}
+						<button type="button" class="btn-action js_toggleCollapse mr-1" data-itemid="{{feature._id}}">
+							{{#if feature.flags.fabula.ctx.collapsed}}
+								<i class="fa fa-up-right-and-down-left-from-center m-0"></i>
+							{{else}}
+								<i class="fa fa-down-left-and-up-right-to-center m-0"></i>
+							{{/if}}
+						</button>
+						{{#unless (or (eq feature.system.subtype '') (eq feature.system.subtype 'infusions'))}}
+							<button type="button" class="name js_rollSubFeature m-0" data-itemid="{{feature._id}}" data-type="{{feature.system.subtype}}">
+								{{feature.name}}
+							</button>
+						{{else}}
+							{{feature.name}}
+						{{/unless}}
+						
 						{{#gt feature.system.level.max 1}}
 							<span>
 								(<span>l</span>{{feature.system.level.current}} / {{feature.system.level.max}})
@@ -44,10 +46,12 @@
 						{{/gt}}
 					</div>
 					<div class="feature-body">
-						{{{feature.enrichedHtml.description}}}
+						<div class="wrapper">
+							{{{feature.enrichedHtml.description}}}
+						</div>
 					</div>
 				</div>
-			{{/gt}}
+			{{/if}}
 		{{/each}}
 	</div>
 </li>

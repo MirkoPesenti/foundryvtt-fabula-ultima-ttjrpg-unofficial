@@ -360,7 +360,7 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 	});
 });
 
-Hooks.on("preCreateItem", (item, options, userId) => {
+Hooks.on("preCreateItem", async (item, options, userId) => {
 
 	// Generate Fabula ID
 	if ( !item.system.fabulaID && item.name )  {

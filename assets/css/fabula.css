@@ -602,6 +602,9 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet .feature-box .feature-body * {user-select:text;}
 .sheet .feature-box .feature-body p {margin:5px 0;}
 .sheet .feature-box .prosemirror menu {border-radius:0;}
+.sheet .feature-box.collapsable .feature-body {display:grid;grid-template-rows:0fr;transition:all .3s ease-in-out;}
+.sheet .feature-box.collapsable.open .feature-body {grid-template-rows:1fr;}
+.sheet .feature-box.collapsable .feature-body .wrapper {overflow:hidden;}
 
 /* Sheets > Equip */
 .sheet .equip-box {display:flex;flex-direction:column;}
@@ -638,6 +641,7 @@ a.content-link i, a.inline-roll i {color:var(--fu-color-primary);}
 .sheet .class.editable .editor-container {min-height:100px;}
 .sheet .class.editable .desc-container .editor-container {min-height:200px;}
 
+.sheet.fabula .class .sheet-header input {font-size:55px;text-transform:uppercase;}
 .sheet .class .sheet-body {background-size:50px 100%;}
 .sheet .class .sheet-body .tab.desc {overflow:visible;}
 .sheet .class .sheet-body .title {transform:translateX(-15px);}

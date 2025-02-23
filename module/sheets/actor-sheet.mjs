@@ -6,15 +6,6 @@ import { incrementSessionResource, initSessionJournal } from "../helpers/journal
 import { createClock, deleteClock } from "../helpers/clock-helpers.mjs";
 import { FU } from "../helpers/config.mjs";
 
-const NPCaccordions = {
-	attack: false,
-	spell: false,
-	other: false,
-	rule: false,
-};
-
-let lastOpennedInnerTab = 'base';
-
 function isDualWieldable( actor, item ) {
 	let result = false;
 	if ( actor.system.dualWield === true && ( item.system.type == 'flail' || item.system.type == 'spear' || item.system.type == 'heavy' || item.system.type == 'sword' ) ) {
@@ -130,7 +121,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 		context.system = actorData.system;
 		context.flags = actorData.flags;
-
+		
 		await this._prepareItems(context);
 
 		//Add required CONFIG data
@@ -493,15 +484,19 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 		} else if ( sourceItem.type == 'classFeature' ) {
-			
-			if (
-				await Dialog.confirm({
-					title: `Stai acquisendo l'abilità ${sourceItem.name}`,
-					content: `<p>Sei sicuro di voler acquisire un livello nella classe ${sourceItem.folder.name} per ottenere l'abilità ${sourceItem.name}?</p>`,
-					rejectClose: false,
-				})
-			) {
-				await addClassToActor( actor, sourceItem, true );
+
+			if ( sourceItem.system.subtype !== '' ) {
+				await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+			} else {
+				if (
+					await Dialog.confirm({
+						title: `Stai acquisendo l'abilità ${sourceItem.name}`,
+						content: `<p>Sei sicuro di voler acquisire un livello nella classe ${sourceItem.folder.name} per ottenere l'abilità ${sourceItem.name}?</p>`,
+						rejectClose: false,
+					})
+				) {
+					await addClassToActor( actor, sourceItem, true );
+				}
 			}
 
 		} else if ( sourceItem.type == 'heroicSkill' ) {
@@ -633,62 +628,51 @@ export class FabulaActorSheet extends ActorSheet {
 	activateListeners( html ) {
 		super.activateListeners( html );
 
+		// Set context flags
+		const ctx = this.actor.getFlag('fabula', 'ctx') || {};
+		if ( ctx.hasOwnProperty('innerTab') ) {
+			ctx.innerTab = 'base';
+		}
+		this.actor.setFlag('fabula', 'ctx', ctx);
+
 		// Debug Actor
 		html.on('click','.getActor', () => console.log(this.actor));
-
-		// Toggle collapse on Sheet open
-		$(html).find('.content-collapse').each((index, element) => {
-			for ( const key in NPCaccordions ) {
-				const content = element;
-				if ( $(content).hasClass(key) && NPCaccordions[key] == true ) {
-
-					$(content).find('button[aria-expanded]').attr('aria-expanded', 'true');
-					const contentChild = $(content).children('.collapse');
-		
-					$(content).addClass('open');
-				}
-			}
-		});
-
-		// Toggle inner tabs on Sheet open
-		$(html).find('.tabs.inner-tabs[data-group="secondary"] > .item').each((index, element) => {
-			if ( $(element).is(`[data-tab="${lastOpennedInnerTab}"]`) ) {
-				$(element).addClass('active');
-				$(html).find(`.tab.inner-tab[data-group="secondary"][data-tab="${lastOpennedInnerTab}"]`).addClass('active');
-			} else {
-				$(element).removeClass('active');
-				$(html).find(`.tab.inner-tab[data-group="secondary"][data-tab="${$(element).data('tab')}"]`).removeClass('active');
-			}
-		});
 
 		// Inner tabs
 		html.on('click', '.tabs.inner-tabs > .item', (e) => {
 			e.preventDefault();
 			const element = e.currentTarget;
-			const tabGroup = $(element).parent('.tabs').data('group');
-			const tab = $(element).data('tab');
-
-			if ( tab && tabGroup ) {
-
-				$(element).siblings().each((index, el) => {
-					$(el).removeClass('active');
-				});
-				$(element).addClass('active');
-
-				const innerTabs = html.find(`.tab[data-group="${tabGroup}"]`);
-				$(innerTabs).each((index, el) => {
-					if ( $(el).is(`[data-tab="${tab}"]`) ) {
-						$(el).addClass('active');
-						lastOpennedInnerTab = tab;
-					} else {
-						$(el).removeClass('active');
-					}
-				});
-
+			const tab = element.dataset.tab;
+			if ( tab ) {
+				const ctx = this.actor.getFlag('fabula', 'ctx') || {};
+				ctx.innerTab = tab;
+				this.actor.setFlag('fabula', 'ctx', ctx);
 			}
 		});
 
+		html.on('resize', (e) => {
+			console.log(e);
+		});
+
 		html.on('click', 'input.autoselect', (e) => e.currentTarget.select() );
+
+		// Toggle collapse
+		html.on('click', '.js_toggleCollapse', async (e) => {
+			e.preventDefault();
+			const element = e.currentTarget;
+			const itemID = element.dataset.itemid;
+			
+			if ( itemID ) {
+				const item = this.actor.items.get( itemID );
+				if ( !item ) return;
+				
+				const ctx = item.getFlag('fabula', 'ctx') || {};
+				if ( ctx.hasOwnProperty('collapsed') ) {
+					ctx.collapsed = !ctx.collapsed;
+				}
+				await item.setFlag('fabula', 'ctx', ctx);
+			}
+		});
 
 		// Open Compendium
 		html.on('click', '.js_openCompendium', this._openCompendium.bind(this));
@@ -713,43 +697,6 @@ export class FabulaActorSheet extends ActorSheet {
 			e.preventDefault();
 			const itemID = e.currentTarget.dataset.id;
 			await this.actor.deleteEmbeddedDocuments('Item', [itemID]);
-		});
-
-		// Toggle collapse elements
-		html.on('click','.js_toggleCollapse', (e) => {
-			e.preventDefault();
-			let accordionOpen = false;
-			if ( $(e.currentTarget).attr('aria-expanded') == 'false' ) {
-				$(e.currentTarget).attr('aria-expanded', 'true');
-			} else {
-				$(e.currentTarget).attr('aria-expanded', 'false');
-			}
-			const content = $(e.currentTarget).closest('.content-collapse');
-			const contentChild = $(e.currentTarget).closest('.content-collapse').children('.collapse');
-
-			if ( content.hasClass('open') ) {
-				contentChild.css('height', contentChild[0].scrollHeight + 'px')
-				content.removeClass('open');
-				setTimeout(() => {
-					contentChild.css('height','0');
-				}, 0);
-			} else {
-				content.addClass('open');
-				contentChild.css('height', contentChild[0].scrollHeight + 'px');
-				
-				contentChild.on('transitionend', function() {
-					if ( content.hasClass('open') )
-						content.css('height', 'auto');
-				});
-				accordionOpen = true;
-			}
-
-			const classes = content.attr('class').split(' ');
-			for ( const key in NPCaccordions ) {
-				if ( classes.includes( key ) )
-					NPCaccordions[key] = accordionOpen;
-			}
-			
 		});
 
 		// Set Affinity
@@ -781,6 +728,9 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Manage Active Effects
 		html.on('click','.js_manageActiveEffect', async (e) => manageActiveEffect(e, this.actor));
+		
+		// Roll sub feature
+		html.on('click','.js_rollSubFeature', this._rollSubFeature.bind(this));
 
 		// Add new bond
 		html.on('click', '.js_addNewBond', async (ev) => {
@@ -826,18 +776,6 @@ export class FabulaActorSheet extends ActorSheet {
 
 		// Level up Character
 		html.on('click', '.js_levelUpCharacter', this._levelUpCharacter.bind(this));
-		
-		// Artefice - Add new Skill Type
-		html.on('click', '.js_addSkillType', this._addSkillType.bind(this));
-		
-		// Artefice - Remove Skill Type
-		html.on('click', '.js_removeSkillType', this._removeSkillType.bind(this));
-		
-		// Artefice - Roll Technology
-		html.on('click', '.js_rollTechnology', this._rollTechnology.bind(this));
-		
-		// Artefice - Roll Verse
-		html.on('click', '.js_rollVerse', this._rollVerse.bind(this));
 
 		// ContextMenu item settings menu items
 		const contextMenuItemSettings = [
@@ -959,13 +897,13 @@ export class FabulaActorSheet extends ActorSheet {
 		const accessories = [];
 		const arcanums = [];
 		const classes = [];
+		const classFeatures = [];
 		const heroicSkills = [];
 		const spells = [];
 		const projects = [];
 		const rituals = [];
 		const baseItems = [];
 		const attacks = [];
-		const skills = [];
 
 		for ( let i of actor.items ) {
 
@@ -978,15 +916,22 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 			// Enriches flags description fields
-			if ( i.flags?.fabula ) {
-				for ( let [namespace, values] of Object.entries(i.flags.fabula) ) {
-					for ( let [key, value] of Object.entries(values) ) {
-						value.enrichedHtml = {
-							description: await TextEditor.enrichHTML( value.system?.description ?? '' ),
-						}
-					}
-				}
+			// if ( i.flags?.fabula ) {
+			// 	for ( let [namespace, values] of Object.entries(i.flags.fabula) ) {
+			// 		for ( let [key, value] of Object.entries(values) ) {
+			// 			value.enrichedHtml = {
+			// 				description: await TextEditor.enrichHTML( value.system?.description ?? '' ),
+			// 			}
+			// 		}
+			// 	}
+			// }
+
+			// Add context flag to item
+			const ctx = i.getFlag('fabula', 'ctx') || {};
+			if ( !ctx.hasOwnProperty('collapsed') ) {
+				ctx.collapsed = true;
 			}
+			await i.setFlag('fabula', 'ctx', ctx);
 
 			if (i.type === 'weapon') {
 				weapons.push(i);
@@ -1003,6 +948,8 @@ export class FabulaActorSheet extends ActorSheet {
 				if ( i.system.level.value >= 10 ) {
 					context.obtainHeroicSkill += 1;
 				}
+			} else if (i.type === 'classFeature') {
+				classFeatures.push(i);
 			} else if (i.type === 'heroicSkill') {
 				heroicSkills.push(i);
 				context.obtainHeroicSkill -= i.system.level.current;
@@ -1016,8 +963,6 @@ export class FabulaActorSheet extends ActorSheet {
 				baseItems.push(i);
 			} else if (i.type === 'attack') {
 				attacks.push(i);
-			} else if (i.type === 'skill') {
-				skills.push(i);
 			}
 		}
 
@@ -1039,23 +984,13 @@ export class FabulaActorSheet extends ActorSheet {
 		context.accessories = accessories;
 		context.arcanums = arcanums;
 		context.classes = classes;
+		context.classFeatures = classFeatures;
 		context.heroicSkills = heroicSkills;
 		context.spells = spells;
 		context.projects = projects;
 		context.rituals = rituals;
 		context.baseItems = baseItems;
 		context.attacks = attacks;
-		context.skills = skills;
-		context.classFeature = {};
-		
-
-		for (const item of this.actor.itemTypes.classFeature) {
-			const featureType = (context.classFeature[item.system.featureType] ??= {
-				feature: item.system.data?.constructor,
-				items: {},
-			});
-			featureType.items[item.id] = { item, additionalData: await featureType.feature?.getAdditionalData(item.system.data) };
-		}
 	}
 
 	async _levelUpCharacter(event) {
@@ -1350,20 +1285,10 @@ export class FabulaActorSheet extends ActorSheet {
 		const element = event.currentTarget;
 		const messageClass = element.dataset.class || 'item-description';
 		const itemID = element.dataset.itemid;
-		const flag = element.dataset.flag || false;
 		const item = this.actor.items.get( itemID );		
 
-		let messageTitle;
-		let messageContent;
-		
-		if ( flag && item.flags?.fabula?.subItems[flag] ) {
-			const subItem = item.flags?.fabula?.subItems[flag];
-			messageTitle = subItem.name;
-			messageContent = subItem.system.description;
-		} else {
-			messageTitle = item.name;
-			messageContent = item.system.description;
-		}
+		let messageTitle = item.name;
+		let messageContent = item.system.description;
 
 		if ( item.type == 'spell' ) {
 			if ( item.system.isOffensive.value )
@@ -1701,183 +1626,20 @@ export class FabulaActorSheet extends ActorSheet {
 		}
 	}
 
-	async _addSkillType(event) {
-		event.preventDefault();
-		const element = event.currentTarget;
-		const skill = element.dataset.type;
-		const actor = this.actor;
-		
-		if ( skill ) {
-			const skillObject = skill.split('.').reduce((o, i) => o[i], FU);
-			if ( !skillObject ) return false;
-
-			// Add volumes and keys to verses
-			if ( skill == 'verses.tone' ) {
-				const volumes = actor.getFlag('fabula', 'verses.volume') || [];
-				if ( volumes.length == 0 ) {
-					const defaultVolumes = [ 'low', 'medium', 'high' ];
-					await actor.setFlag('fabula', 'verses.volume', defaultVolumes);
-				}
-
-				const keys = actor.getFlag('fabula', 'verses.key') || [];
-				if ( keys.length == 0 ) {
-					await actor.setFlag('fabula', 'verses.key', FU.verses.key);
-				}
-			}
-
-			const actorSkill = actor.getFlag('fabula', skill) || [];
-			let optionsList = '';
-			Object.keys( skillObject ).forEach( type => {
-				optionsList += `<option value="${type}">${game.i18n.localize(skillObject[type])}</option>`;
-			});
-
-			let type = await awaitDialogSelect({
-				title: `Stai aggiungendo un nuovo tipo di ${game.i18n.localize(`FU.skills.${skill}`)}`,
-				optionsLabel: '<p>Scegli quale di queste opzioni aggiungere:</p>',
-				options: optionsList,
-			});
-
-			if ( type == false ) return false;
-
-			if ( actorSkill.includes(type) ) {
-				ui.notifications.warn(`${game.i18n.localize(skillObject[type])} è già presente`);
-				return false;
-			}
-
-			actorSkill.push(type);
-			await actor.setFlag('fabula', skill, actorSkill);
-		}
-	}
-
-	async _removeSkillType(event) {
-		event.preventDefault();
-		const actor = this.actor;
-		const element = event.currentTarget;
-		const skill = element.dataset.skill;
-		const type = element.dataset.type;
-
-		if ( skill && type ) {
-			const actorSkill = actor.getFlag('fabula', skill) || [];
-
-			if ( actorSkill.includes(type) ) {
-				const newSkills = actorSkill.filter( item => item !== type );
-				await actor.setFlag('fabula', skill, newSkills);
-			}
-		}
-
-	}
-
-	async _rollTechnology(event) {
+	async _rollSubFeature(event) {
 		event.preventDefault();
 		const actor = this.actor;
 		const element = event.currentTarget;
 		const type = element.dataset.type;
+		const itemID = element.dataset.itemid;
 
-		if ( type ) {
-
-			let messageTitle = '';
-			let messageContent = '';
-			
-			if ( type == 'alchemy' ) {
-
-				messageTitle = 'Sta creando una <strong>pozione</strong>';
-				messageContent = `
-					<table>
-						<tbody>
-							<tr>
-								<th>Mix</th>
-								<td style="width:50%;">
-									<button type="button" class="js_rollAlchemyMix" data-actor="${actor._id}">
-										<i class="fa fa-dice-d20"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<th>Area</th>
-								<td class="area_desc"></td>
-							</tr>
-							<tr>
-								<th>Effetto</th>
-								<td class="effect_desc"></td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p class="alchemy_effect"></p>
-				`;
-
-			} else if ( type == 'magitech' ) {
-				const classFeaturesCompendium = game.packs.get('fabula.classfeatures');
-				const ruleID = '0TVNmvxkwfyua8G5';
-
-				if ( classFeaturesCompendium ) {
-					classFeaturesCompendium.getDocument( ruleID ).then(item => {
-						if ( item )
-							item.sheet.render(true);
-						else
-							console.error(`L'Item con ID: ${ruleID} non è stato trovato!`);
-					});
-				}
-				return;
-			} else if ( type == 'infusions' ) {
-				ui.notifications.warn('Puoi creare un\'infusione quando colpisci uno o più bersagli con un attacco');
-				return false;
+		if ( itemID && type ) {
+			const item = actor.items.get( itemID );
+			if ( type === 'alchemy' ) {
+				console.log('Alchimia');
+			} else if ( type === 'magitech' ) {
+				console.log('Magitech');
 			}
-
-			const chatData = {
-				user: game.user.id,
-				speaker: ChatMessage.getSpeaker({ actor: actor.name }),
-				flavor: messageTitle,
-				content: messageContent,
-				flags: {
-					customClass: 'technology',
-				},
-			};
-			ChatMessage.create(chatData);
-
-		}
-	}
-
-	async _rollVerse(event) {
-		event.preventDefault();
-		const actor = this.actor;
-		const element = event.currentTarget;
-		const tone = element.dataset.tone;
-
-		if ( tone ) {
-			const chatData = {
-				user: game.user.id,
-				speaker: ChatMessage.getSpeaker({ actor: actor.name }),
-				flavor: 'Stai cantando un <strong>verso</strong>',
-				content: `
-					<table>
-						<tbody>
-							<tr>
-								<th>Verso</th>
-								<td style="width:50%;">
-									<button type="button" class="js_createVerse" data-actor="${actor._id}" data-tone="${tone}">
-										<i class="fa fa-gear"></i>
-									</button>
-								</td>
-							</tr>
-							<tr>
-								<th>Volume</th>
-								<td class="volume_desc"></td>
-							</tr>
-							<tr>
-								<th>Chiave</th>
-								<td class="key_desc"></td>
-							</tr>
-						</tbody>
-					</table>
-
-					<p class="tone_effect"></p>
-				`,
-				flags: {
-					customClass: 'verse',
-				},
-			};
-			ChatMessage.create(chatData);
 		}
 	}
 }

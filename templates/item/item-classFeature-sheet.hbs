@@ -162,6 +162,35 @@
                 </div>
             </fieldset>
 
+            {{!-- Advancement Fields --}}
+            <fieldset>
+                <legend>Avanzamento</legend>
+
+                <div class="form-group">
+                    <label for="system.advancement.value">Acquisisci abilità extra</label>
+                    <input type="checkbox" name="system.advancement.value" id="system.advancement.value" {{checked system.advancement.value}}>
+                </div>
+
+                {{#if system.advancement.value}}
+                    {{#if (arrayLengthGt system.features 0)}}
+                        <ul>
+                            {{#each embeddedFeatures as |feature featureIndex|}}
+                                <li>
+                                    <button type="button" class="js_removeFromArray" data-prop="system.features" data-index="{{featureIndex}}">
+                                        <i class="fa fa-fw fa-trash"></i>
+                                    </button>
+                                    <a class="content-link" draggable="true" data-link data-uuid="{{feature.uuid}}" data-id="{{feature._id}}" data-type="Item" data-tooltip="Apri {{feature.name}}">
+                                        {{feature.name}}
+                                    </a>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    {{else}}
+                        <p>Trascina qui le abilità che possono essere acquisite</p>
+                    {{/if}}
+                {{/if}}
+            </fieldset>
+
             {{!-- Uses Fields --}}
             <fieldset>
                 <legend>Utilizzi</legend>

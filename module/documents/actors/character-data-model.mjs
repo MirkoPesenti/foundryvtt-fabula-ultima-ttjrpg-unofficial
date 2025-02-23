@@ -147,13 +147,14 @@ export class CharacterDataModel extends foundry.abstract.TypeDataModel {
 			if ( item.system.bonus.weapon.rangedWeapon ) data.useMartial.ranged = true;
 			if ( item.system.bonus.weapon.armor ) data.useMartial.armor = true;
 			if ( item.system.bonus.weapon.shield ) data.useMartial.shield = true;
+		}
 
-			if ( item.system.bonus.ritual.arcanism ) data.castRitual.arcanism = true;
-			if ( item.system.bonus.ritual.chimerism ) data.castRitual.chimerism = true;
-			if ( item.system.bonus.ritual.elementalism ) data.castRitual.elementalism = true;
-			if ( item.system.bonus.ritual.entropism ) data.castRitual.entropism = true;
-			if ( item.system.bonus.ritual.ritualism ) data.castRitual.ritualism = true;
-			if ( item.system.bonus.ritual.spiritism ) data.castRitual.spiritism = true;
+		// Set Ritual disciplines
+		const actorclassFeatures = this.parent.items.filter( item => item.type == 'classFeature' ) ?? [];
+		for ( const item of actorclassFeatures ) {
+			if ( item.system.ritual.value === true ) {
+				data.castRitual[item.system.ritual.type] = true;
+			}
 		}
 
 		// Set if character can create a project

@@ -176,35 +176,35 @@
     </header>
 
     <nav class="sheet-tabs tabs inner-tabs" data-group="primary">
-        <a class="item" data-tab="base">
+        <a class="item {{#if (eq flags.fabula.ctx.innerTab 'base')}}active{{/if}}" data-tab="base">
             <span>Equipaggiamento</span>
         </a>
-        <a class="item" data-tab="spells">
+        <a class="item {{#if (eq flags.fabula.ctx.innerTab 'spells')}}active{{/if}}" data-tab="spells">
             <span>Incantesimi</span>
         </a>
-        <a class="item" data-tab="skills">
+        <a class="item {{#if (eq flags.fabula.ctx.innerTab 'skills')}}active{{/if}}" data-tab="skills">
             <span>Abilità</span>
         </a>
         {{#if (or (gte (arrayLength heroicSkills) 1) (gte obtainHeroicSkill 1))}}
-            <a class="item" data-tab="heroic">
+            <a class="item {{#if (eq flags.fabula.ctx.innerTab 'heroic')}}active{{/if}}" data-tab="heroic">
                 <span>Eroiche</span>
                 {{#gt_e obtainHeroicSkill (arrayLength heroicSkills)}}
                     <i class="fa fa-fw fa-circle-exclamation"></i>
                 {{/gt_e}}
             </a>
         {{/if}}
-        <a class="item" data-tab="traits">
+        <a class="item {{#if (eq flags.fabula.ctx.innerTab 'traits')}}active{{/if}}" data-tab="traits">
             <span>Tratti</span>
         </a>
-        <a class="item" data-tab="effects">
+        <a class="item {{#if (eq flags.fabula.ctx.innerTab 'effects')}}active{{/if}}" data-tab="effects">
             <span>Effetti</span>
         </a>
-        <a class="item" data-tab="settings" style="flex:0;">
+        <a class="item {{#if (eq flags.fabula.ctx.innerTab 'settings')}}active{{/if}}" data-tab="settings" style="flex:0;">
             <span><i class="fa fa-fw fa-sliders"></i></span>
         </a>
     </nav>
     <section class="sheet-body">
-        <div class="tab base" data-group="primary" data-tab="base">
+        <div class="tab base {{#if (eq flags.fabula.ctx.innerTab 'base')}}active{{/if}}" data-group="primary" data-tab="base">
             <div class="title title-list">
                 <span>Equipaggiamento</span>
             </div>
@@ -297,7 +297,7 @@
             {{/if}}
         </div>
 
-        <div class="tab spells" data-group="primary" data-tab="spells">
+        <div class="tab spells {{#if (eq flags.fabula.ctx.innerTab 'spells')}}active{{/if}}" data-group="primary" data-tab="spells">
             <div class="title title-list">
                 <span>Incantesimi</span>
                 {{#if @root.editable}}
@@ -345,18 +345,18 @@
             {{/if}}
         </div>
         
-        <div class="tab skills" data-group="primary" data-tab="skills">
+        <div class="tab skills {{#if (eq flags.fabula.ctx.innerTab 'skills')}}active{{/if}}" data-group="primary" data-tab="skills">
             <div class="title title-list">
                 <span>Classi</span>
             </div>
             <ul class="list list-classes">
                 {{#each classes}}
-                    {{> 'systems/fabula/templates/actors/common/class-list-item.hbs' item=this actor=../system flags=../flags skills=../skills}}
+                    {{> 'systems/fabula/templates/actors/common/class-list-item.hbs' item=this actor=../system features=../classFeatures}}
                 {{/each}}
             </ul>
         </div>
         
-        <div class="tab heroic" data-group="primary" data-tab="heroic">
+        <div class="tab heroic {{#if (eq flags.fabula.ctx.innerTab 'heroic')}}active{{/if}}" data-group="primary" data-tab="heroic">
             <div class="title title-list">
                 <span>Abilità eroiche</span>
             </div>
@@ -375,7 +375,7 @@
             </ul>
         </div>
 
-        <div class="tab traits" data-group="primary" data-tab="traits">
+        <div class="tab traits {{#if (eq flags.fabula.ctx.innerTab 'traits')}}active{{/if}}" data-group="primary" data-tab="traits">
             <div class="title title-list">
                 <span>Tratti</span>
             </div>
@@ -451,13 +451,13 @@
             {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
         </div>
 
-        <div class="tab effects" data-group="primary" data-tab="effects">
+        <div class="tab effects {{#if (eq flags.fabula.ctx.innerTab 'effects')}}active{{/if}}" data-group="primary" data-tab="effects">
             {{#each effects as |category catIndex|}}
                 {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../actor}}
             {{/each}}
         </div>
 
-        <div class="tab settings" data-group="primary" data-tab="settings">
+        <div class="tab settings {{#if (eq flags.fabula.ctx.innerTab 'settings')}}active{{/if}}" data-group="primary" data-tab="settings">
             <div class="title title-list">
                 <span>Tracciamento risorse</span>
                 {{#if @root.editable}}

@@ -23,11 +23,13 @@ import { FU } from "../../helpers/config.mjs";
  * @property {string} recovery.hp.formula
  * @property {string} recovery.mp.formula
  * @property {string} recovery.ip.formula
+ * @property {boolean} advancement.value
+ * @property {string[]} features
  */
 
 export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 	static defineSchema() {
-		const { SchemaField, HTMLField, NumberField, StringField, BooleanField, EmbeddedDataField } = foundry.data.fields;
+		const { SchemaField, HTMLField, NumberField, StringField, BooleanField, EmbeddedDataField, ArrayField } = foundry.data.fields;
 		return {
 			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
@@ -58,6 +60,8 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 				mp: new SchemaField({ formula: new StringField({ initial: '' }) }),
 				ip: new SchemaField({ formula: new StringField({ initial: '' }) }),
 			}),
+			advancement: new SchemaField({ value: new BooleanField({ initial: false }), }),
+			features: new ArrayField( new StringField() ),
 		};
 	}
 

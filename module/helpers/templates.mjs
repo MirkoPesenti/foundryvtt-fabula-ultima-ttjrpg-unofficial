@@ -21,10 +21,7 @@ export const preloadPartialTemplates = async function() {
 
         // Commons
         'systems/fabula/templates/common/active-effects.hbs',
-        'systems/fabula/templates/common/class/dances.hbs',
         'systems/fabula/templates/common/class/free-benefits.hbs',
-        'systems/fabula/templates/common/class/technologies.hbs',
-        'systems/fabula/templates/common/class/verses.hbs',
 
         // Chat Messages
         'systems/fabula/templates/chat/common/dice-result.hbs',

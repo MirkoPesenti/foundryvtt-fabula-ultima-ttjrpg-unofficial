@@ -1,6 +1,7 @@
 import { FU } from "../../helpers/config.mjs";
 
 /**
+ * @property {string} fabulaID
  * @property {string} sourcebook
  * @property {string} art.src
  * @property {string} summary.value
@@ -11,18 +12,13 @@ import { FU } from "../../helpers/config.mjs";
  * @property {boolean} bonus.hp
  * @property {boolean} bonus.mp
  * @property {boolean} bonus.ip
- * @property {boolean} bonus.ritual.arcanism
- * @property {boolean} bonus.ritual.chimerism
- * @property {boolean} bonus.ritual.elementalism
- * @property {boolean} bonus.ritual.entropism
- * @property {boolean} bonus.ritual.ritualism
- * @property {boolean} bonus.ritual.spiritism
  * @property {boolean} bonus.weapon.meleeWeapon
  * @property {boolean} bonus.weapon.rangedWeapon
  * @property {boolean} bonus.weapon.armor
  * @property {boolean} bonus.weapon.shield
  * @property {boolean} bonus.projects.value
  * @property {string} bonus.projects.condition
+ * @property {string[]} features
  */
 
 export class CLassDataModel extends foundry.abstract.TypeDataModel {

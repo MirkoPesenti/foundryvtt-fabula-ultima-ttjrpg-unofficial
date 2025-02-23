@@ -109,27 +109,59 @@ function openAttributesIncreaseChildDialog( actor ) {
 
 async function openClassFeaturesChildDialog( sourceClass, actor, featureItem = null ) {
 
-	const classFeatures = sourceClass.flags?.fabula?.subItems;
-	if ( !classFeatures ) {
-		ui.notifications.warn('La classe non ha Abilità di Classe selezionabili');
+	let classFeatures = [];
+	for ( const id of sourceClass.system.features ) {
+		let item = game.items.get( id );
+		if ( item ) {
+			classFeatures.push( item );
+			continue;
+		}
+
+		for ( const pack of game.packs ) {
+			if ( pack.documentName === 'Item' ) {
+				item = await pack.getDocument( id );
+				if ( item ) {
+					classFeatures.push( item );
+					break;
+				}
+			}
+		}
+	}
+	
+	if ( classFeatures.length === 0 ) {
+		ui.notifications.warn(`L'Item ${sourceClass.name} non ha Abilità di Classe selezionabili`);
 		return false;
 	}
 
 	if ( featureItem === null ) {
 		let skillOptions = '<div class="form-choose-feature">';
 		for ( const skill of classFeatures ) {
+			let skillCurrentLevel = null;
+			let skillMaxLevel = null;
+			actor.items.forEach(item => {
+				if ( item.system.fabulaID === skill.system.fabulaID ) {
+					skillCurrentLevel = item.system.level.current;
+					skillMaxLevel = item.system.level.max;
+					return;
+				}
+			});
+			if ( skillCurrentLevel === null && skillMaxLevel === null ) {
+				skillCurrentLevel = skill.system.level.current; 
+				skillMaxLevel = skill.system.level.max;
+			}
+
 			skillOptions += `
 				<div class="form-feature-group ${skill.system.sourcebook}">
-					<label class="${skill.system.level.current == skill.system.level.max ? 'disabled' : ''}">
+					<label class="${skillCurrentLevel == skillMaxLevel ? 'disabled' : ''}">
 						<div class="title">
 							${skill.name}
 			`;
-			if ( skill.system.level.current < skill.system.level.max ) {
+			if ( skillCurrentLevel < skillMaxLevel ) {
 				skillOptions += `
 							<span class="upgrade">
-								${skill.system.level.current}
+								${skillCurrentLevel}
 								<i class="fa fa-fw fa-right-long"></i>
-								${skill.system.level.current + 1}
+								${skillCurrentLevel + 1}
 							</span>
 				`;
 			} else {
@@ -142,13 +174,13 @@ async function openClassFeaturesChildDialog( sourceClass, actor, featureItem = n
 			const enrichedDescription = await TextEditor.enrichHTML( skill.system.description ?? '' );
 			skillOptions += `
 							<span class="max">
-								(<span>l</span> ${skill.system.level.max})
+								(<span>l</span> ${skillMaxLevel})
 							</span>
 						</div>
 						<div class="description">
 							${enrichedDescription}
 						</div>
-						<input type="radio" name="formClassFeature" value="${skill._id}" ${skill.system.level.current == skill.system.level.max ? 'disabled' : ''} />
+						<input type="radio" name="formClassFeature" value="${skill._id}" ${skillCurrentLevel == skillMaxLevel ? 'disabled' : ''} />
 					</label>
 				</div>
 			`;
@@ -157,7 +189,7 @@ async function openClassFeaturesChildDialog( sourceClass, actor, featureItem = n
 
 		return new Promise((resolve) => {
 			new Dialog({
-				title: `Hai scelto la classe ${sourceClass.name}!`,
+				title: `Hai scelto: ${sourceClass.name}!`,
 				content: `
 					<p>Scegli una delle seguenti <strong>Abilità di Classe</strong>:</p>
 					${skillOptions}
@@ -171,18 +203,27 @@ async function openClassFeaturesChildDialog( sourceClass, actor, featureItem = n
 						label: 'Conferma',
 						callback: async (html) => {
 							const featureID = html.find('input[name="formClassFeature"]:checked').val();
-							const feature = classFeatures.find((element) => element._id == featureID);
-							feature.system.level.current++;
+							const compendium = game.packs.get('fabula.classfeatures');
+							const feature = await compendium.getDocument( featureID );
 
-							if ( feature?.flags?.fabula?.subItems ) {
-								const subItems = feature?.flags?.fabula?.subItems;
-								for ( const item of subItems ) {
-									await actor.createEmbeddedDocuments("Item", [item]);
+							let existingFeatureID = null;
+							actor.items.forEach(item => {
+								if ( item.system.fabulaID === feature.system.fabulaID ) {
+									existingFeatureID = item._id;
+									return;
 								}
-							}
+							});
 
-							await sourceClass.setFlag('fabula', 'subItems', classFeatures);
-							resolve(true);
+							if ( existingFeatureID === null ) {
+								const newFeature = feature.toObject();
+								newFeature.system.level.current++;
+							
+								resolve( await actor.createEmbeddedDocuments("Item", [newFeature]) );
+							} else {
+								const item = actor.items.get( existingFeatureID );
+								const newLevel = item.system.level.current + 1;
+								resolve( await item.update({ 'system.level.current': newLevel }) );
+							}
 						}
 					}
 				}
@@ -192,19 +233,22 @@ async function openClassFeaturesChildDialog( sourceClass, actor, featureItem = n
 		});
 	} else {
 
-		const feature = classFeatures.find(element => element._id == featureItem._id);
-		feature.system.level.current++;
-
-		if ( feature?.flags?.fabula?.subItems ) {
-			const subItems = feature?.flags?.fabula?.subItems;
-			for ( const item of subItems ) {
-				await actor.createEmbeddedDocuments("Item", [item]);
+		let existingFeatureID = null;
+		actor.items.forEach(item => {
+			if ( item.system.fabulaID === featureItem.system.fabulaID ) {
+				existingFeatureID = item._id;
+				return;
 			}
+		});
+
+		if ( existingFeatureID === null ) {
+			featureItem.system.level.current++;
+			return await actor.createEmbeddedDocuments("Item", [featureItem]);
+		} else {
+			const item = actor.items.get( existingFeatureID );
+			const newLevel = item.system.level.current + 1;
+			return await item.update({ 'system.level.current': newLevel });
 		}
-
-		await sourceClass.setFlag('fabula', 'subItems', classFeatures);
-		return true;
-
 	}
 }
 
@@ -219,7 +263,23 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 	let featureItem;
 	if ( isClassFeature ) {
 		className = sourceItem.folder.name;
-		featureItem = sourceItem.toObject();
+		let existingFeatureID = null;
+		actor.items.forEach(item => {
+			if ( item.system.fabulaID === sourceItem.system.fabulaID ) {
+				existingFeatureID = item._id;
+				return;
+			}
+		});
+		if ( existingFeatureID === null ) {
+			featureItem = sourceItem.toObject();
+		} else {
+			featureItem = actor.items.get( existingFeatureID );
+			featureItem = featureItem.toObject();
+		}
+		if ( featureItem.system.level.current >= featureItem.system.level.max ) {
+			ui.notifications.warn(`Non puoi acquisire ulteriori livelli nell'abilità: ${featureItem.name}!`);
+			return false;
+		}
 	} else {
 		className = sourceItem.name;
 		featureItem = null;
@@ -250,7 +310,20 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		let featureAdded = false;
 		featureAdded = await openClassFeaturesChildDialog( embeddedClass, actor, featureItem );
 
-		if ( featureAdded && embeddedClass.system.level.value < 10 ) {
+		let featureClone = [];
+		console.log(typeof featureAdded);
+		
+		if ( featureAdded.hasOwnProperty(0) ) {
+			featureClone = featureAdded;
+		} else {
+			featureClone.push( featureAdded );
+		}
+		if ( featureAdded !== false && featureClone[0]?.system?.advancement?.value === true ) {
+			featureAdded = false;
+			featureAdded = await openClassFeaturesChildDialog( featureClone[0], actor );
+		}
+
+		if ( featureAdded !== false && embeddedClass.system.level.value < 10 ) {
 			const newLevel = embeddedClass.system.level.value + 1;
 			await embeddedClass.update({ 'system.level.value': newLevel });
 			if ( embeddedClass.system.level.value == 10 ) 
@@ -298,7 +371,18 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		let featureAdded = false;
 		featureAdded = await openClassFeaturesChildDialog( addedClass, actor, featureItem );
 
-		if ( !featureAdded ) {
+		let featureClone = [];
+		if ( featureAdded.hasOwnProperty(0) ) {
+			featureClone = featureAdded;
+		} else {
+			featureClone.push( featureAdded );
+		}
+		if ( featureAdded !== false && featureClone[0]?.system?.advancement?.value === true ) {
+			featureAdded = false;
+			featureAdded = await openClassFeaturesChildDialog( featureClone[0], actor );
+		}
+
+		if ( featureAdded === false ) {
 			const itemToBeRemoved = actor.items.get( addedClass._id );
 			await itemToBeRemoved.delete();
 		}
