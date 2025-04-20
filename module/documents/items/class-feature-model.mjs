@@ -50,6 +50,8 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 				value: new BooleanField({ initial: false }),
 				attributes: new EmbeddedDataField(AttributesDataModel, {}),
 				bonus: new StringField({ initial: undefined, blank: true, }),
+				hasChoice: new BooleanField({ initial: false }),
+				attributesSecondary: new EmbeddedDataField(AttributesDataModel, {}),
 			}),
 			ritual: new SchemaField({
 				value: new BooleanField({ initial: false }),
@@ -59,6 +61,10 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 				hp: new SchemaField({ formula: new StringField({ initial: '' }) }),
 				mp: new SchemaField({ formula: new StringField({ initial: '' }) }),
 				ip: new SchemaField({ formula: new StringField({ initial: '' }) }),
+			}),
+			bonus: new SchemaField({
+				key: new StringField({ initial: undefined, blank: true }),
+				modifier: new NumberField({ initial: undefined, nullable: true }),
 			}),
 			advancement: new SchemaField({ value: new BooleanField({ initial: false }), }),
 			features: new ArrayField( new StringField() ),

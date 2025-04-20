@@ -84,6 +84,22 @@
                             <input type="text" name="system.test.bonus" value="{{system.test.bonus}}">
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="system.test.hasChoice">Scelta multipla?</label>
+                        <input type="checkbox" name="system.test.hasChoice" id="system.test.hasChoice" {{checked system.test.hasChoice}} />
+                    </div>
+                    {{#if system.test.hasChoice}}
+                        <div class="form-group">
+                            <label>Caratteristiche</label>
+                            <select name="system.test.attributesSecondary.primary.value">
+                                {{selectOptions attributesAbbr selected=system.test.attributesSecondary.primary.value sort=true localize=true}}
+                            </select>
+                            <select name="system.test.attributesSecondary.secondary.value">
+                                {{selectOptions attributesAbbr selected=system.test.attributesSecondary.secondary.value sort=true localize=true}}
+                            </select>
+                        </div>
+                    {{/if}}
                 {{/if}}
             </fieldset>
 
@@ -113,6 +129,21 @@
                         <label style="width:100%;flex:unset;">Formula</label>
                         <input type="text" name="system.recovery.ip.formula" value="{{system.recovery.ip.formula}}">
                     </div>
+                </div>
+            </fieldset>
+
+            {{!-- Bonus Fields --}}
+            <fieldset>
+                <legend>Bonus temporaneo su 【LA】</legend>
+
+                <div class="form-group">
+                    <label>Caratteristica</label>
+                    <input type="text" name="system.bonus.key" value="{{system.bonus.key}}">
+                </div>
+
+                <div class="form-group">
+                    <label>Modificatore</label>
+                    <input type="number" name="system.bonus.modifier" value="{{system.bonus.modifier}}">
                 </div>
             </fieldset>
 

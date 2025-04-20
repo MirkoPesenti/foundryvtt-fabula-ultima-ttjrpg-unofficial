@@ -388,13 +388,45 @@ Hooks.on('preUpdateItem', async (item, updateData, options, userId) => {
 	
 	if ( item.type == 'classFeature' ) {
 		const classOrigin = foundry.utils.getProperty(updateData, 'system.origin');
-		if ( !classOrigin ) return;
-		
 		const itemImage = foundry.utils.getProperty(updateData, 'img');
-		if ( !itemImage ) return;
+		if ( classOrigin && itemImage ) {	
+			if ( itemImage == `systems/fabula/assets/icons/default-${item.type}.svg` || ( item.system?.origin != '' && itemImage == `systems/fabula/assets/icons/classes/${item.system.origin}.png` ) ) {
+				updates['img'] = `systems/fabula/assets/icons/classes/${classOrigin}.png`;
+			}
+		}
 
-		if ( itemImage == `systems/fabula/assets/icons/default-${item.type}.svg` || ( item.system?.origin != '' && itemImage == `systems/fabula/assets/icons/classes/${item.system.origin}.png` ) ) {
-			updates['img'] = `systems/fabula/assets/icons/classes/${classOrigin}.png`;
+		// Add Active Effects for level
+		const bonusKey = item.system.bonus.key;
+		if ( ( foundry.utils.hasProperty(updateData, 'system.level.current') || foundry.utils.hasProperty(updateData, 'system.bonus.key') || foundry.utils.hasProperty(updateData, 'system.bonus.modifier') ) && bonusKey ) {
+			if ( item.effects ) {
+				const effectToRemove = item.effects.find( effect => effect.name === `Bonus temporaneo di ${item.name}` );
+				if ( effectToRemove ) {
+					await item.deleteEmbeddedDocuments("ActiveEffect", [effectToRemove.id]);
+				}
+			}
+			
+			const newKey = foundry.utils.hasProperty(updateData, 'system.bonus.key') ? foundry.utils.getProperty(updateData, 'system.bonus.key') : bonusKey;
+
+			if ( newKey !== '' ) {
+				const modifier = foundry.utils.hasProperty(updateData, 'system.bonus.modifier') ? foundry.utils.getProperty(updateData, 'system.bonus.modifier') : item.system.bonus.modifier;
+				const newValue = foundry.utils.hasProperty(updateData, 'system.level.current') ? foundry.utils.getProperty(updateData, 'system.level.current') : item.system.level.current;
+
+				const existingEffect = item.effects.find((effect) => effect.name === `Bonus temporaneo di ${item.name}`);
+				if ( !existingEffect ) {
+					await item.createEmbeddedDocuments('ActiveEffect', [{
+						label: `Bonus temporaneo di ${item.name}`,
+						origin: item.uuid,
+						disabled: true,
+						changes: [
+							{
+								key: newKey,
+								mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+								value: newValue + modifier,
+							}
+						],
+					}]);
+				}
+			}
 		}
 	}
 
@@ -1091,7 +1123,6 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 			options: keyOptions,
 		});
 		if ( key == false ) return false;
-		console.log(FU.verses.key[key]);
 		newMessageContent = newMessageContent.replace('<td class="key_desc"></td>', `<td class="key_desc">${game.i18n.localize(`FU.verses.key.${key}`)}</td>`);
 
 		let verseDescription = game.i18n.localize(`FU.verses.volumeEffect.${volume}`);

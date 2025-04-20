@@ -311,7 +311,6 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		featureAdded = await openClassFeaturesChildDialog( embeddedClass, actor, featureItem );
 
 		let featureClone = [];
-		console.log(typeof featureAdded);
 		
 		if ( featureAdded.hasOwnProperty(0) ) {
 			featureClone = featureAdded;

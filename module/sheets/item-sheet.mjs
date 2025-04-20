@@ -602,7 +602,7 @@ export class FabulaItemSheet extends ItemSheet {
 			}
 			
 			// Check if Class Feature has subfeatures
-			if ( targetItem.system.advancement.value === false ) {
+			if ( targetItem.type == 'classFeature' && targetItem.system?.advancement?.value === false ) {
 				ui.notifications.warn(`L'abilità ${targetItem.name} non può avere abilità secondarie.`);
 				return;
 			}
