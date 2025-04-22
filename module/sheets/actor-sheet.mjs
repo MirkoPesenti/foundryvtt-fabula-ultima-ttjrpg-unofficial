@@ -1465,11 +1465,9 @@ export class FabulaActorSheet extends ActorSheet {
 						}
 					}
 				} else if ( item.type == 'shield' ) {
-					const twinShields = actor.getItemByFabulaID('scudi-gemelli');
-					console.log(twinShields);
-					
+					const doubleShield = actor.getItemByFabulaID('doppio-scudo','classFeature');
 					slot = 'offHand';
-					if ( twinShields ) {
+					if ( doubleShield ) {
 						if (
 							await Dialog.confirm({
 								title: `Stai equipaggiando ${item.name}`,
@@ -1500,6 +1498,9 @@ export class FabulaActorSheet extends ActorSheet {
 				let martialSlot = slot;
 				if ( item.type == 'weapon' ) {
 					martialSlot = item.system.range;
+				}
+				if ( item.type == 'shield' ) {
+					martialSlot = 'shield';
 				}
 
 				if ( !actor.system.useMartial[martialSlot] ) {

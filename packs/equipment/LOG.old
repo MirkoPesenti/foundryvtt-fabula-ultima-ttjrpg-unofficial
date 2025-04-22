@@ -1,7 +1,11 @@
-2025/04/18-08:50:06.105325 314286000 Recovering log #410
-2025/04/18-08:50:06.105613 314286000 Delete type=0 #410
-2025/04/18-08:50:06.105636 314286000 Delete type=3 #409
-2025/04/18-17:51:15.598222 318c13000 Level-0 table #414: started
-2025/04/18-17:51:15.598334 318c13000 Level-0 table #414: 0 bytes OK
-2025/04/18-17:51:15.598460 318c13000 Delete type=0 #412
-2025/04/18-17:51:15.598747 318c13000 Manual compaction at level-0 from '!folders!07TSPQhwHm5R6N2R' @ 72057594037927935 : 1 .. '!items.effects!yMTq4SCt7iPtZTGX.UXUSWGvHsoKXmwN0' @ 0 : 0; will stop at (end)
+2025/04/22-21:31:36.025 c74 Delete type=3 #1
+2025/04/22-21:33:11.005 3fac Level-0 table #421: started
+2025/04/22-21:33:11.005 3fac Level-0 table #421: 0 bytes OK
+2025/04/22-21:33:11.007 3fac Delete type=0 #419
+2025/04/22-21:33:11.041 3fac Manual compaction at level-0 from '!folders!07TSPQhwHm5R6N2R' @ 72057594037927935 : 1 .. '!items.effects!yMTq4SCt7iPtZTGX.UXUSWGvHsoKXmwN0' @ 0 : 0; will stop at '!items.effects!yMTq4SCt7iPtZTGX.UXUSWGvHsoKXmwN0' @ 3751 : 1
+2025/04/22-21:33:11.041 3fac Compacting 1@0 + 0@1 files
+2025/04/22-21:33:11.057 3fac Generated table #422@0: 448 keys, 139217 bytes
+2025/04/22-21:33:11.057 3fac Compacted 1@0 + 0@1 files => 139217 bytes
+2025/04/22-21:33:11.059 3fac compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/04/22-21:33:11.060 3fac Delete type=2 #388
+2025/04/22-21:33:11.071 3fac Manual compaction at level-0 from '!items.effects!yMTq4SCt7iPtZTGX.UXUSWGvHsoKXmwN0' @ 3751 : 1 .. '!items.effects!yMTq4SCt7iPtZTGX.UXUSWGvHsoKXmwN0' @ 0 : 0; will stop at (end)

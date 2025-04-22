@@ -1,7 +1,11 @@
-2025/04/18-08:50:06.095626 314a89000 Recovering log #486
-2025/04/18-08:50:06.095880 314a89000 Delete type=3 #485
-2025/04/18-08:50:06.095909 314a89000 Delete type=0 #486
-2025/04/18-17:51:15.596931 318c13000 Level-0 table #490: started
-2025/04/18-17:51:15.597430 318c13000 Level-0 table #490: 0 bytes OK
-2025/04/18-17:51:15.597709 318c13000 Delete type=0 #488
-2025/04/18-17:51:15.598731 318c13000 Manual compaction at level-0 from '!folders!Uwh7ykulLYTvqOd6' @ 72057594037927935 : 1 .. '!items!za1eM6sfGyD52IyQ' @ 0 : 0; will stop at (end)
+2025/04/22-21:31:35.928 4aa0 Delete type=3 #1
+2025/04/22-21:33:10.949 3fac Level-0 table #497: started
+2025/04/22-21:33:10.950 3fac Level-0 table #497: 0 bytes OK
+2025/04/22-21:33:10.952 3fac Delete type=0 #495
+2025/04/22-21:33:10.969 3fac Manual compaction at level-0 from '!folders!Uwh7ykulLYTvqOd6' @ 72057594037927935 : 1 .. '!items!za1eM6sfGyD52IyQ' @ 0 : 0; will stop at '!items!za1eM6sfGyD52IyQ' @ 469 : 1
+2025/04/22-21:33:10.969 3fac Compacting 1@0 + 0@1 files
+2025/04/22-21:33:10.975 3fac Generated table #498@0: 122 keys, 88816 bytes
+2025/04/22-21:33:10.975 3fac Compacted 1@0 + 0@1 files => 88816 bytes
+2025/04/22-21:33:10.977 3fac compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/04/22-21:33:10.977 3fac Delete type=2 #464
+2025/04/22-21:33:10.996 3fac Manual compaction at level-0 from '!items!za1eM6sfGyD52IyQ' @ 469 : 1 .. '!items!za1eM6sfGyD52IyQ' @ 0 : 0; will stop at (end)

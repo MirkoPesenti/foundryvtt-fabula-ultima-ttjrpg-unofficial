@@ -399,7 +399,7 @@ Hooks.on('preUpdateItem', async (item, updateData, options, userId) => {
 		const bonusKey = item.system.bonus.key;
 		if ( ( foundry.utils.hasProperty(updateData, 'system.level.current') || foundry.utils.hasProperty(updateData, 'system.bonus.key') || foundry.utils.hasProperty(updateData, 'system.bonus.modifier') || foundry.utils.hasProperty(updateData, 'system.bonus.temporary') ) && bonusKey ) {
 			if ( item.effects ) {
-				const effectToRemove = item.effects.find( effect => effect.name === `Bonus temporaneo di ${item.name}` );
+				const effectToRemove = item.effects.find( effect => effect.name === `Bonus di ${item.name}` );
 				if ( effectToRemove ) {
 					await item.deleteEmbeddedDocuments("ActiveEffect", [effectToRemove.id]);
 				}
@@ -421,10 +421,10 @@ Hooks.on('preUpdateItem', async (item, updateData, options, userId) => {
 					changedValue += Number(modifier);
 				}
 
-				const existingEffect = item.effects.find((effect) => effect.name === `Bonus temporaneo di ${item.name}`);
+				const existingEffect = item.effects.find((effect) => effect.name === `Bonus di ${item.name}`);
 				if ( !existingEffect ) {
 					await item.createEmbeddedDocuments('ActiveEffect', [{
-						label: `Bonus temporaneo di ${item.name}`,
+						label: `Bonus di ${item.name}`,
 						origin: item.uuid,
 						disabled: isDisabled,
 						changes: [

@@ -1,17 +1,12 @@
-2025/04/18-08:50:06.084051 313a83000 Recovering log #764
-2025/04/18-08:50:06.084219 313a83000 Level-0 table #766: started
-2025/04/18-08:50:06.084366 313a83000 Level-0 table #766: 3428 bytes OK
-2025/04/18-08:50:06.084748 313a83000 Delete type=3 #763
-2025/04/18-08:50:06.084924 313a83000 Delete type=0 #764
-2025/04/18-17:51:15.599910 318c13000 Level-0 table #769: started
-2025/04/18-17:51:15.600327 318c13000 Level-0 table #769: 3329 bytes OK
-2025/04/18-17:51:15.600535 318c13000 Delete type=0 #767
-2025/04/18-17:51:15.601165 318c13000 Manual compaction at level-0 from '!folders!2mwDmPrZo4lLCuSt' @ 72057594037927935 : 1 .. '!items!yrw0mTatQT78Zt65' @ 0 : 0; will stop at '!items!mpnuGHo6p1OcM7Xf' @ 907 : 1
-2025/04/18-17:51:15.601170 318c13000 Compacting 2@0 + 1@1 files
-2025/04/18-17:51:15.602074 318c13000 Generated table #770@0: 34 keys, 55828 bytes
-2025/04/18-17:51:15.602081 318c13000 Compacted 2@0 + 1@1 files => 55828 bytes
-2025/04/18-17:51:15.602126 318c13000 compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/04/18-17:51:15.610500 318c13000 Delete type=2 #766
-2025/04/18-17:51:15.610776 318c13000 Delete type=2 #758
-2025/04/18-17:51:15.610989 318c13000 Delete type=2 #769
-2025/04/18-17:51:15.613960 318c13000 Manual compaction at level-0 from '!items!mpnuGHo6p1OcM7Xf' @ 907 : 1 .. '!items!yrw0mTatQT78Zt65' @ 0 : 0; will stop at (end)
+2025/04/22-21:31:35.819 4aa0 Delete type=3 #1
+2025/04/22-21:33:10.953 3fac Level-0 table #777: started
+2025/04/22-21:33:10.953 3fac Level-0 table #777: 0 bytes OK
+2025/04/22-21:33:10.956 3fac Delete type=0 #775
+2025/04/22-21:33:10.978 3fac Manual compaction at level-0 from '!folders!2mwDmPrZo4lLCuSt' @ 72057594037927935 : 1 .. '!items!yrw0mTatQT78Zt65' @ 0 : 0; will stop at '!items!yrw0mTatQT78Zt65' @ 927 : 1
+2025/04/22-21:33:10.978 3fac Compacting 2@0 + 0@1 files
+2025/04/22-21:33:10.984 3fac Generated table #778@0: 34 keys, 56249 bytes
+2025/04/22-21:33:10.984 3fac Compacted 2@0 + 0@1 files => 56249 bytes
+2025/04/22-21:33:10.985 3fac compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/04/22-21:33:10.987 3fac Delete type=2 #770
+2025/04/22-21:33:10.987 3fac Delete type=2 #773
+2025/04/22-21:33:10.996 3fac Manual compaction at level-0 from '!items!yrw0mTatQT78Zt65' @ 927 : 1 .. '!items!yrw0mTatQT78Zt65' @ 0 : 0; will stop at (end)
