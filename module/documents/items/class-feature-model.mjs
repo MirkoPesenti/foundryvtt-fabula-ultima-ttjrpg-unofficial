@@ -63,8 +63,9 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 				ip: new SchemaField({ formula: new StringField({ initial: '' }) }),
 			}),
 			bonus: new SchemaField({
+				temporary: new BooleanField({ initial: true }),
 				key: new StringField({ initial: undefined, blank: true }),
-				modifier: new NumberField({ initial: undefined, nullable: true }),
+				modifier: new StringField({ initial: undefined, blank: true }),
 			}),
 			advancement: new SchemaField({ value: new BooleanField({ initial: false }), }),
 			features: new ArrayField( new StringField() ),

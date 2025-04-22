@@ -397,7 +397,7 @@ Hooks.on('preUpdateItem', async (item, updateData, options, userId) => {
 
 		// Add Active Effects for level
 		const bonusKey = item.system.bonus.key;
-		if ( ( foundry.utils.hasProperty(updateData, 'system.level.current') || foundry.utils.hasProperty(updateData, 'system.bonus.key') || foundry.utils.hasProperty(updateData, 'system.bonus.modifier') ) && bonusKey ) {
+		if ( ( foundry.utils.hasProperty(updateData, 'system.level.current') || foundry.utils.hasProperty(updateData, 'system.bonus.key') || foundry.utils.hasProperty(updateData, 'system.bonus.modifier') || foundry.utils.hasProperty(updateData, 'system.bonus.temporary') ) && bonusKey ) {
 			if ( item.effects ) {
 				const effectToRemove = item.effects.find( effect => effect.name === `Bonus temporaneo di ${item.name}` );
 				if ( effectToRemove ) {
@@ -410,18 +410,28 @@ Hooks.on('preUpdateItem', async (item, updateData, options, userId) => {
 			if ( newKey !== '' ) {
 				const modifier = foundry.utils.hasProperty(updateData, 'system.bonus.modifier') ? foundry.utils.getProperty(updateData, 'system.bonus.modifier') : item.system.bonus.modifier;
 				const newValue = foundry.utils.hasProperty(updateData, 'system.level.current') ? foundry.utils.getProperty(updateData, 'system.level.current') : item.system.level.current;
+				const isDisabled = foundry.utils.hasProperty(updateData, 'system.bonus.temporary') ? foundry.utils.getProperty(updateData, 'system.bonus.temporary') : item.system.bonus.temporary;
+
+				let changedValue = newValue;
+				if ( modifier[0] === '*' ) {
+					changedValue *= Number(modifier.substring(1));
+				} else if ( modifier[0] === '/' ) {
+					changedValue /= Number(modifier.substring(1));
+				} else if ( modifier[0] === '+' || modifier[0] === '-' || modifier !== '' ) {
+					changedValue += Number(modifier);
+				}
 
 				const existingEffect = item.effects.find((effect) => effect.name === `Bonus temporaneo di ${item.name}`);
 				if ( !existingEffect ) {
 					await item.createEmbeddedDocuments('ActiveEffect', [{
 						label: `Bonus temporaneo di ${item.name}`,
 						origin: item.uuid,
-						disabled: true,
+						disabled: isDisabled,
 						changes: [
 							{
 								key: newKey,
 								mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-								value: newValue + modifier,
+								value: changedValue,
 							}
 						],
 					}]);

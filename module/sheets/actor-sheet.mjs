@@ -1465,7 +1465,21 @@ export class FabulaActorSheet extends ActorSheet {
 						}
 					}
 				} else if ( item.type == 'shield' ) {
+					const twinShields = actor.getItemByFabulaID('scudi-gemelli');
+					console.log(twinShields);
+					
 					slot = 'offHand';
+					if ( twinShields ) {
+						if (
+							await Dialog.confirm({
+								title: `Stai equipaggiando ${item.name}`,
+								content: `<p>Vuoi equipaggiare questa arma nella Mano Primaria?</p>`,
+								rejectClose: false,
+							})
+						) {
+							slot = 'mainHand';
+						}
+					}
 				} else if ( item.type == 'armor' ) {
 					slot = 'armor';
 				} else if ( item.type == 'accessory' ) {

@@ -253,4 +253,18 @@ export class FabulaActor extends Actor {
 		if ( this.statuses.has( 'poisoned' ) === true ) this.toggleStatusEffect( 'poisoned' );
 	}
 
+	getAllItemsByFabulaID( id, type ) {
+		const idFilter = (i) => i.system.fabulaID === id;
+		if ( !type ) return this.items.filter( idFilter );
+		const itemTypes = FU.ItemTypes;
+		if ( !Object.prototype.hasOwnProperty.call( itemTypes, type ) ) {
+			throw new Error( `Invalid item type: ${type}!` );
+		}
+		return ItemTypes[type].filter( idFilter );
+	}
+
+	getItemByFabulaID( id, type ) {
+		return this.getAllItemsByFabulaID( id, type )[0];
+	}
+
 }

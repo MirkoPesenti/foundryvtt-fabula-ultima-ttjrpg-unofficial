@@ -134,7 +134,12 @@
 
             {{!-- Bonus Fields --}}
             <fieldset>
-                <legend>Bonus temporaneo su 【LA】</legend>
+                <legend>Bonus 【LA】</legend>
+
+                <div class="form-group">
+                    <label for="system.bonus.temporary">Temporaneo?</label>
+                    <input type="checkbox" name="system.bonus.temporary" id="system.bonus.temporary" {{checked system.bonus.temporary}} />
+                </div>
 
                 <div class="form-group">
                     <label>Caratteristica</label>
@@ -143,7 +148,7 @@
 
                 <div class="form-group">
                     <label>Modificatore</label>
-                    <input type="number" name="system.bonus.modifier" value="{{system.bonus.modifier}}">
+                    <input type="text" name="system.bonus.modifier" value="{{system.bonus.modifier}}">
                 </div>
             </fieldset>
 
