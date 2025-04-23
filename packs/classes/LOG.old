@@ -1,12 +1,3 @@
-2025/04/22-21:31:35.819 4aa0 Delete type=3 #1
-2025/04/22-21:33:10.953 3fac Level-0 table #777: started
-2025/04/22-21:33:10.953 3fac Level-0 table #777: 0 bytes OK
-2025/04/22-21:33:10.956 3fac Delete type=0 #775
-2025/04/22-21:33:10.978 3fac Manual compaction at level-0 from '!folders!2mwDmPrZo4lLCuSt' @ 72057594037927935 : 1 .. '!items!yrw0mTatQT78Zt65' @ 0 : 0; will stop at '!items!yrw0mTatQT78Zt65' @ 927 : 1
-2025/04/22-21:33:10.978 3fac Compacting 2@0 + 0@1 files
-2025/04/22-21:33:10.984 3fac Generated table #778@0: 34 keys, 56249 bytes
-2025/04/22-21:33:10.984 3fac Compacted 2@0 + 0@1 files => 56249 bytes
-2025/04/22-21:33:10.985 3fac compacted to: files[ 0 1 0 0 0 0 0 ]
-2025/04/22-21:33:10.987 3fac Delete type=2 #770
-2025/04/22-21:33:10.987 3fac Delete type=2 #773
-2025/04/22-21:33:10.996 3fac Manual compaction at level-0 from '!items!yrw0mTatQT78Zt65' @ 927 : 1 .. '!items!yrw0mTatQT78Zt65' @ 0 : 0; will stop at (end)
+2025/04/22-21:37:50.193 4aa0 Recovering log #776
+2025/04/22-21:37:50.198 4aa0 Delete type=0 #776
+2025/04/22-21:37:50.198 4aa0 Delete type=3 #774

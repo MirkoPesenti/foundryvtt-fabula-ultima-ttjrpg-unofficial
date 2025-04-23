@@ -119,11 +119,6 @@ Hooks.once('init', async () => {
 Hooks.once('setup', () => {});
 
 Hooks.once('ready', async function () {
-	
-	// Get Unarmed Strike
-	const pack = game.packs.get('fabula.equipment');
-	const itemUnarmedStrike = await pack.getDocument( 'ULPXVZ44g7h3Wkw1' );
-	FU.UnarmedStrike = itemUnarmedStrike.toObject();
 
 	// Check new session
 	if ( game.user.isGM ) {
@@ -466,15 +461,15 @@ Hooks.on('preUpdateActor', async (actor, updateData, options, userId) => {
 	const offHandEquipped = equipped.offHand === null;
 	if ( !mainHandEquipped && !offHandEquipped ) return;
 	
-	const embeddedUnarmedStrike = actor.items.find( item => item.name == FU.UnarmedStrike.name );
-	if ( !embeddedUnarmedStrike ) return;
+	const unarmedStrike = actor.getItemByFabulaID('colpo-senz-armi');
+	if ( !unarmedStrike ) return;
 
 	const updates = {};
 	if ( mainHandEquipped ) {
-		updates['system.equip.mainHand'] = embeddedUnarmedStrike._id;
+		updates['system.equip.mainHand'] = unarmedStrike._id;
 	}
 	if ( offHandEquipped ) {
-		updates['system.equip.offHand'] = embeddedUnarmedStrike._id;
+		updates['system.equip.offHand'] = unarmedStrike._id;
 	}
 
 	if ( Object.keys(updates).length > 0 ) {
@@ -725,549 +720,6 @@ Hooks.on('renderChatMessage', (message, html, data) => {
 		}
 	});
 
-	// Create Alchemy Mix
-	html.on('click', '.js_rollAlchemyMix', async (e) => {
-		e.preventDefault();
-		const element = e.currentTarget;
-		const actorID = element.dataset.actor;
-		const actor = game.actors.get( actorID );
-		const messageID = $(html).data('message-id');
-		const message = game.messages.get(messageID);
-		let newMessageContent = message.content;
-
-		let awaitDialogTitle = 'Stai creando una Pozione';
-
-		// Choose mix option
-		let mix = await awaitDialogSelect({
-			title: awaitDialogTitle,
-			optionsLabel: '<p>Scegli quale mix usare (cambierà il costo in PI e il numero di d20 da lanciare):</p>',
-			options: `
-				<optgroup label="${game.i18n.localize('FU.alchemyTypes.basic')}">
-					<option value="basic">PI: 3 - 2d20</option>
-				</optgroup>
-				<optgroup label="${game.i18n.localize('FU.alchemyTypes.advanced')}">
-					<option value="advanced">PI: 4 - 3d20</option>
-				</optgroup>
-				<optgroup label="${game.i18n.localize('FU.alchemyTypes.superior')}">
-					<option value="superior">PI: 5 - 4d20</option>
-				</optgroup>
-			`,
-		});
-		if ( mix == false ) return false;
-
-		let dices, cost;
-		if ( mix == 'basic' ) {
-			dices = 2;
-			cost = 3;
-		} else if ( mix == 'advanced' ) {
-			dices = 3;
-			cost = 4;
-		} else if ( mix == 'superior' ) {
-			dices = 4;
-			cost = 5;
-		}
-
-		// Roll dices
-		let roll = new Roll( `${dices}d20` );
-		await roll.evaluate();
-		roll.toMessage();
-
-		let results = [];
-		let areaOptions = '';
-		for ( const result of roll.terms[0].results ) {
-			results.push(result.result);
-			areaOptions += `<option value="${result.result}">${result.result}</option>`;
-		}
-		
-		// Choose area
-		let area = await awaitDialogSelect({
-			title: awaitDialogTitle,
-			optionsLabel: `<p>Assegna uno dei risultati all'<strong>area</strong></p>`,
-			options: areaOptions,
-		});
-		if ( area == false ) return false;
-		
-		let areaValue = '';
-		let areaDesc = game.i18n.localize('FU.alchemyAreas.base');
-		if ( Number(area) >= 1 && Number(area) <= 6 ) {
-			areaValue = '1-6';
-		} else if ( Number(area) >= 7 && Number(area) <= 11 ) {
-			areaValue = '7-11';
-		} else if ( Number(area) >= 12 && Number(area) <= 16 ) {
-			areaValue = '12-16';
-		} else if ( Number(area) >= 17 && Number(area) <= 20 ) {
-			areaValue = '17-20';
-		}
-		areaDesc += game.i18n.localize(`FU.alchemyAreas.${areaValue}`);
-
-		newMessageContent = newMessageContent.replace('<td class="area_desc"></td>', `<td class="area_desc">${area} <i class="fa fa-circle-info" data-tooltip="${areaDesc}"></i></td>`);
-
-		let index = results.indexOf( Number(area) );
-		if ( index >= 0 ) {
-			results.splice( index, 1 );
-		}
-
-		// Choose effect
-		let effectOptions = '';
-		for ( const result of results ) {
-			effectOptions += `<option value="${result}">${result}</option>`;
-		}
-		let effect = await awaitDialogSelect({
-			title: awaitDialogTitle,
-			optionsLabel: `<p>Assegna uno dei risultati all'<strong>effetto</strong></p>`,
-			options: effectOptions,
-		});
-		if ( effect == false ) return false;
-
-		// Choose if replace the effect
-		let replaceEffectOptions = `
-			<option value="any-1">${game.i18n.localize('FU.alchemyEffects.any-1')}</option>
-			<option value="any-2">${game.i18n.localize('FU.alchemyEffects.any-2')}</option>
-		`;
-		if ( effect == "16" || effect == "17" ) {
-			replaceEffectOptions += `
-				<option value="16-17">${game.i18n.localize('FU.alchemyEffects.16-17')}</option>
-			`;
-		} else {
-			replaceEffectOptions += `
-				<option value="${effect}">${game.i18n.localize(`FU.alchemyEffects.${effect}`)}</option>
-			`;
-		}
-		replaceEffectOptions += `<optgroup label="Se possiedi l'Abilità Eroica 'Segreto del Gran calderone'">`;
-		if ( effect != "13" ) {
-			replaceEffectOptions += `<option value="13">${game.i18n.localize('FU.alchemyEffects.13')}</option>`;
-		}
-		if ( effect != "16" || effect != "17" ) {
-			replaceEffectOptions += `<option value="16-17">${game.i18n.localize('FU.alchemyEffects.16-17')}</option>`;
-		}	
-		replaceEffectOptions += `</optgroup>`;
-		
-		let replacedEffect = await awaitDialogSelect({
-			title: awaitDialogTitle,
-			optionsLabel: `<p>Vuoi utilizzare l'effetto predefinito del risultato o usare un'altra opzione?</p>`,
-			options: replaceEffectOptions,
-		});
-		if ( replacedEffect == false ) return false;
-
-		let effectDesc = game.i18n.localize('FU.alchemyEffects.base') + game.i18n.localize(`FU.alchemyEffects.${replacedEffect}`);
-		newMessageContent = newMessageContent.replace('<td class="effect_desc"></td>', `<td class="effect_desc">${effect} <i class="fa fa-circle-info" data-tooltip="${effectDesc}"></i></td>`);
-
-		newMessageContent = newMessageContent.replace('<p class="alchemy_effect"></p>', `
-			<p class="alchemy_effect">${areaDesc}<br>${effectDesc}</p>
-			<button type="button" class="js_applyAlchemyMix" data-area="${areaValue}" data-effect="${replacedEffect}"  data-actor="${actor._id}">Applica effetti</button>
-		`);
-
-		await message.update({ 'content': newMessageContent });
-	});
-
-	// Apply Alchemy Mix effect
-	html.on('click', '.js_applyAlchemyMix', async (e) => {
-		e.preventDefault();
-		const element = e.currentTarget;
-		const area = element.dataset.area;
-		const effect = element.dataset.effect;
-		const actorID = element.dataset.actor;
-		const caster = game.actors.get( actorID );
-
-		if ( area && effect ) {
-			let selectedTokens = [];
-
-			// Get selected tokens
-			if ( canvas.tokens.controlled.length > 0 ) {
-				selectedTokens = [ ...canvas.tokens.controlled ];
-			} else {
-				ui.notifications.warn('Devi selezionare almeno un bersaglio');
-				return false;
-			}
-
-			for ( const token of selectedTokens ) {
-				const actor = token.actor;
-				if ( !actor ) continue;
-
-				let damage = 0;
-				let newHP = 0;
-				const currentHP = foundry.utils.getProperty( actor, 'system.resources.hp.current' ) || 0;
-				let newMP = 0;
-				const currentMP = foundry.utils.getProperty( actor, 'system.resources.mp.current' ) || 0;
-
-				// Apply effect
-				switch ( effect ) {
-					// 20 Poison damage
-					case 'any-1':
-						await actor.applyDamage( 20, 'poison' );
-						break;
-
-					// Heal 20 HP
-					case 'any-2':
-						newHP = currentHP + 30;
-						await actor.update({ 'system.resources.hp.current': newHP });
-						break;
-
-					// DEX and MIG are upgrated
-					case '1':
-						await actor.createEmbeddedDocuments('ActiveEffect', [{
-							label: 'Effetto alchimia',
-							origin: caster.uuid,
-							'duration.rounds': 1,
-							disabled: false,
-							changes: [
-								{
-									key: 'system.attributes.dex.current',
-									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-									value: '2',
-								},
-								{
-									key: 'system.attributes.mig.current',
-									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-									value: '2',
-								}
-							],
-						}]);
-						break;
-						
-					// INS and WLP are upgrated
-					case '2':
-						await actor.createEmbeddedDocuments('ActiveEffect', [{
-							label: 'Effetto alchimia',
-							origin: caster.uuid,
-							'duration.rounds': 1,
-							disabled: false,
-							changes: [
-								{
-									key: 'system.attributes.ins.current',
-									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-									value: '2',
-								},
-								{
-									key: 'system.attributes.wlp.current',
-									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-									value: '2',
-								}
-							],
-						}]);
-						break;
-
-					// Level based damage
-					case '3':
-					case '4':
-					case '5':
-					case '6':
-					case '7':
-					case '8':
-						let damageType = '';
-						if ( effect == '3' ) damageType = 'air';
-						else if ( effect == '4' ) damageType = 'bolt';
-						else if ( effect == '5' ) damageType = 'dark';
-						else if ( effect == '6' ) damageType = 'earth';
-						else if ( effect == '7' ) damageType = 'fire';
-						else if ( effect == '8' ) damageType = 'ice';
-
-						if ( caster.system.level.value >= 40 ) damage = 40;
-						else if ( caster.system.level.value >= 20 ) damage = 30;
-						else damage = 20;
-
-						await actor.applyDamage( damage, damageType );
-						break;
-
-					// Resistance to air and fire damage
-					case '9':
-						await actor.createEmbeddedDocuments('ActiveEffect', [{
-							label: 'Effetto alchimia',
-							origin: caster.uuid,
-							disabled: false,
-							changes: [
-								{
-									key: 'system.affinity.air',
-									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-									value: 'resistance',
-								},
-								{
-									key: 'system.affinity.fire',
-									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-									value: 'resistance',
-								}
-							],
-						}]);
-						break;
-
-					// Resistance to bolt and ice damage
-					case '10':
-						await actor.createEmbeddedDocuments('ActiveEffect', [{
-							label: 'Effetto alchimia',
-							origin: caster.uuid,
-							disabled: false,
-							changes: [
-								{
-									key: 'system.affinity.bolt',
-									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-									value: 'resistance',
-								},
-								{
-									key: 'system.affinity.ice',
-									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-									value: 'resistance',
-								}
-							],
-						}]);
-						break;
-
-					// Resistance to dark and earth damage
-					case '11':
-						await actor.createEmbeddedDocuments('ActiveEffect', [{
-							label: 'Effetto alchimia',
-							origin: caster.uuid,
-							disabled: false,
-							changes: [
-								{
-									key: 'system.affinity.dark',
-									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-									value: 'resistance',
-								},
-								{
-									key: 'system.affinity.earth',
-									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-									value: 'resistance',
-								}
-							],
-						}]);
-						break;
-
-					// Get enraged status
-					case '12':
-						if ( actor.statuses.has( 'enraged' ) === false ) actor.toggleStatusEffect( 'enraged' );
-						break;
-
-					// Get poisoned status
-					case '13':
-						if ( actor.statuses.has( 'poisoned' ) === false ) actor.toggleStatusEffect( 'poisoned' );
-						break;
-						
-					// Get slow, dazed, weak and shaken statuses
-					case '14':
-						if ( actor.statuses.has( 'slow' ) === false ) actor.toggleStatusEffect( 'slow' );
-						if ( actor.statuses.has( 'dazed' ) === false ) actor.toggleStatusEffect( 'dazed' );
-						if ( actor.statuses.has( 'weak' ) === false ) actor.toggleStatusEffect( 'weak' );
-						if ( actor.statuses.has( 'shaken' ) === false ) actor.toggleStatusEffect( 'shaken' );
-
-					// Remove all statuses
-					case '15':
-						if ( actor.statuses.has( 'slow' ) === true ) actor.toggleStatusEffect( 'slow' );
-						if ( actor.statuses.has( 'dazed' ) === true ) actor.toggleStatusEffect( 'dazed' );
-						if ( actor.statuses.has( 'weak' ) === true ) actor.toggleStatusEffect( 'weak' );
-						if ( actor.statuses.has( 'shaken' ) === true ) actor.toggleStatusEffect( 'shaken' );
-						if ( actor.statuses.has( 'enraged' ) === true ) actor.toggleStatusEffect( 'enraged' );
-						if ( actor.statuses.has( 'poisoned' ) === true ) actor.toggleStatusEffect( 'poisoned' );
-						break;
-
-					// Heal 50 HP and PM
-					case '16-17':
-						newHP = currentHP + 50;
-						await actor.update({ 'system.resources.hp.current': newHP });
-						newMP = currentMP + 50;
-						await actor.update({ 'system.resources.mp.current': newMP });
-						break;
-
-					// Heal 100 HP
-					case '18':
-						newHP = currentHP + 100;
-						await actor.update({ 'system.resources.hp.current': newHP });
-						break;
-
-					// Heal 100 MP
-					case '19':
-						newMP = currentMP + 100;
-						await actor.update({ 'system.resources.mp.current': newMP });
-						break;
-
-					// Heal 100 HP and PM
-					case '20':
-						newHP = currentHP + 100;
-						await actor.update({ 'system.resources.hp.current': newHP });
-						newMP = currentMP + 100;
-						await actor.update({ 'system.resources.mp.current': newMP });
-						break;
-				}
-			}
-		}
-	});
-
-	// Compose Verse
-	html.on('click', '.js_createVerse', async (e) => {
-		e.preventDefault();
-		const element = e.currentTarget;
-		const tone = element.dataset.tone;
-		const actorID = element.dataset.actor;
-		const actor = game.actors.get( actorID );
-		const messageID = $(html).data('message-id');
-		const message = game.messages.get(messageID);
-		let newMessageContent = message.content;
-		let awaitDialogTitle = 'Stai formando un Verso';
-
-		// Choose volume option
-		let volumeOptions = '';
-		const volumes = actor.getFlag('fabula', 'verses.volume') || [];
-		for ( const vol of volumes ) {
-			volumeOptions += `
-				<option value="${vol}">${game.i18n.localize(`FU.verses.volume.${vol}`)} | PM: ${game.i18n.localize(`FU.verses.volumeCost.${vol}`)}</option>
-			`;
-		}
-		let volume = await awaitDialogSelect({
-			title: awaitDialogTitle,
-			optionsLabel: '<p>Scegli quale Volume usare (cambierà il costo in PI e i bersagli del Verso):</p>',
-			options: volumeOptions,
-		});
-		if ( volume == false ) return false;
-		newMessageContent = newMessageContent.replace('<td class="volume_desc"></td>', `<td class="volume_desc">${game.i18n.localize(`FU.verses.volume.${volume}`)} (${game.i18n.localize(`FU.verses.volumeCost.${volume}`)} PM)</td>`);
-
-		// Choose key option
-		let keyOptions = '';
-		const keys = actor.getFlag('fabula', 'verses.key') || [];
-		for ( const key in keys ) {
-			keyOptions += `
-				<option value="${key}">${game.i18n.localize(`FU.verses.key.${key}`)}</option>
-			`;
-		}
-		let key = await awaitDialogSelect({
-			title: awaitDialogTitle,
-			optionsLabel: '<p>Scegli quale chiave usare:</p>',
-			options: keyOptions,
-		});
-		if ( key == false ) return false;
-		newMessageContent = newMessageContent.replace('<td class="key_desc"></td>', `<td class="key_desc">${game.i18n.localize(`FU.verses.key.${key}`)}</td>`);
-
-		let verseDescription = game.i18n.localize(`FU.verses.volumeEffect.${volume}`);
-		if ( tone ) {
-			verseDescription += '<br /><br />';
-			verseDescription += game.i18n.format(`FU.verses.toneEffect.${tone}`, {
-				recover: game.i18n.localize( FU.verses.key[key].recover ),
-				attribute: game.i18n.localize( FU.verses.key[key].attribute ),
-				type: game.i18n.localize( FU.verses.key[key].type ),
-				status: game.i18n.localize( FU.verses.key[key].status ),
-			});
-		}
-		newMessageContent = newMessageContent.replace('<p class="tone_effect"></p>', `<p class="tone_effect">${verseDescription}</p>
-		<button type="button" class="js_applyVerseEffects ${tone == 'threatening' || tone == 'energetic' ? 'd-none' : ''}" data-key="${key}" data-tone="${tone}" data-actor="${actor._id}">Applica effetti</button>
-		`);
-
-		await message.update({ 'content': newMessageContent });
-	});
-
-	// Apply Verse effects
-	html.on('click', '.js_applyVerseEffects', async (e) => {
-		e.preventDefault();
-		const element = e.currentTarget;
-		const key = element.dataset.key;
-		const tone = element.dataset.tone;
-		const actorID = element.dataset.actor;
-		const caster = game.actors.get( actorID );
-
-		if ( key && tone ) {
-			const keyData = FU.verses.key[key];
-			
-			// Get selected tokens
-			let selectedTokens = [];
-			if ( canvas.tokens.controlled.length > 0 ) {
-				selectedTokens = [ ...canvas.tokens.controlled ];
-			} else {
-				ui.notifications.warn('Devi selezionare almeno un bersaglio');
-				return false;
-			}
-
-			for ( const token of selectedTokens ) {
-				const actor = token.actor;
-				if ( !actor ) continue;
-				
-				let status = keyData.status.replace( 'FU.Status.', '' );
-				let type = keyData.type.replace( 'FU.DamageTypes.', '' );
-				let attribute = keyData.attribute.replace( 'FU.attributes.', '' );
-				let recover = keyData.recover.replace( 'FU.', '' ).toLowerCase();
-				let damage = 0;
-
-				switch ( tone ) {
-					case 'calm':
-						if ( recover == 'mp' && actor._id == caster._id ) {
-							ui.notifications.warn('Non puoi recuperare PM con questo verso!');
-							break;
-						}
-						const currentResource = foundry.utils.getProperty( actor, `system.resources.${recover}.current` ) || 0;
-						const currentResourceKey = `system.resources.${recover}.current`;
-						let resourceNewVal = currentResource + 10 + ( caster.system.attributes.wlp.current * 2 );
-						if ( caster.system.level.value >= 40 ) resourceNewVal += 20;
-						else if ( caster.system.level.value >= 20 ) resourceNewVal += 10;
-						
-						await actor.update({ [currentResourceKey]: resourceNewVal });
-						break;
-
-					// case 'energetic':
-					// 	break;
-
-					case 'frenetic':
-						damage = caster.system.attributes.wlp.current * 2;
-						if ( caster.system.level.value >= 40 ) damage += 20;
-						else if ( caster.system.level.value >= 20 ) damage += 10;
-
-						await actor.applyDamage( damage, type );
-						break;
-
-					case 'unsettling':
-						if ( actor.statuses.has( status ) === false ) actor.toggleStatusEffect( status );
-						if ( actor.system.affinity[type] == 'resistance' ) {
-							await actor.createEmbeddedDocuments('ActiveEffect', [{
-								label: 'Effetto verso',
-								origin: caster.uuid,
-								'duration.rounds': 1,
-								disabled: false,
-								changes: [
-									{
-										key: `system.affinity.${type}`,
-										mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-										value: '',
-									}
-								],
-							}]);
-						}
-						break;
-						
-					// case 'threatening':
-					// 	break;
-
-					case 'solemn':
-						if ( actor.statuses.has( status ) === true ) actor.toggleStatusEffect( status );
-						await actor.createEmbeddedDocuments('ActiveEffect', [{
-							label: 'Effetto verso',
-							origin: caster.uuid,
-							'duration.rounds': 1,
-							disabled: false,
-							changes: [
-								{
-									key: `system.affinity.${type}`,
-									mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE,
-									value: 'resistance',
-								}
-							],
-						}]);
-						break;
-
-					case 'lively':
-						await actor.createEmbeddedDocuments('ActiveEffect', [{
-							label: 'Effetto verso',
-							origin: caster.uuid,
-							'duration.rounds': 1,
-							disabled: false,
-							changes: [
-								{
-									key: `system.attributes.${attribute}.current`,
-									mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-									value: '2',
-								}
-							],
-						}]);
-						break;
-				}
-			}
-		}
-	});
-
 });
 
 /* ============================= */
@@ -1375,29 +827,36 @@ Handlebars.registerHelper('selectGroupedOptions', function( groups, options ) {
 	let html = '';
 	if ( options.hash.blank ) html += `<option value="" ${options.hash.selected === '' ? 'selected' : ''}></option>`;
 	
-	for ( let group in groups )  {
+	for ( const group in groups )  {
 		let label = group;
-		if ( options.hash.localize && groups[group].groupLabel ) label = game.i18n.localize(groups[group].groupLabel);
-		html += `<optgroup label="${label}">`;
-
 		let list = groups[group];
-		if ( options.hash.sort ) list = Object.entries(list).sort((a, b) => {
-			if ( options.hash.localize ) {
-				const localizedA = game.i18n.localize(a[1]);
-				const localizedB = game.i18n.localize(b[1]);
-				return localizedA.localeCompare(localizedB);
-			}
-			return a[1].localeCompare(b[1]);
-		});
 
-		list.forEach(([key, value]) => {
-			if ( key == 'groupLabel' ) return;
+		if ( typeof list === 'object' ) {
+			if ( options.hash.localize && groups[group].groupLabel ) label = game.i18n.localize(groups[group].groupLabel);
+			html += `<optgroup label="${label}">`;
 
-			let optLabel = value;
-			if ( options.hash.localize ) optLabel = game.i18n.localize(value);
-			html += `<option value="${key}" ${options.hash.selected == key ? 'selected' : ''}>${optLabel}</option>`;
-		});
-		html += '</optgroup>';
+			if ( options.hash.sort ) list = Object.entries(list).sort((a, b) => {
+				if ( options.hash.localize ) {
+					const localizedA = game.i18n.localize(a[1]);
+					const localizedB = game.i18n.localize(b[1]);
+					return localizedA.localeCompare(localizedB);
+				}
+				return a[1].localeCompare(b[1]);
+			});
+
+			list.forEach(([key, value]) => {
+				if ( key == 'groupLabel' ) return;
+
+				let optLabel = value;
+				if ( options.hash.localize ) optLabel = game.i18n.localize(value);
+				html += `<option value="${key}" ${options.hash.selected == key ? 'selected' : ''}>${optLabel}</option>`;
+			});
+			html += '</optgroup>';
+		} else if ( typeof list === 'string' ) {
+			let optLabel = list;
+			if ( options.hash.localize ) optLabel = game.i18n.localize(list);
+			html += `<option value="${group}" ${options.hash.selected == group ? 'selected' : ''}>${optLabel}</option>`;
+		}
 	}
 
 	return new Handlebars.SafeString(html);

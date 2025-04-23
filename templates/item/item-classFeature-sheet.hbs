@@ -186,7 +186,7 @@
                     <div class="form-group">
                         <label>Tipologia</label>
                         <select name="system.subtype">
-                            {{selectOptions featureSubtype selected=system.subtype blank='' sort=true localize=true}}
+                            {{selectGroupedOptions groupedFeatureSubtype selected=system.subtype blank='' sort=true localize=true}}
                         </select>
                     </div>
                 {{/if}}
@@ -208,6 +208,11 @@
                 </div>
 
                 {{#if system.advancement.value}}
+                    <div class="form-group">
+                        <label>Abilità minime acquisite</label>
+                        <input name="system.advancement.min" min="1" type="number" value="{{system.advancement.min}}">
+                    </div>
+
                     {{#if (arrayLengthGt system.features 0)}}
                         <ul>
                             {{#each embeddedFeatures as |feature featureIndex|}}

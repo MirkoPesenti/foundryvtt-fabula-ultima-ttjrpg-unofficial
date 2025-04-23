@@ -189,8 +189,9 @@ export class FabulaActorSheet extends ActorSheet {
 				return false;
 			}
 
-			if ( sourceItem.name == FU.UnarmedStrike.name ) {
-				ui.notifications.warn(`Non puoi equipaggiare ${FU.UnarmedStrike.name} perché lo possiedi già`);
+			const unarmedStrike = actor.getItemByFabulaID('colpo-senz-armi');
+			if ( unarmedStrike && sourceItem.system.fabulaID == unarmedStrike?.system?.fabulaID ) {
+				ui.notifications.warn(`Possiedi già un Item con Fabula ID: ${sourceItem.system.fabulaID}!`);
 				return false;
 			}
 
@@ -250,6 +251,7 @@ export class FabulaActorSheet extends ActorSheet {
 		} else if ( sourceItem.type == 'weapon' || sourceItem.type == 'armor' || sourceItem.type == 'accessory' || sourceItem.type == 'shield' ) {
 			if ( actor.system.equippable ) {
 				const newItem = await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
+				const unarmedStrike = actor.getItemByFabulaID('colpo-senz-armi');
 
 				const equippedData = foundry.utils.deepClone(actor.system.equip);
 				let slot;
@@ -275,15 +277,14 @@ export class FabulaActorSheet extends ActorSheet {
 					equippedData.offHand = null;
 				}
 				equippedData[slot] = equippedData[slot] == newItem[0]._id ? null : newItem[0]._id;
-				
-				const embeddedItem = actor.items.find( item => item.name == FU.UnarmedStrike.name );
-				if ( embeddedItem ) {
+
+				if ( unarmedStrike ) {
 					if ( !equippedData.mainHand ) {
-						equippedData.mainHand = embeddedItem._id;
-						await embeddedItem.update({ 'system.isEquipped': true });
+						equippedData.mainHand = unarmedStrike._id;
+						await unarmedStrike.update({ 'system.isEquipped': true });
 					} else if ( !equippedData.offHand ) {
-						equippedData.offHand = embeddedItem._id;
-						await embeddedItem.update({ 'system.isEquipped': true });
+						equippedData.offHand = unarmedStrike._id;
+						await unarmedStrike.update({ 'system.isEquipped': true });
 					}
 				}
 
@@ -845,7 +846,7 @@ export class FabulaActorSheet extends ActorSheet {
 				}
 
 				// Remove not wanted options for Unarmed Strike item
-				if ( item.name === FU.UnarmedStrike.name ) {
+				if ( item.system?.fabulaID === 'colpo-senz-armi' ) {
 					let optIndex;
 					optIndex = contextMenuItemSettings.findIndex( opt => opt.name === game.i18n.localize('FU.actions.edit') );
 					contextMenuItemSettings.splice( optIndex, 1 );
@@ -1264,8 +1265,8 @@ export class FabulaActorSheet extends ActorSheet {
 		const itemId = $(el).data('item');
 		const item = this.actor.items.get( itemId );
 
-		if ( item.name == FU.UnarmedStrike.name ) {
-			ui.notifications.warn(`Non puoi eliminare l'Item ${FU.UnarmedStrike.name}`);
+		if ( item.system?.fabulaID == 'colpo-senz-armi' ) {
+			ui.notifications.warn(`Non puoi eliminare l'Item ${item.name}`);
 			return;
 		}
 
@@ -1587,14 +1588,14 @@ export class FabulaActorSheet extends ActorSheet {
 				equippedData[slot] = equippedData[slot] == itemId ? null : itemId;
 			}
 			
-			const embeddedItem = actor.items.find( item => item.name == FU.UnarmedStrike.name );
-			if ( embeddedItem ) {
+			const unarmedStrike = actor.getItemByFabulaID('colpo-senz-armi');
+			if ( unarmedStrike ) {
 				if ( !equippedData.mainHand ) {
-					equippedData.mainHand = embeddedItem._id;
-					await embeddedItem.update({ 'system.isEquipped': true });
+					equippedData.mainHand = unarmedStrike._id;
+					await unarmedStrike.update({ 'system.isEquipped': true });
 				} else if ( !equippedData.offHand ) {
-					equippedData.offHand = embeddedItem._id;
-					await embeddedItem.update({ 'system.isEquipped': true });
+					equippedData.offHand = unarmedStrike._id;
+					await unarmedStrike.update({ 'system.isEquipped': true });
 				}
 			}
 
@@ -1650,11 +1651,7 @@ export class FabulaActorSheet extends ActorSheet {
 
 		if ( itemID && type ) {
 			const item = actor.items.get( itemID );
-			if ( type === 'alchemy' ) {
-				console.log('Alchimia');
-			} else if ( type === 'magitech' ) {
-				console.log('Magitech');
-			}
+			console.log(type, item);
 		}
 	}
 }

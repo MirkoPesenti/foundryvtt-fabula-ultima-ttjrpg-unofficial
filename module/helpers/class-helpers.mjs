@@ -378,7 +378,10 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		}
 		if ( featureAdded !== false && featureClone[0]?.system?.advancement?.value === true ) {
 			featureAdded = false;
-			featureAdded = await openClassFeaturesChildDialog( featureClone[0], actor );
+			const iterations = featureClone[0]?.system?.advancement?.min ?? 1;
+			for ( let i = 0; i < iterations; i++ ) {
+				featureAdded = await openClassFeaturesChildDialog( featureClone[0], actor );
+			}
 		}
 
 		if ( featureAdded === false ) {

@@ -70,12 +70,16 @@ export class FabulaActor extends Actor {
 
 		// Check if Unarmed Strike is equipped to the Actor
 		if ( this.type == 'character' || this.type == 'npc' ) {
-			if ( FU.UnarmedStrike ) {
-				const embeddedItem = this.items.find( item => item.name == FU.UnarmedStrike.name );
+
+			const pack = game.packs.get('projectfu.basic-equipment');
+			const content = await pack.getDocuments();
+			const unarmedStrike = content.find((item) => foundry.utils.getProperty(item, 'system.fabulaID') === 'colpo-senz-armi');
+			
+			if ( unarmedStrike ) {
+				const embeddedItem = this.getItemByFabulaID( unarmedStrike.system.fabulaID );
 
 				if ( !embeddedItem ) {
-					const createdItem = await this.createEmbeddedDocuments( 'Item', [FU.UnarmedStrike] );
-					if ( this.type == 'character' )
+					const createdItem = await this.createEmbeddedDocuments( 'Item', [unarmedStrike.toObject()] );
 					await createdItem[0].update({ 'system.isEquipped': true });
 					await this.update({
 						'system.equip.mainHand': createdItem[0]._id,
@@ -253,7 +257,7 @@ export class FabulaActor extends Actor {
 		if ( this.statuses.has( 'poisoned' ) === true ) this.toggleStatusEffect( 'poisoned' );
 	}
 
-	getAllItemsByFabulaID( id, type ) {
+	getAllItemsByFabulaID( id, type = null ) {
 		const idFilter = (i) => i.system.fabulaID === id;
 		if ( !type ) return this.items.filter( idFilter );
 		const itemTypes = FU.ItemTypes;
@@ -263,7 +267,7 @@ export class FabulaActor extends Actor {
 		return ItemTypes[type].filter( idFilter );
 	}
 
-	getItemByFabulaID( id, type ) {
+	getItemByFabulaID( id, type = null ) {
 		return this.getAllItemsByFabulaID( id, type )[0];
 	}
 

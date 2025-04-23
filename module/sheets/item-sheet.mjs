@@ -159,6 +159,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.statusses = CONFIG.FU.statusses;
 		context.groupedClasses = CONFIG.FU.groupedClasses;
 		context.featureSubtype = CONFIG.FU.featureSubtype;
+		context.groupedFeatureSubtype = CONFIG.FU.groupedFeatureSubtype;
 		context.statusEffects = CONFIG.FU.statusEffects;
 
 		// Add listed features to context

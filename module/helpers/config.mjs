@@ -121,7 +121,19 @@ FU.featureSubtype = {
 	alchemy: "FU.technologies.alchemy",
 	infusions: "FU.technologies.infusions",
 	magitech: "FU.technologies.magitech",
-	verses: 'FU.verses.label',
+	key: 'FU.verses.key',
+	tone: 'FU.verses.tone',
+};
+
+FU.groupedFeatureSubtype = {
+	alchemy: "FU.technologies.alchemy",
+	infusions: "FU.technologies.infusions",
+	magitech: "FU.technologies.magitech",
+	verses: {
+		groupLabel: "FU.verses.label",
+		key: 'FU.verses.key',
+		tone: 'FU.verses.tone',
+	},
 };
 
 /**

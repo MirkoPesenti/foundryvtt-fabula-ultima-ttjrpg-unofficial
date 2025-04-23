@@ -409,55 +409,8 @@
     },
     "verses": {
       "label": "Versi",
-      "volume": {
-        "low": "Basso",
-        "medium": "Medio",
-        "high": "Alto"
-      },
-      "volumeCost": {
-        "low": "10",
-        "medium": "20",
-        "high": "30"
-      },
-      "volumeEffect": {
-        "low": "Te stesso <b>oppure</b> un'altra creatura a te visibile in grado di sentirti.",
-        "medium": "Ciascun alleato in grado di sentirti.",
-        "high": "Ciascun nemico in grado di sentirti."
-      },
-      "key": {
-        "flame": "Fiamma",
-        "iron": "Ferro",
-        "frost": "Gelo",
-        "stone": "Pietra",
-        "star": "Stella",
-        "darkness": "Tenebra",
-        "thunder": "Tuono",
-        "wind": "Vento"
-      },
-      "tone": {
-        "calm": "Calmo",
-        "energetic": "Energico",
-        "frenetic": "Frenetico",
-        "unsettling": "Inquietante",
-        "threatening": "Minaccioso",
-        "solemn": "Solenne",
-        "lively": "Vivace"
-      },
-      "toneEffect": {
-        "calm": "Ciascun bersaglio recupera <b>【{recover}】</b> pari a <b>【 10 + il doppio della tua taglia di dado attuale di Volontà】</b>. Questo ammontare aumenta di 10 se sei di <b>livello 20 o superiore</b>, oppure di 20 se sei di <b>livello 40 o superiore</b>.<br /><br />Se questo tono causa il recupero di PM, <b>non ha effetto</b> sul personaggio che lo canta.",
-        "energetic": "Fino all'inizio del tuo prossimo turno, quando un bersaglio ha successo su un Test per riempire o svuotare un Orologio, se quel Test includeva <b>【{attribute}】</b>, quell'alleato può riempire o svuotare una sezione aggiuntiva di quell'Orologio.",
-        "frenetic": "Ciascun bersaglio subisce danni da <b>【{type}】</b> pari al <b>doppio</b> della tua taglia di dado attuale di <b>Volontà</b>. Questo tono infligge 10 danni extra se sei di <b>livello 20 o superiore</b>, oppure 20 danni extra se sei di <b>livello 40 o superiore</b>.",
-        "unsettling": "Ciascun bersaglio subisce lo status <b>【{status}】</b>. Inoltre, ciascun bersaglio perde la Resistenza al danno da <b>【{type}】</b> (se la possedeva) fino all'inizio del tuo prossimo turno.",
-        "threatening": "La prima volta che ciascun bersaglio subisce danno prima dell'inizio del tuo prossimo turno, quel danno diventa da <b>【{type}】</b>. Questo effetto si innesca separatamente solo una volta per ciascun bersaglio del verso.",
-        "solemn": "Ciascun bersaglio guarisce dallo status <b>【{status}】</b>. Inoltre, ciascun bersaglio ottiene Resistenza al danno da <b>【{type}】</b> fino all'inizio del tuo prossimo turno.",
-        "lively": "Ciascun bersaglio considera la propria taglia di dado di <b>【{attribute}】</b> incrementata di una taglia (fino a un massimo di <b>d12</b>) fino all'inizio del tuo prossimo turno."
-      },
-      "tonePlaceholders": {
-        "recover": "recupero della chiave",
-        "attribute": "Caratteristica della chiave",
-        "type": "tipo della chiave",
-        "status": "status della chiave"
-      }
+      "key": "Chiave",
+      "tone": "Tono"
     }
   }
 }
