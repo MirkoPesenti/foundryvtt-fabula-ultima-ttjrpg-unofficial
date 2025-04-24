@@ -58,7 +58,7 @@
       "commander": "Comandante",
       "dancer": "Danzatore",
       "singer": "Cantore",
-      "symbolist": "Simbolista",
+      "painter": "Simbolista",
       "esper": "Esper",
       "mutant": "Mutante",
       "pilot": "Pilota",
@@ -344,42 +344,6 @@
       "infusions": "Infusioni",
       "magitech": "Magitech"
     },
-    "alchemyTypes": {
-      "basic": "Mix Base",
-      "advanced": "Mix Avanzato",
-      "superior": "Mix Superiore"
-    },
-    "alchemyAreas": {
-      "base": "La pozione ha effetto su ",
-      "1-6": "di te <b>oppure</b> un alleato a te visibile presente nella scena.",
-      "7-11": "un nemico a te visibile presente nella scena.",
-      "12-16": "di te e ciascun alleato presente nella scena.",
-      "17-20": "ciascun nemico presente nella scena."
-    },
-    "alchemyEffects": {
-      "base": "Ciascuna creatura affetta dalla pozione ",
-      "any-1": "subisce 20 danni da <b>veleno</b>.",
-      "any-2": "recupera 30 Punti Vita.",
-      "1": "considera i suoi dadi di <b>Destrezza</b> e <b>Vigore</b> incrementati di una taglia (massimo <b>d12</b>) fino al termine del tuo prossimo turno.",
-      "2": "considera i suoi dadi di <b>Intuito</b> e <b>Volontà</b> incrementati di una taglia (massimo <b>d12</b>) fino al termine del tuo prossimo turno.",
-      "3": "subisce 20 danni da <b>aria</b>. Questo ammontare aumenta a 30 danni se sei di <b>livello 20 o superiore</b>, oppure 40 danni se sei di <b>livello 40 o superiore</b>.",
-      "4": "subisce 20 danni da <b>fulmine</b>. Questo ammontare aumenta a 30 danni se sei di <b>livello 20 o superiore</b>, oppure 40 danni se sei di <b>livello 40 o superiore</b>.",
-      "5": "subisce 20 danni da <b>ombra</b>. Questo ammontare aumenta a 30 danni se sei di <b>livello 20 o superiore</b>, oppure 40 danni se sei di <b>livello 40 o superiore</b>.",
-      "6": "subisce 20 danni da <b>terra</b>. Questo ammontare aumenta a 30 danni se sei di <b>livello 20 o superiore</b>, oppure 40 danni se sei di <b>livello 40 o superiore</b>.",
-      "7": "subisce 20 danni da <b>fuoco</b>. Questo ammontare aumenta a 30 danni se sei di <b>livello 20 o superiore</b>, oppure 40 danni se sei di <b>livello 40 o superiore</b>.",
-      "8": "subisce 20 danni da <b>ghiaccio</b>. Questo ammontare aumenta a 30 danni se sei di <b>livello 20 o superiore</b>, oppure 40 danni se sei di <b>livello 40 o superiore</b>.",
-      "9": "ottiene Resistenza ai danni da <b>aria</b> e <b>fuoco</b> fino al termine della scena.",
-      "10": "ottiene Resistenza ai danni da <b>fulmine</b> e <b>ghiaccio</b> fino al termine della scena.",
-      "11": "ottiene Resistenza ai danni da <b>ombra</b> e <b>terra</b> fino al termine della scena.",
-      "12": "subisce lo status <b>furente</b>.",
-      "13": "subisce lo status <b>avvelenato</b>.",
-      "14": "subisce lo status <b>confuso, debole, lento</b> e <b>scosso</b>.",
-      "15": "guarisce da tutti gli status.",
-      "16-17": "recupera 50 Punti Vita e 50 Punti Mente.",
-      "18": "recupera 100 Punti Vita.",
-      "19": "recupera 100 Punti Mente.",
-      "20": "recupera 100 Punti Vita e 100 Punti Mente."
-    },
     "infusions": {
       "cryo": "Cryo",
       "pyro": "Pyro",
@@ -411,6 +375,8 @@
       "label": "Versi",
       "key": "Chiave",
       "tone": "Tono"
-    }
+    },
+    "dance": "Danza",
+    "symbol": "Simbolo"
   }
 }

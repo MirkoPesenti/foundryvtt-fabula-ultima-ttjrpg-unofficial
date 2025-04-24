@@ -56,7 +56,7 @@ FU.classes = {
 	commander: 'FU.classes.commander',
 	dancer: 'FU.classes.dancer',
 	singer: 'FU.classes.singer',
-	symbolist: 'FU.classes.symbolist',
+	painter: 'FU.classes.painter',
 	esper: 'FU.classes.esper',
 	mutant: 'FU.classes.mutant',
 	pilot: 'FU.classes.pilot',
@@ -92,7 +92,7 @@ FU.groupedClasses = {
 		commander: 'FU.classes.commander',
 		dancer: 'FU.classes.dancer',
 		singer: 'FU.classes.singer',
-		symbolist: 'FU.classes.symbolist',
+		painter: 'FU.classes.painter',
 	},
 	atlasTechnoFantasy: {
 		groupLabel: 'FU.sourcebook.atlasTechnoFantasy',
@@ -123,6 +123,8 @@ FU.featureSubtype = {
 	magitech: "FU.technologies.magitech",
 	key: 'FU.verses.key',
 	tone: 'FU.verses.tone',
+	dance: 'FU.dance',
+	symbol: 'FU.symbol',
 };
 
 FU.groupedFeatureSubtype = {
@@ -134,6 +136,8 @@ FU.groupedFeatureSubtype = {
 		key: 'FU.verses.key',
 		tone: 'FU.verses.tone',
 	},
+	dance: 'FU.dance',
+	symbol: 'FU.symbol',
 };
 
 /**

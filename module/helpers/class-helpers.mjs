@@ -26,7 +26,7 @@ export function checkParams( params ) {
 	});
 }
 
-function openFreeBenefirsChildDialog( radios, newClass ) {
+function addFreeBenefits( radios, newClass ) {
 	return new Promise((resolve) => {
 		new Dialog({
 			title: `Scegli i benefici gratuiti della classe ${newClass.name}`,
@@ -54,7 +54,7 @@ function openFreeBenefirsChildDialog( radios, newClass ) {
 	});
 }
 
-function openAttributesIncreaseChildDialog( actor ) {
+function increaseAttributes( actor ) {
 	const attributes = actor.system.attributes;
 	const newAttributes = {
 		dex: attributes.dex.base == 12 ? 12 : attributes.dex.base + 2,
@@ -107,7 +107,7 @@ function openAttributesIncreaseChildDialog( actor ) {
 	});
 }
 
-async function openClassFeaturesChildDialog( sourceClass, actor, featureItem = null ) {
+async function addClassFeature( sourceClass, actor, featureItem = null ) {
 
 	let classFeatures = [];
 	for ( const id of sourceClass.system.features ) {
@@ -259,30 +259,33 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		return false;
 	}
 	
-	let className;
-	let featureItem;
+	let newClassName;
+	let newClassID;
+	let featureItem = null;
+	
 	if ( isClassFeature ) {
-		className = sourceItem.folder.name;
-		let existingFeatureID = null;
+		newClassName = game.i18n.localize(`FU.classes.${sourceItem.system.origin}`);
 		actor.items.forEach(item => {
-			if ( item.system.fabulaID === sourceItem.system.fabulaID ) {
-				existingFeatureID = item._id;
+			if ( item.name === newClassName ) {
+				newClassID = item.system.fabulaID;
 				return;
 			}
 		});
-		if ( existingFeatureID === null ) {
+		
+		// Check if Actor has already an item with the same fabulaID
+		const existingFeature = actor.getItemByFabulaID( sourceItem.system.fabulaID, 'classFeature' );
+		if ( existingFeature ) 
+			featureItem = existingFeature.toObject();
+		else 
 			featureItem = sourceItem.toObject();
-		} else {
-			featureItem = actor.items.get( existingFeatureID );
-			featureItem = featureItem.toObject();
-		}
+
 		if ( featureItem.system.level.current >= featureItem.system.level.max ) {
 			ui.notifications.warn(`Non puoi acquisire ulteriori livelli nell'abilità: ${featureItem.name}!`);
 			return false;
 		}
 	} else {
-		className = sourceItem.name;
-		featureItem = null;
+		newClassName = sourceItem.name;
+		newClassID = sourceItem.system.fabulaID;
 	}
 	let obtainHeroicSkill = false;
 
@@ -290,25 +293,25 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 	let nonMasteredClasses = 0;
 	const actorClasses = actor.items.filter( item => item.type === 'class' ) ?? [];
 	for ( const item of actorClasses ) {
-		if ( item.system.level.value < 10 && item.name !== className )
+		if ( item.system.level.value < 10 && item.system.fabulaID !== newClassID )
 			nonMasteredClasses++;
 	}
 	if ( nonMasteredClasses >= 3 ) {
-		ui.notifications.warn(`Non puoi acquisire un livello in ${className}! Hai già 3 classi non padroneggiate!`);
+		ui.notifications.warn(`Non puoi acquisire un livello in ${newClassName}! Hai già 3 classi non padroneggiate!`);
 		return false;
 	}
 
 	// Check if the class is new or already obtained
-	const embeddedClass = actor.items.find( item => item.type === 'class' && item.name == className );
-	if ( embeddedClass ) {
+	const existingClass = actor.getItemByFabulaID( newClassID, 'class' );
+	if ( existingClass ) {
 
-		if ( embeddedClass.system.level.value == 10 ) {
-			ui.notifications.warn(`Possiedi già 10 livelli nella classe ${className} e non puoi acquisirne altri!`);
+		if ( existingClass.system.level.value == 10 ) {
+			ui.notifications.warn(`Possiedi già 10 livelli nella classe ${newClassName} e non puoi acquisirne altri!`);
 			return false;
 		}
 		
 		let featureAdded = false;
-		featureAdded = await openClassFeaturesChildDialog( embeddedClass, actor, featureItem );
+		featureAdded = await addClassFeature( embeddedClass, actor, featureItem );
 
 		let featureClone = [];
 		
@@ -319,13 +322,13 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		}
 		if ( featureAdded !== false && featureClone[0]?.system?.advancement?.value === true ) {
 			featureAdded = false;
-			featureAdded = await openClassFeaturesChildDialog( featureClone[0], actor );
+			featureAdded = await addClassFeature( featureClone[0], actor );
 		}
 
-		if ( featureAdded !== false && embeddedClass.system.level.value < 10 ) {
-			const newLevel = embeddedClass.system.level.value + 1;
-			await embeddedClass.update({ 'system.level.value': newLevel });
-			if ( embeddedClass.system.level.value == 10 ) 
+		if ( featureAdded !== false && existingClass.system.level.value < 10 ) {
+			const newLevel = existingClass.system.level.value + 1;
+			await existingClass.update({ 'system.level.value': newLevel });
+			if ( existingClass.system.level.value == 10 ) 
 				obtainHeroicSkill = true;
 		}
 
@@ -335,9 +338,10 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		let newClass;
 		if ( isClassFeature ) {
 			const pack = game.packs.get('fabula.classes');
-			const classInPack = pack.index.find(item => item.name == sourceItem.folder.name);
-			const classDocument = await pack.getDocument( classInPack._id );
-			newClass = classDocument.toObject();
+			const content = await pack.getDocuments();
+			const selectedClass = content.find((item) => foundry.utils.getProperty(item, 'system.fabulaID') === newClassID);
+
+			newClass = selectedClass.toObject();
 		} else {
 			newClass = sourceItem.toObject();
 		}
@@ -361,14 +365,14 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 							<label for="benefitIP">Punti Inventario</label>
 						</div>`;
 			}
-			await openFreeBenefirsChildDialog( radios, newClass );
+			await addFreeBenefits( radios, newClass );
 		}
 		newClass.system.level.value++;
 		await actor.createEmbeddedDocuments("Item", [newClass]);
 
-		const addedClass = actor.items.find( item => item.type === 'class' && item.name == className );
+		const addedClass = actor.items.find( item => item.type === 'class' && item.name == newClassName );
 		let featureAdded = false;
-		featureAdded = await openClassFeaturesChildDialog( addedClass, actor, featureItem );
+		featureAdded = await addClassFeature( addedClass, actor, featureItem );
 
 		let featureClone = [];
 		if ( featureAdded.hasOwnProperty(0) ) {
@@ -380,7 +384,7 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 			featureAdded = false;
 			const iterations = featureClone[0]?.system?.advancement?.min ?? 1;
 			for ( let i = 0; i < iterations; i++ ) {
-				featureAdded = await openClassFeaturesChildDialog( featureClone[0], actor );
+				featureAdded = await addClassFeature( featureClone[0], actor );
 			}
 		}
 
@@ -399,12 +403,12 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 
 	// Check if Actor level is 20 or 40
 	if ( actor.system.level.value == 20 || actor.system.level.value == 40 ) {
-		await openAttributesIncreaseChildDialog( actor );
+		await increaseAttributes( actor );
 	}
 
 	// Check if Actor can obtain an Heroic Skill
 	if ( obtainHeroicSkill ) {
-		ui.notifications.info(`Hai padroneggiato la classe ${className}! Ora puoi acquisire un'Abilità Eroica`);
+		ui.notifications.info(`Hai padroneggiato la classe ${newClassName}! Ora puoi acquisire un'Abilità Eroica`);
 		const heroicSkills = game.packs.get('fabula.heroicskill');
 		const itemID = '1rMuu2Rly4ueElJd';
 

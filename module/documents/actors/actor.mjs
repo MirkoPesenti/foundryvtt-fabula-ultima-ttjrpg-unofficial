@@ -71,7 +71,7 @@ export class FabulaActor extends Actor {
 		// Check if Unarmed Strike is equipped to the Actor
 		if ( this.type == 'character' || this.type == 'npc' ) {
 
-			const pack = game.packs.get('projectfu.basic-equipment');
+			const pack = game.packs.get('fabula.equipment');
 			const content = await pack.getDocuments();
 			const unarmedStrike = content.find((item) => foundry.utils.getProperty(item, 'system.fabulaID') === 'colpo-senz-armi');
 			
@@ -264,7 +264,7 @@ export class FabulaActor extends Actor {
 		if ( !Object.prototype.hasOwnProperty.call( itemTypes, type ) ) {
 			throw new Error( `Invalid item type: ${type}!` );
 		}
-		return ItemTypes[type].filter( idFilter );
+		return itemTypes[type].filter( idFilter );
 	}
 
 	getItemByFabulaID( id, type = null ) {
