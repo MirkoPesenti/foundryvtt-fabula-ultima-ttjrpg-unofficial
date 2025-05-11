@@ -29,7 +29,7 @@ import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
 import { AttackDataModel } from './documents/items/attack-data-model.mjs';
 import { BaseDataModel } from './documents/items/base-data-model.mjs';
 import { CLassDataModel } from './documents/items/class-data-model .mjs';
-import { CLassFeatureDataModel } from './documents/items/class-feature-model.mjs';
+import { CLassFeatureDataModel } from './documents/items/classFeatures/class-feature-model.mjs';
 import { ConsumableDataModel } from './documents/items/consumable-data-model.mjs';
 import { HeroicSkillDataModel } from './documents/items/heroicSkill-data-model.mjs';
 import { ProjectDataModel } from './documents/items/project-data-model.mjs';
@@ -391,48 +391,48 @@ Hooks.on('preUpdateItem', async (item, updateData, options, userId) => {
 		}
 
 		// Add Active Effects for level
-		const bonusKey = item.system.bonus.key;
-		if ( ( foundry.utils.hasProperty(updateData, 'system.level.current') || foundry.utils.hasProperty(updateData, 'system.bonus.key') || foundry.utils.hasProperty(updateData, 'system.bonus.modifier') || foundry.utils.hasProperty(updateData, 'system.bonus.temporary') ) && bonusKey ) {
-			if ( item.effects ) {
-				const effectToRemove = item.effects.find( effect => effect.name === `Bonus di ${item.name}` );
-				if ( effectToRemove ) {
-					await item.deleteEmbeddedDocuments("ActiveEffect", [effectToRemove.id]);
-				}
-			}
+		// const bonusKey = item.system.bonus.key;
+		// if ( ( foundry.utils.hasProperty(updateData, 'system.level.current') || foundry.utils.hasProperty(updateData, 'system.bonus.key') || foundry.utils.hasProperty(updateData, 'system.bonus.modifier') || foundry.utils.hasProperty(updateData, 'system.bonus.temporary') ) && bonusKey ) {
+		// 	if ( item.effects ) {
+		// 		const effectToRemove = item.effects.find( effect => effect.name === `Bonus di ${item.name}` );
+		// 		if ( effectToRemove ) {
+		// 			await item.deleteEmbeddedDocuments("ActiveEffect", [effectToRemove.id]);
+		// 		}
+		// 	}
 			
-			const newKey = foundry.utils.hasProperty(updateData, 'system.bonus.key') ? foundry.utils.getProperty(updateData, 'system.bonus.key') : bonusKey;
+		// 	const newKey = foundry.utils.hasProperty(updateData, 'system.bonus.key') ? foundry.utils.getProperty(updateData, 'system.bonus.key') : bonusKey;
 
-			if ( newKey !== '' ) {
-				const modifier = foundry.utils.hasProperty(updateData, 'system.bonus.modifier') ? foundry.utils.getProperty(updateData, 'system.bonus.modifier') : item.system.bonus.modifier;
-				const newValue = foundry.utils.hasProperty(updateData, 'system.level.current') ? foundry.utils.getProperty(updateData, 'system.level.current') : item.system.level.current;
-				const isDisabled = foundry.utils.hasProperty(updateData, 'system.bonus.temporary') ? foundry.utils.getProperty(updateData, 'system.bonus.temporary') : item.system.bonus.temporary;
+		// 	if ( newKey !== '' ) {
+		// 		const modifier = foundry.utils.hasProperty(updateData, 'system.bonus.modifier') ? foundry.utils.getProperty(updateData, 'system.bonus.modifier') : item.system.bonus.modifier;
+		// 		const newValue = foundry.utils.hasProperty(updateData, 'system.level.current') ? foundry.utils.getProperty(updateData, 'system.level.current') : item.system.level.current;
+		// 		const isDisabled = foundry.utils.hasProperty(updateData, 'system.bonus.temporary') ? foundry.utils.getProperty(updateData, 'system.bonus.temporary') : item.system.bonus.temporary;
 
-				let changedValue = newValue;
-				if ( modifier[0] === '*' ) {
-					changedValue *= Number(modifier.substring(1));
-				} else if ( modifier[0] === '/' ) {
-					changedValue /= Number(modifier.substring(1));
-				} else if ( modifier[0] === '+' || modifier[0] === '-' || modifier !== '' ) {
-					changedValue += Number(modifier);
-				}
+		// 		let changedValue = newValue;
+		// 		if ( modifier[0] === '*' ) {
+		// 			changedValue *= Number(modifier.substring(1));
+		// 		} else if ( modifier[0] === '/' ) {
+		// 			changedValue /= Number(modifier.substring(1));
+		// 		} else if ( modifier[0] === '+' || modifier[0] === '-' || modifier !== '' ) {
+		// 			changedValue += Number(modifier);
+		// 		}
 
-				const existingEffect = item.effects.find((effect) => effect.name === `Bonus di ${item.name}`);
-				if ( !existingEffect ) {
-					await item.createEmbeddedDocuments('ActiveEffect', [{
-						label: `Bonus di ${item.name}`,
-						origin: item.uuid,
-						disabled: isDisabled,
-						changes: [
-							{
-								key: newKey,
-								mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-								value: changedValue,
-							}
-						],
-					}]);
-				}
-			}
-		}
+		// 		const existingEffect = item.effects.find((effect) => effect.name === `Bonus di ${item.name}`);
+		// 		if ( !existingEffect ) {
+		// 			await item.createEmbeddedDocuments('ActiveEffect', [{
+		// 				label: `Bonus di ${item.name}`,
+		// 				origin: item.uuid,
+		// 				disabled: isDisabled,
+		// 				changes: [
+		// 					{
+		// 						key: newKey,
+		// 						mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+		// 						value: changedValue,
+		// 					}
+		// 				],
+		// 			}]);
+		// 		}
+		// 	}
+		// }
 	}
 
 	if ( Object.keys(updates).length > 0 ) {

@@ -485,19 +485,15 @@ export class FabulaActorSheet extends ActorSheet {
 			}
 
 		} else if ( sourceItem.type == 'classFeature' ) {
-
-			if ( sourceItem.system.subtype !== '' ) {
-				await actor.createEmbeddedDocuments( 'Item', [sourceItem] );
-			} else {
-				if (
-					await Dialog.confirm({
-						title: `Stai acquisendo l'abilità ${sourceItem.name}`,
-						content: `<p>Sei sicuro di voler acquisire un livello nella classe ${sourceItem.folder.name} per ottenere l'abilità ${sourceItem.name}?</p>`,
-						rejectClose: false,
-					})
-				) {
-					await addClassToActor( actor, sourceItem, true );
-				}
+			
+			if (
+				await Dialog.confirm({
+					title: `Stai acquisendo l'abilità ${sourceItem.name}`,
+					content: `<p>Sei sicuro di voler acquisire un livello nella classe ${sourceItem.folder.name} per ottenere l'abilità ${sourceItem.name}?</p>`,
+					rejectClose: false,
+				})
+			) {
+				await addClassToActor( actor, sourceItem, true );
 			}
 
 		} else if ( sourceItem.type == 'heroicSkill' ) {
@@ -1466,7 +1462,7 @@ export class FabulaActorSheet extends ActorSheet {
 						}
 					}
 				} else if ( item.type == 'shield' ) {
-					const doubleShield = actor.getItemByFabulaID('doppio-scudo','classFeature');
+					const doubleShield = actor.getItemByFabulaID('doppio-scudo');
 					slot = 'offHand';
 					if ( doubleShield ) {
 						if (

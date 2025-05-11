@@ -1,10 +1,12 @@
 import { statusEffects } from "./status-helpers.mjs";
 
-export const SYSTEM = 'Fabula Ultima';
+export const SYSTEM = 'fabula';
 
 export const FU = {};
 
 FU.journalName = 'Tracciamento risorse';
+
+FU.classFeatureRegister;
 
 FU.ItemTypes = {
 	"": "FU.selectOption",

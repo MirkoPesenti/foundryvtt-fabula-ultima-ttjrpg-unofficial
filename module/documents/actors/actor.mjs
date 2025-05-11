@@ -257,18 +257,13 @@ export class FabulaActor extends Actor {
 		if ( this.statuses.has( 'poisoned' ) === true ) this.toggleStatusEffect( 'poisoned' );
 	}
 
-	getAllItemsByFabulaID( id, type = null ) {
+	getAllItemsByFabulaID( id ) {
 		const idFilter = (i) => i.system.fabulaID === id;
-		if ( !type ) return this.items.filter( idFilter );
-		const itemTypes = FU.ItemTypes;
-		if ( !Object.prototype.hasOwnProperty.call( itemTypes, type ) ) {
-			throw new Error( `Invalid item type: ${type}!` );
-		}
-		return itemTypes[type].filter( idFilter );
+		return this.items.filter( idFilter );
 	}
 
-	getItemByFabulaID( id, type = null ) {
-		return this.getAllItemsByFabulaID( id, type )[0];
+	getItemByFabulaID( id ) {
+		return this.getAllItemsByFabulaID( id )[0];
 	}
 
 }

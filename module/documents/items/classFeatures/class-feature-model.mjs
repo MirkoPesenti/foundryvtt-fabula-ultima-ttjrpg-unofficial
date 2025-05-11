@@ -1,5 +1,5 @@
-import { AttributesDataModel } from "./common/attributes-data-model.mjs";
-import { FU } from "../../helpers/config.mjs";
+import { AttributesDataModel } from "../common/attributes-data-model.mjs";
+import { FU } from "../../../helpers/config.mjs";
 
 /**
  * @property {string} fabulaID
@@ -34,44 +34,39 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 			fabulaID: new StringField(),
 			sourcebook: new StringField({ initial: 'base', choices: Object.keys(FU.sourcebook) }),
 			origin: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.classes) }),
-			subtype: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.featureSubtype) }),
 			description: new HTMLField(),
 			level: new SchemaField({ 
 				current: new NumberField({ initial: 0, min: 0, integer: true, nullable: false, }),
 				max: new NumberField({ initial: undefined, min: 0, nullable: true, }),
-			}),
-			uses: new SchemaField({
-				duration: new StringField({ initial: '' }),
-				spent: new NumberField({ initial: 0, min: 0, integer: true, nullable: false, }),
-				max: new NumberField({ initial: undefined,  min: 0, nullable: true, }),
-				status: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.statusEffects) }),
-			}),
-			test: new SchemaField({
-				value: new BooleanField({ initial: false }),
-				attributes: new EmbeddedDataField(AttributesDataModel, {}),
-				bonus: new StringField({ initial: undefined, blank: true, }),
-				hasChoice: new BooleanField({ initial: false }),
-				attributesSecondary: new EmbeddedDataField(AttributesDataModel, {}),
-			}),
-			ritual: new SchemaField({
-				value: new BooleanField({ initial: false }),
-				type: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.MagicDisciplines) }),
-			}),
-			recovery: new SchemaField({
-				hp: new SchemaField({ formula: new StringField({ initial: '' }) }),
-				mp: new SchemaField({ formula: new StringField({ initial: '' }) }),
-				ip: new SchemaField({ formula: new StringField({ initial: '' }) }),
-			}),
-			bonus: new SchemaField({
-				temporary: new BooleanField({ initial: true }),
-				key: new StringField({ initial: undefined, blank: true }),
-				modifier: new StringField({ initial: undefined, blank: true }),
 			}),
 			advancement: new SchemaField({ 
 				value: new BooleanField({ initial: false }),
 				min: new NumberField({ initial: 1, min: 1, integer: true, nullable: false }),
 			}),
 			features: new ArrayField( new StringField() ),
+			// subtype: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.featureSubtype) }),
+			// uses: new SchemaField({
+			// 	duration: new StringField({ initial: '' }),
+			// 	spent: new NumberField({ initial: 0, min: 0, integer: true, nullable: false, }),
+			// 	max: new NumberField({ initial: undefined,  min: 0, nullable: true, }),
+			// 	status: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.statusEffects) }),
+			// }),
+			// test: new SchemaField({
+			// 	value: new BooleanField({ initial: false }),
+			// 	attributes: new EmbeddedDataField(AttributesDataModel, {}),
+			// 	bonus: new StringField({ initial: undefined, blank: true, }),
+			// 	hasChoice: new BooleanField({ initial: false }),
+			// 	attributesSecondary: new EmbeddedDataField(AttributesDataModel, {}),
+			// }),
+			// ritual: new SchemaField({
+			// 	value: new BooleanField({ initial: false }),
+			// 	type: new StringField({ initial: undefined, blank: true, choices: Object.keys(FU.MagicDisciplines) }),
+			// }),
+			// recovery: new SchemaField({
+			// 	hp: new SchemaField({ formula: new StringField({ initial: '' }) }),
+			// 	mp: new SchemaField({ formula: new StringField({ initial: '' }) }),
+			// 	ip: new SchemaField({ formula: new StringField({ initial: '' }) }),
+			// }),
 		};
 	}
 
@@ -80,10 +75,10 @@ export class CLassFeatureDataModel extends foundry.abstract.TypeDataModel {
 	}
 
 	prepareBaseData() {
-		let current = 0;
-		if ( typeof this.uses.max === 'number' && this.uses.max > 0 ) {
-			current = this.uses.max - this.uses.spent;
-			this.uses.current = current;
-		}
+		// let current = 0;
+		// if ( typeof this.uses.max === 'number' && this.uses.max > 0 ) {
+		// 	current = this.uses.max - this.uses.spent;
+		// 	this.uses.current = current;
+		// }
 	}
 }

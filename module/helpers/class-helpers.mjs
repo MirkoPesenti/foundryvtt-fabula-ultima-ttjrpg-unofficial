@@ -273,7 +273,7 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 		});
 		
 		// Check if Actor has already an item with the same fabulaID
-		const existingFeature = actor.getItemByFabulaID( sourceItem.system.fabulaID, 'classFeature' );
+		const existingFeature = actor.getItemByFabulaID( sourceItem.system.fabulaID );
 		if ( existingFeature ) 
 			featureItem = existingFeature.toObject();
 		else 
@@ -302,7 +302,7 @@ export async function addClassToActor( actor, sourceItem, isClassFeature = false
 	}
 
 	// Check if the class is new or already obtained
-	const existingClass = actor.getItemByFabulaID( newClassID, 'class' );
+	const existingClass = actor.getItemByFabulaID( newClassID );
 	if ( existingClass ) {
 
 		if ( existingClass.system.level.value == 10 ) {

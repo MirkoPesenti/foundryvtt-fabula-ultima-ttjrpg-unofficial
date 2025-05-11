@@ -43,7 +43,7 @@
         <div class="tab effects" data-group="primary" data-tab="effects">
 
             {{!-- Rituals Fields --}}
-            <fieldset>
+            {{!-- <fieldset>
                 <legend>Rituali</legend>
 
                 <div class="form-group">
@@ -59,10 +59,10 @@
                         </select>
                     </div>
                 {{/if}}
-            </fieldset>
+            </fieldset> --}}
 
             {{!-- Test Fields --}}
-            <fieldset>
+            {{!-- <fieldset>
                 <legend>Test</legend>
                 
                 <div class="form-group">
@@ -101,10 +101,10 @@
                         </div>
                     {{/if}}
                 {{/if}}
-            </fieldset>
+            </fieldset> --}}
 
             {{!-- Recovery Fields --}}
-            <fieldset>
+            {{!-- <fieldset>
                 <legend>Recupero</legend>
 
                 <div class="form-group">
@@ -130,10 +130,10 @@
                         <input type="text" name="system.recovery.ip.formula" value="{{system.recovery.ip.formula}}">
                     </div>
                 </div>
-            </fieldset>
+            </fieldset> --}}
 
             {{!-- Bonus Fields --}}
-            <fieldset>
+            {{!-- <fieldset>
                 <legend>Bonus 【LA】</legend>
 
                 <div class="form-group">
@@ -150,7 +150,7 @@
                     <label>Modificatore</label>
                     <input type="text" name="system.bonus.modifier" value="{{system.bonus.modifier}}">
                 </div>
-            </fieldset>
+            </fieldset> --}}
 
             {{!-- Active Effects --}}
             {{#each effects as |category catIndex|}}
@@ -182,14 +182,14 @@
                     </select>
                 </div>
 
-                {{#if system.origin}}
+                {{!-- {{#if system.origin}}
                     <div class="form-group">
                         <label>Tipologia</label>
                         <select name="system.subtype">
                             {{selectGroupedOptions groupedFeatureSubtype selected=system.subtype blank=true sort=true localize=true}}
                         </select>
                     </div>
-                {{/if}}
+                {{/if}} --}}
 
                 <div class="form-group">
                     <label>Livello massimo</label>
@@ -233,7 +233,7 @@
             </fieldset>
 
             {{!-- Uses Fields --}}
-            <fieldset>
+            {{!-- <fieldset>
                 <legend>Utilizzi</legend>
 
                 <div class="form-group">
@@ -259,7 +259,7 @@
                         <input name="system.uses.max" type="number" value="{{system.uses.max}}">
                     </div>
                 </div>
-            </fieldset>
+            </fieldset> --}}
         </div>
     </section>
 </form>
