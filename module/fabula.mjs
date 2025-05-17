@@ -24,7 +24,8 @@ import { NpcDataModel } from './documents/actors/npc-data-model.mjs';
 
 // Items Data Models
 import { AccessoryDataModel } from './documents/items/accessory-data-model.mjs';
-import { ArcanumDataModel } from './documents/items/arcanum-data-model.mjs';
+import { AlchemyDataModel } from './documents/items/classFeatures/tinkerer/alchemy-data-model.mjs';
+import { ArcanumDataModel } from './documents/items/classFeatures/arcanist/arcanum-data-model.mjs';
 import { ArmorDataModel } from './documents/items/armor-data-model.mjs';
 import { AttackDataModel } from './documents/items/attack-data-model.mjs';
 import { BaseDataModel } from './documents/items/base-data-model.mjs';
@@ -69,10 +70,11 @@ Hooks.once('init', async () => {
 	CONFIG.Item.documentClass = FabulaItem;
 	CONFIG.Item.dataModels = {
 		accessory: AccessoryDataModel,
+		alchemy: AlchemyDataModel,
 		arcanum: ArcanumDataModel,
 		armor: ArmorDataModel,
 		attack: AttackDataModel,
-		base: BaseDataModel,
+		baseItem: BaseDataModel,
 		class: CLassDataModel,
 		classFeature: CLassFeatureDataModel,
 		consumable: ConsumableDataModel,
@@ -358,7 +360,7 @@ Hooks.on('renderActiveEffectConfig', (app, html, data) => {
 Hooks.on("preCreateItem", async (item, options, userId) => {
 
 	// Generate Fabula ID
-	if ( !item.system.fabulaID && item.name )  {
+	if ( !item.system.fabulaID && item.name ) {
 		const id = game.fabula.utils.slugify( item.name );
 		if ( id ) {
 			item.updateSource({ 'system.fabulaID': id });
@@ -746,13 +748,13 @@ Handlebars.registerHelper('getItemByID', function(items, itemID) {
 });
 
 Handlebars.registerHelper('getAttributeValue', function(resourcePath, attributeKey, options) {
-    const value = resourcePath[attributeKey]?.value;
-    return value !== undefined ? value : 0;
+	const value = resourcePath[attributeKey]?.value;
+	return value !== undefined ? value : 0;
 });
 
 Handlebars.registerHelper("getProperty", function(obj, key) {
-	return obj[key];
-});  
+	return obj?.[key];
+});
 
 Handlebars.registerHelper('concatPath', function (...args) {
 	const options = args.pop();
@@ -772,13 +774,13 @@ Handlebars.registerHelper('divide', function( a, b ){
 });
 
 Handlebars.registerHelper('add', function() {
-    let args = Array.prototype.slice.call(arguments, 0, -1);
-    return args.reduce((sum, value) => sum + ( Number(value) ? Number(value) : 0 ), 0);
+	let args = Array.prototype.slice.call(arguments, 0, -1);
+	return args.reduce((sum, value) => sum + ( Number(value) ? Number(value) : 0 ), 0);
 });
 
 Handlebars.registerHelper('reduce', function() {
-    let args = Array.prototype.slice.call(arguments, 0, -1);
-    return args.reduce((sum, value) => sum - ( Number(value) ? Number(value) : 0 ), 0);
+	let args = Array.prototype.slice.call(arguments, 0, -1);
+	return args.reduce((sum, value) => sum - ( Number(value) ? Number(value) : 0 ), 0);
 });
 
 Handlebars.registerHelper("arrayLength", function(array, length, options) {
@@ -794,27 +796,27 @@ Handlebars.registerHelper("arrayLastIndex", function(index, array, options) {
 });
 
 Handlebars.registerHelper('gt', function( a, b ) {
-	var next =  arguments[arguments.length-1];
+	var next = arguments[arguments.length-1];
 	return (a > b) ? next.fn(this) : next.inverse(this);
 });
 
 Handlebars.registerHelper('gt_e', function( a, b ) {
-	var next =  arguments[arguments.length-1];
+	var next = arguments[arguments.length-1];
 	return (a >= b) ? next.fn(this) : next.inverse(this);
 });
 
 Handlebars.registerHelper('gte', function( a, b ) {
-	var next =  arguments[arguments.length-1];
+	var next = arguments[arguments.length-1];
 	return (a >= b);
 });
 
 Handlebars.registerHelper('sm', function( a, b ) {
-	var next =  arguments[arguments.length-1];
+	var next = arguments[arguments.length-1];
 	return (a < b);
 });
 
 Handlebars.registerHelper('sm_e', function( a, b ) {
-	var next =  arguments[arguments.length-1];
+	var next = arguments[arguments.length-1];
 	return (a <= b) ? next.fn(this) : next.inverse(this);
 });
 
@@ -827,7 +829,7 @@ Handlebars.registerHelper('selectGroupedOptions', function( groups, options ) {
 	let html = '';
 	if ( options.hash.blank ) html += `<option value="" ${options.hash.selected === '' ? 'selected' : ''}></option>`;
 	
-	for ( const group in groups )  {
+	for ( const group in groups ) {
 		let label = group;
 		let list = groups[group];
 
@@ -923,4 +925,3 @@ Handlebars.registerHelper("renderItemList", function(obj, key) {
 	}
 
 });
-  

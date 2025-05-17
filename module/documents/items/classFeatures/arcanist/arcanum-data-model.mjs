@@ -1,5 +1,5 @@
-import { FU } from '../../helpers/config.mjs';
-import { DamageDataModel } from './common/damage-data-model.mjs';
+import { FU } from '../../../../helpers/config.mjs';
+import { DamageDataModel } from '../../common/damage-data-model.mjs';
 
 /**
  * @property {string} sourcebook

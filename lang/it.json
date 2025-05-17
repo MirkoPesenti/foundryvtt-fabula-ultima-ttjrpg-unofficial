@@ -6,6 +6,7 @@
     },
     "Item": {
       "accessory": "Accessorio",
+      "alchemy": "Alchimia",
       "arcanum": "Arcanum",
       "armor": "Armatura",
       "artifact": "Artefatto",
@@ -344,6 +345,11 @@
       "infusions": "Infusioni",
       "magitech": "Magitech"
     },
+    "technologiesRank": {
+      "base": "Base",
+      "advanced": "Avanzato",
+      "superior": "Superiore"
+    },
     "infusions": {
       "cryo": "Cryo",
       "pyro": "Pyro",
@@ -354,22 +360,6 @@
       "shadow": "Tenebra",
       "vampire": "Vampiro",
       "venom": "Tossina"
-    },
-    "infusionsTypes": {
-      "basic": "Infusioni Base",
-      "advanced": "Infusioni Avanzate",
-      "superior": "Infusioni Superiori"
-    },
-    "infusionsEffects": {
-      "cryo": "L'attacco infligge 5 danni extra e tutto il danno diventa da <b>ghiaccio</b>.",
-      "pyro": "L'attacco infligge 5 danni extra e tutto il danno diventa da <b>fuoco</b>.",
-      "volt": "L'attacco infligge 5 danni extra e tutto il danno diventa da <b>fulmine</b>.",
-      "cyclone": "L'attacco infligge 5 danni extra e tutto il danno diventa da <b>aria</b>.",
-      "exorcism": "L'attacco infligge 5 danni extra e tutto il danno diventa da <b>luce</b>.",
-      "seismic": "L'attacco infligge 5 danni extra e tutto il danno diventa da <b>terra</b>.",
-      "shadow": "L'attacco infligge 5 danni extra e tutto il danno diventa da <b>ombra</b>.",
-      "vampire": "Scegli un'opzione: recuperi un ammontare di Punti Vita pari a metà dei PV persi dal bersaglio dell'attacco; <b>oppure</b> recuperi un'ammontare di Punti Mente pari a metà dei PV persi dal bersaglio dell'attacco.<br /><br />Questa infusione può essere applicata solo ad attacchi che hanno un <b>singolo</b> bersaglio.",
-      "venom": "L'attacco infligge 5 danni extra, tutto il danno diventa da <b>veleno</b> e ciascuna creatura colpita subisce lo status <b>avvelenato</b>."
     },
     "verses": {
       "label": "Versi",

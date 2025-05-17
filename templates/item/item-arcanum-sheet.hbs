@@ -108,11 +108,11 @@
                             {{#if @root.editable}}
                                 <div class="flexrow">
                                     <div class="form-group">
-                                        <input type="checkbox" name="system.dismiss.{{dismissIndex}}.damage.hasDamage.value" id="system.dismiss.{{dismissIndex}}.damage.hasDamage.value" {{checked dismiss.damage.hasDamage.value}}>
-                                        <label for="system.dismiss.{{dismissIndex}}.damage.hasDamage.value">Infligge danno?</label>
+                                        <input type="checkbox" name="system.dismiss.{{dismissIndex}}.damage.hasDamage" id="system.dismiss.{{dismissIndex}}.damage.hasDamage" {{checked dismiss.damage.hasDamage}}>
+                                        <label for="system.dismiss.{{dismissIndex}}.damage.hasDamage">Infligge danno?</label>
                                     </div>
 
-                                    {{#if dismiss.damage.hasDamage.value}}
+                                    {{#if dismiss.damage.hasDamage}}
                                         <div class="form-group form-dmg">
                                             <input type="number" name="system.dismiss.{{dismissIndex}}.damage.value" value="{{dismiss.damage.value}}">
                                             <p>danni da</p>

@@ -107,7 +107,7 @@
                 {{#unless @root.editable}}
                     {{#if system.opportunity.value}}
                         <div class="title">Opportunità</div>
-                        {{editor enrichedHtml.opportunity target="system.opportunityEffect" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
+                        {{editor enrichedHtml.opportunityEffect target="system.opportunityEffect" engine="prosemirror" rollData=rollData button=false owner=owner editable=editable }}
                     {{/if}}
                 {{/unless}}
             </div>
@@ -123,11 +123,11 @@
                 {{#if system.isOffensive.value}}
                     {{#if @root.editable}}
                         <div class="form-group">
-                            <input type="checkbox" id="system.damage.hasDamage.value" name="system.damage.hasDamage.value" {{checked system.damage.hasDamage.value}}>
-                            <label for="system.damage.hasDamage.value">Infligge danno?</label>
+                            <input type="checkbox" id="system.damage.hasDamage" name="system.damage.hasDamage" {{checked system.damage.hasDamage}}>
+                            <label for="system.damage.hasDamage">Infligge danno?</label>
                         </div>
 
-                        {{#if system.damage.hasDamage.value}}
+                        {{#if system.damage.hasDamage}}
                             <div class="form-group form-dmg">
                                 <p><strong>【TM +</strong></p>
                                 <input type="number" name="system.damage.value" value="{{system.damage.value}}" placeholder="Danno">

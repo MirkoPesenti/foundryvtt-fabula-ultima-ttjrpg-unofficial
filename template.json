@@ -8,6 +8,7 @@
 	"Item": {
 		"types": [
 			"accessory",
+			"alchemy",
 			"arcanum",
 			"armor",
 			"artifact",

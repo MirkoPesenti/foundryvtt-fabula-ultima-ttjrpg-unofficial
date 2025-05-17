@@ -41,7 +41,8 @@ export class FabulaItemSheet extends ItemSheet {
 		// Set the default sheet height
 		if ( 
 			this.object.type == 'class' || 
-			this.object.type == 'rule' 
+			this.object.type == 'rule' || 
+			this.object.type == 'alchemy'
 		)
 			options.height = 700;
 		else if (
@@ -161,6 +162,7 @@ export class FabulaItemSheet extends ItemSheet {
 		context.featureSubtype = CONFIG.FU.featureSubtype;
 		context.groupedFeatureSubtype = CONFIG.FU.groupedFeatureSubtype;
 		context.statusEffects = CONFIG.FU.statusEffects;
+		context.technologiesRank = CONFIG.FU.technologiesRank;
 
 		// Add listed features to context
 		if ( context.system?.features?.length > 0 ) {
@@ -190,12 +192,41 @@ export class FabulaItemSheet extends ItemSheet {
 			}
 		}
 
-		context.enrichedHtml = {
-			summary: await TextEditor.enrichHTML( context.system.summary ?? '' ),
-			description: await TextEditor.enrichHTML( context.system.description ?? '' ),
-			opportunity: await TextEditor.enrichHTML( context.system.opportunityEffect ?? '' ),
-			projectCondition: await TextEditor.enrichHTML( context.system.bonus?.projects?.condition ?? '' ),
-		};
+		// Enrich HTML fields
+		context.enrichedHtml = {};
+		async function enrichHtmlFields( obj, path = [] ) {
+			for ( const [key, field] of Object.entries(obj) ) {
+				const currentPath = [...path, key];
+
+				if ( field instanceof foundry.data.fields.HTMLField ) {
+
+					// HTMLField
+					const propertyPath = currentPath.join('.');
+					const value = foundry.utils.getProperty(context.system, propertyPath);
+					context.enrichedHtml[propertyPath] = await TextEditor.enrichHTML( value ?? '' );
+
+				} else if ( field instanceof foundry.data.fields.SchemaField ) {
+
+					// SchemaField
+					await enrichHtmlFields( field.fields, currentPath );
+
+				} else if ( field instanceof foundry.data.fields.ArrayField && field.element instanceof foundry.data.fields.SchemaField ) {
+
+					// ArrayField
+					const arrayData = foundry.utils.getProperty(context.system, currentPath.join('.'));
+					if ( Array.isArray( arrayData ) ) {
+						for ( let i = 0; i < arrayData.length; i++ ) {
+							await enrichHtmlFields( field.element.fields, [...currentPath, i.toString()] );
+						}
+					}
+
+				}
+			}
+		}
+		const itemType = this.item.type;
+		const dataModelClass = CONFIG.Item.dataModels?.[itemType];
+		const schema = dataModelClass?.defineSchema?.();
+		await enrichHtmlFields( schema );
 		
 		// Add list of items sorted by packs to CONFIG data
 		context.itemLists = {
@@ -282,6 +313,7 @@ export class FabulaItemSheet extends ItemSheet {
 			const newArray = [...array];
 			newArray.push('');
 			await this.item.update({ [string]: newArray });
+			this.item.render();
 		});
 		html.on('click', '.js_removeLastToArray', async (ev) => {
 			ev.preventDefault();
@@ -313,7 +345,7 @@ export class FabulaItemSheet extends ItemSheet {
 
 			if ( index && arrayProp ) {
 				const updateObj = `system.${arrayProp}`;
-				const array = item.system[arrayProp];
+				const array = updateObj.split('.').reduce((obj, key) => obj?.[key], item);
 				const newArray = [...array];
 				
 				newArray.splice( index, 1 );

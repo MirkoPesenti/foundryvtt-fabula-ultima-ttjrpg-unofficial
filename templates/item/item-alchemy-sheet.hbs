@@ -1,0 +1,247 @@
+<form class="{{cssClass}} {{item.type}} is-feature flexcol" autocomplete="off">
+
+    {{!-- Sheet Header --}}
+    {{> 'systems/fabula/templates/item/common/sheet-header.hbs' }}
+
+    {{!-- Sheet Tabs --}}
+    <nav class="sheet-tabs tabs tabs-bookmark" data-group="primary">
+        <a class="item" data-tab="base">
+            <span>Descrizione</span>
+        </a>
+        <a class="item" data-tab="effects">
+            <span>Effetti</span>
+        </a>
+        <a class="item" data-tab="settings">
+            <span>Opzioni</span>
+        </a>
+    </nav>
+
+    <section class="sheet-body">
+        {{!-- Tab Base --}}
+        <div class="tab base" data-group="primary" data-tab="base">
+            <strong>Anche:</strong>
+            <input type="text" name="system.summary" value="{{system.summary}}" />
+
+            {{editor enrichedHtml.description target="system.description" engine="prosemirror" rollData=rollData owner=owner editable=editable button=true }}
+        </div>
+
+        {{!-- Tab Effects --}}
+        <div class="tab effects" data-group="primary" data-tab="effects">
+
+            {{!-- Area Effects --}}
+            <fieldset>
+                <legend>
+                    Area
+                    <button type="button" class="js_newEntryToArray" data-target="system.area">
+                        <i class="fa fa-plus m-0"></i>
+                    </button>
+                </legend>
+
+                {{#if (arrayLengthGt system.area 0)}}
+                    <ul>
+                        {{#each system.area as |area areaIndex|}}
+                            <li>
+                                <button type="button" class="js_removeFromArray" data-target="area" data-index="{{areaIndex}}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <div class="form-group">
+                                    <input type="number" name="system.area.{{areaIndex}}.range.min" value="{{area.range.min}}" />
+                                    <input type="number" name="system.area.{{areaIndex}}.range.max" value="{{area.range.max}}" />
+                                </div>
+                                <input type="hidden" value="{{{area.description}}}" name="system.area.{{areaIndex}}.description">
+                                {{editor (getProperty ../enrichedHtml (concat "area." areaIndex ".description")) target=(concat "system.area." areaIndex ".description") engine="prosemirror" rollData=rollData owner=owner editable=editable button=true }}
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </fieldset>
+
+            {{!-- Effects --}}
+            <fieldset>
+                <legend>
+                    Effetti
+                    <button type="button" class="js_newEntryToArray" data-target="system.effects">
+                        <i class="fa fa-plus m-0"></i>
+                    </button>
+                </legend>
+
+                {{#if (arrayLengthGt system.effects 0)}}
+                    <ul>
+                        {{#each system.effects as |effect effectIndex|}}
+                            <li>
+                                <button type="button" class="js_removeFromArray" data-target="effects" data-index="{{effectIndex}}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <div class="form-group">
+                                    <label for="system.effects.{{effectIndex}}.alwaysAvailable">Sempre disponibile?</label>
+                                    <input type="checkbox" name="system.effects.{{effectIndex}}.alwaysAvailable" id="system.effects.{{effectIndex}}.alwaysAvailable" {{#if effect.alwaysAvailable}}checked{{/if}} />
+                                </div>
+                                {{#unless effect.alwaysAvailable}}
+                                    <div class="form-group">
+                                        <input type="number" name="system.effects.{{effectIndex}}.range.min" value="{{effect.range.min}}" />
+                                        <input type="number" name="system.effects.{{effectIndex}}.range.max" value="{{effect.range.max}}" />
+                                    </div>
+                                {{/unless}}
+                                <input type="hidden" value="{{{effect.description}}}" name="system.effects.{{effectIndex}}.description">
+                                {{editor (getProperty ../enrichedHtml (concat "effects." effectIndex ".description")) target=(concat "system.effects." effectIndex ".description") engine="prosemirror" rollData=rollData owner=owner editable=editable button=true }}
+
+                                <div class="form-group">
+                                    <label for="system.effects.{{effectIndex}}.damage.hasDamage">Infligge danno?</label>
+                                    <input type="checkbox" name="system.effects.{{effectIndex}}.damage.hasDamage" id="system.effects.{{effectIndex}}.damage.hasDamage" {{#if effect.damage.hasDamage}}checked{{/if}}>
+                                </div>
+                                    <div class="form-group">
+                                        <label>
+                                            Resistenze ottenute
+                                            <button type="button" class="js_newEntryToArray" data-target="system.effects.{{effectIndex}}.resistances">
+                                                <i class="fa fa-plus m-0"></i>
+                                            </button>
+                                        </label>
+                                        <ul>
+                                            {{#each effect.resistances as |resistance resistanceIndex|}}
+                                                <li>
+                                                    <div class="form-group">
+                                                        <button type="button" class="js_removeFromArray" data-target="effects.{{effectIndex}}.resistances" data-index="{{resistanceIndex}}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                        <select name="system.effects.{{effectIndex}}.resistances.{{resistanceIndex}}">
+                                                            {{selectOptions ../../DamageTypes selected=(concat "system.effects." effectIndex ".resistances." resistanceIndex) localize=true}}
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+
+                                {{#if effect.damage.hasDamage}}
+                                    <p>Danno</p>
+                                    <div class="form-group">
+                                        <select name="system.effects.{{effectIndex}}.damage.type.value">
+                                            {{selectOptions ../DamageTypes selected=(concat "system.effects." effectIndex ".damage.type.value") localize=true}}
+                                        </select>
+                                        <input type="number" name="system.effects.{{effectIndex}}.damage.value" value="{{effect.damage.value}}">
+                                    </div>
+                                    <p>Bonus di livello</p>
+                                    <div class="form-group">
+                                        <label>20+</label>
+                                        <input type="number" name="system.effects.{{effectIndex}}.damage.levelBonus.first" value="{{effect.damage.levelBonus.first}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>40+</label>
+                                        <input type="number" name="system.effects.{{effectIndex}}.damage.levelBonus.second" value="{{effect.damage.levelBonus.second}}">
+                                    </div>
+                                {{else}}
+                                    <div class="form-group">
+                                        <label>Cura</label>
+                                        <input type="number" name="system.effects.{{effectIndex}}.heal.hp" value="{{effect.heal.hp}}" />
+                                        <input type="number" name="system.effects.{{effectIndex}}.heal.mp" value="{{effect.heal.mp}}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="system.effects.{{effectIndex}}.heal.status">Cura da uno status?</label>
+                                        <input type="checkbox" name="system.effects.{{effectIndex}}.heal.status" id="system.effects.{{effectIndex}}.heal.status"{{#if effect.heal.status}}checked{{/if}} />
+                                    </div>
+                                    {{#if effect.heal.status}}
+                                        <div class="form-group">
+                                            <label>
+                                                Status
+                                                <button type="button" class="js_newEntryToArray" data-target="system.effects.{{effectIndex}}.statuses">
+                                                    <i class="fa fa-plus m-0"></i>
+                                                </button>
+                                            </label>
+                                            <ul>
+                                                {{#each effect.statuses as |status statusIndex|}}
+                                                    <li>
+                                                        <div class="form-group">
+                                                            <button type="button" class="js_removeFromArray" data-target="effects.{{effectIndex}}.statuses" data-index="{{statusIndex}}">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                            <select name="system.effects.{{effectIndex}}.statuses.{{statusIndex}}">
+                                                                <option value="" {{#if (eq status "")}}selected{{/if}}></option>
+                                                                {{selectOptions ../../statusses selected=(concat "system.effects." effectIndex ".statuses." statusIndex) localize=true}}
+                                                            </select>
+                                                        </div>
+                                                    </li>
+                                                {{/each}}
+                                            </ul>
+                                        </div>
+                                    {{/if}}
+                                {{/if}}
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            </fieldset>
+
+            {{!-- Active Effects --}}
+            {{#each effects as |category catIndex|}}
+                {{> 'systems/fabula/templates/common/active-effects.hbs' category=category element=../item}}
+            {{/each}}
+        </div>
+
+        {{!-- Tab Settings --}}
+        <div class="tab settings" data-group="primary" data-tab="settings">
+            
+            {{!-- General Fields --}}
+            <fieldset>
+                <legend>Generali</legend>
+                
+                <div class="form-group">
+                    <label>Fabula ID</label>
+                    <div class="input-group">
+                        <input type="text" name="system.fabulaID" value="{{system.fabulaID}}" readonly />
+                        <button type="button" class="js_regenerateFabulaID" data-tooltip="{{localize 'FU.fabulaID.regenerate'}}">
+                            <i class="fa fa-fw fa-rotate"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Rango</label>
+                    <select name="system.rank">
+                        {{selectOptions technologiesRank selected=system.rank blank=true localize=true}}
+                    </select>
+                </div>
+            </fieldset>
+
+            {{!-- Properties Fields --}}
+            <fieldset>
+                <legend>Proprietà</legend>
+
+                <div class="form-group">
+                    <label style="{{#if (eq system.rank "base")}}font-weight:700{{/if}}">Base</label>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Costo</label>
+                        <input type="number" name="system.properties.base.IPCost" value="{{system.properties.base.IPCost}}">
+                    </div>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">D20</label>
+                        <input type="number" name="system.properties.base.dices" value="{{system.properties.base.dices}}">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label style="{{#if (eq system.rank "advanced")}}font-weight:700{{/if}}">Avanzato</label>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Costo</label>
+                        <input type="number" name="system.properties.advanced.IPCost" value="{{system.properties.advanced.IPCost}}">
+                    </div>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">D20</label>
+                        <input type="number" name="system.properties.advanced.dices" value="{{system.properties.advanced.dices}}">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label style="{{#if (eq system.rank "superior")}}font-weight:700{{/if}}">Superiore</label>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">Costo</label>
+                        <input type="number" name="system.properties.superior.IPCost" value="{{system.properties.superior.IPCost}}">
+                    </div>
+                    <div class="form-group">
+                        <label style="width:100%;flex:unset;">D20</label>
+                        <input type="number" name="system.properties.superior.dices" value="{{system.properties.superior.dices}}">
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </section>
+</form>

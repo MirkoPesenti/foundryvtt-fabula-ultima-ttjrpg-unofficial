@@ -98,10 +98,10 @@
                 <hr>
 
                 <div class="form-group">
-                    <input type="checkbox" name="system.damage.hasDamage.value" id="system.damage.hasDamage.value" {{checked system.damage.hasDamage.value}}>
-                    <label for="system.damage.hasDamage.value">Infligge del danno ai nemici?</label>
+                    <input type="checkbox" name="system.damage.hasDamage" id="system.damage.hasDamage" {{checked system.damage.hasDamage}}>
+                    <label for="system.damage.hasDamage">Infligge del danno ai nemici?</label>
                 </div>
-                {{#if system.damage.hasDamage.value}}
+                {{#if system.damage.hasDamage}}
                     <div class="form-group group-inputs">
                         <input type="number" name="system.damage.value" min="0" value="{{system.damage.value}}">
                         <select name="system.damage.type.value">

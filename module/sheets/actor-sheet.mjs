@@ -422,7 +422,7 @@ export class FabulaActorSheet extends ActorSheet {
 				}
 
 				// Inflict damage
-				if ( sourceItem.system.damage.hasDamage.value ) {
+				if ( sourceItem.system.damage.hasDamage ) {
 
 					let damageType = '';
 					if ( sourceItem.system.damage.type.value == '' ) {
@@ -908,7 +908,7 @@ export class FabulaActorSheet extends ActorSheet {
 			for ( let item of actor.items ) {
 				item.enrichedHtml = {
 					description: await TextEditor.enrichHTML( item.system?.description ?? '' ),
-					opportunity: await TextEditor.enrichHTML( item.system?.opportunityEffect ?? '' ),
+					opportunityEffect: await TextEditor.enrichHTML( item.system?.opportunityEffect ?? '' ),
 				};
 			}
 

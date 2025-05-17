@@ -13,7 +13,7 @@
 	{{#if item.system.isOffensive.value}}
 		{{> 'systems/fabula/templates/chat/common/dice-result.hbs'}}
 	{{/if}}
-	{{#if item.system.damage.hasDamage.value}}
+	{{#if item.system.damage.hasDamage}}
 		{{> 'systems/fabula/templates/chat/common/dice-damage.hbs'}}
 	{{/if}}
 	{{#allTrue crit.success item.system.opportunity.value}}

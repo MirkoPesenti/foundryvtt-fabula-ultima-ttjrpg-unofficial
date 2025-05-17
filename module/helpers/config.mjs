@@ -381,6 +381,12 @@ FU.technologies = {
 	magitech: "FU.technologies.magitech",
 };
 
+FU.technologiesRank = {
+	base: "FU.technologiesRank.base",
+	advanced: "FU.technologiesRank.advanced",
+	superior: "FU.technologiesRank.superior",
+};
+
 FU.infusionsBasic = {
 	cryo: "FU.infusions.cryo",
 	pyro: "FU.infusions.pyro",
