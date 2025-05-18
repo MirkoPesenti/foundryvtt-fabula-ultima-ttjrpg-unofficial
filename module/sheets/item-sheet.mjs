@@ -1,6 +1,7 @@
 import { FU } from "../helpers/config.mjs";
 import { returnSortedPack, setProgress } from "../helpers/helpers.mjs";
 import { prepareActiveEffect, manageActiveEffect } from "../helpers/effects.mjs";
+import { AlchemyListeners } from "../documents/items/classFeatures/tinkerer/alchemy-data-model.mjs";
 
 /**
  * Extend basic ItemSheet
@@ -545,6 +546,9 @@ export class FabulaItemSheet extends ItemSheet {
 				},
 			}).render(true);
 		});
+
+		// Add Alchemy listeners
+		AlchemyListeners(html, this.item);
 
 		if (!this.isEditable) return;
 	}

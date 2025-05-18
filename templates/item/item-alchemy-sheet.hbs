@@ -32,7 +32,7 @@
             <fieldset>
                 <legend>
                     Area
-                    <button type="button" class="js_newEntryToArray" data-target="system.area">
+                    <button type="button" class="js_addArrayEntry" data-target="area">
                         <i class="fa fa-plus m-0"></i>
                     </button>
                 </legend>
@@ -60,7 +60,7 @@
             <fieldset>
                 <legend>
                     Effetti
-                    <button type="button" class="js_newEntryToArray" data-target="system.effects">
+                    <button type="button" class="js_addArrayEntry" data-target="effects">
                         <i class="fa fa-plus m-0"></i>
                     </button>
                 </legend>
@@ -89,28 +89,6 @@
                                     <label for="system.effects.{{effectIndex}}.damage.hasDamage">Infligge danno?</label>
                                     <input type="checkbox" name="system.effects.{{effectIndex}}.damage.hasDamage" id="system.effects.{{effectIndex}}.damage.hasDamage" {{#if effect.damage.hasDamage}}checked{{/if}}>
                                 </div>
-                                    <div class="form-group">
-                                        <label>
-                                            Resistenze ottenute
-                                            <button type="button" class="js_newEntryToArray" data-target="system.effects.{{effectIndex}}.resistances">
-                                                <i class="fa fa-plus m-0"></i>
-                                            </button>
-                                        </label>
-                                        <ul>
-                                            {{#each effect.resistances as |resistance resistanceIndex|}}
-                                                <li>
-                                                    <div class="form-group">
-                                                        <button type="button" class="js_removeFromArray" data-target="effects.{{effectIndex}}.resistances" data-index="{{resistanceIndex}}">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                        <select name="system.effects.{{effectIndex}}.resistances.{{resistanceIndex}}">
-                                                            {{selectOptions ../../DamageTypes selected=(concat "system.effects." effectIndex ".resistances." resistanceIndex) localize=true}}
-                                                        </select>
-                                                    </div>
-                                                </li>
-                                            {{/each}}
-                                        </ul>
-                                    </div>
 
                                 {{#if effect.damage.hasDamage}}
                                     <p>Danno</p>
@@ -131,6 +109,29 @@
                                     </div>
                                 {{else}}
                                     <div class="form-group">
+                                        <label>
+                                            Resistenze ottenute
+                                            <button type="button" class="js_addEffectArrayEntry" data-index="{{effectIndex}}" data-target="resistances">
+                                                <i class="fa fa-plus m-0"></i>
+                                            </button>
+                                        </label>
+                                        <ul>
+                                            {{#each effect.resistances as |resistance resistanceIndex|}}
+                                                <li>
+                                                    <div class="form-group">
+                                                        <button type="button" class="js_removeFromArray" data-target="effects.{{effectIndex}}.resistances" data-index="{{resistanceIndex}}">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                        <select name="system.effects.{{effectIndex}}.resistances.{{resistanceIndex}}">
+                                                            <option value="" {{#if (eq resistance "")}}selected{{/if}}></option>
+                                                            {{selectOptions ../../DamageTypes selected=(concat "system.effects." effectIndex ".resistances." resistanceIndex) localize=true}}
+                                                        </select>
+                                                    </div>
+                                                </li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                    <div class="form-group">
                                         <label>Cura</label>
                                         <input type="number" name="system.effects.{{effectIndex}}.heal.hp" value="{{effect.heal.hp}}" />
                                         <input type="number" name="system.effects.{{effectIndex}}.heal.mp" value="{{effect.heal.mp}}" />
@@ -143,7 +144,7 @@
                                         <div class="form-group">
                                             <label>
                                                 Status
-                                                <button type="button" class="js_newEntryToArray" data-target="system.effects.{{effectIndex}}.statuses">
+                                                <button type="button" class="js_addEffectArrayEntry" data-index="{{effectIndex}}" data-target="statuses">
                                                     <i class="fa fa-plus m-0"></i>
                                                 </button>
                                             </label>

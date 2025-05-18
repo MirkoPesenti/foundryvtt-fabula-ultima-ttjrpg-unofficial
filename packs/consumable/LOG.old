@@ -1,3 +1,5 @@
-2025/05/16-08:14:30.364546 30fe4a000 Recovering log #404
-2025/05/16-08:14:30.365047 30fe4a000 Delete type=0 #404
-2025/05/16-08:14:30.365086 30fe4a000 Delete type=3 #403
+2025/05/17-14:12:37.431 aa4 Log #408: 0 ops saved to Table #409 OK
+2025/05/17-14:12:37.431 aa4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/000408.log: OK
+2025/05/17-14:12:37.440 aa4 Table #394: 5 entries OK
+2025/05/17-14:12:37.445 aa4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable/MANIFEST-000407: OK
+2025/05/17-14:12:37.449 aa4 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\consumable; recovered 1 files; 1355 bytes. Some data may have been lost. ****

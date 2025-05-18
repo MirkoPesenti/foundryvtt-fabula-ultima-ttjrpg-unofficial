@@ -60,3 +60,33 @@ export class AlchemyDataModel extends foundry.abstract.TypeDataModel {
 
 	prepareBaseData() {}
 }
+
+export function AlchemyListeners(html, item) {
+	if (item.type !== 'alchemy') return;
+
+	// Add entry to Array
+	html.on('click', '.js_addArrayEntry', async (e) => {
+		e.preventDefault();
+		const target = e.currentTarget.dataset.target;
+		if ( !target ) return;
+
+		const prop = `system.${target}`;
+		const array = foundry.utils.duplicate(item.system?.[target]) || [];
+		array.push({});
+		await item.update({ [prop]: array });
+	});
+
+	// Add entry to Array in Effect
+	html.on('click', '.js_addEffectArrayEntry', async (e) => {
+		e.preventDefault();
+		const index = e.currentTarget.dataset.index;
+		const target = e.currentTarget.dataset.target;
+		if ( !index || !target ) return;
+
+		const effects = foundry.utils.duplicate(item.system.effects) || [];
+		if ( effects[index]?.[target] ) {
+			effects[index][target].push('');
+		}
+		await item.update({ 'system.effects': effects });
+	});
+}

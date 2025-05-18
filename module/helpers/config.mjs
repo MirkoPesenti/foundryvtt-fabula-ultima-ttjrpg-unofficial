@@ -197,7 +197,6 @@ FU.recoverResources = {
  */
 
 FU.DamageTypes = {
-	"": "FU.selectType",
 	physical: 'FU.DamageTypes.physical',
 	air: 'FU.DamageTypes.air',
 	bolt: 'FU.DamageTypes.bolt',
