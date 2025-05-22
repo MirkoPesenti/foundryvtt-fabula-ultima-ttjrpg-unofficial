@@ -45,7 +45,7 @@ export class AlchemyDataModel extends foundry.abstract.TypeDataModel {
 					status: new BooleanField({ initial: false }),
 				}),
 				statuses: new ArrayField(
-					new StringField({ initial: "", blank: true, choices: Object.keys(CONFIG.statusEffects) })
+					new StringField({ initial: "", blank: true, choices: Object.keys(FU.statusses) })
 				),
 				resistances: new ArrayField(
 					new StringField({ initial: "", blank: true, choices: Object.keys(FU.DamageTypes) })
@@ -76,8 +76,8 @@ export function AlchemyListeners(html, item) {
 		await item.update({ [prop]: array });
 	});
 
-	// Add entry to Array in Effect
-	html.on('click', '.js_addEffectArrayEntry', async (e) => {
+	// Add entry to second level Array
+	html.on('click', '.js_addSecondLevelArray', async (e) => {
 		e.preventDefault();
 		const index = e.currentTarget.dataset.index;
 		const target = e.currentTarget.dataset.target;
@@ -88,5 +88,21 @@ export function AlchemyListeners(html, item) {
 			effects[index][target].push('');
 		}
 		await item.update({ 'system.effects': effects });
+	});
+
+	// Remove entry to second level Array
+	html.on('click', '.js_removeSecondLevelArray', async (e) => {
+		e.preventDefault();
+		const effectIndex = e.currentTarget.dataset.effectIndex;
+		const index = e.currentTarget.dataset.index;
+		const target = e.currentTarget.dataset.target;
+		if ( !effectIndex || !target || !index ) return;
+
+		const effects = foundry.utils.duplicate(item.system.effects) || [];
+		const newEffects = [...effects];
+		if ( effects[effectIndex]?.[target] ) {
+			newEffects[effectIndex][target].splice(index, 1);
+		}
+		await item.update({ 'system.effects': newEffects });
 	});
 }

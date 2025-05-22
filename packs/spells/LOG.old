@@ -1,5 +1,3 @@
-2025/05/17-14:12:37.337 aa4 Log #501: 0 ops saved to Table #502 OK
-2025/05/17-14:12:37.338 aa4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells/000501.log: OK
-2025/05/17-14:12:37.341 aa4 Table #487: 39 entries OK
-2025/05/17-14:12:37.345 aa4 Archiving C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells/MANIFEST-000500: OK
-2025/05/17-14:12:37.349 aa4 **** Repaired leveldb C:\Users\mirko\AppData\Local\FoundryVTT\Data\systems\fabula\packs\spells; recovered 1 files; 19059 bytes. Some data may have been lost. ****
+2025/05/20-16:11:38.146610 30b60e000 Recovering log #508
+2025/05/20-16:11:38.146988 30b60e000 Delete type=0 #508
+2025/05/20-16:11:38.147013 30b60e000 Delete type=3 #507

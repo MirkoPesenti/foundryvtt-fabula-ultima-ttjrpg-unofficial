@@ -111,23 +111,35 @@
                                     <div class="form-group">
                                         <label>
                                             Resistenze ottenute
-                                            <button type="button" class="js_addEffectArrayEntry" data-index="{{effectIndex}}" data-target="resistances">
+                                            <button type="button" class="js_addSecondLevelArray" data-index="{{effectIndex}}" data-target="resistances">
                                                 <i class="fa fa-plus m-0"></i>
                                             </button>
                                         </label>
-                                        <ul>
+                                        <ul style="list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:10px;">
                                             {{#each effect.resistances as |resistance resistanceIndex|}}
-                                                <li>
-                                                    <div class="form-group">
-                                                        <button type="button" class="js_removeFromArray" data-target="effects.{{effectIndex}}.resistances" data-index="{{resistanceIndex}}">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                        <select name="system.effects.{{effectIndex}}.resistances.{{resistanceIndex}}">
-                                                            <option value="" {{#if (eq resistance "")}}selected{{/if}}></option>
-                                                            {{selectOptions ../../DamageTypes selected=(concat "system.effects." effectIndex ".resistances." resistanceIndex) localize=true}}
-                                                        </select>
-                                                    </div>
-                                                </li>
+                                                {{#if (eq resistance "")}}
+                                                    <li class="to-select" style="width:100%;order:6;">
+                                                        <div class="form-group">
+                                                            <button type="button" class="js_removeSecondLevelArray" data-target="resistances" data-effect-index="{{effectIndex}}" data-index="{{resistanceIndex}}">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                            <select name="system.effects.{{effectIndex}}.resistances.{{resistanceIndex}}">
+                                                                <option value="" {{#if (eq resistance "")}}selected{{/if}}></option>
+                                                                {{selectOptions ../../DamageTypes selected=(concat "system.effects." effectIndex ".resistances." resistanceIndex) localize=true}}
+                                                            </select>
+                                                        </div>
+                                                    </li>
+                                                {{else}}
+                                                    <li>
+                                                        <input type="hidden" name="system.effects.{{effectIndex}}.resistances.{{resistanceIndex}}" value="{{resistance}}">
+                                                        <div class="badge" style="display:inline-block;align-items:center;background-color:var(--color-primary);color:#000;">
+                                                            <button type="button" class="js_removeSecondLevelArray" data-target="resistances" data-effect-index="{{effectIndex}}" data-index="{{resistanceIndex}}" style="background:none;border:0;border-radius:0;padding:0;margin-right:10px;">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                            <div class="label">{{localize (concat "FU.DamageTypes." resistance)}}</div>
+                                                        </div>
+                                                    </li>
+                                                {{/if}}
                                             {{/each}}
                                         </ul>
                                     </div>
@@ -144,23 +156,35 @@
                                         <div class="form-group">
                                             <label>
                                                 Status
-                                                <button type="button" class="js_addEffectArrayEntry" data-index="{{effectIndex}}" data-target="statuses">
+                                                <button type="button" class="js_addSecondLevelArray" data-index="{{effectIndex}}" data-target="statuses">
                                                     <i class="fa fa-plus m-0"></i>
                                                 </button>
                                             </label>
-                                            <ul>
+                                            <ul style="list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:10px;">
                                                 {{#each effect.statuses as |status statusIndex|}}
-                                                    <li>
-                                                        <div class="form-group">
-                                                            <button type="button" class="js_removeFromArray" data-target="effects.{{effectIndex}}.statuses" data-index="{{statusIndex}}">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                            <select name="system.effects.{{effectIndex}}.statuses.{{statusIndex}}">
-                                                                <option value="" {{#if (eq status "")}}selected{{/if}}></option>
-                                                                {{selectOptions ../../statusses selected=(concat "system.effects." effectIndex ".statuses." statusIndex) localize=true}}
-                                                            </select>
-                                                        </div>
-                                                    </li>
+                                                    {{#if (eq status "")}}
+                                                        <li class="to-select" style="width:100%;order:6;">
+                                                            <div class="form-group">
+                                                                <button type="button" class="js_removeSecondLevelArray" data-target="statuses" data-effect-index="{{effectIndex}}" data-index="{{statusIndex}}">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                                <select name="system.effects.{{effectIndex}}.statuses.{{statusIndex}}">
+                                                                    <option value="" {{#if (eq status "")}}selected{{/if}}></option>
+                                                                    {{selectOptions ../../statusses selected=(concat "system.effects." effectIndex ".statuses." statusIndex) localize=true}}
+                                                                </select>
+                                                            </div>
+                                                        </li>
+                                                    {{else}}
+                                                        <li>
+                                                            <input type="hidden" name="system.effects.{{effectIndex}}.statuses.{{statusIndex}}" value="{{status}}">
+                                                            <div class="badge" style="display:inline-block;align-items:center;background-color:var(--color-primary);color:#000;">
+                                                                <button type="button" class="js_removeSecondLevelArray" data-target="statuses" data-effect-index="{{effectIndex}}" data-index="{{statusIndex}}" style="background:none;border:0;border-radius:0;padding:0;margin-right:10px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                                <div class="label">{{localize (concat "FU.Status." status)}}</div>
+                                                            </div>
+                                                        </li>
+                                                    {{/if}}
                                                 {{/each}}
                                             </ul>
                                         </div>
