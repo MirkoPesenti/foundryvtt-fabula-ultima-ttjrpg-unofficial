@@ -2,7 +2,7 @@
   "id": "fabula",
   "title": "Fabula Ultima TTJRPG (Unofficial)",
   "description": "An Unofficial system for playing Fabula Ultima in the Foundry Virtual Tabletop environment.",
-  "version": "0.1.2",
+  "version": "0.1.2a",
   "authors": [
     {
       "name": "OmegaPrime",
@@ -16,16 +16,11 @@
     }
   ],
   "compatibility": {
-    "minimum": "12",
-    "verified": "12",
-    "maximum": "12"
+    "minimum": "13",
+    "verified": "13"
   },
-  "esmodules": [
-    "module/fabula.mjs"
-  ],
-  "styles": [
-    "assets/css/fabula.css"
-  ],
+  "esmodules": ["module/fabula.mjs"],
+  "styles": ["assets/css/fabula.css"],
   "packs": [
     {
       "name": "classes",
@@ -184,25 +179,14 @@
       "name": "Regole di Gioco",
       "sorting": "m",
       "color": "#005995",
-      "packs": [
-        "consumable",
-        "equipment",
-        "artifacts",
-        "projects"
-      ],
+      "packs": ["consumable", "equipment", "artifacts", "projects"],
       "folders": []
     },
     {
       "name": "Premi Start",
       "sorting": "m",
       "color": "#2f6a29",
-      "packs": [
-        "classes",
-        "classfeatures",
-        "spells",
-        "heroicskill",
-        "arcanum"
-      ],
+      "packs": ["classes", "classfeatures", "spells", "heroicskill", "arcanum"],
       "folders": []
     },
     {
@@ -216,11 +200,7 @@
       "name": "Bestiario",
       "sorting": "m",
       "color": "#572d57",
-      "packs": [
-        "npcFeatures",
-        "villains",
-        "npc"
-      ],
+      "packs": ["npcFeatures", "villains", "npc"],
       "folders": []
     }
   ],
@@ -247,16 +227,8 @@
   },
   "flags": {
     "hotReload": {
-      "extensions": [
-        "css",
-        "hbs",
-        "json"
-      ],
-      "paths": [
-        "css",
-        "lang",
-        "templates"
-      ]
+      "extensions": ["css", "hbs", "json"],
+      "paths": ["css", "lang", "templates"]
     }
   },
   "media": [
@@ -278,5 +250,5 @@
   "readme": "README.md",
   "url": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical",
   "manifest": "https://raw.githubusercontent.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/master/system.json",
-  "download": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/releases/download/0.1.2/fabula.zip"
+  "download": "https://github.com/MirkoPesenti/foundryvtt-fabula-ultima-ttjrpg-unoffical/archive/master.zip"
 }
