@@ -248,7 +248,7 @@
   "background": "systems/fabula/assets/img/ui/fabula-background.webp",
   "socket": true,
   "readme": "README.md",
-  "url": "https://github.com/MirkoPesenti/FoundryVTT-Ultima-Legends",
-  "manifest": "https://raw.githubusercontent.com/MirkoPesenti/FoundryVTT-Ultima-Legends/master/system.json",
-  "download": "https://github.com/MirkoPesenti/FoundryVTT-Ultima-Legends/archive/master.zip"
+  "url": "https://github.com/MirkoPesenti/ultima-legends",
+  "manifest": "https://raw.githubusercontent.com/MirkoPesenti/ultima-legends/master/system.json",
+  "download": "https://github.com/MirkoPesenti/ultima-legends/archive/master.zip"
 }
